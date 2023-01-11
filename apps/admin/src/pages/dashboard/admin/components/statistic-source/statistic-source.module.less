@@ -1,0 +1,29 @@
+.main-body {
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+  padding-inline: 20px;
+
+  .header {
+    display: flex;
+    width: 100%;
+    height: 60px;
+    flex-direction: row;
+    align-items: center;
+    border-bottom: 2px solid rgba(200, 200, 200, 0.5);
+    .left-header {
+      color: #224170;
+      font-size: 16px;
+      width: 80%;
+      font-weight: bold;
+    }
+  }
+  .chart {
+    display: flex;
+    width: 100%;
+    height: calc(100% - 60px);
+    justify-content: center;
+  }
+}

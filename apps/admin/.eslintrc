@@ -1,0 +1,6 @@
+{
+  "root": true,
+  "extends": [
+    "@aiacademy/eslint-config-custom"
+  ]
+}

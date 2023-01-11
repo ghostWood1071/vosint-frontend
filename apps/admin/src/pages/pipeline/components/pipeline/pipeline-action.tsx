@@ -1,0 +1,37 @@
+import { IActionInfos } from "@/services/pipeline.types";
+import { UniqueIdentifier, useDraggable } from "@dnd-kit/core";
+import { CSS } from "@dnd-kit/utilities";
+import { Col, Row } from "antd";
+import { CSSProperties } from "react";
+import { PIPELINE_ACTION_ICON } from "./pipeline.constants";
+import styles from "./pipeline-action.module.less";
+
+interface Props extends Pick<IActionInfos, "display_name" | "readme" | "name"> {
+  id: UniqueIdentifier;
+}
+
+export function PipelineAction({ id, display_name, readme, name }: Props) {
+  const { setNodeRef, transform, attributes, listeners } = useDraggable({
+    id,
+    data: {
+      name,
+    },
+  });
+
+  const style: CSSProperties = {
+    transform: CSS.Translate.toString(transform),
+  };
+
+  return (
+    <div style={style} className={styles.wrapper} ref={setNodeRef} {...listeners} {...attributes}>
+      <Row className={styles.treeitem} align="middle" wrap={false}>
+        <Col flex="0 0 40px" className={styles.icon}>
+          {PIPELINE_ACTION_ICON[name]}
+        </Col>
+        <Col className={styles.text} flex="1 1 auto" title={readme}>
+          {display_name}
+        </Col>
+      </Row>
+    </div>
+  );
+}

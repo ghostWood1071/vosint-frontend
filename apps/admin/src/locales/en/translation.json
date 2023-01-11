@@ -1,0 +1,64 @@
+{
+  "app": {
+    "News": "News",
+    "Organization": "Organization",
+    "Social": "Social",
+    "Analysis": "Analysis",
+    "Database": "Database",
+    "Report": "Report",
+    "App": "App",
+    "Setting": "Setting",
+    "Database setting": "Database setting",
+    "close sidebar": "Close sidebar",
+    "open sidebar": "Lock sidebar open"
+  },
+  "auth": {
+    "login": "Sign in",
+    "forgot_password": "Forgot password",
+    "username": "User name",
+    "enter_username": "Enter user name",
+    "password": "Password",
+    "enter_password": "Enter password",
+    "keep_login_again": "Keep logged in next time",
+    "change_password": "Change Password",
+    "sign_in_to_vosint": "Sign in to V-OSINT",
+    "update": "Update",
+
+    "new_password": "New password",
+    "enter_new_password": "Enter new password",
+    "confirm_password": "Confirm password",
+    "enter_confirm_password": "Enter new password again",
+    "error_confirm_password": "The two passwords that you entered do not match!"
+  },
+  "pipeline": {
+    "dashboard": "Thống kê dashboard",
+    "information_gathering": "Thu thập tin tức theo pipeline",
+    "data_processing": "Xử lý dữ liệu",
+    "title_information_gathering": "Danh sách pipeline",
+    "add_pipeline": "Thêm mới pipeline",
+    "pipeline_history": "Lịch sử thu thập",
+    "search_here": "Tìm kiếm ở đây",
+    "id_pipeline": "Mã pipeline",
+    "name_pipeline": "Tên pipeline",
+    "create_at": "Ngày tạo",
+    "active": "Kích hoạt",
+    "activity": "Hoạt động",
+    "status": "Trạng thái",
+    "collect_history": "Lịch sử thu thập",
+    "action": "Hành động",
+    "time": "Thời gian",
+    "links_information": "Thông tin các đường dẫn",
+    "edit_pipeline_name": "Đổi tên pipeline"
+  },
+  "news": {
+    "add_basket": "Thêm giỏ tin",
+    "update_basket": "Sửa giỏ tin",
+    "delete_basket": "Xoá giỏ tin",
+    "add_news": "Thêm tin",
+    "news_basket": "Giỏ tin",
+    "add_newsletter": "Thêm bản tin",
+    "update_newsletter": "Sửa bản tin",
+    "delete_newsletter": "Xoá bản tin",
+    "confirm_delete_news_basket": "Xác nhận xoá giỏ tin"
+  }
+}

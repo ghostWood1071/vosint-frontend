@@ -1,0 +1,39 @@
+.main-container{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+
+    .name-object{
+        width: 315px;
+        height: 100%;
+
+        .user{
+            border-bottom: 1px solid gray;
+            height: 50%;
+            width: 100%;
+        }
+        .group{
+            width: 100%;
+            height: 50%;
+        }
+    }
+    .content{
+        width: calc(100% - 315px);
+        padding-left: 10px;
+
+        .all-tab-button-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 60px;
+
+            .tab-button-container{
+                display: flex;
+                flex-direction: row;
+                
+            }
+        }
+    }
+}

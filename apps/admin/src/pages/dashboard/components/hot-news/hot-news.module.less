@@ -1,0 +1,98 @@
+.main-body {
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+  padding-inline: 20px;
+
+  .header {
+    display: flex;
+    width: 100%;
+    height: 50px;
+    flex-direction: row;
+    align-items: center;
+    border-bottom: 2px solid rgba(200, 200, 200, 0.5);
+    .left-header {
+      color: #224170;
+      font-size: 16px;
+      width: 80%;
+      font-weight: bold;
+    }
+  }
+
+  .content-container {
+    display: flex;
+    width: 100%;
+    height: calc(100% - 70px);
+    align-items: center;
+    justify-content: center;
+    padding-inline: 20px;
+
+    .content {
+      display: flex;
+      width: 100%;
+      align-items: center;
+      justify-content: center;
+      flex-direction: row;
+
+      .number-hot-news-container {
+        width: 230px;
+        height: 160px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        .number-hot-news {
+          width: 90%;
+          height: 100%;
+          background-color: #f1fafe;
+          border-radius: 10px;
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: center;
+
+          box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.3);
+          .number {
+            font-weight: bold;
+            font-size: 96px;
+            font-family: "Inter";
+            background: linear-gradient(310.57deg, #9c0600 0%, #ff5c00 87.85%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+          }
+          .status-news {
+            margin-left: 10px;
+            color: #02d3a1;
+            .title-status {
+              font-weight: bold;
+              font-size: 24px;
+              color: #224170;
+            }
+          }
+        }
+      }
+      .swiper-news-container {
+        display: flex;
+        width: calc(100% - 230px);
+        height: auto;
+        padding-inline: 20px;
+        flex-direction: row;
+        align-items: center;
+        .button-prev {
+          width: 50px;
+          display: flex;
+          justify-content: center;
+        }
+        .swiper-container {
+          width: calc(100%);
+          .swiper {
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+}

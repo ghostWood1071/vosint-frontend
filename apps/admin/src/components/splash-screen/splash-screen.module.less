@@ -1,0 +1,103 @@
+.root {
+  background-color: var(--p-splash-screen-background);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: calc(100% - 111px);
+  width: 100%;
+}
+
+.layer {
+  position: absolute;
+  box-shadow: "0 2px 4px 0 rgba(0, 0, 0, 0.4)";
+  transform: "rotateX(50deg) rotateY(0deg) rotateZ(45deg)";
+}
+
+.logo {
+  position: "relative";
+}
+
+@keyframes ball-beat {
+  50% {
+    opacity: 0.2;
+    transform: scale(0.75);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes fade-in {
+  0% {
+    will-change: opacity;
+    opacity: 0.25;
+  }
+  100% {
+    will-change: unset;
+    opacity: 1;
+  }
+}
+.linode-loader {
+  width: 100px;
+  height: 120px;
+}
+.cube1 {
+  will-change: opacity;
+}
+.cube2 {
+  will-change: opacity;
+}
+.cube3 {
+  will-change: opacity;
+}
+.cube4 {
+  will-change: opacity;
+}
+.cube5 {
+  will-change: opacity;
+}
+.la-ball-beat {
+  opacity: 0;
+  animation: fade-in 0.25s linear 1.5s forwards;
+  position: relative;
+  box-sizing: border-box;
+  margin-top: 8px;
+  margin-left: 8px;
+  display: block;
+  font-size: 0;
+  color: var(--p-surface);
+  width: 54px;
+  height: 18px;
+  > div {
+    position: relative;
+    box-sizing: border-box;
+    margin-top: 8px;
+    margin-left: 8px;
+    display: inline-block;
+    float: none;
+    background-color: currentColor;
+    border: 0 solid currentColor;
+    width: 10px;
+    height: 10px;
+    margin: 4px;
+    border-radius: 100%;
+    animation: ball-beat 0.7s -0.15s infinite linear;
+    &:nth-child(2n-1) {
+      animation-delay: -0.5s;
+    }
+  }
+}
+
+.la-ball-beat.la-dark {
+  color: var(--p-splash-screen-color);
+}
+
+@media (min-width: 960px) {
+  .linode-loader {
+    width: 209px;
+    height: 251px;
+  }
+  .la-ball-beat {
+    margin-left: 65px;
+  }
+}

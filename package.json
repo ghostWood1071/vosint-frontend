@@ -1,0 +1,42 @@
+{
+  "name": "v-osin3",
+  "version": "0.0.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev --parallel",
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "format": "prettier --write \"**/*.{ts,tsx,md,json,less}\"",
+    "prepare": "husky install"
+  },
+  "devDependencies": {
+    "husky": "^8.0.1",
+    "lint-staged": "^13.0.3",
+    "prettier": "latest",
+    "turbo": "latest"
+  },
+  "lint-staged": {
+    "apps/**/*.{ts,tsx}": [
+      "eslint --fix"
+    ],
+    "apps/**/*.{ts,tsx,css,json,less}": [
+      "prettier --write"
+    ],
+    "packages/**/*.{ts,tsx,css,json}": [
+      "prettier --write"
+    ]
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "packageManager": "npm@8.19.2",
+  "volta": {
+    "node": "16.17.1",
+    "npm": "8.19.2"
+  }
+}

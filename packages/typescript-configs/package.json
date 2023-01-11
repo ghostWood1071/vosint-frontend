@@ -1,0 +1,9 @@
+{
+  "name": "@aiacademy/typescript-configs",
+  "version": "0.0.1",
+  "license": "MIT",
+  "description": "A set of typescript configuration files that can be extended.",
+  "publishConfig": {
+    "access": "public"
+  }
+}

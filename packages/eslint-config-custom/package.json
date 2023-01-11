@@ -1,0 +1,15 @@
+{
+  "name": "@aiacademy/eslint-config-custom",
+  "version": "0.0.1",
+  "private": true,
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-config-react-app": "^7.0.1",
+    "eslint-plugin-prettier": "^4.2.1"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

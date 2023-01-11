@@ -1,0 +1,33 @@
+.header {
+  background-color: var(--p-action-primary);
+  color: var(--p-surface);
+  padding: 0 35px;
+
+  .logo {
+    width: 100%;
+    height: auto;
+    max-width: 200px;
+    padding-right: 10px;
+  }
+
+  .navbar {
+    .link {
+      display: flex;
+      padding: 14px 11px;
+      border-radius: var(--p-border-radius-1);
+      color: white;
+    }
+
+    .active {
+      background-color: var(--p-background-navbar-active);
+    }
+  }
+
+  .user-setting > * + * {
+    margin-left: var(--p-space-5);
+  }
+
+  .icon {
+    font-size: 28px;
+  }
+}
