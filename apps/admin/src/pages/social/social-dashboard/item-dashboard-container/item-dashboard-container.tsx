@@ -7,7 +7,11 @@ interface ItemDashboardContainerProps {
   rightComponent?: any;
 }
 
-export const ItemDashboardContainer: React.FC<ItemDashboardContainerProps> = ({ titleItem, chart, rightComponent }) => {
+export const ItemDashboardContainer: React.FC<ItemDashboardContainerProps> = ({
+  titleItem,
+  chart,
+  rightComponent,
+}) => {
   return (
     <div className={styles.mainContainer}>
       <div className={styles.header}>

@@ -1,66 +1,64 @@
-.main-container{
-    width: 100%;
+.main-container {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  padding-block: 5px;
+  border: 1px solid rgba(200, 200, 200, 0.6);
+
+  .icon-user-container {
+    width: 110px;
+    height: 110px;
     display: flex;
-    flex-direction: row;
-    padding-block: 5px;
-    border: 1px solid rgba(200, 200, 200, 0.6);
-    
-    .icon-user-container{
-        width: 110px;
-        height: 110px;
+    justify-content: center;
+    align-items: center;
+    .icon-user {
+      width: 105px;
+      height: 105px;
+    }
+  }
+  .content {
+    width: calc(100% - 110px);
+    height: 110px;
+    padding-left: 10px;
+
+    .title {
+      display: flex;
+      height: 40px;
+      font-weight: bold;
+      color: #224170;
+      font-size: 16px;
+      align-items: center;
+    }
+    .summary {
+      font-size: 14px;
+      color: black;
+      font-weight: 500;
+      font-style: normal;
+    }
+    .bottom {
+      width: 100%;
+
+      .type {
+        width: 100%;
         display: flex;
-        justify-content: center;
+        flex-direction: row;
         align-items: center;
-        .icon-user{
-            width: 105px;
-            height: 105px;
+
+        .type-post-icon {
+          width: 20px;
+          height: 20px;
         }
+
+        .title-item-bottom {
+          font-size: 14px;
+          color: #005ab0;
+        }
+        .number-item-bottom {
+          margin-left: 5px;
+          font-size: 14px;
+          color: black;
+        }
+      }
     }
-    .content{
-        width: calc(100% - 110px);
-        height: 110px;
-        padding-left: 10px;
-
-        .title{
-            display: flex;
-            height: 40px;
-            font-weight: bold;
-            color: #224170;
-            font-size: 16px;
-            align-items: center;
-        }
-        .summary{
-            font-size: 14px;
-            color: black;
-            font-weight: 500;
-            font-family: 'Inter';
-            font-style: normal;
-        }
-        .bottom{
-            width: 100%;
-            
-            .type{
-                width: 100%;
-                display: flex;
-                flex-direction: row;
-                align-items: center;
-
-                .type-post-icon{
-                    width: 20px;
-                    height: 20px;
-                }
-
-                .title-item-bottom{
-                    font-size: 14px;
-                    color: #005AB0;
-                }
-                .number-item-bottom{
-                    margin-left: 5px;
-                    font-size: 14px;
-                    color: black;
-                }
-    
-            }
-        }
-    }
+  }
 }
