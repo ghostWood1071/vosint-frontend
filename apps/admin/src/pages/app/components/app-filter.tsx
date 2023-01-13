@@ -13,6 +13,7 @@ import { useTranslation } from "react-i18next";
 import { useSidebar } from "../app.store";
 import shallow from "zustand/shallow";
 import styles from "./app-filter.module.less";
+import { Key } from "react";
 
 const { Search } = Input;
 
@@ -70,7 +71,7 @@ export function AppFilter(): JSX.Element {
         title={"Thêm tin"}
         open={show}
         onOk={handleOK}
-        onCancel={() => setShow(false)}
+        onCancel={handleCancel}
         getContainer="#modal-mount"
         okText="Thêm"
       >
@@ -79,11 +80,15 @@ export function AppFilter(): JSX.Element {
           isSpinning={isLoading}
           title={"Giỏ tin"}
           treeData={data?.[0]?.data ?? []}
-          onSelect={() => {}}
+          onSelect={handleSelect}
         />
       </Modal>
     </>
   );
+
+  function handleCancel() {
+    setShow(false);
+  }
 
   function handleAddBasket() {
     setShow(true);
@@ -92,5 +97,9 @@ export function AppFilter(): JSX.Element {
   function handleOK() {
     message.success("Đã thêm vào giỏ tin");
     setShow(false);
+  }
+
+  function handleSelect(selectedKeys: Key[]) {
+    console.debug({ selectedKeys });
   }
 }

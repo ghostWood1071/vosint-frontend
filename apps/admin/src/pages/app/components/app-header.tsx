@@ -36,11 +36,7 @@ export const AppHeader: React.FC = () => {
         <Row justify="space-between" align="middle">
           {NAVBAR_HEADER.map(({ title, to, icon }) => (
             <Col key={to}>
-              <NavLink
-                to={to}
-                title={t(title)}
-                className={({ isActive }) => classNames(styles.link, { [styles.active]: isActive })}
-              >
+              <NavLink to={to} title={t(title)} className={handleActive}>
                 {icon}
               </NavLink>
             </Col>
@@ -49,12 +45,7 @@ export const AppHeader: React.FC = () => {
       </Col>
       <Col span={4}>
         <Row justify="end" className={styles.userSetting}>
-          <SearchOutlined
-            onClick={() => {
-              navigate(searchPath);
-            }}
-            className={styles.icon}
-          />
+          <SearchOutlined onClick={handlerNavigateSearch} className={styles.icon} />
           <Dropdown overlay={menu}>
             <UserOutlined className={styles.icon} />
           </Dropdown>
@@ -63,8 +54,16 @@ export const AppHeader: React.FC = () => {
     </Row>
   );
 
+  function handleActive({ isActive }: { isActive: boolean }) {
+    return classNames(styles.link, { [styles.active]: isActive });
+  }
+
   function handleLogout() {
     navigate(authLoginPath);
     remove();
+  }
+
+  function handlerNavigateSearch() {
+    navigate(searchPath);
   }
 };
