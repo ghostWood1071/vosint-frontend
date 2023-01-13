@@ -11,7 +11,6 @@ import {
 } from "@/assets/svg";
 
 import {
-  analysisPath,
   databasePath,
   sourceConfigPath,
   newsPath,

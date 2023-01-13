@@ -32,12 +32,14 @@ export const Tree: React.FC<Props> = ({ treeData, title, isSpinning, onAdd, onSe
           blockNode
           selectable={!onAdd}
           treeData={treeData}
-          titleRender={function renderTreeTitle(node) {
-            return <TreeTitle {...node} isEditable={!!onAdd} />;
-          }}
+          titleRender={renderTreeTitle}
           onSelect={onSelect}
         />
       </div>
     </Spin>
   );
+
+  function renderTreeTitle(node: any) {
+    return <TreeTitle {...node} isEditable={!!onAdd} />;
+  }
 };
