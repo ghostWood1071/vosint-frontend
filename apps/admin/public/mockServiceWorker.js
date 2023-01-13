@@ -20,7 +20,7 @@ self.addEventListener("activate", function(event) {
 });
 
 self.addEventListener("message", async function(event) {
-  if (event.origin !== "https://vosint.aiacademy.edu.vn" || event.origin !== "http://vosint.aiacademy.edu.vn") {
+  if (event.origin !== "https://vosint.aiacademy.edu.vn") {
     return;
   }
 
