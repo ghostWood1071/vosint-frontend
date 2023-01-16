@@ -23,10 +23,12 @@ export function PipelineAction({ id, display_name, readme, name }: Props) {
   };
 
   return (
-    <div style={style} className={styles.wrapper} ref={setNodeRef} {...listeners} {...attributes}>
+    <div style={style} className={styles.wrapper} ref={setNodeRef}>
       <Row className={styles.treeitem} align="middle" wrap={false}>
         <Col flex="0 0 40px" className={styles.icon}>
-          {PIPELINE_ACTION_ICON[name]}
+          <div className={styles.grab} {...listeners} {...attributes}>
+            {PIPELINE_ACTION_ICON[name]}
+          </div>
         </Col>
         <Col className={styles.text} flex="1 1 auto" title={readme}>
           {display_name}

@@ -1,5 +1,5 @@
 import { forwardRef, HTMLAttributes } from "react";
-import { CloseOutlined, DownOutlined, RightOutlined, ToolOutlined } from "@ant-design/icons";
+import { CloseOutlined, DownOutlined, RightOutlined } from "@ant-design/icons";
 import { Col, Row } from "antd";
 import styles from "./pipeline-tree-item.module.less";
 import { PIPELINE_ACTION_ICON } from "./pipeline.constants";
@@ -72,21 +72,26 @@ export const PipelineTreeItem = forwardRef<HTMLDivElement, Props>(
       >
         <Row className={styles.treeItem} ref={ref} style={style} align="middle" wrap={false}>
           <Col flex="0 0 40px" className={styles.icon}>
-            {PIPELINE_ACTION_ICON[name]}
+            <div tabIndex={0} className={styles.grab} {...handleProps}>
+              {PIPELINE_ACTION_ICON[name]}
+            </div>
           </Col>
           {onCollapse && (
             <Col flex="0 0 40px" className={styles.collapsed} onClick={onCollapse}>
               {collapsed ? <RightOutlined /> : <DownOutlined />}
             </Col>
           )}
-          <Col className={styles.text} flex="1 1 auto" {...handleProps} title={readme}>
+          <Col
+            className={classNames({
+              [styles.text]: true,
+              [styles.options]: !clone && !is_ctrl_flow && onOpenOptions,
+            })}
+            flex="1 1 auto"
+            title={readme}
+            onClick={!clone && !is_ctrl_flow && onOpenOptions ? onOpenOptions : undefined}
+          >
             {display_name}
           </Col>
-          {!clone && !is_ctrl_flow && onOpenOptions && (
-            <Col flex="0 0 40px" className={styles.collapsed}>
-              <ToolOutlined onClick={onOpenOptions} />
-            </Col>
-          )}
           {!clone && onRemove && (
             <Col flex="0 0 40px" className={styles.collapsed}>
               <CloseOutlined onClick={onRemove} />
