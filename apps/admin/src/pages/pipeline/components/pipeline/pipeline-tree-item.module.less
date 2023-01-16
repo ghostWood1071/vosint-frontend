@@ -62,12 +62,7 @@
   &.is-opened-options {
     .tree-item {
       border-color: #40a9ff;
-    }
-
-    & + * {
-      .tree-item {
-        border-top-color: #40a9ff;
-      }
+      z-index: 1;
     }
   }
 }
@@ -87,6 +82,9 @@
   font-weight: bold;
   font-size: 16px;
   padding-left: 10px;
+  &.options {
+    cursor: pointer;
+  }
 }
 
 .collapsed {
@@ -100,6 +98,10 @@
   align-items: center;
   height: 40px;
   border-right: 1px solid #e4e4e4;
+
+  .grab {
+    cursor: grab;
+  }
 }
 
 .count {
@@ -128,6 +130,9 @@
   .count {
     user-select: none;
     -webkit-user-select: none;
+  }
+  .grab {
+    cursor: grabbing;
   }
 }
 

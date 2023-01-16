@@ -137,13 +137,8 @@ export function Pipeline({
             }
             extra={
               <Space>
-                {onRunPipeline && (
-                  <Button
-                    icon={<SaveOutlined />}
-                    onClick={() =>
-                      onRunPipeline({ name: pipelineName, pipeline: items, cron_expr: cron })
-                    }
-                  />
+                {handleRunPipeline && (
+                  <Button icon={<SaveOutlined />} onClick={handleRunPipeline} />
                 )}
                 <Button icon={<ActionLogIcon />} />
               </Space>
@@ -227,6 +222,10 @@ export function Pipeline({
       )}
     </DndContext>
   );
+
+  function handleRunPipeline() {
+    onRunPipeline({ name: pipelineName, pipeline: items, cron_expr: cron });
+  }
 
   function handleDragStart({ active: { id: activeId } }: DragStartEvent) {
     setActiveId(activeId);
