@@ -40,7 +40,6 @@
     "zustand": "^4.1.2"
   },
   "devDependencies": {
-    "@aiacademy/eslint-config-custom": "^0.0.1",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^14.4.3",
