@@ -1,6 +1,7 @@
-import React from "react";
 import { ReactComponent as Logo } from "@/assets/svg/logo-animated.svg";
 import classnames from "classnames";
+import React from "react";
+
 import styles from "./splash-screen.module.less";
 
 export const SplashScreen: React.FC = () => {

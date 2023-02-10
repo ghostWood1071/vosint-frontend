@@ -1,7 +1,8 @@
+import { DatePicker, Select } from "antd";
 import React, { useState } from "react";
-import styles from "./card.module.less";
-import { Select, DatePicker } from "antd";
+
 import { DonutChart } from "../circle-chart/donut-chart";
+import styles from "./card.module.less";
 
 interface CardProps {
   titleSource: string;

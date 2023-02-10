@@ -1,8 +1,9 @@
-import React, { useState } from "react";
 import { Input, Radio } from "antd";
-import styles from "./body-social-page.module.less";
+import React, { useState } from "react";
+
 import { Post } from "../../components/post";
 import { Statistic } from "../components/statistic";
+import styles from "./body-social-page.module.less";
 
 interface BodySocialPageProps {
   postData: any[];

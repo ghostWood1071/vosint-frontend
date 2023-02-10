@@ -1,7 +1,8 @@
-import React from "react";
-import { Column, ColumnConfig } from "@ant-design/plots";
-import styles from "./column-bottom-chart.module.less";
 import { BackgroundWorld } from "@/assets/svg";
+import { Column, ColumnConfig } from "@ant-design/plots";
+import React from "react";
+
+import styles from "./column-bottom-chart.module.less";
 
 interface ColumnBottomChartProps {
   data: any[];

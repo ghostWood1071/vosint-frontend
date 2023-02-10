@@ -1,11 +1,11 @@
+import { LOCAL_ROLE } from "@/constants/config";
+import { AppHeader } from "@/pages/app/components/app-header";
+import { authLoginPath } from "@/pages/router";
 import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
-import styles from "./dashboard-layout.module.less";
 import { useLocalStorage } from "react-use";
 
-import { AppHeader } from "@/pages/app/components/app-header";
-import { LOCAL_ROLE } from "@/constants/config";
-import { authLoginPath } from "@/pages/router";
+import styles from "./dashboard-layout.module.less";
 
 export const DashboardLayout = () => {
   const [role] = useLocalStorage(LOCAL_ROLE);

@@ -1,11 +1,12 @@
-import React from "react";
+import { PipelineNewIcon } from "@/assets/svg";
+import { EyeOutlined } from "@ant-design/icons";
 import { Button, Card, Col, List, Pagination, Row, Space } from "antd";
 import VirtualList from "rc-virtual-list";
-import styles from "./pipeline-history.module.less";
-import data from "./data.json";
-import { EyeOutlined } from "@ant-design/icons";
-import { PipelineNewIcon } from "@/assets/svg";
+import React from "react";
 import { useTranslation } from "react-i18next";
+
+import data from "./data.json";
+import styles from "./pipeline-history.module.less";
 
 interface Props {}
 
@@ -35,7 +36,7 @@ export const PipelineHistory: React.FC<Props> = () => {
               itemHeight={35}
               itemKey={({ start_time, url }) => start_time + url}
             >
-              {(item: typeof data.detail[0]) => (
+              {(item: (typeof data.detail)[0]) => (
                 <List.Item actions={[<EyeOutlined />]} key={item.start_time + item.url}>
                   <Space>
                     <a href={item.url} target="_blank" rel="noreferrer">

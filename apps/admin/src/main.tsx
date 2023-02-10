@@ -1,13 +1,13 @@
-import "antd/dist/antd.css";
-
 import { ConfigProvider } from "antd";
+import "antd/dist/antd.css";
 import viVN from "antd/es/locale/vi_VN";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { RouterProvider } from "react-router-dom";
-import { routers } from "./routes";
+
 import "./locales/i18n";
+import { routers } from "./routes";
 
 const queryClient = new QueryClient({
   defaultOptions: {

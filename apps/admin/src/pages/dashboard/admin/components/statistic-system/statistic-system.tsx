@@ -1,4 +1,5 @@
 import React from "react";
+
 import { Progress } from "../chart/progress-chart/progress";
 import styles from "./statistic-system.module.less";
 

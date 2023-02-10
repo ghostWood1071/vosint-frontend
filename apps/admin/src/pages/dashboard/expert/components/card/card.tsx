@@ -1,7 +1,8 @@
 import React from "react";
-import styles from "./card.module.less";
+
 import { Card1Item } from "./card-component/card1-item";
 import { Card2Item } from "./card-component/card2-item";
+import styles from "./card.module.less";
 
 interface CardProps {}
 

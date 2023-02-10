@@ -1,7 +1,7 @@
+import { AppContainer } from "@/pages/app/";
 import { sourceConfigPath, userManagerListPath } from "@/pages/router";
 import { Menu, MenuProps } from "antd";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import { AppContainer } from "@/pages/app/";
 
 export const SourceConfigLayout = () => {
   return (

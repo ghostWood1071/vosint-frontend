@@ -1,11 +1,12 @@
+import { ActionReloadIcon, ActionRunIcon, ActionStopIcon } from "@/assets/svg";
+import { pipelineInformationGatheringCreatePath } from "@/pages/router";
 import { PlusOutlined } from "@ant-design/icons";
-import { Col, Row, Typography, Input, Space, Button, Modal } from "antd";
+import { Button, Col, Input, Modal, Row, Space, Typography } from "antd";
 import classNames from "classnames";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
-import { ActionReloadIcon, ActionRunIcon, ActionStopIcon } from "@/assets/svg";
-import { pipelineInformationGatheringCreatePath } from "@/pages/router";
+import { useNavigate, useSearchParams } from "react-router-dom";
+
 import { PipelineHistory } from "../components/pipeline-history";
 import { PipelineTable } from "../components/pipeline-table";
 import {
@@ -20,7 +21,12 @@ const { Title } = Typography;
 const { Search } = Input;
 
 export const InformationGatheringList: React.FC = () => {
-  const { data } = usePipelines();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { data: pipelines } = usePipelines({
+    page_number: searchParams.get("page_number") ?? 1,
+    page_size: searchParams.get("page_size") ?? 10,
+    text_search: searchParams.get("text_search") ?? "",
+  });
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const { t } = useTranslation("translation", { keyPrefix: "pipeline" });
   const navigate = useNavigate();
@@ -38,26 +44,31 @@ export const InformationGatheringList: React.FC = () => {
       </Title>
       <Row justify="space-between">
         <Col span={6}>
-          <Search placeholder={t("search_here")} />
+          <Search placeholder={t("search_here")} onSearch={handleSearch} />
         </Col>
         <Col>
           <Space align="end">
-            <Button icon={<ActionStopIcon />} />
-            <Button icon={<ActionRunIcon />} />
-            <Button icon={<ActionReloadIcon />} />
-            <Button onClick={navigateCreatePipeline} icon={<PlusOutlined />} />
+            <Button title="Dung tat ca" icon={<ActionStopIcon />} />
+            <Button title="Chay tat ca" icon={<ActionRunIcon />} />
+            <Button title="Làm mới trang" icon={<ActionReloadIcon />} />
+            <Button
+              title="Them moi pipeline"
+              icon={<PlusOutlined />}
+              onClick={navigateCreatePipeline}
+            />
           </Space>
         </Col>
       </Row>
       <br />
       <PipelineTable
         isLoading={isLoading || isCloning || isDeleting}
-        data={data ?? []}
+        data={pipelines?.data ?? []}
         onHistory={showHistory}
         onChangeEnabled={handleChangeEnabled}
-        onChangeActived={handleChangeActived}
+        onChangeActive={handleChangeActive}
         onClonePipeline={handleClonePipeline}
         onDeletePipeline={handleDeletePipeline}
+        totalRecord={pipelines?.total}
       />
       <Modal
         title={t("pipeline_history")}
@@ -91,7 +102,7 @@ export const InformationGatheringList: React.FC = () => {
     });
   }
 
-  function handleChangeActived(_id: string, actived: boolean) {
+  function handleChangeActive(_id: string, actived: boolean) {
     mutate({
       _id,
       actived,
@@ -104,5 +115,11 @@ export const InformationGatheringList: React.FC = () => {
 
   function handleDeletePipeline(_id: string) {
     mutateDelete(_id);
+  }
+
+  function handleSearch(value: string) {
+    setSearchParams({
+      text_search: value,
+    });
   }
 };

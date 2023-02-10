@@ -1,7 +1,7 @@
 import LineChart from "@/pages/social/components/line-chart";
 import { ItemDashboardContainer } from "@/pages/social/social-dashboard/item-dashboard-container/item-dashboard-container";
-import React, { useState, useEffect } from "react";
 import { Select } from "antd";
+import React, { useEffect, useState } from "react";
 
 interface StatisticSourceProps {
   data: any[];

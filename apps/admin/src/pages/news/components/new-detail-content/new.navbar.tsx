@@ -1,9 +1,11 @@
-import { useState } from "react";
-import styles from "./new-navbar.module.less";
 import { Radio } from "antd";
-import { NewDetailMainContent } from "../new-detail-main-content/new-detail-maincontent";
+import { useState } from "react";
+
 import { NewKey } from "../new-detail-key/new-detail-key";
+import { NewDetailMainContent } from "../new-detail-main-content/new-detail-maincontent";
 import { NewDetailSummary } from "../new-detail-summary/new-detail-summary";
+import styles from "./new-navbar.module.less";
+
 export const NAVBAR_NEW = () => {
   const [isModalOpen, setModalState] = useState("");
   const toggleModal = () => setModalState("");

@@ -1,6 +1,7 @@
-import React from "react";
-import styles from "./circle-bottom.module.less";
 import { CircleChart } from "@/pages/app/components/circle-chart/circle-chart";
+import React from "react";
+
+import styles from "./circle-bottom.module.less";
 
 interface CircleBottomChartProps {
   data: any[];

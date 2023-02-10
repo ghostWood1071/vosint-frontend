@@ -1,15 +1,16 @@
-import { Checkbox, Input, Form, Button, message } from "antd";
+import { LOCAL_ROLE } from "@/constants/config";
+import { Button, Checkbox, Form, Input, message } from "antd";
+import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
 import { useLocalStorage } from "react-use";
+
 import {
   authForgotPasswordPath,
-  dashboardLeaderPath,
-  dashboardExpertPath,
   dashboardAdminPath,
+  dashboardExpertPath,
+  dashboardLeaderPath,
 } from "../../router";
-import { useTranslation } from "react-i18next";
 import styles from "./login.module.less";
-import { LOCAL_ROLE } from "@/constants/config";
 
 export const LoginPage = () => {
   const navigate = useNavigate();

@@ -1,26 +1,50 @@
-import { createBrowserRouter, Navigate } from "react-router-dom";
+import { Navigate, createBrowserRouter } from "react-router-dom";
+
+import { SplashScreen } from "./components";
 import { AppLayout } from "./pages/app";
 import { AuthLayout } from "./pages/auth/";
+import { ForgotPasswordPage } from "./pages/auth/forgot-password/forgot-password";
+import { LoginPage } from "./pages/auth/login/login";
 import { DashboardLayout } from "./pages/dashboard/";
+import { AdminPage } from "./pages/dashboard/admin/admin.page";
+import { ExpertPage } from "./pages/dashboard/expert/expert.page";
+import { LeaderLayout } from "./pages/dashboard/leader/leader.page";
 import { ErrorBoundary } from "./pages/errors/error-boundary";
-import { QuickReport, SyntheticReport, PeriodicReport, ReportLayout } from "./pages/reports";
+import { ViewList } from "./pages/list-application";
+import { SourceList } from "./pages/list-source";
+import { NewsLayout, NewsListPage } from "./pages/news";
 import {
+  DashboardStatistics,
+  DataProcessing,
+  InformationGathering,
+  InformationGatheringCreate,
+  InformationGatheringDetail,
+  PipelineLayout,
+} from "./pages/pipeline";
+import { PeriodicReport, QuickReport, ReportLayout, SyntheticReport } from "./pages/reports";
+import {
+  SourceListPath,
   analysisPath,
+  appPath,
   authForgotPasswordPath,
   authLoginPath,
   dashboardAdminPath,
   dashboardExpertPath,
   dashboardLeaderPath,
-  searchPath,
   databasePath,
-  sourceConfigPath,
   homePath,
   newsPath,
   organizationPath,
+  pipelineDashboardPath,
+  pipelineDataProcessingPath,
+  pipelineInformationGathering,
+  pipelineInformationGatheringCreatePath,
+  pipelineInformationGatheringDetail,
   reportPath,
   reportPeriodicPath,
   reportQuickPath,
   reportSyntheticPath,
+  searchPath,
   settingPath,
   socialDashboardPath,
   socialFacebookPath,
@@ -28,45 +52,22 @@ import {
   socialPriorityObjectPath,
   socialTiktokPath,
   socialTwitterPath,
-  pipelineDashboardPath,
-  pipelineDataProcessingPath,
-  pipelineInformationGathering,
-  pipelineInformationGatheringCreatePath,
-  pipelineInformationGatheringDetail,
-  appPath,
-  SourceListPath,
+  sourceConfigPath,
   userManagerListPath,
 } from "./pages/router";
-import {
-  SocialLayout,
-  SocialDashboard,
-  PriorityObject,
-  Facebook,
-  Twitter,
-  Tiktok,
-} from "./pages/social";
-
-import { LeaderLayout } from "./pages/dashboard/leader/leader.page";
-import { LoginPage } from "./pages/auth/login/login";
-import { ForgotPasswordPage } from "./pages/auth/forgot-password/forgot-password";
 import { Search } from "./pages/search/search.page";
-import { ExpertPage } from "./pages/dashboard/expert/expert.page";
-import { AdminPage } from "./pages/dashboard/admin/admin.page";
 import {
-  DashboardStatistics,
-  PipelineLayout,
-  DataProcessing,
-  InformationGathering,
-  InformationGatheringCreate,
-  InformationGatheringDetail,
-} from "./pages/pipeline";
-import { SourceManaLayout } from "./pages/sourceManagerment/components";
-import { ViewList } from "./pages/list-application";
-import { SourceList } from "./pages/list-source";
-import { SourceConfigLayout } from "./pages/source-config/components";
+  Facebook,
+  PriorityObject,
+  SocialDashboard,
+  SocialLayout,
+  Tiktok,
+  Twitter,
+} from "./pages/social";
 import { SourceConfigList } from "./pages/source-config";
+import { SourceConfigLayout } from "./pages/source-config/components";
+import { SourceManaLayout } from "./pages/sourceManagerment/components";
 import { UserManagerList } from "./pages/user-manager";
-import { NewsLayout, NewsListPage } from "./pages/news";
 
 export const routers = createBrowserRouter([
   {
@@ -151,7 +152,7 @@ export const routers = createBrowserRouter([
           },
           {
             path: pipelineDataProcessingPath,
-            element: <DataProcessing />,
+            element: <SplashScreen />,
           },
           {
             path: pipelineInformationGathering,

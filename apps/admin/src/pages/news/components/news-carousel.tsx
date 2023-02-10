@@ -1,6 +1,7 @@
 import { BellTwoTone, ShoppingTwoTone, StarTwoTone } from "@ant-design/icons";
 import { Col, Image, Row, Space, Typography } from "antd";
 import React from "react";
+
 import styles from "./news-carousel.module.less";
 
 interface Props {

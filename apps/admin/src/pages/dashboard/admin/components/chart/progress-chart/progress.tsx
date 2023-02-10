@@ -1,5 +1,5 @@
-import React from "react";
 import { RingProgress, RingProgressConfig } from "@ant-design/plots";
+import React from "react";
 
 interface ProgressProps {
   heightProgress: number;

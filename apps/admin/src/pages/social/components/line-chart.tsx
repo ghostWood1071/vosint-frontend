@@ -1,5 +1,5 @@
-import React from "react";
 import { Line, LineConfig } from "@ant-design/plots";
+import React from "react";
 
 interface LineChartProps {
   data: any[];

@@ -1,9 +1,11 @@
-import { forwardRef, HTMLAttributes } from "react";
+import { ActionFallbackIcon } from "@/assets/svg";
 import { CloseOutlined, DownOutlined, RightOutlined } from "@ant-design/icons";
 import { Col, Row } from "antd";
+import classNames from "classnames";
+import { HTMLAttributes, forwardRef } from "react";
+
 import styles from "./pipeline-tree-item.module.less";
 import { PIPELINE_ACTION_ICON } from "./pipeline.constants";
-import classNames from "classnames";
 
 export interface Props extends Omit<HTMLAttributes<HTMLLIElement>, "id"> {
   name: string;
@@ -73,7 +75,7 @@ export const PipelineTreeItem = forwardRef<HTMLDivElement, Props>(
         <Row className={styles.treeItem} ref={ref} style={style} align="middle" wrap={false}>
           <Col flex="0 0 40px" className={styles.icon}>
             <div tabIndex={0} className={styles.grab} {...handleProps}>
-              {PIPELINE_ACTION_ICON[name]}
+              {PIPELINE_ACTION_ICON[name] ?? <ActionFallbackIcon />}
             </div>
           </Col>
           {onCollapse && (
@@ -88,7 +90,7 @@ export const PipelineTreeItem = forwardRef<HTMLDivElement, Props>(
             })}
             flex="1 1 auto"
             title={readme}
-            onClick={!clone && !is_ctrl_flow && onOpenOptions ? onOpenOptions : undefined}
+            onClick={!clone && onOpenOptions ? onOpenOptions : undefined}
           >
             {display_name}
           </Col>

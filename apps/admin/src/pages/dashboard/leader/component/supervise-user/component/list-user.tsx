@@ -1,6 +1,7 @@
-import React from "react";
-import styles from "./list-user.module.less";
 import { IconAddress } from "@/assets/svg";
+import React from "react";
+
+import styles from "./list-user.module.less";
 
 interface UserItemProps {
   id: string;

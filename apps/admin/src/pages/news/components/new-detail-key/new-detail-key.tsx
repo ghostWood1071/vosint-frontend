@@ -1,7 +1,9 @@
-import React from "react";
-import styles from "./new-detail-key.module.less";
-import KeyData from "./key.data.json";
 import { Col, Row } from "antd";
+import React from "react";
+
+import KeyData from "./key.data.json";
+import styles from "./new-detail-key.module.less";
+
 interface ModalMainKey {
   isOpen: boolean;
   onClose: () => void;

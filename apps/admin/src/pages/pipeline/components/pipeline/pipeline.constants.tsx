@@ -1,17 +1,18 @@
 import {
-  ActionGotoIcon,
-  ActionKeyboardPressIcon,
-  ActionGetContentIcon,
-  ActionWhileIcon,
-  ActionClick,
-  ActionScrollIcon,
   ActionAttributeIcon,
+  ActionClick,
   ActionForIcon,
+  ActionGetContentIcon,
   ActionGetNewInformationIcon,
   ActionGetUrlsIcon,
+  ActionGotoIcon,
+  ActionKeyboardPressIcon,
+  ActionScrollIcon,
   ActionSelectIcon,
   ActionUrlInputIcon,
+  ActionWhileIcon,
 } from "@/assets/svg";
+
 import { TreeItems } from "./pipeline.types";
 
 export const PIPELINE_ACTION_ICON: Record<string, JSX.Element> = {

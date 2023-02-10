@@ -5,6 +5,7 @@ import {
   getPipelineDetail,
   getPipelines,
   putPipeline,
+  verifyPipeline,
 } from "@/services/pipeline.service";
 import { message } from "antd";
 import { useMutation, useQuery, useQueryClient } from "react-query";
@@ -13,14 +14,16 @@ export const CACHE_KEYS = {
   Pipelines: "PIPELINES",
   PipelineActionInfos: "PIPELINE_ACTION_INFOS",
   PipelineDetail: "PIPELINE_DETAIL",
+  PipelineUpdate: "PIPELINE_UPDATE",
+  PipelineVerify: "PIPELINE_VERIFY",
 };
 
 export const usePipelineActionInfos = () => {
   return useQuery([CACHE_KEYS.PipelineActionInfos], () => getActionInfos());
 };
 
-export const usePipelines = () => {
-  return useQuery([CACHE_KEYS.Pipelines], () => getPipelines());
+export const usePipelines = (filter: any) => {
+  return useQuery([CACHE_KEYS.Pipelines, filter], () => getPipelines(filter));
 };
 
 export const usePipelineDetail = (id: string, enabled: boolean) => {
@@ -29,6 +32,13 @@ export const usePipelineDetail = (id: string, enabled: boolean) => {
 
 export const usePutPipeline = ({ onSuccess = () => {}, onError = () => {} }) => {
   return useMutation((data: any) => putPipeline(data), {
+    onSuccess,
+    onError,
+  });
+};
+
+export const useVerifyPipeline = ({ onSuccess = () => {}, onError = () => {} }) => {
+  return useMutation((id: string) => verifyPipeline(id), {
     onSuccess,
     onError,
   });

@@ -1,9 +1,10 @@
-import { Button, Col, Form, Grid, Input, Modal, Row, Table, TableColumnsType } from "antd";
-import React, { useState } from "react";
-import "./view-list.less";
-import { PlusCircleOutlined } from "@ant-design/icons";
 import { AddIcon, DelIcon, ViewIcon } from "@/assets/svg";
+import { PlusCircleOutlined } from "@ant-design/icons";
+import { Button, Col, Form, Grid, Input, Modal, Row, Table, TableColumnsType } from "antd";
 import layout from "antd/lib/layout";
+import React, { useState } from "react";
+
+import "./view-list.less";
 
 interface DataType {
   key: React.Key;

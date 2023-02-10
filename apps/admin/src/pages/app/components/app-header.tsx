@@ -1,13 +1,14 @@
+import { LOCAL_ROLE } from "@/constants/config";
+import { authLoginPath, dashboardPathWithRole, searchPath } from "@/pages/router";
 import { SearchOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Col, Dropdown, Menu, Row } from "antd";
 import classNames from "classnames";
 import { useTranslation } from "react-i18next";
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import { authLoginPath, dashboardPathWithRole, searchPath } from "@/pages/router";
-import { NAVBAR_HEADER } from "../app.constants";
 import { useLocalStorage } from "react-use";
+
+import { NAVBAR_HEADER } from "../app.constants";
 import styles from "./app-header.module.less";
-import { LOCAL_ROLE } from "@/constants/config";
 
 export const AppHeader: React.FC = () => {
   const { t } = useTranslation("translation", { keyPrefix: "app" });

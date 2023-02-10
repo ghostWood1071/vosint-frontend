@@ -1,12 +1,11 @@
-import { $getRoot, $getSelection } from "lexical";
-import { useEffect } from "react";
-
 import { LexicalComposer } from "@lexical/react/LexicalComposer";
-import { PlainTextPlugin } from "@lexical/react/LexicalPlainTextPlugin";
+import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { ContentEditable } from "@lexical/react/LexicalContentEditable";
 import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
 import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
-import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
+import { PlainTextPlugin } from "@lexical/react/LexicalPlainTextPlugin";
+import { $getRoot, $getSelection } from "lexical";
+import { useEffect } from "react";
 
 const theme = {
   // Theme styling goes here

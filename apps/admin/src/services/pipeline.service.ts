@@ -1,13 +1,19 @@
-import { apiClient } from "@/utils/api";
+import { apiClient, filterEmptyString } from "@/utils/api";
+
 import { IActionInfos, IPipeline, IPipelines } from "./pipeline.types";
 import { APIResponse } from "./service.types";
 
 const apiPipelineBaseUrl = "/pipeline/api";
 
-export const getPipelines = async () => {
+export const getPipelines = async (filter: any) => {
   const url = `${apiPipelineBaseUrl}/get_pipelines`;
-  const result = await apiClient.get<APIResponse<IPipelines[]>>(url);
-  return result.data.payload;
+  const result = await apiClient.get<APIResponse<IPipelines[]>>(url, {
+    params: filterEmptyString(filter),
+  });
+  return {
+    data: result.data.payload,
+    total: result.data?.metadata?.total_records,
+  };
 };
 
 export const getPipelineDetail = async (id: string) => {
@@ -30,6 +36,12 @@ export const putPipeline = async (data: any) => {
 
 export const clonePipeline = async (id: string) => {
   const url = `${apiPipelineBaseUrl}/clone_pipeline/${id}`;
+  const result = await apiClient.post<APIResponse<any>>(url);
+  return result.data.payload;
+};
+
+export const verifyPipeline = async (id: string) => {
+  const url = `${apiPipelineBaseUrl}/run_only_job/${id}`;
   const result = await apiClient.post<APIResponse<any>>(url);
   return result.data.payload;
 };

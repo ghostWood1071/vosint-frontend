@@ -1,4 +1,5 @@
 import React from "react";
+
 import styles from "./card1-item.module.less";
 
 interface Card1ItemProps {

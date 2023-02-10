@@ -1,4 +1,5 @@
 import React from "react";
+
 import { BodySocialPage } from "../components/body-social-page";
 
 const postData = [
