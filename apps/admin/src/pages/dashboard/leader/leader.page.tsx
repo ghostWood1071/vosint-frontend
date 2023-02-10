@@ -1,11 +1,12 @@
+import { Col, Row } from "antd";
 import React from "react";
-import styles from "./leader.module.less";
+
+import { ColumnTopChart } from "../components/column-top-chart/column-top-chart";
+import { HotNews } from "../components/hot-news/hot-news";
 import { CircleBottomChart } from "./component/circle-bottom-chart/circle-bottom-chart";
 import { ColumnBottomChart } from "./component/column-bottom-chart/column-bottom-chart";
-import { ColumnTopChart } from "../components/column-top-chart/column-top-chart";
 import { SuperviseUser } from "./component/supervise-user/supervise-user";
-import { HotNews } from "../components/hot-news/hot-news";
-import { Col, Row } from "antd";
+import styles from "./leader.module.less";
 
 export const LeaderLayout: React.FC = () => {
   //fake data supervise user

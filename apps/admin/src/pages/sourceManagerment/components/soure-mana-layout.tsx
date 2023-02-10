@@ -1,7 +1,7 @@
-import { appPath, SourceListPath } from "@/pages/router";
+import { AppContainer } from "@/pages/app/";
+import { SourceListPath, appPath } from "@/pages/router";
 import { Menu, MenuProps } from "antd";
 import { Outlet, useNavigate } from "react-router-dom";
-import { AppContainer } from "@/pages/app/";
 
 type MenuItem = Required<MenuProps>["items"][number];
 

@@ -1,4 +1,5 @@
 import React from "react";
+
 import LineChart from "../../components/line-chart";
 import styles from "./statistic.module.less";
 import { TopGood } from "./top-good";

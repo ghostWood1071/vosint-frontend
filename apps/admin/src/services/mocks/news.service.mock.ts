@@ -1,5 +1,6 @@
 import { BASE_URL } from "@/constants/config";
 import { rest } from "msw";
+
 import { createFixResponseHandler } from "./mock-helper";
 
 export const MOCK_NEWS_SIDEBAR_REQUEST = [

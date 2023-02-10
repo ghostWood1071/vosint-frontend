@@ -1,3 +1,4 @@
+import { AppContainer } from "@/pages/app/";
 import {
   getReportQuickUrl,
   getReportSyntheticUrl,
@@ -7,7 +8,6 @@ import {
 } from "@/pages/router";
 import { Menu, MenuProps } from "antd";
 import { Outlet, useNavigate } from "react-router-dom";
-import { AppContainer } from "@/pages/app/";
 
 type MenuItem = Required<MenuProps>["items"][number];
 

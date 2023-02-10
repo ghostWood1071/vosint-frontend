@@ -1,8 +1,9 @@
 import { DeleteOutlined, EditOutlined, EllipsisOutlined, PlusOutlined } from "@ant-design/icons";
-import { Col, Row, Typography, TreeDataNode, Space, Tooltip, Modal, Input } from "antd";
+import { Col, Input, Modal, Row, Space, Tooltip, TreeDataNode, Typography } from "antd";
 import React, { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useClickAway } from "react-use";
+
 import styles from "./tree-title.module.less";
 
 const { Paragraph } = Typography;

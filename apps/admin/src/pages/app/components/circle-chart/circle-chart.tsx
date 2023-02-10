@@ -1,5 +1,5 @@
-import React from "react";
 import { Pie, PieConfig } from "@ant-design/plots";
+import React from "react";
 
 interface CircleChartProps {
   data: any[];

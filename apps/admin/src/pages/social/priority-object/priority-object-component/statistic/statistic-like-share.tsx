@@ -1,5 +1,6 @@
 import LineChart from "@/pages/social/components/line-chart";
 import React from "react";
+
 import styles from "./statistic-like-share.module.less";
 
 interface StatisticLikeShareProps {

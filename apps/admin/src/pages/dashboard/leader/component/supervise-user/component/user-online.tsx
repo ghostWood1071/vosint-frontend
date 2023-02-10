@@ -1,5 +1,6 @@
-import React from "react";
 import { Progress } from "antd";
+import React from "react";
+
 import styles from "./user-online.module.less";
 
 interface UserOnlineProps {

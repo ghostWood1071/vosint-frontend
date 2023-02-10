@@ -2,6 +2,7 @@ import { ColumnTopChart } from "@/pages/dashboard/components/column-top-chart/co
 import { HotNews } from "@/pages/dashboard/components/hot-news/hot-news";
 import { Col, Row } from "antd";
 import React from "react";
+
 import styles from "./chart-layout.module.less";
 import { LineChart } from "./line-chart";
 

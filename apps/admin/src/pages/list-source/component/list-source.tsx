@@ -1,8 +1,8 @@
-import { Col, Form, Input, Modal, Row, Select, Table, TableColumnsType } from "antd";
-import React, { useState } from "react";
 import { ViewIcon } from "@/assets/svg";
+import { Col, Form, Input, Modal, Row, Select, Table, TableColumnsType } from "antd";
 import form from "antd/lib/form";
 import layout from "antd/lib/layout";
+import React, { useState } from "react";
 
 interface DataType {
   key: React.Key;

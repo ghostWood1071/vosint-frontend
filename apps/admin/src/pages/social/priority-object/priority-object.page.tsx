@@ -1,10 +1,11 @@
-import React, { useState } from "react";
-import styles from "./priority-object.module.less";
 import { Radio } from "antd";
+import React, { useState } from "react";
+import { useSearchParams } from "react-router-dom";
+
+import { Post } from "../components/post";
 import { ListGroup, ListUser } from "./priority-object-component/name-object";
 import { Statistic } from "./priority-object-component/statistic";
-import { useSearchParams } from "react-router-dom";
-import { Post } from "../components/post";
+import styles from "./priority-object.module.less";
 
 const listUserData = [
   {

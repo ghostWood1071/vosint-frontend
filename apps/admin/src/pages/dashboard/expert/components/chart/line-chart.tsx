@@ -1,6 +1,7 @@
-import React from "react";
-import styles from "./line-chart.module.less";
 import { Line, LineConfig } from "@ant-design/plots";
+import React from "react";
+
+import styles from "./line-chart.module.less";
 
 interface LineChartProps {
   data: any[];

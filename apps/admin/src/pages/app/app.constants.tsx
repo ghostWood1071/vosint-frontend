@@ -9,17 +9,16 @@ import {
   SettingIcon,
   SocialIcon,
 } from "@/assets/svg";
-
 import {
+  appPath,
   databasePath,
-  sourceConfigPath,
   newsPath,
   organizationPath,
+  pipelineInformationGathering,
   reportPath,
   settingPath,
   socialPath,
-  appPath,
-  pipelineInformationGathering,
+  sourceConfigPath,
 } from "@/pages/router";
 
 export const DEFAULT_ENTITY_EXPLORER_WIDTH = 270;

@@ -1,11 +1,12 @@
+import { LOCAL_ROLE } from "@/constants/config";
+import { authLoginPath } from "@/pages/router";
 import React from "react";
+import { Navigate } from "react-router-dom";
+import { useLocalStorage } from "react-use";
+
 import { BodySearch } from "./components/body-search";
 import { SearchHeader } from "./components/search-header";
 import styles from "./search.module.less";
-import { useLocalStorage } from "react-use";
-import { LOCAL_ROLE } from "@/constants/config";
-import { authLoginPath } from "@/pages/router";
-import { Navigate } from "react-router-dom";
 
 interface SearchProps {}
 

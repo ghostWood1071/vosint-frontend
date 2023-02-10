@@ -1,5 +1,5 @@
-import { rest } from "msw";
 import { isFunction } from "lodash";
+import { rest } from "msw";
 
 export type JsonResolver = Parameters<typeof rest.post>[1];
 export type Request = Parameters<JsonResolver>[0];

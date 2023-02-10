@@ -1,8 +1,9 @@
-import { pipelineInformationGatheringCreatePath } from "@/pages/router";
-import { message, PageHeader } from "antd";
+import { pipelineInformationGathering } from "@/pages/router";
+import { PageHeader, message } from "antd";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+
 import { PipelineForm } from "../components/pipeline-form/pipeline-form";
 import { usePutPipeline } from "../pipeline.loader";
 
@@ -11,7 +12,7 @@ export const InformationGatheringCreate: React.FC = () => {
   const { mutate, isLoading } = usePutPipeline({
     onSuccess: () => {
       message.success("Created pipeline");
-      navigate(pipelineInformationGatheringCreatePath);
+      navigate(pipelineInformationGathering);
     },
   });
   const navigate = useNavigate();
@@ -19,7 +20,7 @@ export const InformationGatheringCreate: React.FC = () => {
   return (
     <div>
       <PageHeader title={t("create_new_pipeline")} onBack={goBack} />
-      <PipelineForm onSave={handleRunPipeline} isLoading={isLoading} />
+      <PipelineForm onSave={handleCreatePipeline} isLoading={isLoading} />
     </div>
   );
 
@@ -27,7 +28,7 @@ export const InformationGatheringCreate: React.FC = () => {
     navigate(-1);
   }
 
-  function handleRunPipeline({ name, cronExpr }: { name: string; cronExpr: string }) {
+  function handleCreatePipeline({ name, cronExpr }: { name: string; cronExpr: string }) {
     mutate({
       name,
       cron_expr: cronExpr,

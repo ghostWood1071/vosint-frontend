@@ -1,6 +1,7 @@
 import { UserIcon } from "@/assets/svg";
 import { Col, Row } from "antd";
 import React from "react";
+
 import styles from "./post-item.module.less";
 
 interface PostItemProps {

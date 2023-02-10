@@ -1,5 +1,6 @@
-import React from "react";
 import { Column, ColumnConfig } from "@ant-design/plots";
+import React from "react";
+
 import styles from "./column-top-chart.module.less";
 
 interface ColumnTopChartProps {

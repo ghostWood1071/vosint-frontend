@@ -1,9 +1,8 @@
-import "react-js-cron/dist/styles.css";
-
+import { ActionLogIcon } from "@/assets/svg";
+import { VI_LOCALE } from "@/locales/cron";
 import { IActionInfos, IPipelineSchema } from "@/services/pipeline.types";
+import { EditOutlined, SaveOutlined } from "@ant-design/icons";
 import {
-  closestCenter,
-  defaultDropAnimation,
   DndContext,
   DragEndEvent,
   DragMoveEvent,
@@ -13,17 +12,24 @@ import {
   DropAnimation,
   Modifier,
   UniqueIdentifier,
+  closestCenter,
+  defaultDropAnimation,
 } from "@dnd-kit/core";
-import { arrayMove, SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
+import { SortableContext, arrayMove, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Button, Card, Col, Row, Space, Typography } from "antd";
 import produce from "immer";
 import { nanoid } from "nanoid";
 import { useMemo, useState } from "react";
 import { createPortal } from "react-dom";
+import { useTranslation } from "react-i18next";
 import { Cron } from "react-js-cron";
+import "react-js-cron/dist/styles.css";
+
 import { PipelineAction } from "./pipeline-action";
 import { PipelineSortableItem } from "./pipeline-sortable-item";
+import { PipelineTreeOptions } from "./pipeline-tree-options";
+import "./pipeline.less";
 import { FlattenedItem } from "./pipeline.types";
 import {
   buildTree,
@@ -34,12 +40,6 @@ import {
   removeItem,
   setProperty,
 } from "./pipeline.utilities";
-import "./pipeline.less";
-import { EditOutlined, SaveOutlined } from "@ant-design/icons";
-import { ActionLogIcon } from "@/assets/svg";
-import { useTranslation } from "react-i18next";
-import { PipelineTreeOptions } from "./pipeline-tree-options";
-import { VI_LOCALE } from "@/locales/cron";
 
 const { Paragraph } = Typography;
 
@@ -48,7 +48,8 @@ interface Props {
   initialActions: IActionInfos[];
   initialNamePipeline?: string;
   initialCron: string;
-  onRunPipeline(args: { pipeline: IPipelineSchema[]; name: string; cron_expr: string }): void;
+  onSavePipeline?: (args: { pipeline: IPipelineSchema[]; name: string; cron_expr: string }) => void;
+  onVerifyPipeline?: () => void;
 }
 
 const indentationWidth = 40;
@@ -58,7 +59,8 @@ export function Pipeline({
   initialActions,
   initialNamePipeline,
   initialCron,
-  onRunPipeline,
+  onSavePipeline,
+  onVerifyPipeline,
 }: Props) {
   const { t } = useTranslation("translation", { keyPrefix: "pipeline" });
   const [items, setItems] = useState(() => initialItems);
@@ -137,10 +139,16 @@ export function Pipeline({
             }
             extra={
               <Space>
-                {handleRunPipeline && (
-                  <Button icon={<SaveOutlined />} onClick={handleRunPipeline} />
+                {onSavePipeline && (
+                  <Button icon={<SaveOutlined />} title="Save" onClick={handleSavePipeline} />
                 )}
-                <Button icon={<ActionLogIcon />} />
+                {onVerifyPipeline && (
+                  <Button
+                    icon={<ActionLogIcon />}
+                    title="verify pipeline"
+                    onClick={handleVerifyPipeline}
+                  />
+                )}
               </Space>
             }
           >
@@ -223,8 +231,12 @@ export function Pipeline({
     </DndContext>
   );
 
-  function handleRunPipeline() {
-    onRunPipeline({ name: pipelineName, pipeline: items, cron_expr: cron });
+  function handleSavePipeline() {
+    onSavePipeline?.({ name: pipelineName, pipeline: items, cron_expr: cron });
+  }
+
+  function handleVerifyPipeline() {
+    onVerifyPipeline?.();
   }
 
   function handleDragStart({ active: { id: activeId } }: DragStartEvent) {
@@ -313,6 +325,7 @@ export function Pipeline({
   }
 
   function handleOptionFormValueChange(_changedValues: any, values: Record<string, any>) {
+    console.log(values);
     optionId && setItems((items) => setProperty(items, optionId, "params", () => values));
   }
 }

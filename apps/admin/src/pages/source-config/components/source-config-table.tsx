@@ -1,6 +1,7 @@
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { Button, Checkbox, Rate, Space, Table, TableColumnsType } from "antd";
 import React from "react";
+
 import { ISourceConfig } from "../source-config.types";
 
 interface Props {

@@ -1,5 +1,6 @@
-import MainPic from "../../../../assets/img/mainpic.jpg";
 import MainPic2 from "../../../../assets/img/mainpic2.jpg";
+import MainPic from "../../../../assets/img/mainpic.jpg";
+
 export const dataNews = [
   {
     id: 1,

@@ -1,4 +1,5 @@
 import React from "react";
+
 import { NewsCarousel } from "../components/news-carousel";
 import { NewsTable } from "../components/news-table";
 import { useNewsList } from "../news.loader";

@@ -1,7 +1,7 @@
 export type APIResponse<T> = {
   payload: T;
-  Metadata?: {
-    Total_Records: number;
+  metadata?: {
+    total_records: number;
   };
   Success?: boolean;
 };

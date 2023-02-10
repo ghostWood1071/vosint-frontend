@@ -1,10 +1,11 @@
+import { BellIcon, CartIcon, HeartIcon, StarIcon, TickIcon } from "@/assets/svg";
 import { Button, Col, Modal, Row, Space } from "antd";
-import React, { useState } from "react";
 import classNames from "classnames";
-import style from "./new-detail-content.module.less";
+import React, { useState } from "react";
+
 import styles from "../../../reports/views/synthetic-report.module.less";
 import { NAVBAR_NEW } from "../new-detail-content/new.navbar";
-import { BellIcon, StarIcon, HeartIcon, TickIcon, CartIcon } from "@/assets/svg";
+import style from "./new-detail-content.module.less";
 
 export const NewDetailModal: React.FC = () => {
   const [modal1Open, setModal1Open] = useState(false);

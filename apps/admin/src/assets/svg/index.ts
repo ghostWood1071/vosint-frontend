@@ -53,3 +53,4 @@ export { ReactComponent as BellIcon } from "./bell.svg";
 export { ReactComponent as CartIcon } from "./cart.svg";
 export { ReactComponent as TickIcon } from "./tick.svg";
 export { ReactComponent as HeartIcon } from "./heart.svg";
+export { ReactComponent as ActionFallbackIcon } from "./action-fallback.svg";

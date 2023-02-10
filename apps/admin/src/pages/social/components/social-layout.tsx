@@ -2,9 +2,9 @@ import { AppContainer } from "@/pages/app";
 import {
   socialDashboardPath,
   socialFacebookPath,
-  socialTwitterPath,
   socialPriorityObjectPath,
   socialTiktokPath,
+  socialTwitterPath,
 } from "@/pages/router";
 import { Menu, MenuProps } from "antd";
 import React from "react";

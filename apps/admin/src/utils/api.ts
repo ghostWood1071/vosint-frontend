@@ -1,6 +1,6 @@
-import axios from "axios";
 import { BASE_URL } from "@/constants/config";
 import { HttpStatusCode } from "@/constants/http-status";
+import axios from "axios";
 
 export const apiClient = axios.create({
   baseURL: BASE_URL,
@@ -27,3 +27,15 @@ axios.interceptors.response.use(
     return Promise.reject(error);
   },
 );
+
+export const filterEmptyString = (params: Record<string, any>) => {
+  const result: Record<string, any> = {};
+
+  Object.entries(params).forEach(([key, value]) => {
+    if (value !== "") {
+      result[key] = value;
+    }
+  });
+
+  return result;
+};

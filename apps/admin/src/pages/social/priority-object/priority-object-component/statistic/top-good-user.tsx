@@ -1,4 +1,5 @@
 import React from "react";
+
 import styles from "./top-good-user.module.less";
 
 interface TopGoodUserProps {

@@ -1,10 +1,11 @@
-import React from "react";
-import { Input, Form, Button, message } from "antd";
-import "antd/dist/antd.css";
-import { useNavigate } from "react-router-dom";
-import styles from "./forgot-password.module.less";
 import { authLoginPath } from "@/pages/router";
+import { Button, Form, Input, message } from "antd";
+import "antd/dist/antd.css";
+import React from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+
+import styles from "./forgot-password.module.less";
 
 export const ForgotPasswordPage = () => {
   const { t } = useTranslation();

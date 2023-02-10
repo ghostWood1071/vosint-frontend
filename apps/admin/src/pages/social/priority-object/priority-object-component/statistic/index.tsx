@@ -1,8 +1,9 @@
-import React from "react";
 import { Col, Row } from "antd";
+import React from "react";
+
+import { CardStatistic } from "./card-statistic";
 import { StatisticLikeShare } from "./statistic-like-share";
 import { TopGoodUser } from "./top-good-user";
-import { CardStatistic } from "./card-statistic";
 
 interface StatisticProps {
   objectChoosed: any;

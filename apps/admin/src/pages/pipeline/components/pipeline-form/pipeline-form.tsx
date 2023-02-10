@@ -1,10 +1,9 @@
-import "react-js-cron/dist/styles.css";
-
 import { VI_LOCALE } from "@/locales/cron";
 import { SaveOutlined } from "@ant-design/icons";
 import { Button, Card, Form, Input } from "antd";
 import React, { useEffect, useState } from "react";
 import { Cron } from "react-js-cron";
+import "react-js-cron/dist/styles.css";
 
 interface Props {
   isLoading?: boolean;

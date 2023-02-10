@@ -2,6 +2,7 @@ import { IActionParamInfo } from "@/services/pipeline.types";
 import { CloseCircleOutlined } from "@ant-design/icons";
 import { Card, Form, Input, Select } from "antd";
 import { useEffect } from "react";
+
 import styles from "./pipeline-tree-options.module.less";
 import { FlattenedItem } from "./pipeline.types";
 
@@ -17,16 +18,13 @@ interface Props {
 export function PipelineTreeOptions({ option, onClose, onValuesChange }: Props) {
   const [form] = Form.useForm();
 
+  var defaultParams = option?.param_infos?.reduce(
+    (acc, curr) => ({ ...acc, [curr.name]: curr.default_val }),
+    {},
+  );
+
   useEffect(() => {
-    form.setFieldsValue(
-      Object.keys(option?.params ?? {}).length === 1 && option?.params.actions
-        ? option?.param_infos?.reduce(
-            (acc, curr) => ({ ...acc, [curr.name]: curr.default_val }),
-            {},
-          )
-        : option?.params,
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    form.setFieldsValue({ ...defaultParams, ...option?.params });
   }, [option?.id]);
 
   return (
@@ -43,7 +41,7 @@ export function PipelineTreeOptions({ option, onClose, onValuesChange }: Props) 
 function RenderFormItem({ param }: { param: IActionParamInfo }) {
   return (
     <Form.Item key={param.name} label={param.display_name} name={[param.name]}>
-      {renderFormItemStrategies[param?.val_type](param)}
+      {renderFormItemStrategies?.[param?.val_type]?.(param)}
     </Form.Item>
   );
 }

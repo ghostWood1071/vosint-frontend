@@ -3,6 +3,7 @@ import { AppContainer } from "@/pages/app";
 import { Input, Modal, Space } from "antd";
 import { useTranslation } from "react-i18next";
 import { Outlet } from "react-router-dom";
+
 import { useNewsSidebar } from "../news.loader";
 import styles from "./news-layout.module.less";
 

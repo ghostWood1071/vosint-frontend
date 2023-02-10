@@ -12,5 +12,8 @@
         "printWidth": 200
       }
     }
-  ]
+  ],
+  "importOrder": ["^components/(.*)$", "^[./]"],
+  "importOrderSeparation": true,
+  "importOrderSortSpecifiers": true
 }

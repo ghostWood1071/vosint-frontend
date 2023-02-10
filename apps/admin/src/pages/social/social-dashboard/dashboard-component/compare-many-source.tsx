@@ -1,7 +1,7 @@
 import { CircleChart } from "@/pages/social/social-dashboard/dashboard-component/circle-chart/circle-chart";
 import { ItemDashboardContainer } from "@/pages/social/social-dashboard/item-dashboard-container/item-dashboard-container";
-import React, { useState, useEffect } from "react";
 import { Select } from "antd";
+import React, { useEffect, useState } from "react";
 
 interface CompareManySourceProps {
   data: any[];

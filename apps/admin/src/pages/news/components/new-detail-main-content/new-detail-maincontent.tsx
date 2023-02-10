@@ -1,5 +1,7 @@
 import React from "react";
+
 import styles from "./detail-content.module.less";
+
 interface ModalMainContent {
   isOpen: boolean;
   onClose: () => void;

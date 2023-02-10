@@ -1,7 +1,8 @@
-import React from "react";
 import { Input, List } from "antd";
-import { PostItem } from "./post-item";
+import React from "react";
+
 import styles from "./index.module.less";
+import { PostItem } from "./post-item";
 
 interface PostProps {
   data: any[];

@@ -1,6 +1,7 @@
-import React from "react";
-import styles from "./statistic-source.module.less";
 import { CircleChart } from "@/pages/app/components/circle-chart/circle-chart";
+import React from "react";
+
+import styles from "./statistic-source.module.less";
 
 interface StatisticSourceProps {
   data: any[];

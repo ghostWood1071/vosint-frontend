@@ -1,12 +1,13 @@
-import React from "react";
-import styles from "./hot-news.module.less";
-import { SwiperItem } from "./component/swiper-item";
-import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/css";
-import "swiper/css/pagination";
-import "swiper/css/navigation";
-import { Pagination, Navigation } from "swiper";
 import { StatusNewsLoad } from "@/assets/svg";
+import React from "react";
+import { Navigation, Pagination } from "swiper";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import { Swiper, SwiperSlide } from "swiper/react";
+
+import { SwiperItem } from "./component/swiper-item";
+import styles from "./hot-news.module.less";
 
 interface HotNewsProps {
   dataSwiper: object[];

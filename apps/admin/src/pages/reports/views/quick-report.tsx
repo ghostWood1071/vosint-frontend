@@ -2,6 +2,7 @@ import { FileTextOutlined, SaveOutlined } from "@ant-design/icons";
 import { Button, Modal, PageHeader, Radio } from "antd";
 import classNames from "classnames";
 import React, { useState } from "react";
+
 import styles from "./synthetic-report.module.less";
 
 export const QuickReport: React.FC = () => {

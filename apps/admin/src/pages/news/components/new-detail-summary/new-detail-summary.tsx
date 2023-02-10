@@ -1,7 +1,9 @@
-import React from "react";
-import { Ratiosummary } from "./ratio";
-import styles from "./new-summary.module.less";
 import { Col, Row } from "antd";
+import React from "react";
+
+import styles from "./new-summary.module.less";
+import { Ratiosummary } from "./ratio";
+
 interface ModalSummary {
   isOpen: boolean;
   onClose: () => void;
