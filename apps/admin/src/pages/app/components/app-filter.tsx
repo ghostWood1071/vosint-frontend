@@ -1,15 +1,16 @@
 import { Tree } from "@/components";
-import { useNewsSidebar } from "@/pages/news/news.loader";
+import { useNewsIdToNewsletter, useNewsSidebar } from "@/pages/news/news.loader";
 import { useNewsStore } from "@/pages/news/news.store";
+import { buildTree } from "@/pages/news/news.utils";
 import {
   DoubleLeftOutlined,
   DoubleRightOutlined,
   MenuOutlined,
   PlusCircleTwoTone,
 } from "@ant-design/icons";
-import { Button, Col, DatePicker, Input, Modal, Row, Select, Space, Tooltip, message } from "antd";
+import { Button, Col, DatePicker, Input, Modal, Row, Select, Space, Tooltip } from "antd";
 import classNames from "classnames";
-import { Key } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import shallow from "zustand/shallow";
 
@@ -24,10 +25,16 @@ export function AppFilter(): JSX.Element {
   const { t } = useTranslation("translation", { keyPrefix: "app" });
   const [show, setShow] = useNewsStore((state) => [state.show, state.setShow], shallow);
   const { data, isLoading } = useNewsSidebar();
+  const { newsIds } = useNewsStore((state) => ({ newsIds: state.newsIds }), shallow);
+  const [newsletterId, setNewsletterId] = useState("");
+  const [topic, setTopic] = useState("newsletters");
 
   function handlePin() {
     setPinned(!pinned);
   }
+  const { mutate, isLoading: isLoadingMutate } = useNewsIdToNewsletter();
+
+  const buildNewslettersTree = data?.[topic] && buildTree(data[topic]);
 
   return (
     <>
@@ -59,7 +66,11 @@ export function AppFilter(): JSX.Element {
             <Button>Tóm tắt đa tin (1)</Button>
             <Search placeholder="Từ khoá" />
             <Select placeholder="Kiểu danh sách" />
-            <Button icon={<PlusCircleTwoTone />} onClick={handleAddBasket}>
+            <Button
+              icon={<PlusCircleTwoTone />}
+              onClick={handleAddBasket}
+              disabled={newsIds.length === 0}
+            >
               Thêm tin
             </Button>
             <Button type="primary">Xuất file dữ liệu</Button>
@@ -75,12 +86,21 @@ export function AppFilter(): JSX.Element {
         onCancel={handleCancel}
         getContainer="#modal-mount"
         okText="Thêm"
+        okButtonProps={{ disabled: !newsletterId }}
+        confirmLoading={isLoadingMutate}
+        destroyOnClose
       >
+        <Select defaultValue="newsletters" style={{ width: "100%" }} onChange={(e) => setTopic(e)}>
+          <Select.Option value="newsletters">Giỏ tin</Select.Option>
+          <Select.Option value="fields">Lĩnh vực tin</Select.Option>
+          <Select.Option value="topics">Danh mục chủ đề</Select.Option>
+        </Select>
+        <br />
+        <br />
         <Tree
-          key="Giỏ tin"
           isSpinning={isLoading}
-          title={"Giỏ tin"}
-          treeData={data?.[0]?.data ?? []}
+          title={t(topic)}
+          treeData={buildNewslettersTree}
           onSelect={handleSelect}
         />
       </Modal>
@@ -96,11 +116,20 @@ export function AppFilter(): JSX.Element {
   }
 
   function handleOK() {
-    message.success("Đã thêm vào giỏ tin");
-    setShow(false);
+    mutate(
+      {
+        newsIds,
+        newsletterId,
+      },
+      {
+        onSuccess: () => {
+          setShow(false);
+        },
+      },
+    );
   }
 
-  function handleSelect(selectedKeys: Key[]) {
-    console.debug({ selectedKeys });
+  function handleSelect(selectedKeys: any[]) {
+    setNewsletterId(selectedKeys[0]);
   }
 }

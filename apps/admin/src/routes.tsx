@@ -14,8 +14,7 @@ import { ViewList } from "./pages/list-application";
 import { SourceList } from "./pages/list-source";
 import { NewsLayout, NewsListPage } from "./pages/news";
 import {
-  DashboardStatistics,
-  DataProcessing,
+  DashboardStatistics, // DataProcessing,
   InformationGathering,
   InformationGatheringCreate,
   InformationGatheringDetail,
@@ -80,6 +79,10 @@ export const routers = createBrowserRouter([
         children: [
           {
             path: newsPath,
+            element: <NewsListPage />,
+          },
+          {
+            path: "/news/:id",
             element: <NewsListPage />,
           },
         ],

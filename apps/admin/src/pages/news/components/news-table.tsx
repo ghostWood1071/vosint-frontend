@@ -1,4 +1,4 @@
-import { DownNewsIcon, UpNewsIcon } from "@/assets/svg";
+// import { DownNewsIcon, UpNewsIcon } from "@/assets/svg";
 import { generateExternalLink } from "@/utils/href";
 import {
   BellTwoTone,
@@ -7,42 +7,57 @@ import {
   StarTwoTone,
 } from "@ant-design/icons";
 import { Space, Table, TableColumnsType, Tooltip, Typography, message } from "antd";
+import qs from "query-string";
 import React from "react";
+import { useLocation, useSearchParams } from "react-router-dom";
+import shallow from "zustand/shallow";
 
 import { useNewsStore } from "../news.store";
 
 interface Props {
   dataSource?: any[];
+  total_record: number;
 }
 
-export const NewsTable: React.FC<Props> = ({ dataSource }) => {
-  const setSelected = useNewsStore((state) => state.setSelected);
-  const setShow = useNewsStore((state) => state.setShow);
+export const NewsTable: React.FC<Props> = ({ dataSource, total_record }) => {
+  const { setNewsIds, setShow } = useNewsStore(
+    (state) => ({
+      setNewsIds: state.setNewsIds,
+      setShow: state.setShow,
+    }),
+    shallow,
+  );
+  const [searchParams, setSearchParams] = useSearchParams();
+  const page = searchParams.get("page_number");
+  const location = useLocation();
 
   const columns: TableColumnsType<any> = [
+    // {
+    //   key: "isUp",
+    //   dataIndex: "isUp",
+    //   width: 50,
+    //   render: (isUp) => (isUp ? <UpNewsIcon /> : <DownNewsIcon />),
+    // },
     {
-      key: "isUp",
-      dataIndex: "isUp",
-      width: 50,
-      render: (isUp) => (isUp ? <UpNewsIcon /> : <DownNewsIcon />),
-    },
-    {
-      key: "title",
-      dataIndex: "title",
+      key: "data:title",
+      dataIndex: "data:title",
       ellipsis: true,
       width: 500,
       render: (title, { id }) => <Typography.Link>{title}</Typography.Link>,
     },
     {
       key: "title",
-      dataIndex: "id",
+      dataIndex: "_id",
       render: (_, record) => {
         function handleClickShop() {
+          setNewsIds([record._id]);
           setShow(true);
         }
+
         function handleClickBell() {
           record.isBell ? message.warning("Xoá thành công") : message.success("Thêm thành công");
         }
+
         function handleClickStar() {
           record.isStar ? message.warning("Xoá thành công") : message.success("Thêm thành công");
         }
@@ -72,7 +87,8 @@ export const NewsTable: React.FC<Props> = ({ dataSource }) => {
     },
     {
       key: "url",
-      dataIndex: "url",
+      dataIndex: "data:url",
+      width: 500,
       render: (url) => (
         <a href={generateExternalLink(url)} target="_blank" rel="noreferrer">
           {url}
@@ -81,11 +97,11 @@ export const NewsTable: React.FC<Props> = ({ dataSource }) => {
     },
     {
       key: "date",
-      dataIndex: "date",
+      dataIndex: "data:time",
     },
     {
       key: "id",
-      dataIndex: "id",
+      dataIndex: "_id",
       render: (id) => {
         return (
           <Tooltip title="Xoá bản tin">
@@ -102,7 +118,7 @@ export const NewsTable: React.FC<Props> = ({ dataSource }) => {
 
   const rowSelection = {
     onChange: (selected: any) => {
-      setSelected(selected);
+      setNewsIds(selected);
     },
     getCheckboxProps: (record: any) => ({
       disabled: false,
@@ -112,14 +128,27 @@ export const NewsTable: React.FC<Props> = ({ dataSource }) => {
 
   return (
     <Table
-      rowKey="id"
+      rowKey="_id"
       showHeader={false}
       pagination={{
-        position: ["topCenter"],
+        position: ["bottomCenter"],
+        total: total_record,
+        current: page ? +page : 1,
+        onChange: handlePaginationChange,
       }}
       columns={columns}
       dataSource={dataSource}
       rowSelection={rowSelection}
     />
   );
+
+  function handlePaginationChange(page: number, pageSize: number) {
+    setSearchParams(
+      qs.stringify({
+        ...qs.parse(location.search),
+        page_number: page + "",
+        page_size: pageSize + "",
+      }),
+    );
+  }
 };

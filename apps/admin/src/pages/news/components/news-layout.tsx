@@ -1,11 +1,12 @@
-import { Tree } from "@/components";
 import { AppContainer } from "@/pages/app";
-import { Input, Modal, Space } from "antd";
-import { useTranslation } from "react-i18next";
+import { useNewsletterStore } from "@/pages/news/news.store";
+import { buildTree } from "@/pages/news/news.utils";
+import { Form, Input, Modal, Space } from "antd";
 import { Outlet } from "react-router-dom";
 
-import { useNewsSidebar } from "../news.loader";
+import { useMutationNewsSidebar, useNewsSidebar } from "../news.loader";
 import styles from "./news-layout.module.less";
+import { Tree } from "./tree";
 
 export const NewsLayout: React.FC = () => {
   return (
@@ -16,35 +17,94 @@ export const NewsLayout: React.FC = () => {
 };
 
 function Sidebar() {
-  const { t } = useTranslation("translation", { keyPrefix: "news" });
   const { data, isLoading } = useNewsSidebar();
+  const { mutate, isLoading: isMutateLoading } = useMutationNewsSidebar();
+  const [form] = Form.useForm();
+  const { newsletter, open, setOpen } = useNewsletterStore((state) => ({
+    newsletter: state.newsletter,
+    open: state.open,
+    setOpen: state.setOpen,
+  }));
 
   if (isLoading) return null;
+
+  const buildNewslettersTree = data?.newsletters && buildTree(data.newsletters);
+  const buildFieldsTree = data?.fields && buildTree(data.fields);
+  const buildTopicsTree = data?.topics && buildTree(data.topics);
 
   return (
     <>
       <Space direction="vertical" className={styles.sidebar}>
-        {data.map((basket: { name: string; data: any[] }) => (
+        {buildNewslettersTree && (
           <Tree
-            key={basket.name}
+            title="Giỏ tin"
+            treeData={buildNewslettersTree}
             isSpinning={isLoading}
-            title={basket.name}
-            treeData={basket.data}
-            onAdd={basket.name === "Giỏ tin" ? handleAdd : undefined}
+            isEditable
+            type="newsletter"
+            onClick={handleSelect}
           />
-        ))}
+        )}
+
+        {buildFieldsTree && (
+          <Tree
+            title="Lĩnh vực tin"
+            treeData={buildFieldsTree}
+            isSpinning={isLoading}
+            type="field"
+            onClick={handleSelect}
+          />
+        )}
+
+        {buildTopicsTree && (
+          <Tree
+            title="Danh mục chủ đề"
+            treeData={buildTopicsTree}
+            isSpinning={isLoading}
+            type="topic"
+            isEditable
+            onClick={handleSelect}
+          />
+        )}
       </Space>
+      <Modal
+        title={open}
+        open={!!open}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        confirmLoading={isMutateLoading}
+        destroyOnClose
+      >
+        <Form initialValues={newsletter} form={form} preserve={false}>
+          <Form.Item name="title">
+            <Input placeholder="Tên giỏ tin" disabled={open === "delete"} />
+          </Form.Item>
+        </Form>
+      </Modal>
     </>
   );
 
-  function handleAdd() {
-    Modal.confirm({
-      title: t("add_basket"),
-      content: <Input placeholder="Tên giỏ tin" />,
-      getContainer: "#modal-mount",
-      okText: "Thêm",
-      cancelText: "Huỷ",
-      onOk: function () {},
-    });
+  function handleOk() {
+    const title: string = form.getFieldValue("title");
+    mutate(
+      {
+        ...newsletter,
+        title,
+        mode: open,
+      },
+      {
+        onSuccess: () => {
+          setOpen(null);
+        },
+      },
+    );
+  }
+
+  function handleCancel() {
+    setOpen(null);
+  }
+
+  function handleSelect(newsletterId: string) {
+    console.log(newsletterId);
   }
 }

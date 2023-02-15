@@ -10,7 +10,10 @@
     "Setting": "Cấu hình",
     "Database setting": "Cấu hình nguồn",
     "close sidebar": "Đóng sidebar",
-    "open sidebar": "Mở sidebar"
+    "open sidebar": "Mở sidebar",
+    "newsletters": "GIỎ TIN",
+    "fields": "LĨNH VỰC TIN",
+    "topics": "DANH MỤC CHỦ ĐỀ"
   },
   "auth": {
     "login": "Đăng nhập",

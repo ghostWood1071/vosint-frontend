@@ -10,7 +10,10 @@
     "Setting": "Setting",
     "Database setting": "Database setting",
     "close sidebar": "Close sidebar",
-    "open sidebar": "Lock sidebar open"
+    "open sidebar": "Lock sidebar open",
+    "newsletters": "GIỎ TIN",
+    "fields": "LĨNH VỰC TIN",
+    "topics": "DANH MỤC CHỦ ĐỀ"
   },
   "auth": {
     "login": "Sign in",
