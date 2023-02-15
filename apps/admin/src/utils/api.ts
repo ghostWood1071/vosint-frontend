@@ -1,4 +1,4 @@
-import { BASE_URL } from "@/constants/config";
+import { BASE_URL, LOCAL_TOKEN } from "@/constants/config";
 import { HttpStatusCode } from "@/constants/http-status";
 import axios from "axios";
 
@@ -7,8 +7,15 @@ export const apiClient = axios.create({
   timeout: 1000 * 30,
 });
 
-axios.interceptors.request.use(
+try {
+  var token = JSON.parse(JSON.parse(localStorage.getItem(LOCAL_TOKEN) ?? "{}"));
+} catch {}
+
+apiClient.interceptors.request.use(
   function (config) {
+    // @ts-ignore
+    config.headers["Authorization"] = `Bearer ${token?.access_token}`;
+
     return config;
   },
   function (error) {
@@ -16,7 +23,7 @@ axios.interceptors.request.use(
   },
 );
 
-axios.interceptors.response.use(
+apiClient.interceptors.response.use(
   function (response) {
     return response;
   },

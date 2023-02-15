@@ -1,34 +1,47 @@
-import { LOCAL_ROLE } from "@/constants/config";
+import { LOCAL_ROLE, LOCAL_TOKEN } from "@/constants/config";
+import { CACHE_KEYS, useLogin } from "@/pages/auth/auth.loader";
 import { Button, Checkbox, Form, Input, message } from "antd";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
 import { useLocalStorage } from "react-use";
 
-import {
-  authForgotPasswordPath,
-  dashboardAdminPath,
-  dashboardExpertPath,
-  dashboardLeaderPath,
-} from "../../router";
+import { authForgotPasswordPath, dashboardPathWithRole } from "../../router";
 import styles from "./login.module.less";
+
+type FormLogin = {
+  username: string;
+  password: string;
+  remember: boolean;
+};
 
 export const LoginPage = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const [_, setValue] = useLocalStorage(LOCAL_ROLE);
-  const onFinish = (values: any) => {
-    if (values.username === "admin" || values.username === "Admin") {
-      setValue("admin");
-      navigate(dashboardAdminPath);
-    } else if (values.username === "expert" || values.username === "Expert") {
-      setValue("expert");
-      navigate(dashboardExpertPath);
-    } else if (values.username === "leader" || values.username === "Leader") {
-      setValue("leader");
-      navigate(dashboardLeaderPath);
-    } else {
-      message.warning("Tài khoản không hợp lệ");
-    }
+  const [_, setRole] = useLocalStorage(LOCAL_ROLE);
+  const [__, setToken] = useLocalStorage(LOCAL_TOKEN);
+  const { mutate } = useLogin({
+    onSuccess: ({ detail }: any) => {
+      message.success({
+        content: "Login successfully",
+        key: CACHE_KEYS.Login,
+      });
+      setToken(JSON.stringify(detail));
+      setRole(detail.role);
+      navigate(dashboardPathWithRole(detail.role));
+    },
+    onError: () => {
+      message.error({
+        content: "Invalid username or password",
+        key: CACHE_KEYS.Login,
+      });
+    },
+  });
+  const onFinish = (values: FormLogin) => {
+    message.loading({
+      content: "Loading...",
+      key: CACHE_KEYS.Login,
+    });
+    mutate(values);
   };
   const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);

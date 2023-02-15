@@ -1,4 +1,4 @@
-import { LOCAL_ROLE } from "@/constants/config";
+import { LOCAL_ROLE, LOCAL_TOKEN } from "@/constants/config";
 import { authLoginPath, dashboardPathWithRole, searchPath } from "@/pages/router";
 import { SearchOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Col, Dropdown, Menu, Row } from "antd";
@@ -14,6 +14,7 @@ export const AppHeader: React.FC = () => {
   const { t } = useTranslation("translation", { keyPrefix: "app" });
   const navigate = useNavigate();
   const [value, __, remove] = useLocalStorage<string>(LOCAL_ROLE);
+  const [_, ___, removeToken] = useLocalStorage<string>(LOCAL_TOKEN);
 
   const menu = (
     <Menu
@@ -62,6 +63,7 @@ export const AppHeader: React.FC = () => {
   function handleLogout() {
     navigate(authLoginPath);
     remove();
+    removeToken();
   }
 
   function handlerNavigateSearch() {
