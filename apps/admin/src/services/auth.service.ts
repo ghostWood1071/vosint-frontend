@@ -1,6 +1,6 @@
 import { apiClient } from "@/utils/api";
 
-const apiAuthBaseUrl = "";
+const apiAuthBaseUrl = "/v2";
 
 export const loginAuth = async (data: any) => {
   const url = `${apiAuthBaseUrl}/login`;

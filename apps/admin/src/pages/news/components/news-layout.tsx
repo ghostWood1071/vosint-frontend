@@ -1,8 +1,10 @@
 import { AppContainer } from "@/pages/app";
 import { useNewsletterStore } from "@/pages/news/news.store";
 import { buildTree } from "@/pages/news/news.utils";
+import { getNewsDetailUrl } from "@/pages/router";
 import { Form, Input, Modal, Space } from "antd";
-import { Outlet } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { Outlet, useNavigate } from "react-router-dom";
 
 import { useMutationNewsSidebar, useNewsSidebar } from "../news.loader";
 import styles from "./news-layout.module.less";
@@ -17,6 +19,7 @@ export const NewsLayout: React.FC = () => {
 };
 
 function Sidebar() {
+  const { t } = useTranslation("translation", { keyPrefix: "news" });
   const { data, isLoading } = useNewsSidebar();
   const { mutate, isLoading: isMutateLoading } = useMutationNewsSidebar();
   const [form] = Form.useForm();
@@ -25,6 +28,7 @@ function Sidebar() {
     open: state.open,
     setOpen: state.setOpen,
   }));
+  const navigate = useNavigate();
 
   if (isLoading) return null;
 
@@ -68,7 +72,7 @@ function Sidebar() {
         )}
       </Space>
       <Modal
-        title={open}
+        title={t(open ?? "")}
         open={!!open}
         onOk={handleOk}
         onCancel={handleCancel}
@@ -105,6 +109,6 @@ function Sidebar() {
   }
 
   function handleSelect(newsletterId: string) {
-    console.log(newsletterId);
+    navigate(getNewsDetailUrl(newsletterId));
   }
 }

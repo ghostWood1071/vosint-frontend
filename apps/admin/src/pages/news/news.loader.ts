@@ -2,6 +2,7 @@ import {
   addNewsIdsToNewsletter,
   addNewsletter,
   deleteNewsletter,
+  getNewsDetail,
   getNewsList,
   getNewsSidebar,
   updateNewsletter,
@@ -21,6 +22,10 @@ export const useNewsSidebar = () => {
 
 export const useNewsList = (filter: any) => {
   return useQuery([CACHE_KEYS.NewsList, filter], () => getNewsList(filter));
+};
+
+export const useNewsDetail = (id: string, filter: any) => {
+  return useQuery([CACHE_KEYS.NewsList, id, filter], () => getNewsDetail(id, filter));
 };
 
 export const useMutationNewsSidebar = () => {

@@ -12,7 +12,7 @@ import { LeaderLayout } from "./pages/dashboard/leader/leader.page";
 import { ErrorBoundary } from "./pages/errors/error-boundary";
 import { ViewList } from "./pages/list-application";
 import { SourceList } from "./pages/list-source";
-import { NewsLayout, NewsListPage } from "./pages/news";
+import { NewsDetailPage, NewsLayout, NewsListPage } from "./pages/news";
 import {
   DashboardStatistics, // DataProcessing,
   InformationGathering,
@@ -82,8 +82,8 @@ export const routers = createBrowserRouter([
             element: <NewsListPage />,
           },
           {
-            path: "/news/:id",
-            element: <NewsListPage />,
+            path: "/news/:newsletterId",
+            element: <NewsDetailPage />,
           },
         ],
       },

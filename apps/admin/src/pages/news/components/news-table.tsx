@@ -7,6 +7,7 @@ import {
   StarTwoTone,
 } from "@ant-design/icons";
 import { Space, Table, TableColumnsType, Tooltip, Typography, message } from "antd";
+import { truncate } from "lodash";
 import qs from "query-string";
 import React from "react";
 import { useLocation, useSearchParams } from "react-router-dom";
@@ -17,9 +18,10 @@ import { useNewsStore } from "../news.store";
 interface Props {
   dataSource?: any[];
   total_record: number;
+  isLoading?: boolean;
 }
 
-export const NewsTable: React.FC<Props> = ({ dataSource, total_record }) => {
+export const NewsTable: React.FC<Props> = ({ dataSource, total_record, isLoading }) => {
   const { setNewsIds, setShow } = useNewsStore(
     (state) => ({
       setNewsIds: state.setNewsIds,
@@ -29,6 +31,7 @@ export const NewsTable: React.FC<Props> = ({ dataSource, total_record }) => {
   );
   const [searchParams, setSearchParams] = useSearchParams();
   const page = searchParams.get("page_number");
+  const pageSize = searchParams.get("page_size");
   const location = useLocation();
 
   const columns: TableColumnsType<any> = [
@@ -42,12 +45,13 @@ export const NewsTable: React.FC<Props> = ({ dataSource, total_record }) => {
       key: "data:title",
       dataIndex: "data:title",
       ellipsis: true,
-      width: 500,
+      width: "30%",
       render: (title, { id }) => <Typography.Link>{title}</Typography.Link>,
     },
     {
       key: "title",
       dataIndex: "_id",
+      align: "center",
       render: (_, record) => {
         function handleClickShop() {
           setNewsIds([record._id]);
@@ -88,10 +92,10 @@ export const NewsTable: React.FC<Props> = ({ dataSource, total_record }) => {
     {
       key: "url",
       dataIndex: "data:url",
-      width: 500,
+      // width: 400,
       render: (url) => (
         <a href={generateExternalLink(url)} target="_blank" rel="noreferrer">
-          {url}
+          {truncate(url, { length: 30 })}
         </a>
       ),
     },
@@ -102,6 +106,7 @@ export const NewsTable: React.FC<Props> = ({ dataSource, total_record }) => {
     {
       key: "id",
       dataIndex: "_id",
+      align: "center",
       render: (id) => {
         return (
           <Tooltip title="Xoá bản tin">
@@ -135,10 +140,12 @@ export const NewsTable: React.FC<Props> = ({ dataSource, total_record }) => {
         total: total_record,
         current: page ? +page : 1,
         onChange: handlePaginationChange,
+        pageSize: pageSize ? +pageSize : 10,
       }}
       columns={columns}
       dataSource={dataSource}
       rowSelection={rowSelection}
+      loading={isLoading}
     />
   );
 

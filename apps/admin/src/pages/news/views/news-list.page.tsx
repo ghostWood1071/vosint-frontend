@@ -9,16 +9,20 @@ interface Props {}
 
 export const NewsListPage: React.FC<Props> = () => {
   const [searchParams] = useSearchParams();
-  const { data } = useNewsList({
+  const { data, isLoading } = useNewsList({
     order: "modified_at",
-    page_number: searchParams.get("page_number") ?? 1,
-    page_size: searchParams.get("page_size") ?? 10,
+    skip: searchParams.get("page_number") ?? 1,
+    limit: searchParams.get("page_size") ?? 10,
   });
 
   return (
     <>
       {/* <NewsCarousel data={Array.isArray(data) ? data : []} /> */}
-      <NewsTable dataSource={data?.result} total_record={data?.total_record} />
+      <NewsTable
+        isLoading={isLoading}
+        dataSource={data?.result}
+        total_record={data?.total_record}
+      />
     </>
   );
 };

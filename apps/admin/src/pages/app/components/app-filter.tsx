@@ -25,16 +25,18 @@ export function AppFilter(): JSX.Element {
   const { t } = useTranslation("translation", { keyPrefix: "app" });
   const [show, setShow] = useNewsStore((state) => [state.show, state.setShow], shallow);
   const { data, isLoading } = useNewsSidebar();
-  const { newsIds } = useNewsStore((state) => ({ newsIds: state.newsIds }), shallow);
+  const { newsIds, setNewsIds } = useNewsStore(
+    (state) => ({ newsIds: state.newsIds, setNewsIds: state.setNewsIds }),
+    shallow,
+  );
   const [newsletterId, setNewsletterId] = useState("");
-  const [topic, setTopic] = useState("newsletters");
 
   function handlePin() {
     setPinned(!pinned);
   }
   const { mutate, isLoading: isLoadingMutate } = useNewsIdToNewsletter();
 
-  const buildNewslettersTree = data?.[topic] && buildTree(data[topic]);
+  const buildNewslettersTree = data?.newsletters && buildTree(data["newsletters"]);
 
   return (
     <>
@@ -80,7 +82,7 @@ export function AppFilter(): JSX.Element {
 
       {/* TODO: Need move to module news */}
       <Modal
-        title={"Thêm tin"}
+        title={"Thêm tin vào giỏ tin"}
         open={show}
         onOk={handleOK}
         onCancel={handleCancel}
@@ -90,16 +92,9 @@ export function AppFilter(): JSX.Element {
         confirmLoading={isLoadingMutate}
         destroyOnClose
       >
-        <Select defaultValue="newsletters" style={{ width: "100%" }} onChange={(e) => setTopic(e)}>
-          <Select.Option value="newsletters">Giỏ tin</Select.Option>
-          <Select.Option value="fields">Lĩnh vực tin</Select.Option>
-          <Select.Option value="topics">Danh mục chủ đề</Select.Option>
-        </Select>
-        <br />
-        <br />
         <Tree
           isSpinning={isLoading}
-          title={t(topic)}
+          title={"Giỏ tin"}
           treeData={buildNewslettersTree}
           onSelect={handleSelect}
         />
@@ -124,6 +119,7 @@ export function AppFilter(): JSX.Element {
       {
         onSuccess: () => {
           setShow(false);
+          setNewsIds([]);
         },
       },
     );

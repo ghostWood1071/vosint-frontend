@@ -8,3 +8,9 @@ export const NewsListPage = lazyLoad(
   (module) => module.NewsListPage,
   { fallback: <SplashScreen /> },
 );
+
+export const NewsDetailPage = lazyLoad(
+  () => import("./views/news-detail.page"),
+  (module) => module.NewsDetailPage,
+  { fallback: <SplashScreen /> },
+);
