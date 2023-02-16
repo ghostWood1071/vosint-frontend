@@ -11,12 +11,12 @@ import {
 } from "@/assets/svg";
 import {
   appPath,
+  configPath,
   databasePath,
   newsPath,
   organizationPath,
   pipelineInformationGathering,
   reportPath,
-  settingPath,
   socialPath,
   sourceConfigPath,
 } from "@/pages/router";
@@ -62,8 +62,8 @@ export const NAVBAR_HEADER = [
     icon: <AppIcon />,
   },
   {
-    title: "Setting",
-    to: settingPath,
+    title: "Configuration",
+    to: configPath,
     icon: <SettingIcon />,
   },
   {

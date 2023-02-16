@@ -5,6 +5,17 @@ import { AppLayout } from "./pages/app";
 import { AuthLayout } from "./pages/auth/";
 import { ForgotPasswordPage } from "./pages/auth/forgot-password/forgot-password";
 import { LoginPage } from "./pages/auth/login/login";
+import {
+  CategoryNewsConfig,
+  ConfigLayout,
+  FacebookConfig,
+  GatheringDataConfig,
+  NewsFromAccountsConfig,
+  ProxyConfig,
+  SourceNewsConfig,
+  TiktokConfig,
+  TwitterConfig,
+} from "./pages/configuration";
 import { DashboardLayout } from "./pages/dashboard/";
 import { AdminPage } from "./pages/dashboard/admin/admin.page";
 import { ExpertPage } from "./pages/dashboard/expert/expert.page";
@@ -28,11 +39,16 @@ import {
   appPath,
   authForgotPasswordPath,
   authLoginPath,
+  categoryNewsConfigPath,
+  configPath,
   dashboardAdminPath,
   dashboardExpertPath,
   dashboardLeaderPath,
   databasePath,
+  facebookConfigPath,
+  gatheringDataConfigPath,
   homePath,
+  newsFromAccountsConfigPath,
   newsPath,
   organizationPath,
   pipelineDashboardPath,
@@ -40,12 +56,12 @@ import {
   pipelineInformationGathering,
   pipelineInformationGatheringCreatePath,
   pipelineInformationGatheringDetail,
+  proxyConfigPath,
   reportPath,
   reportPeriodicPath,
   reportQuickPath,
   reportSyntheticPath,
   searchPath,
-  settingPath,
   socialDashboardPath,
   socialFacebookPath,
   socialPath,
@@ -53,6 +69,9 @@ import {
   socialTiktokPath,
   socialTwitterPath,
   sourceConfigPath,
+  sourceNewsConfigPath,
+  tiktokConfigPath,
+  twitterConfigPath,
   userManagerListPath,
 } from "./pages/router";
 import { Search } from "./pages/search/search.page";
@@ -169,7 +188,45 @@ export const routers = createBrowserRouter([
         ],
       },
       {
-        path: settingPath,
+        element: <ConfigLayout />,
+        children: [
+          {
+            path: configPath,
+            element: <Navigate to={categoryNewsConfigPath} />,
+          },
+          {
+            path: categoryNewsConfigPath,
+            element: <CategoryNewsConfig />,
+          },
+          {
+            path: facebookConfigPath,
+            element: <FacebookConfig />,
+          },
+          {
+            path: tiktokConfigPath,
+            element: <TiktokConfig />,
+          },
+          {
+            path: twitterConfigPath,
+            element: <TwitterConfig />,
+          },
+          {
+            path: gatheringDataConfigPath,
+            element: <GatheringDataConfig />,
+          },
+          {
+            path: proxyConfigPath,
+            element: <ProxyConfig />,
+          },
+          {
+            path: newsFromAccountsConfigPath,
+            element: <NewsFromAccountsConfig />,
+          },
+          {
+            path: sourceNewsConfigPath,
+            element: <SourceNewsConfig />,
+          },
+        ],
       },
 
       {
