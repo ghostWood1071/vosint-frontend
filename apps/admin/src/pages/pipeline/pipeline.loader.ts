@@ -2,6 +2,7 @@ import {
   clonePipeline,
   deletePipeline,
   getActionInfos,
+  getHistory,
   getPipelineDetail,
   getPipelines,
   putPipeline,
@@ -16,6 +17,7 @@ export const CACHE_KEYS = {
   PipelineDetail: "PIPELINE_DETAIL",
   PipelineUpdate: "PIPELINE_UPDATE",
   PipelineVerify: "PIPELINE_VERIFY",
+  PipelineHistory: "PipelineHistory",
 };
 
 export const usePipelineActionInfos = () => {
@@ -28,6 +30,10 @@ export const usePipelines = (filter: any) => {
 
 export const usePipelineDetail = (id: string, enabled: boolean) => {
   return useQuery([CACHE_KEYS.PipelineDetail, id], () => getPipelineDetail(id), { enabled });
+};
+
+export const usePipelineHistory = (id: string) => {
+  return useQuery([CACHE_KEYS.PipelineHistory, id], () => getHistory(id), { enabled: !!id });
 };
 
 export const usePutPipeline = ({ onSuccess = () => {}, onError = () => {} }) => {

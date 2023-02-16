@@ -12,6 +12,7 @@ import { PipelineTable } from "../components/pipeline-table";
 import {
   useClonePipeline,
   useDeletePipeline,
+  usePipelineHistory,
   usePipelines,
   usePutPipeline,
 } from "../pipeline.loader";
@@ -36,6 +37,8 @@ export const InformationGatheringList: React.FC = () => {
   });
   const { mutate: mutateClone, isLoading: isCloning } = useClonePipeline();
   const { mutate: mutateDelete, isLoading: isDeleting } = useDeletePipeline();
+  const [idPipeline, setIdPipeline] = useState("");
+  const { data, isLoading: isLoadingHistory } = usePipelineHistory(idPipeline);
 
   return (
     <div id="pipeline-gathering" className={classNames(styles.informationGathering, "modal-mount")}>
@@ -78,12 +81,13 @@ export const InformationGatheringList: React.FC = () => {
         width={1300}
         footer={null}
       >
-        <PipelineHistory />
+        <PipelineHistory isLoading={isLoadingHistory} data={data} />
       </Modal>
     </div>
   );
 
-  function showHistory() {
+  function showHistory(id: string) {
+    setIdPipeline(id);
     setIsHistoryOpen(true);
   }
 

@@ -14,7 +14,7 @@ interface Props {
   isLoading?: boolean;
   totalRecord?: number;
 
-  onHistory?(): void;
+  onHistory?(id: string): void;
 
   onChangeEnabled: (_id: string, enabled: boolean) => void;
   onChangeActive: (_id: string, actived: boolean) => void;
@@ -106,8 +106,11 @@ export const PipelineTable: React.FC<Props> = ({
     {
       title: t("collect_history"),
       align: "center",
-      render: () => {
-        return <Button onClick={onHistory} icon={<PipelineHistoryIcon />} type="primary" />;
+      render: (_, record) => {
+        return <Button onClick={handleSetId} icon={<PipelineHistoryIcon />} type="primary" />;
+        function handleSetId() {
+          onHistory && onHistory(record._id);
+        }
       },
     },
     {

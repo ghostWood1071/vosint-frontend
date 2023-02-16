@@ -51,3 +51,9 @@ export const deletePipeline = async (id: string) => {
   const result = await apiClient.delete<APIResponse<any>>(url);
   return result.data.payload;
 };
+
+export const getHistory = async (id: string) => {
+  const url = `${apiPipelineBaseUrl}/get_log_history_error_or_getnews/${id}`;
+  const result = await apiClient.get<APIResponse<IPipeline>>(url);
+  return result.data;
+};

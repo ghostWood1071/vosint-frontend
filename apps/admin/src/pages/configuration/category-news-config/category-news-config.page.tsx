@@ -1,3 +1,5 @@
+import { useMutationNewsSidebar, useNewsSidebar } from "@/pages/news/news.loader";
+import { buildTree } from "@/pages/news/news.utils";
 import { DownOutlined, PlusOutlined } from "@ant-design/icons";
 import { Button, Form, Input, List, Modal, Tree } from "antd";
 import type { DataNode, TreeProps } from "antd/es/tree";
@@ -56,6 +58,10 @@ export const CategoryNewsConfig = () => {
   ]);
   const [form] = Form.useForm();
   const [isShowedModal, setIsShowedModal] = useState(false);
+  const { data } = useNewsSidebar();
+  const { mutate } = useMutationNewsSidebar();
+
+  const buildTopicsTree = data?.topics && buildTree(data.fields);
 
   return (
     <div className={styles.mainContainer}>
@@ -95,7 +101,7 @@ export const CategoryNewsConfig = () => {
             }}
             dataSource={dataInput}
             renderItem={(item) => {
-              return <TableItem treeData={item.data} detailData={item.infor} />;
+              return <TableItem treeData={buildTopicsTree} detailData={item.infor} />;
             }}
           />
         </div>
@@ -126,24 +132,11 @@ export const CategoryNewsConfig = () => {
   }
 
   function handleFinishCreate(values: any) {
-    console.log(values.name_category);
-    const treeData: DataNode[] = [
-      {
-        title: values.name_category,
-        key: new Date().getTime(),
-        children: [],
-      },
-    ];
-    setDataInput([
-      {
-        data: treeData,
-        infor: {
-          required_value_key: values.required_value_key,
-          remove_value_key: values.remove_value_key,
-        },
-      },
-      ...dataInput,
-    ]);
+    mutate({
+      ...values,
+      mode: "create",
+      topic: "field",
+    });
     form.resetFields();
   }
 };

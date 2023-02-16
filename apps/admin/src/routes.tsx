@@ -176,10 +176,10 @@ export const routers = createBrowserRouter([
             path: pipelineDataProcessingPath,
             element: <SplashScreen />,
           },
-          {
-            path: pipelineInformationGathering,
-            element: <InformationGathering />,
-          },
+          // {
+          //   path: pipelineInformationGathering,
+          //   element: <InformationGathering />,
+          // },
           {
             path: pipelineInformationGatheringCreatePath,
             element: <InformationGatheringCreate />,
@@ -228,6 +228,10 @@ export const routers = createBrowserRouter([
           {
             path: sourceNewsConfigPath,
             element: <SourceNewsConfig />,
+          },
+          {
+            path: pipelineInformationGathering,
+            element: <InformationGathering />,
           },
         ],
       },

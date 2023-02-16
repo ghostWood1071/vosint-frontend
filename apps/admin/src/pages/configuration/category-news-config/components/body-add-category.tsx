@@ -33,7 +33,7 @@ export const BodyAddCategory: React.FC<Props> = ({ form, onFinish }) => {
     >
       <Form.Item
         label="Tên danh mục"
-        name={"name_category"}
+        name={"title"}
         rules={[{ message: "Hãy nhập vào tên danh mục!" }]}
       >
         <Input />
