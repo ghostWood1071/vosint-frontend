@@ -46,7 +46,16 @@ export const getPipelineInformationGatheringUrl = (pipelineId: string | number) 
 
 export const pipelinePath = pipelineDashboardPath;
 
-export const settingPath = "/setting";
+export const configPath = "/config";
+export const categoryNewsConfigPath = "/config/category-news-config";
+export const facebookConfigPath = "/config/facebook-config";
+export const tiktokConfigPath = "/config/tiktok-config";
+export const twitterConfigPath = "/config/twitter-config";
+export const gatheringDataConfigPath = "/config/gathering-data-config";
+
+export const proxyConfigPath = "/config/proxy-config";
+export const newsFromAccountsConfigPath = "/config/news-from-accounts-config";
+export const sourceNewsConfigPath = "/config/source-news-config";
 
 export const sourceConfigPath = "/source-config";
 export const userManagerListPath = "/source-config/user-manager";
