@@ -1,4 +1,5 @@
 import { Tree } from "@/components";
+import { ETreeTag } from "@/components/tree/tree.store";
 import { useNewsIdToNewsletter, useNewsSidebar } from "@/pages/news/news.loader";
 import { useNewsStore } from "@/pages/news/news.store";
 import { buildTree } from "@/pages/news/news.utils";
@@ -36,7 +37,7 @@ export function AppFilter(): JSX.Element {
   }
   const { mutate, isLoading: isLoadingMutate } = useNewsIdToNewsletter();
 
-  const buildNewslettersTree = data?.newsletters && buildTree(data["newsletters"]);
+  const gioTinTree = data?.gio_tin && buildTree(data.gio_tin);
 
   return (
     <>
@@ -95,8 +96,9 @@ export function AppFilter(): JSX.Element {
         <Tree
           isSpinning={isLoading}
           title={"Giỏ tin"}
-          treeData={buildNewslettersTree}
+          treeData={gioTinTree}
           onSelect={handleSelect}
+          tag={ETreeTag.GIO_TIN}
         />
       </Modal>
     </>
