@@ -24,6 +24,8 @@ import { ErrorBoundary } from "./pages/errors/error-boundary";
 import { ViewList } from "./pages/list-application";
 import { SourceList } from "./pages/list-source";
 import { NewsDetailPage, NewsLayout, NewsListPage } from "./pages/news";
+import { OrganizationsLayout, OrganizationsListPage } from "./pages/organization";
+import { InternationalRelationshipGraph } from "./pages/organization/international-relationship-graph/component/international-relationship-graph";
 import {
   DashboardStatistics, // DataProcessing,
   InformationGathering,
@@ -49,6 +51,7 @@ import {
   homePath,
   newsFromAccountsConfigPath,
   newsPath,
+  organizationGraphPath,
   organizationPath,
   pipelineDashboardPath,
   pipelineDataProcessingPath,
@@ -107,7 +110,17 @@ export const routers = createBrowserRouter([
         ],
       },
       {
-        path: organizationPath,
+        element: <OrganizationsLayout />,
+        children: [
+          {
+            path: organizationPath,
+            element: <OrganizationsListPage />,
+          },
+          {
+            path: organizationGraphPath,
+            element: <InternationalRelationshipGraph />,
+          },
+        ],
       },
       {
         element: <SocialLayout />,

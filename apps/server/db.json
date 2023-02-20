@@ -163,6 +163,94 @@
       "data": []
     }
   ],
+
+  "organizations-sidebar": [
+    {
+      "name": "Danh mục đối tượng",
+      "data": [
+        {
+          "title": "JOE BIDEN",
+          "key": "1",
+          "children": [
+            {
+              "title": "Khác",
+              "key": "1-1"
+            }
+          ]
+        },
+        {
+          "title": "VLADIMIR\nVLADIMIROVICH PUTIN",
+          "key": "2",
+          "children": [
+            {
+              "title": "Khác",
+              "key": "2-1"
+            }
+          ]
+        },
+        {
+          "title": "DONALD TRUMP",
+          "key": "3",
+          "children": [
+            {
+              "title": "Khác",
+              "key": "3-1"
+            }
+          ]
+        },
+        {
+          "title": "PRAYUTH CHAN-OCHA",
+          "key": "4",
+          "children": [
+            {
+              "title": "Khác",
+              "key": "4-1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Danh mục các tổ chức",
+      "data": []
+    },
+    {
+      "name": "Danh mục các quốc gia",
+      "data": [
+        {
+          "title": "ANH",
+          "key": "1",
+          "children": [
+            {
+              "title": "Khác",
+              "key": "1-1"
+            }
+          ]
+        },
+        {
+          "title": "MỸ",
+          "key": "2",
+          "children": [
+            {
+              "title": "Khác",
+              "key": "2-1"
+            }
+          ]
+        },
+        {
+          "title": "BRAZIL",
+          "key": "3",
+          "children": [
+            {
+              "title": "Khác",
+              "key": "3-1"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+
   "get_pipelines": {
     "Metadata": {
       "Total_Records": 1
