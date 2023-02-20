@@ -1,8 +1,6 @@
 import { apiClient, filterEmptyString } from "@/utils/api";
 
-// const apiNewsBaseUrl = "/pipeline/api";
-// const apiNewsBaseV2Url = "/v2";
-const apiNewsBaseV2Url = "";
+const apiNewsBaseV2Url = "/v2";
 
 export const getNewsSidebar = async () => {
   const result = await apiClient.get<any>(`${apiNewsBaseV2Url}/newsletters`);
