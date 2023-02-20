@@ -10,6 +10,8 @@ import {
 import { message } from "antd";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 
+import { ETreeAction } from "../../components/tree/tree.store";
+
 export const CACHE_KEYS = {
   NewsSidebar: "NEWS_SIDEBAR",
   NewsList: "NEWS_LIST",
@@ -31,16 +33,20 @@ export const useNewsDetail = (id: string, filter: any) => {
 export const useMutationNewsSidebar = () => {
   const queryClient = useQueryClient();
   return useMutation(
-    ({ mode, _id, topic, ...data }: any) => {
-      if (mode === "delete") {
+    ({ action, _id, ...data }: any) => {
+      if (action === ETreeAction.DELETE) {
         return deleteNewsletter(_id);
       }
 
-      if (mode === "update") {
-        return updateNewsletter(_id, { ...data, tags: topic });
+      if (action === ETreeAction.UPDATE) {
+        return updateNewsletter(_id, data);
       }
 
-      return addNewsletter({ ...data, tags: topic });
+      if (action === ETreeAction.CREATE) {
+        return addNewsletter(data);
+      }
+
+      throw new Error("action invalid");
     },
     {
       onSuccess: () => {

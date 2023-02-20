@@ -1,14 +1,14 @@
 import { AppContainer } from "@/pages/app";
-import { useNewsletterStore } from "@/pages/news/news.store";
 import { buildTree } from "@/pages/news/news.utils";
 import { getNewsDetailUrl } from "@/pages/router";
-import { Form, Input, Modal, Space } from "antd";
-import { useTranslation } from "react-i18next";
+import { Space } from "antd";
 import { Outlet, useNavigate } from "react-router-dom";
 
+import { Tree } from "../../../components/tree";
+import { ETreeTag, useTreeStore } from "../../../components/tree/tree.store";
 import { useMutationNewsSidebar, useNewsSidebar } from "../news.loader";
+import { NewsForm } from "./news-form";
 import styles from "./news-layout.module.less";
-import { Tree } from "./tree";
 
 export const NewsLayout: React.FC = () => {
   return (
@@ -19,96 +19,69 @@ export const NewsLayout: React.FC = () => {
 };
 
 function Sidebar() {
-  const { t } = useTranslation("translation", { keyPrefix: "news" });
   const { data, isLoading } = useNewsSidebar();
   const { mutate, isLoading: isMutateLoading } = useMutationNewsSidebar();
-  const [form] = Form.useForm();
-  const { newsletter, open, setOpen } = useNewsletterStore((state) => ({
-    newsletter: state.newsletter,
-    open: state.open,
-    setOpen: state.setOpen,
-  }));
   const navigate = useNavigate();
+  const setValues = useTreeStore((state) => state.setValues);
 
   if (isLoading) return null;
 
-  const buildNewslettersTree = data?.newsletters && buildTree(data.newsletters);
-  const buildFieldsTree = data?.fields && buildTree(data.fields);
-  const buildTopicsTree = data?.topics && buildTree(data.topics);
+  const gioTinTree = data?.gio_tin && buildTree(data.gio_tin);
+  const linhVucTree = data?.linh_vuc && buildTree(data.linh_vuc);
+  const chuDeTree = data?.chu_de && buildTree(data.chu_de);
 
   return (
     <>
       <Space direction="vertical" className={styles.sidebar}>
-        {buildNewslettersTree && (
+        {gioTinTree && (
           <Tree
             title="Giỏ tin"
-            treeData={buildNewslettersTree}
+            treeData={gioTinTree}
             isSpinning={isLoading}
             isEditable
-            type="newsletter"
-            onClick={handleSelect}
+            onClickTitle={handleClickTitle}
+            tag={ETreeTag.GIO_TIN}
           />
         )}
 
-        {buildFieldsTree && (
+        {linhVucTree && (
           <Tree
             title="Lĩnh vực tin"
-            treeData={buildFieldsTree}
+            treeData={linhVucTree}
             isSpinning={isLoading}
-            type="field"
-            onClick={handleSelect}
+            onClickTitle={handleClickTitle}
+            tag={ETreeTag.LINH_VUC}
           />
         )}
 
-        {buildTopicsTree && (
+        {chuDeTree && (
           <Tree
             title="Danh mục chủ đề"
-            treeData={buildTopicsTree}
+            treeData={chuDeTree}
             isSpinning={isLoading}
-            type="topic"
             isEditable
-            onClick={handleSelect}
+            onClickTitle={handleClickTitle}
+            tag={ETreeTag.CHU_DE}
           />
         )}
       </Space>
-      <Modal
-        title={t(open ?? "")}
-        open={!!open}
-        onOk={handleOk}
-        onCancel={handleCancel}
-        confirmLoading={isMutateLoading}
-        destroyOnClose
-      >
-        <Form initialValues={newsletter} form={form} preserve={false}>
-          <Form.Item name="title">
-            <Input placeholder="Tên giỏ tin" disabled={open === "delete"} />
-          </Form.Item>
-        </Form>
-      </Modal>
+      <NewsForm onFinish={handleFinish} confirmLoading={isMutateLoading} />
     </>
   );
 
-  function handleOk() {
-    const title: string = form.getFieldValue("title");
-    mutate(
-      {
-        ...newsletter,
-        title,
-        mode: open,
+  function handleFinish(values: Record<string, any>) {
+    mutate(values, {
+      onSuccess: () => {
+        setValues({
+          tag: null,
+          action: null,
+          data: null,
+        });
       },
-      {
-        onSuccess: () => {
-          setOpen(null);
-        },
-      },
-    );
+    });
   }
 
-  function handleCancel() {
-    setOpen(null);
-  }
-
-  function handleSelect(newsletterId: string) {
+  function handleClickTitle(newsletterId: string) {
     navigate(getNewsDetailUrl(newsletterId));
   }
 }

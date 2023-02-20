@@ -6,14 +6,10 @@ import styles from "./table-item.module.less";
 import { TreeTitle } from "./tree-title";
 
 interface TableItemProps {
-  treeData: any;
-  detailData: any;
+  values: any;
 }
 
-export const TableItem: React.FC<TableItemProps> = ({ treeData, detailData }) => {
-  const onSelect = (selectedKeys: React.Key[], info: any) => {
-    console.log("selected", selectedKeys, info);
-  };
+export const TableItem: React.FC<TableItemProps> = ({ values }) => {
   return (
     <div className={styles.mainContainer}>
       <div className={styles.treeContainer}>
@@ -23,21 +19,26 @@ export const TableItem: React.FC<TableItemProps> = ({ treeData, detailData }) =>
           className={styles.treeAnt}
           blockNode
           titleRender={renderTreeTitle}
-          onSelect={onSelect}
-          treeData={treeData}
+          onSelect={handleSelect}
+          treeData={[values]}
         />
       </div>
       <div className={styles.detailContainer}>
         <div className={styles.requiredKeyContainer}>
-          <div className={styles.requiredKeyTitle}>tu khoa bat buoc:</div>
-          <div>{detailData.required_value_key[0]}</div>
-        </div>
-        <div className={styles.removedValueContainer}>
-          <div className={styles.removedKeyTitle}>tu khoa loai tru</div>
+          <div className={styles.requiredKeyTitle}>
+            bắt buộc:
+            <span> {values.required_keyword?.[0]}, ...</span>
+          </div>
+          <div className={styles.requiredKeyTitle}>
+            loại trừ:
+            <span> {values.exclusion_keyword}, ...</span>
+          </div>
         </div>
       </div>
     </div>
   );
+
+  function handleSelect() {}
 
   function renderTreeTitle(node: any) {
     return <TreeTitle {...node} isEditable={true} />;

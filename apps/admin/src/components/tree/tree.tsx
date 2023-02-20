@@ -1,46 +1,64 @@
 import { PlusCircleFilled } from "@ant-design/icons";
-import { Col, Row, Spin, Tree as TreeAntd } from "antd";
+import { Col, Row, Tree as TreeAntd } from "antd";
 import { DataNode } from "antd/lib/tree";
 import React from "react";
 
 import { TreeTitle } from "./tree-title";
 import styles from "./tree.module.less";
+import { ETreeAction, ETreeTag, useTreeStore } from "./tree.store";
 
 interface Props {
   treeData: DataNode[];
   title: string;
   isSpinning?: boolean;
-  onAdd?: () => void;
+
+  isEditable?: boolean;
+  tag: ETreeTag;
+
   onSelect?: (selectedKeys: React.Key[]) => void;
+  onClickTitle?: (_id: string) => void;
 }
 
-export const Tree: React.FC<Props> = ({ treeData, title, isSpinning, onAdd, onSelect }) => {
+export const Tree: React.FC<Props> = ({
+  treeData,
+  title,
+  tag,
+  isEditable = false,
+  onClickTitle,
+  onSelect,
+}) => {
+  const setValues = useTreeStore((state) => state.setValues);
+
   return (
-    <Spin spinning={isSpinning}>
-      <div className={styles.tree}>
-        <Row className={styles.title}>
-          <Col span={16} className={styles.text}>
-            {title}
+    <div className={styles.tree}>
+      <Row className={styles.title}>
+        <Col span={16} className={styles.text}>
+          {title}
+        </Col>
+        {isEditable && (
+          <Col span={8} className={styles.icon}>
+            <PlusCircleFilled onClick={handleAdd} />
           </Col>
-          {onAdd && (
-            <Col span={8} className={styles.icon}>
-              <PlusCircleFilled onClick={onAdd} />
-            </Col>
-          )}
-        </Row>
-        <TreeAntd
-          className={styles.treeAnt}
-          blockNode
-          selectable={!onAdd}
-          treeData={treeData}
-          titleRender={renderTreeTitle}
-          onSelect={onSelect}
-        />
-      </div>
-    </Spin>
+        )}
+      </Row>
+      <TreeAntd
+        className={styles.treeAnt}
+        blockNode
+        selectable={!isEditable}
+        treeData={treeData}
+        titleRender={(node: any) => (
+          <TreeTitle {...node} isEditable={isEditable} onClick={onClickTitle} tag={tag} />
+        )}
+        onSelect={onSelect}
+      />
+    </div>
   );
 
-  function renderTreeTitle(node: any) {
-    return <TreeTitle {...node} isEditable={!!onAdd} />;
+  function handleAdd() {
+    setValues({
+      tag,
+      action: ETreeAction.CREATE,
+      data: null,
+    });
   }
 };

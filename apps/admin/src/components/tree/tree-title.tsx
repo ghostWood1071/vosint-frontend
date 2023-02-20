@@ -1,18 +1,27 @@
 import { DeleteOutlined, EditOutlined, EllipsisOutlined, PlusOutlined } from "@ant-design/icons";
-import { Col, Input, Modal, Row, Space, Tooltip, TreeDataNode, Typography } from "antd";
+import { Col, Row, Space, Tooltip, TreeDataNode, Typography } from "antd";
+import { pick } from "lodash";
 import React, { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useClickAway } from "react-use";
 
 import styles from "./tree-title.module.less";
+import { ETreeAction, ETreeTag, useTreeStore } from "./tree.store";
 
 const { Paragraph } = Typography;
 
 interface Props extends TreeDataNode {
   isEditable?: boolean;
+  _id: string;
+  title: string;
+  onClick?: (_id: string) => void;
+  tag: ETreeTag;
 }
 
-export const TreeTitle: React.FC<Props> = (node) => {
+export const TreeTitle: React.FC<Props> = ({ onClick, children, isEditable, ...node }) => {
+  const setValues = useTreeStore((state) => state.setValues);
+
+  // TODO: update translation
   const { t } = useTranslation("translation", { keyPrefix: "news" });
   const [isOpen, setIsOpen] = useState(false);
   const ref = useRef(null);
@@ -22,11 +31,11 @@ export const TreeTitle: React.FC<Props> = (node) => {
   return (
     <Row className={styles.treeTitle}>
       <Col span={16}>
-        <Paragraph ellipsis={{ rows: 1 }} className={styles.paragraph}>
+        <Paragraph ellipsis={{ rows: 1 }} className={styles.paragraph} onClick={handleClick}>
           {node.title?.toString()}
         </Paragraph>
       </Col>
-      {node.isEditable && (
+      {isEditable && (
         <Col span={8} className={styles.menu} ref={ref}>
           {isOpen ? (
             <Space>
@@ -48,6 +57,10 @@ export const TreeTitle: React.FC<Props> = (node) => {
     </Row>
   );
 
+  function handleClick() {
+    onClick?.(node._id);
+  }
+
   function handleClickAway() {
     setIsOpen(false);
   }
@@ -57,33 +70,32 @@ export const TreeTitle: React.FC<Props> = (node) => {
   }
 
   function handleAdd() {
-    Modal.confirm({
-      title: t("add_basket"),
-      content: <Input placeholder="Tên giỏ tin" />,
-      getContainer: "#modal-mount",
-      okText: "Thêm",
-      cancelText: "Huỷ",
-      onOk: function () {},
+    setValues({
+      tag: node.tag,
+      action: ETreeAction.CREATE,
+      data: {
+        parent_id: node._id,
+      },
     });
   }
 
   function handleEdit() {
-    Modal.confirm({
-      title: t("update_basket"),
-      content: <Input placeholder="Tên giỏ tin" defaultValue={node.title?.toString()} />,
-      getContainer: "#modal-mount",
-      okText: "Sửa",
-      cancelText: "Huỷ",
-      onOk: function () {},
+    const data = pick(node, ["title", "_id", "required_keyword", "exclusion_keyword"]);
+
+    setValues({
+      tag: node.tag,
+      action: ETreeAction.UPDATE,
+      data,
     });
   }
 
   function handleDelete() {
-    Modal.warning({
-      title: t("confirm_delete_news_basket"),
-      content: node.title?.toString(),
-      getContainer: "#modal-mount",
-      onOk: function () {},
+    const data = pick(node, ["title", "_id", "required_keyword", "exclusion_keyword"]);
+
+    setValues({
+      tag: node.tag,
+      action: ETreeAction.DELETE,
+      data: data,
     });
   }
 };

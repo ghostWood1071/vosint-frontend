@@ -1,6 +1,8 @@
+import { ETreeAction, ETreeTag, useTreeStore } from "@/components/tree/tree.store";
 import { DeleteOutlined, EditOutlined, FolderOutlined, PlusOutlined } from "@ant-design/icons";
-import { Col, Input, Modal, Row, Space, Tooltip, TreeDataNode, Typography } from "antd";
-import React, { useRef } from "react";
+import { Col, Row, Space, Tooltip, TreeDataNode, Typography } from "antd";
+import { pick } from "lodash";
+import React from "react";
 
 import styles from "./tree-title.module.less";
 
@@ -8,11 +10,15 @@ const { Paragraph } = Typography;
 
 interface Props extends TreeDataNode {
   isEditable?: boolean;
+  _id: string;
+  title: string;
+  onClick?: (_id: string) => void;
+  tag: ETreeTag;
 }
 
 export const TreeTitle: React.FC<Props> = (node) => {
-  const ref = useRef(null);
-  console.log(node);
+  const setValues = useTreeStore((state) => state.setValues);
+
   return (
     <Row className={styles.treeTitle}>
       <Col span={2}>
@@ -24,7 +30,7 @@ export const TreeTitle: React.FC<Props> = (node) => {
         </Paragraph>
       </Col>
 
-      <Col span={8} className={styles.menu} ref={ref}>
+      <Col span={8} className={styles.menu}>
         <Space>
           <Tooltip title={"Thêm danh mục"}>
             <PlusOutlined onClick={handleAdd} className={styles.add} />
@@ -41,33 +47,32 @@ export const TreeTitle: React.FC<Props> = (node) => {
   );
 
   function handleAdd() {
-    Modal.confirm({
-      title: "Thêm danh mục",
-      content: <Input placeholder="Tên danh mục" />,
-      getContainer: "#modal-mount",
-      okText: "Thêm",
-      cancelText: "Huỷ",
-      onOk: function () {},
+    setValues({
+      tag: node.tag,
+      action: ETreeAction.CREATE,
+      data: {
+        parent_id: node._id,
+      },
     });
   }
 
   function handleEdit() {
-    Modal.confirm({
-      title: "Cập nhật danh mục",
-      content: <Input placeholder="Tên danh mục" defaultValue={node.title?.toString()} />,
-      getContainer: "#modal-mount",
-      okText: "Sửa",
-      cancelText: "Huỷ",
-      onOk: function () {},
+    const data = pick(node, ["title", "_id", "required_keyword", "exclusion_keyword"]);
+
+    setValues({
+      tag: node.tag,
+      action: ETreeAction.UPDATE,
+      data,
     });
   }
 
   function handleDelete() {
-    Modal.warning({
-      title: "Xoá danh mục",
-      content: node.title?.toString(),
-      getContainer: "#modal-mount",
-      onOk: function () {},
+    const data = pick(node, ["title", "_id", "required_keyword", "exclusion_keyword"]);
+
+    setValues({
+      tag: node.tag,
+      action: ETreeAction.DELETE,
+      data: data,
     });
   }
 };
