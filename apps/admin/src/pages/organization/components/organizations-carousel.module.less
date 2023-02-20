@@ -1,0 +1,27 @@
+.description {
+  padding: 8px;
+}
+
+.row {
+  height: 100%;
+  border-right: 1px solid gray;
+
+  & > * + * {
+    border-bottom: 1px solid gray;
+  }
+}
+
+.card {
+  background-color: white;
+  padding: 4px;
+  border: 1px solid gray;
+}
+
+.card-tiny {
+  background-color: white;
+  padding: 8px;
+  height: 100%;
+  flex-direction: column;
+  border-top: 1px solid gray;
+  border-right: 1px;
+}

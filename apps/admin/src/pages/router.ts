@@ -13,6 +13,8 @@ export const newsPath = "/news";
 export const getNewsDetailUrl = (id: string | number) => `/news/${id}`;
 
 export const organizationPath = "/organization";
+export const getOrganizationsDetailUrl = (id: string | number) => `/organization/${id}`;
+export const organizationGraphPath = "/organization/international-relationship-graph";
 
 export const socialPath = "/social";
 export const socialDashboardPath = "/social/dashboard";
