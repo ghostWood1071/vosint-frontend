@@ -4,6 +4,8 @@ export enum ETreeTag {
   CHU_DE = "chu_de",
   LINH_VUC = "linh_vuc",
   GIO_TIN = "gio_tin",
+  QUAN_TRONG = "quan_trong",
+  DANH_DAU = "danh_dau",
 }
 
 export enum ETreeAction {

@@ -1,6 +1,8 @@
 import { Col, Input, List, Row } from "antd";
 import React from "react";
+
 import styles from "./graph-list.module.less";
+
 const { Search } = Input;
 const data = [
   {

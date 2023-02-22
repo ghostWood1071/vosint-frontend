@@ -39,35 +39,25 @@ export const NewsForm: React.FC<Props> = ({ onFinish, confirmLoading }) => {
     return null;
   }
 
-  if (tag === ETreeTag.GIO_TIN) {
-    return (
-      <Modal
-        title={t(action!) + t(tag)}
-        open={action !== null}
-        destroyOnClose
-        confirmLoading={confirmLoading}
-        onOk={handleOk}
-        onCancel={handleCancel}
-      >
+  return (
+    <Modal
+      title={t(action!) + t(tag!)}
+      open={action !== null}
+      confirmLoading={confirmLoading}
+      onOk={handleOk}
+      onCancel={handleCancel}
+      maskClosable={false}
+      destroyOnClose
+    >
+      {tag === ETreeTag.GIO_TIN && (
         <Form form={form} initialValues={initialValues ?? {}} preserve={false}>
           <Form.Item name="title">
             <Input placeholder="Nhập tên giỏ tin" disabled={action === ETreeAction.DELETE} />
           </Form.Item>
         </Form>
-      </Modal>
-    );
-  }
+      )}
 
-  if (tag === ETreeTag.CHU_DE || tag === ETreeTag.LINH_VUC) {
-    return (
-      <Modal
-        title={t(action!) + t(tag)}
-        open={action !== null}
-        destroyOnClose
-        confirmLoading={confirmLoading}
-        onOk={handleOk}
-        onCancel={handleCancel}
-      >
+      {(tag === ETreeTag.CHU_DE || tag === ETreeTag.LINH_VUC) && (
         <Form
           form={form}
           initialValues={initialValues ?? {}}
@@ -79,7 +69,7 @@ export const NewsForm: React.FC<Props> = ({ onFinish, confirmLoading }) => {
             name={"title"}
             rules={[{ message: "Hãy nhập vào tên danh mục!" }]}
           >
-            <Input />
+            <Input placeholder="Nhập tên danh mục" disabled={action === ETreeAction.DELETE} />
           </Form.Item>
           <Form.List
             name="required_keyword"
@@ -114,7 +104,11 @@ export const NewsForm: React.FC<Props> = ({ onFinish, confirmLoading }) => {
                       ]}
                       noStyle
                     >
-                      <Input style={{ width: "80%" }} />
+                      <Input
+                        placeholder="Các từ phân tách nhau bởi dấu phẩy"
+                        disabled={action === ETreeAction.DELETE}
+                        style={{ width: "80%" }}
+                      />
                     </Form.Item>
 
                     {fields.length > 1 ? (
@@ -134,6 +128,7 @@ export const NewsForm: React.FC<Props> = ({ onFinish, confirmLoading }) => {
                     onClick={() => add()}
                     style={{ width: "80%" }}
                     icon={<PlusOutlined />}
+                    disabled={action === ETreeAction.DELETE}
                   >
                     Thêm từ khoá bắt buộc
                   </Button>
@@ -142,14 +137,15 @@ export const NewsForm: React.FC<Props> = ({ onFinish, confirmLoading }) => {
             )}
           </Form.List>
           <Form.Item label="Từ khoá loại trừ" name={"exclusion_keyword"}>
-            <Input />
+            <Input
+              placeholder="Các từ phân tách nhau bởi dấu phẩy"
+              disabled={action === ETreeAction.DELETE}
+            />
           </Form.Item>
         </Form>
-      </Modal>
-    );
-  }
-
-  return null;
+      )}
+    </Modal>
+  );
 
   function handleOk() {
     const values = form.getFieldsValue();
@@ -163,6 +159,7 @@ export const NewsForm: React.FC<Props> = ({ onFinish, confirmLoading }) => {
   }
 
   function handleCancel() {
+    form.resetFields();
     setValues({
       tag: null,
       action: null,

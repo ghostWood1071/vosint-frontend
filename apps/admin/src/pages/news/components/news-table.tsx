@@ -2,11 +2,12 @@
 import { generateExternalLink } from "@/utils/href";
 import {
   BellTwoTone,
+  ExclamationCircleOutlined,
   MinusCircleTwoTone,
   ShoppingCartOutlined,
   StarTwoTone,
 } from "@ant-design/icons";
-import { Space, Table, TableColumnsType, Tooltip, Typography, message } from "antd";
+import { Modal, Space, Table, TableColumnsType, Tooltip, Typography, message } from "antd";
 import { truncate } from "lodash";
 import qs from "query-string";
 import React from "react";
@@ -19,9 +20,17 @@ interface Props {
   dataSource?: any[];
   total_record: number;
   isLoading?: boolean;
+  isDeleting?: boolean;
+  onDelete?: (id: string) => void;
 }
 
-export const NewsTable: React.FC<Props> = ({ dataSource, total_record, isLoading }) => {
+export const NewsTable: React.FC<Props> = ({
+  dataSource,
+  total_record,
+  isLoading,
+  isDeleting,
+  onDelete,
+}) => {
   const { setNewsIds, setShow } = useNewsStore(
     (state) => ({
       setNewsIds: state.setNewsIds,
@@ -92,7 +101,6 @@ export const NewsTable: React.FC<Props> = ({ dataSource, total_record, isLoading
     {
       key: "url",
       dataIndex: "data:url",
-      // width: 400,
       render: (url) => (
         <a href={generateExternalLink(url)} target="_blank" rel="noreferrer">
           {truncate(url, { length: 30 })}
@@ -103,23 +111,36 @@ export const NewsTable: React.FC<Props> = ({ dataSource, total_record, isLoading
       key: "date",
       dataIndex: "data:time",
     },
-    {
+  ];
+
+  if (onDelete) {
+    columns.push({
       key: "id",
       dataIndex: "_id",
       align: "center",
-      render: (id) => {
+      render: (id, record) => {
         return (
-          <Tooltip title="Xoá bản tin">
-            <MinusCircleTwoTone onClick={handleRemove} twoToneColor="#ff1207" />
-          </Tooltip>
+          <MinusCircleTwoTone
+            twoToneColor="#ff1207"
+            title="Xoá bản tin khỏi giỏ"
+            onClick={handleRemove}
+          />
         );
 
         function handleRemove() {
-          console.debug("debug--id", id);
+          Modal.confirm({
+            title: "Bạn có muốn xoá bản tin này?",
+            icon: <ExclamationCircleOutlined />,
+            content: `Titls: ${record["data:title"]}`,
+            onOk() {
+              return onDelete?.(id);
+            },
+            onCancel() {},
+          });
         }
       },
-    },
-  ];
+    });
+  }
 
   const rowSelection = {
     onChange: (selected: any) => {

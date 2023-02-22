@@ -1,16 +1,16 @@
 import {
   addNewsIdsToNewsletter,
   addNewsletter,
+  deleteNewsIdInNewsletter,
   deleteNewsletter,
   getNewsDetail,
   getNewsList,
   getNewsSidebar,
   updateNewsletter,
 } from "@/services/news.service";
-import { message } from "antd";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 
-import { ETreeAction } from "../../components/tree/tree.store";
+import { ETreeAction, ETreeTag } from "../../components/tree/tree.store";
 
 export const CACHE_KEYS = {
   NewsSidebar: "NEWS_SIDEBAR",
@@ -27,7 +27,9 @@ export const useNewsList = (filter: any) => {
 };
 
 export const useNewsDetail = (id: string, filter: any) => {
-  return useQuery([CACHE_KEYS.NewsList, id, filter], () => getNewsDetail(id, filter));
+  return useQuery([CACHE_KEYS.NewsList, id, filter], () => getNewsDetail(id, filter), {
+    enabled: id !== ETreeTag.QUAN_TRONG && id !== ETreeTag.DANH_DAU,
+  });
 };
 
 export const useMutationNewsSidebar = () => {
@@ -66,15 +68,36 @@ export const useDeleteNewsletter = () => {
   });
 };
 
-export const useNewsIdToNewsletter = () => {
-  // const queryClient = useQueryClient();
+export const useNewsIdToNewsletter = (id: string, filter?: any) => {
+  const queryClient = useQueryClient();
   return useMutation(
-    ({ newsletterId, newsIds }: { newsletterId: string; newsIds: string[] }) =>
-      addNewsIdsToNewsletter(newsletterId, newsIds),
+    ({ newsletterId, newsIds }: { newsletterId: string; newsIds: string[] }) => {
+      if (newsletterId === ETreeTag.DANH_DAU) {
+        return new Promise(() => "pending...");
+      }
+
+      if (newsletterId === ETreeTag.QUAN_TRONG) {
+        return new Promise(() => "pending...");
+      }
+
+      return addNewsIdsToNewsletter(newsletterId, newsIds);
+    },
     {
       onSuccess: () => {
-        message.success("Thêm tin vào giỏ thành công");
-        // queryClient.invalidateQueries(CACHE_KEYS.NewsSidebar);
+        queryClient.invalidateQueries([CACHE_KEYS.NewsList, id, filter]);
+      },
+    },
+  );
+};
+
+export const useDeleteNewsInNewsletter = (id: string, filter?: any) => {
+  const queryClient = useQueryClient();
+
+  return useMutation<any, any, { newsletterId: string; newsId: string[] }>(
+    ({ newsletterId, newsId }) => deleteNewsIdInNewsletter(newsletterId, newsId),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries([CACHE_KEYS.NewsList, id, filter]);
       },
     },
   );

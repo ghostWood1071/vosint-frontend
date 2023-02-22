@@ -1,5 +1,6 @@
 import { Col, Row } from "antd";
 import React from "react";
+
 import { GraphList } from "../graph-list/graph-list";
 import { RelationshipGraph } from "../relationship-graph/relationship-graph";
 
