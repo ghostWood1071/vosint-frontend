@@ -47,3 +47,11 @@ export const updateNewsletter = async (newsletterId: string, newsletter: any) =>
   );
   return result.data;
 };
+
+export const deleteNewsIdInNewsletter = async (newsletterId: string, newsIds: string[]) => {
+  const result = await apiClient.put<any>(
+    `${apiNewsBaseV2Url}/newsletters/${newsletterId}/news`,
+    newsIds,
+  );
+  return result.data;
+};

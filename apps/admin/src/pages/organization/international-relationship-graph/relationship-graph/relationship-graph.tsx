@@ -1,6 +1,7 @@
-import React, { useState } from "react";
-import { Button, Col, Row, Select, Space, Image, Modal, message, Input } from "antd";
 import { EditTwoTone, PlusCircleTwoTone, SaveTwoTone } from "@ant-design/icons";
+import { Button, Col, Image, Input, Modal, Row, Select, Space, message } from "antd";
+import React, { useState } from "react";
+
 import styles from "./relationship-graph.module.less";
 
 export const RelationshipGraph = () => {

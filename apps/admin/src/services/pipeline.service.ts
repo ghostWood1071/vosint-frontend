@@ -3,7 +3,8 @@ import { apiClient, filterEmptyString } from "@/utils/api";
 import { IActionInfos, IPipeline, IPipelines } from "./pipeline.types";
 import { APIResponse } from "./service.types";
 
-const apiPipelineBaseUrl = "/pipeline/api";
+const apiPipelineBaseUrl = "/v2/Pipeline/api";
+const apiJobBaseUrl = "/v2/Job/api";
 
 export const getPipelines = async (filter: any) => {
   const url = `${apiPipelineBaseUrl}/get_pipelines`;
@@ -40,20 +41,20 @@ export const clonePipeline = async (id: string) => {
   return result.data.payload;
 };
 
-export const verifyPipeline = async (id: string) => {
-  const url = `${apiPipelineBaseUrl}/run_only_job/${id}`;
-  const result = await apiClient.post<APIResponse<any>>(url);
-  return result.data.payload;
-};
-
 export const deletePipeline = async (id: string) => {
   const url = `${apiPipelineBaseUrl}/delete_pipeline/${id}`;
   const result = await apiClient.delete<APIResponse<any>>(url);
   return result.data.payload;
 };
 
+export const verifyPipeline = async (id: string) => {
+  const url = `${apiJobBaseUrl}/run_only_job/${id}`;
+  const result = await apiClient.post<APIResponse<any>>(url);
+  return result.data.payload;
+};
+
 export const getHistory = async (id: string) => {
-  const url = `${apiPipelineBaseUrl}/get_log_history_error_or_getnews/${id}`;
+  const url = `${apiJobBaseUrl}/get_log_history_error_or_getnews/${id}`;
   const result = await apiClient.get<APIResponse<IPipeline>>(url);
   return result.data;
 };

@@ -44,7 +44,7 @@ export const Tree: React.FC<Props> = ({
       <TreeAntd
         className={styles.treeAnt}
         blockNode
-        selectable={!isEditable}
+        selectable={!isEditable && tag !== ETreeTag.LINH_VUC}
         treeData={treeData}
         titleRender={(node: any) => (
           <TreeTitle {...node} isEditable={isEditable} onClick={onClickTitle} tag={tag} />

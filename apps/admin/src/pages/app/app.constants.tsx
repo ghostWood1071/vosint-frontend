@@ -10,12 +10,12 @@ import {
   SocialIcon,
 } from "@/assets/svg";
 import {
+  analysisPath,
   appPath,
   configPath,
   databasePath,
   newsPath,
   organizationPath,
-  pipelineInformationGathering,
   reportPath,
   socialPath,
   sourceConfigPath,
@@ -43,7 +43,7 @@ export const NAVBAR_HEADER = [
   },
   {
     title: "Analysis",
-    to: pipelineInformationGathering,
+    to: analysisPath,
     icon: <AnalysisIcon />,
   },
   {

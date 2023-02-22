@@ -39,13 +39,13 @@ export const TreeTitle: React.FC<Props> = ({ onClick, children, isEditable, ...n
         <Col span={8} className={styles.menu} ref={ref}>
           {isOpen ? (
             <Space>
-              <Tooltip title={t("add_basket")}>
+              <Tooltip title={t(ETreeAction.CREATE) + t(node.tag)}>
                 <PlusOutlined onClick={handleAdd} className={styles.add} />
               </Tooltip>
-              <Tooltip title={t("update_basket")}>
+              <Tooltip title={t(ETreeAction.UPDATE) + t(node.tag)}>
                 <EditOutlined onClick={handleEdit} className={styles.edit} />
               </Tooltip>
-              <Tooltip title={t("delete_basket")}>
+              <Tooltip title={t(ETreeAction.DELETE) + t(node.tag)}>
                 <DeleteOutlined onClick={handleDelete} className={styles.delete} />
               </Tooltip>
             </Space>

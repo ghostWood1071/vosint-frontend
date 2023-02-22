@@ -1,4 +1,5 @@
 import React from "react";
+
 import { OrganizationsCarousel } from "../components/organizations-carousel";
 import { OrganizationsTable } from "../components/organizations-table";
 import { useNewsList } from "../organizations.loader";

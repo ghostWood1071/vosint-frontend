@@ -1,18 +1,25 @@
 import { Tree } from "@/components";
 import { ETreeTag } from "@/components/tree/tree.store";
-import { useNewsIdToNewsletter, useNewsSidebar } from "@/pages/news/news.loader";
+import {
+  useDeleteNewsInNewsletter,
+  useNewsIdToNewsletter,
+  useNewsSidebar,
+} from "@/pages/news/news.loader";
 import { useNewsStore } from "@/pages/news/news.store";
 import { buildTree } from "@/pages/news/news.utils";
 import {
   DoubleLeftOutlined,
   DoubleRightOutlined,
+  ExclamationCircleOutlined,
   MenuOutlined,
+  MinusCircleTwoTone,
   PlusCircleTwoTone,
 } from "@ant-design/icons";
 import { Button, Col, DatePicker, Input, Modal, Row, Select, Space, Tooltip } from "antd";
 import classNames from "classnames";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useParams, useSearchParams } from "react-router-dom";
 import shallow from "zustand/shallow";
 
 import { useSidebar } from "../app.store";
@@ -31,13 +38,42 @@ export function AppFilter(): JSX.Element {
     shallow,
   );
   const [newsletterId, setNewsletterId] = useState("");
+  let { newsletterId: detailIds } = useParams();
+  const [searchParams] = useSearchParams();
 
   function handlePin() {
     setPinned(!pinned);
   }
-  const { mutate, isLoading: isLoadingMutate } = useNewsIdToNewsletter();
+  const { mutate, isLoading: isLoadingMutate } = useNewsIdToNewsletter(detailIds ?? "", {
+    skip: searchParams.get("page_number") ?? 1,
+    limit: searchParams.get("page_size") ?? 10,
+  });
 
-  const gioTinTree = data?.gio_tin && buildTree(data.gio_tin);
+  const { mutateAsync: mutateDelete } = useDeleteNewsInNewsletter(detailIds ?? "", {
+    skip: searchParams.get("page_number") ?? 1,
+    limit: searchParams.get("page_size") ?? 10,
+  });
+
+  const gioTinTree =
+    data?.gio_tin &&
+    buildTree([
+      {
+        _id: ETreeTag.QUAN_TRONG,
+        title: "Tin Quan Trọng",
+        tag: ETreeTag.QUAN_TRONG,
+      },
+      {
+        _id: ETreeTag.DANH_DAU,
+        title: "Tin đánh dấu",
+        tag: ETreeTag.DANH_DAU,
+      },
+      {
+        _id: ETreeTag.GIO_TIN,
+        title: "Giỏ tin",
+        tag: ETreeTag.GIO_TIN,
+      },
+      ...data.gio_tin.map((i: any) => ({ ...i, parent_id: i?.parent_id ?? ETreeTag.GIO_TIN })),
+    ]);
 
   return (
     <>
@@ -62,11 +98,14 @@ export function AppFilter(): JSX.Element {
           </Tooltip>
         </Col>
         <Col span={20}>
-          <Space>
+          <Space wrap>
             <DatePicker.RangePicker />
-            <Select placeholder="Dịch" />
+            <Select placeholder="Dịch" defaultValue="nuoc-ngoai">
+              <Select.Option key="nuoc-ngoai">Dịch tiếng nước ngoài</Select.Option>
+              <Select.Option key="nguon">Hiển thị ngôn ngữ nguồn</Select.Option>
+            </Select>
             <Select placeholder="Điểm tin" />
-            <Button>Tóm tắt đa tin (1)</Button>
+            <Button disabled={newsIds.length === 0}>Tóm tắt đa tin ({newsIds.length})</Button>
             <Search placeholder="Từ khoá" />
             <Select placeholder="Kiểu danh sách" />
             <Button
@@ -76,12 +115,23 @@ export function AppFilter(): JSX.Element {
             >
               Thêm tin
             </Button>
+
+            {detailIds && (
+              <Button
+                icon={<MinusCircleTwoTone twoToneColor="#ff4d4f" />}
+                danger
+                disabled={newsIds.length === 0}
+                onClick={handleRemoveNewsIds}
+              >
+                Xoá tin
+              </Button>
+            )}
+
             <Button type="primary">Xuất file dữ liệu</Button>
           </Space>
         </Col>
       </Row>
 
-      {/* TODO: Need move to module news */}
       <Modal
         title={"Thêm tin vào giỏ tin"}
         open={show}
@@ -89,13 +139,13 @@ export function AppFilter(): JSX.Element {
         onCancel={handleCancel}
         getContainer="#modal-mount"
         okText="Thêm"
-        okButtonProps={{ disabled: !newsletterId }}
+        okButtonProps={{ disabled: !newsletterId || newsletterId === ETreeTag.GIO_TIN }}
         confirmLoading={isLoadingMutate}
         destroyOnClose
       >
         <Tree
           isSpinning={isLoading}
-          title={"Giỏ tin"}
+          title={""}
           treeData={gioTinTree}
           onSelect={handleSelect}
           tag={ETreeTag.GIO_TIN}
@@ -106,10 +156,25 @@ export function AppFilter(): JSX.Element {
 
   function handleCancel() {
     setShow(false);
+    setNewsletterId("");
   }
 
   function handleAddBasket() {
     setShow(true);
+  }
+
+  function handleRemoveNewsIds() {
+    Modal.confirm({
+      title: "Bạn có muốn xoá những bản tin này?",
+      icon: <ExclamationCircleOutlined />,
+      onOk() {
+        return mutateDelete({
+          newsId: newsIds,
+          newsletterId: detailIds!,
+        });
+      },
+      onCancel() {},
+    });
   }
 
   function handleOK() {

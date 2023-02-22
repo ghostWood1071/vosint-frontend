@@ -2,7 +2,8 @@ import { AppContainer } from "@/pages/app";
 import { buildTree } from "@/pages/news/news.utils";
 import { getNewsDetailUrl } from "@/pages/router";
 import { Space } from "antd";
-import { Outlet, useNavigate } from "react-router-dom";
+import classNames from "classnames";
+import { NavLink, Outlet, useNavigate } from "react-router-dom";
 
 import { Tree } from "../../../components/tree";
 import { ETreeTag, useTreeStore } from "../../../components/tree/tree.store";
@@ -32,7 +33,7 @@ function Sidebar() {
 
   return (
     <>
-      <Space direction="vertical" className={styles.sidebar}>
+      <Space direction="vertical" className={styles.sidebar} size={16}>
         {gioTinTree && (
           <Tree
             title="Giỏ tin"
@@ -64,10 +65,23 @@ function Sidebar() {
             tag={ETreeTag.CHU_DE}
           />
         )}
+
+        <NavLink to={getNewsDetailUrl(ETreeTag.QUAN_TRONG)} className={handleActive}>
+          Tin quan trọng
+        </NavLink>
+
+        <NavLink to={getNewsDetailUrl(ETreeTag.DANH_DAU)} className={handleActive}>
+          Tin được đánh dấu
+        </NavLink>
       </Space>
       <NewsForm onFinish={handleFinish} confirmLoading={isMutateLoading} />
     </>
   );
+
+  function handleActive({ isActive }: { isActive: boolean }) {
+    console.log("🚀 ~ file: news-layout.tsx:82 ~ handleActive ~ isActive:", isActive);
+    return classNames(styles.text, { [styles.active]: isActive });
+  }
 
   function handleFinish(values: Record<string, any>) {
     mutate(values, {
