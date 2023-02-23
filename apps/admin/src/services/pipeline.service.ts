@@ -3,8 +3,8 @@ import { apiClient, filterEmptyString } from "@/utils/api";
 import { IActionInfos, IPipeline, IPipelines } from "./pipeline.types";
 import { APIResponse } from "./service.types";
 
-const apiPipelineBaseUrl = "/v2/Pipeline/api";
-const apiJobBaseUrl = "/v2/Job/api";
+const apiPipelineBaseUrl = "/pipeline/Pipeline/api";
+const apiJobBaseUrl = "/pipeline/Job/api";
 
 export const getPipelines = async (filter: any) => {
   const url = `${apiPipelineBaseUrl}/get_pipelines`;
