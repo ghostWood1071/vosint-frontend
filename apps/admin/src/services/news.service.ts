@@ -55,3 +55,20 @@ export const deleteNewsIdInNewsletter = async (newsletterId: string, newsIds: st
   );
   return result.data;
 };
+
+export const getNewsBookmarks = async (filter: Record<string, string>) => {
+  const result = await apiClient.get(`${apiNewsBaseV2Url}/user/bookmarks`, {
+    params: filterEmptyString(filter),
+  });
+  return result.data;
+};
+
+export const addNewsToBookmarkUser = async (newsIds: string[]) => {
+  const result = await apiClient.post<any>(`${apiNewsBaseV2Url}/user/bookmarks`, newsIds);
+  return result;
+};
+
+export const deleteNewsInBookmarkUser = async (newsIds: string[]) => {
+  const result = await apiClient.put<any>(`${apiNewsBaseV2Url}/user/bookmarks`, newsIds);
+  return result;
+};
