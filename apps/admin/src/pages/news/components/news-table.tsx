@@ -1,4 +1,5 @@
 // import { DownNewsIcon, UpNewsIcon } from "@/assets/svg";
+import { ETreeTag } from "@/components/tree/tree.store";
 import { generateExternalLink } from "@/utils/href";
 import {
   BellTwoTone,
@@ -7,7 +8,7 @@ import {
   ShoppingCartOutlined,
   StarTwoTone,
 } from "@ant-design/icons";
-import { Modal, Space, Table, TableColumnsType, Tooltip, Typography, message } from "antd";
+import { Modal, Space, Table, TableColumnsType, Tooltip, Typography } from "antd";
 import { truncate } from "lodash";
 import qs from "query-string";
 import React from "react";
@@ -20,16 +21,18 @@ interface Props {
   dataSource?: any[];
   total_record: number;
   isLoading?: boolean;
-  isDeleting?: boolean;
-  onDelete?: (id: string) => void;
+  type?: "edit";
+  onDelete?: (id: string, tag?: ETreeTag) => void;
+  onAdd?: (id: string, tag: ETreeTag) => void;
 }
 
 export const NewsTable: React.FC<Props> = ({
   dataSource,
   total_record,
   isLoading,
-  isDeleting,
+  type,
   onDelete,
+  onAdd,
 }) => {
   const { setNewsIds, setShow } = useNewsStore(
     (state) => ({
@@ -55,9 +58,11 @@ export const NewsTable: React.FC<Props> = ({
       dataIndex: "data:title",
       ellipsis: true,
       width: "30%",
+      title: "Tiêu đề",
       render: (title, { id }) => <Typography.Link>{title}</Typography.Link>,
     },
     {
+      title: "Hành động",
       key: "title",
       dataIndex: "_id",
       align: "center",
@@ -68,11 +73,15 @@ export const NewsTable: React.FC<Props> = ({
         }
 
         function handleClickBell() {
-          record.isBell ? message.warning("Xoá thành công") : message.success("Thêm thành công");
+          record.isBell
+            ? onDelete?.(record._id, ETreeTag.QUAN_TRONG)
+            : onAdd?.(record._id, ETreeTag.QUAN_TRONG);
         }
 
         function handleClickStar() {
-          record.isStar ? message.warning("Xoá thành công") : message.success("Thêm thành công");
+          record.isStar
+            ? onDelete?.(record._id, ETreeTag.DANH_DAU)
+            : onAdd?.(record._id, ETreeTag.DANH_DAU);
         }
 
         return (
@@ -99,6 +108,7 @@ export const NewsTable: React.FC<Props> = ({
       },
     },
     {
+      title: "Url",
       key: "url",
       dataIndex: "data:url",
       render: (url) => (
@@ -108,12 +118,13 @@ export const NewsTable: React.FC<Props> = ({
       ),
     },
     {
+      title: "Thời gian",
       key: "date",
       dataIndex: "data:time",
     },
   ];
 
-  if (onDelete) {
+  if (type === "edit") {
     columns.push({
       key: "id",
       dataIndex: "_id",
@@ -131,7 +142,7 @@ export const NewsTable: React.FC<Props> = ({
           Modal.confirm({
             title: "Bạn có muốn xoá bản tin này?",
             icon: <ExclamationCircleOutlined />,
-            content: `Titls: ${record["data:title"]}`,
+            content: `${record["data:title"]}`,
             onOk() {
               return onDelete?.(id);
             },
@@ -155,7 +166,7 @@ export const NewsTable: React.FC<Props> = ({
   return (
     <Table
       rowKey="_id"
-      showHeader={false}
+      // showHeader={false}
       pagination={{
         position: ["bottomCenter"],
         total: total_record,

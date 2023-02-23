@@ -79,7 +79,6 @@ function Sidebar() {
   );
 
   function handleActive({ isActive }: { isActive: boolean }) {
-    console.log("🚀 ~ file: news-layout.tsx:82 ~ handleActive ~ isActive:", isActive);
     return classNames(styles.text, { [styles.active]: isActive });
   }
 
