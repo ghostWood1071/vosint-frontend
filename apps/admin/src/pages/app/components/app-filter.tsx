@@ -19,7 +19,7 @@ import { Button, Col, DatePicker, Input, Modal, Row, Select, Space, Tooltip } fr
 import classNames from "classnames";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useParams, useSearchParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import shallow from "zustand/shallow";
 
 import { useSidebar } from "../app.store";
@@ -39,20 +39,13 @@ export function AppFilter(): JSX.Element {
   );
   const [newsletterId, setNewsletterId] = useState("");
   let { newsletterId: detailIds } = useParams();
-  const [searchParams] = useSearchParams();
 
   function handlePin() {
     setPinned(!pinned);
   }
-  const { mutate, isLoading: isLoadingMutate } = useNewsIdToNewsletter(detailIds ?? "", {
-    skip: searchParams.get("page_number") ?? 1,
-    limit: searchParams.get("page_size") ?? 10,
-  });
+  const { mutate, isLoading: isLoadingMutate } = useNewsIdToNewsletter();
 
-  const { mutateAsync: mutateDelete } = useDeleteNewsInNewsletter(detailIds ?? "", {
-    skip: searchParams.get("page_number") ?? 1,
-    limit: searchParams.get("page_size") ?? 10,
-  });
+  const { mutateAsync: mutateDelete } = useDeleteNewsInNewsletter();
 
   const gioTinTree =
     data?.gio_tin &&

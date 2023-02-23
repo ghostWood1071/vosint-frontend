@@ -1,13 +1,17 @@
 import {
+  addNewsToBookmarkUser as addNewsIdsToBookmarkUser,
   addNewsIdsToNewsletter,
   addNewsletter,
   deleteNewsIdInNewsletter,
+  deleteNewsInBookmarkUser,
   deleteNewsletter,
+  getNewsBookmarks,
   getNewsDetail,
   getNewsList,
   getNewsSidebar,
   updateNewsletter,
 } from "@/services/news.service";
+import { message } from "antd";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 
 import { ETreeAction, ETreeTag } from "../../components/tree/tree.store";
@@ -27,8 +31,12 @@ export const useNewsList = (filter: any) => {
 };
 
 export const useNewsDetail = (id: string, filter: any) => {
-  return useQuery([CACHE_KEYS.NewsList, id, filter], () => getNewsDetail(id, filter), {
-    enabled: id !== ETreeTag.QUAN_TRONG && id !== ETreeTag.DANH_DAU,
+  return useQuery([CACHE_KEYS.NewsList, id, filter], () => {
+    if (id === ETreeTag.DANH_DAU) {
+      return getNewsBookmarks(filter);
+    }
+
+    return getNewsDetail(id, filter);
   });
 };
 
@@ -68,12 +76,12 @@ export const useDeleteNewsletter = () => {
   });
 };
 
-export const useNewsIdToNewsletter = (id: string, filter?: any) => {
+export const useNewsIdToNewsletter = () => {
   const queryClient = useQueryClient();
   return useMutation(
     ({ newsletterId, newsIds }: { newsletterId: string; newsIds: string[] }) => {
       if (newsletterId === ETreeTag.DANH_DAU) {
-        return new Promise(() => "pending...");
+        return addNewsIdsToBookmarkUser(newsIds);
       }
 
       if (newsletterId === ETreeTag.QUAN_TRONG) {
@@ -84,20 +92,30 @@ export const useNewsIdToNewsletter = (id: string, filter?: any) => {
     },
     {
       onSuccess: () => {
-        queryClient.invalidateQueries([CACHE_KEYS.NewsList, id, filter]);
+        queryClient.invalidateQueries([CACHE_KEYS.NewsList]);
+        queryClient.invalidateQueries(["ME"]);
+        message.success("Thêm tin thành công");
       },
     },
   );
 };
 
-export const useDeleteNewsInNewsletter = (id: string, filter?: any) => {
+export const useDeleteNewsInNewsletter = () => {
   const queryClient = useQueryClient();
 
   return useMutation<any, any, { newsletterId: string; newsId: string[] }>(
-    ({ newsletterId, newsId }) => deleteNewsIdInNewsletter(newsletterId, newsId),
+    ({ newsletterId, newsId }) => {
+      if (newsletterId === ETreeTag.DANH_DAU) {
+        return deleteNewsInBookmarkUser(newsId);
+      }
+
+      return deleteNewsIdInNewsletter(newsletterId, newsId);
+    },
     {
       onSuccess: () => {
-        queryClient.invalidateQueries([CACHE_KEYS.NewsList, id, filter]);
+        queryClient.invalidateQueries([CACHE_KEYS.NewsList]);
+        queryClient.invalidateQueries(["ME"]);
+        message.success("Xoá tin thành công");
       },
     },
   );
