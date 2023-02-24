@@ -2,7 +2,6 @@ import {
   AnalysisIcon,
   AppIcon,
   DatabaseIcon,
-  DatabaseSettingIcon,
   NewsIcon,
   OrganizationIcon,
   ReportIcon,
@@ -11,14 +10,13 @@ import {
 } from "@/assets/svg";
 import {
   analysisPath,
-  appPath,
   configPath,
   databasePath,
   newsPath,
   organizationPath,
   reportPath,
   socialPath,
-  sourceConfigPath,
+  sourceGroupPath,
 } from "@/pages/router";
 
 export const DEFAULT_ENTITY_EXPLORER_WIDTH = 270;
@@ -58,17 +56,12 @@ export const NAVBAR_HEADER = [
   },
   {
     title: "App",
-    to: appPath,
+    to: sourceGroupPath,
     icon: <AppIcon />,
   },
   {
     title: "Configuration",
     to: configPath,
     icon: <SettingIcon />,
-  },
-  {
-    title: "Database setting",
-    to: sourceConfigPath,
-    icon: <DatabaseSettingIcon />,
   },
 ];

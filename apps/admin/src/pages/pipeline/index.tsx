@@ -19,24 +19,24 @@ export const DataProcessing = lazyLoad(
   },
 );
 
-export const InformationGathering = lazyLoad(
-  () => import("./views/information-gathering-list"),
-  (module) => module.InformationGatheringList,
+export const PipelineList = lazyLoad(
+  () => import("./views/pipeline-list"),
+  (module) => module.PipelineList,
   {
     fallback: <SplashScreen />,
   },
 );
 
-export const InformationGatheringCreate = lazyLoad(
-  () => import("./views/information-gathering-create"),
-  (module) => module.InformationGatheringCreate,
+export const PipelineCreate = lazyLoad(
+  () => import("./views/pipeline-create"),
+  (module) => module.PipelineCreate,
   {
     fallback: <SplashScreen />,
   },
 );
 
-export const InformationGatheringDetail = lazyLoad(
-  () => import("./views/information-gathering-detail"),
-  (module) => module.InformationGatheringDetail,
+export const PipelineDetail = lazyLoad(
+  () => import("./views/pipeline-detail"),
+  (module) => module.PipelineDetail,
   { fallback: <SplashScreen /> },
 );
