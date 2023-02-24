@@ -40,27 +40,26 @@ export const getReportSyntheticUrl = (reportId: string | number) => `/report/syn
 
 export const pipelineDashboardPath = "/pipeline/dashboard";
 export const pipelineDataProcessingPath = "/pipeline/data-processing";
-export const pipelineInformationGatheringCreatePath = "/pipeline/information-gathering/create";
-export const pipelineInformationGathering = "/pipeline/information-gathering";
-export const pipelineInformationGatheringDetail = "/pipeline/information-gathering/:id";
-export const getPipelineInformationGatheringUrl = (pipelineId: string | number) =>
+export const pipelineCreatePath = "/pipeline/information-gathering/create";
+export const pipelineListPath = "/pipeline/information-gathering";
+export const pipelineDetailPath = "/pipeline/information-gathering/:id";
+export const getPipelineDetailPath = (pipelineId: string | number) =>
   `/pipeline/information-gathering/${pipelineId}`;
 
 export const pipelinePath = pipelineDashboardPath;
 
 export const configPath = "/config";
-export const categoryNewsConfigPath = "/config/category-news-config";
-export const facebookConfigPath = "/config/facebook-config";
-export const tiktokConfigPath = "/config/tiktok-config";
-export const twitterConfigPath = "/config/twitter-config";
-export const gatheringDataConfigPath = "/config/gathering-data-config";
-
+export const newsCategoryConfigPath = "/config/news-category";
+export const facebookConfigPath = "/config/facebook";
+export const tiktokConfigPath = "/config/tiktok";
+export const twitterConfigPath = "/config/twitter";
+export const collectDataConfigPath = "/config/collect-data";
 export const proxyConfigPath = "/config/proxy-config";
-export const newsFromAccountsConfigPath = "/config/news-from-accounts-config";
-export const sourceNewsConfigPath = "/config/source-news-config";
+export const newsAccountConfigPath = "/config/news-account";
+export const newsSourceConfigPath = "/config/news-source";
 
-export const sourceConfigPath = "/source-config";
-export const userManagerListPath = "/source-config/user-manager";
+export const sourceConfigPath = "/config/news";
+export const userManagementPath = "/config/user";
 
 export const dashboardPathWithRole = (role: string) => {
   const roles: Record<string, string> = {
@@ -71,5 +70,5 @@ export const dashboardPathWithRole = (role: string) => {
   return roles[role];
 };
 
-export const appPath = "/list-app";
-export const SourceListPath = "/list-source";
+export const sourceGroupPath = "/source/group";
+export const sourceListPath = "/source/list";

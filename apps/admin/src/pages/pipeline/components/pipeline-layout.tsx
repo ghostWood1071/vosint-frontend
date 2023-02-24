@@ -2,7 +2,7 @@ import { AppContainer } from "@/pages/app";
 import {
   pipelineDashboardPath,
   pipelineDataProcessingPath,
-  pipelineInformationGathering,
+  pipelineListPath,
 } from "@/pages/router";
 import { Menu, MenuProps } from "antd";
 import React from "react";
@@ -24,7 +24,7 @@ const Sidebar = () => {
 
   const items: MenuProps["items"] = [
     { label: t("dashboard"), key: pipelineDashboardPath },
-    { label: t("information_gathering"), key: pipelineInformationGathering },
+    { label: t("information_gathering"), key: pipelineListPath },
     { label: t("data_processing"), key: pipelineDataProcessingPath },
   ];
 

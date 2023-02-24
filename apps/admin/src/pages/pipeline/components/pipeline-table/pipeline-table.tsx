@@ -1,6 +1,6 @@
 import { PipelineCloneIcon, PipelineHistoryIcon } from "@/assets/svg";
 import { SwitchCustom } from "@/components/";
-import { getPipelineInformationGatheringUrl } from "@/pages/router";
+import { getPipelineDetailPath } from "@/pages/router";
 import { IPipelines } from "@/services/pipeline.types";
 import Icon, { DeleteOutlined } from "@ant-design/icons";
 import { Button, Popconfirm, Space, Table, TableColumnsType, Tooltip } from "antd";
@@ -42,7 +42,7 @@ export const PipelineTable: React.FC<Props> = ({
       key: "name",
       dataIndex: "name",
       render: (name, { _id }) => {
-        return <Link to={getPipelineInformationGatheringUrl(_id)}>{name}</Link>;
+        return <Link to={getPipelineDetailPath(_id)}>{name}</Link>;
       },
     },
     {

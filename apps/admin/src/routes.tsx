@@ -6,58 +6,56 @@ import { AuthLayout } from "./pages/auth/";
 import { ForgotPasswordPage } from "./pages/auth/forgot-password/forgot-password";
 import { LoginPage } from "./pages/auth/login/login";
 import {
-  CategoryNewsConfig,
-  ConfigLayout,
+  CollectDataConfig,
+  ConfigurationLayout,
   FacebookConfig,
-  GatheringDataConfig,
-  NewsFromAccountsConfig,
+  NewsAccountConfig,
+  NewsCategoryConfig,
+  NewsSourceConfig,
   ProxyConfig,
-  SourceNewsConfig,
   TiktokConfig,
   TwitterConfig,
+  UserManagement,
 } from "./pages/configuration";
 import { DashboardLayout } from "./pages/dashboard/";
 import { AdminPage } from "./pages/dashboard/admin/admin.page";
 import { ExpertPage } from "./pages/dashboard/expert/expert.page";
 import { LeaderLayout } from "./pages/dashboard/leader/leader.page";
 import { ErrorBoundary } from "./pages/errors/error-boundary";
-import { ViewList } from "./pages/list-application";
-import { SourceList } from "./pages/list-source";
 import { NewsDetailPage, NewsLayout, NewsListPage } from "./pages/news";
 import { OrganizationsLayout, OrganizationsListPage } from "./pages/organization";
 import { InternationalRelationshipGraph } from "./pages/organization/international-relationship-graph/component/international-relationship-graph";
 import {
-  DashboardStatistics, // DataProcessing,
-  InformationGathering,
-  InformationGatheringCreate,
-  InformationGatheringDetail,
+  DashboardStatistics,
+  PipelineCreate,
+  PipelineDetail,
   PipelineLayout,
+  PipelineList,
 } from "./pages/pipeline";
 import { PeriodicReport, QuickReport, ReportLayout, SyntheticReport } from "./pages/reports";
 import {
-  SourceListPath,
   analysisPath,
-  appPath,
   authForgotPasswordPath,
   authLoginPath,
-  categoryNewsConfigPath,
+  collectDataConfigPath,
   configPath,
   dashboardAdminPath,
   dashboardExpertPath,
   dashboardLeaderPath,
   databasePath,
   facebookConfigPath,
-  gatheringDataConfigPath,
   homePath,
-  newsFromAccountsConfigPath,
+  newsAccountConfigPath,
+  newsCategoryConfigPath,
   newsPath,
+  newsSourceConfigPath,
   organizationGraphPath,
   organizationPath,
+  pipelineCreatePath,
   pipelineDashboardPath,
   pipelineDataProcessingPath,
-  pipelineInformationGathering,
-  pipelineInformationGatheringCreatePath,
-  pipelineInformationGatheringDetail,
+  pipelineDetailPath,
+  pipelineListPath,
   proxyConfigPath,
   reportPath,
   reportPeriodicPath,
@@ -70,11 +68,11 @@ import {
   socialPriorityObjectPath,
   socialTiktokPath,
   socialTwitterPath,
-  sourceConfigPath,
-  sourceNewsConfigPath,
+  sourceGroupPath,
+  sourceListPath,
   tiktokConfigPath,
   twitterConfigPath,
-  userManagerListPath,
+  userManagementPath,
 } from "./pages/router";
 import { Search } from "./pages/search/search.page";
 import {
@@ -85,10 +83,7 @@ import {
   Tiktok,
   Twitter,
 } from "./pages/social";
-import { SourceConfigList } from "./pages/source-config";
-import { SourceConfigLayout } from "./pages/source-config/components";
-import { SourceManaLayout } from "./pages/sourceManagerment/components";
-import { UserManagerList } from "./pages/user-manager";
+import { SourceGroup, SourceList, SourceManagementLayout } from "./pages/source";
 
 export const routers = createBrowserRouter([
   {
@@ -189,30 +184,18 @@ export const routers = createBrowserRouter([
             path: pipelineDataProcessingPath,
             element: <SplashScreen />,
           },
-          // {
-          //   path: pipelineInformationGathering,
-          //   element: <InformationGathering />,
-          // },
-          {
-            path: pipelineInformationGatheringCreatePath,
-            element: <InformationGatheringCreate />,
-          },
-          {
-            path: pipelineInformationGatheringDetail,
-            element: <InformationGatheringDetail />,
-          },
         ],
       },
       {
-        element: <ConfigLayout />,
+        element: <ConfigurationLayout />,
         children: [
           {
             path: configPath,
-            element: <Navigate to={categoryNewsConfigPath} />,
+            element: <Navigate to={newsCategoryConfigPath} />,
           },
           {
-            path: categoryNewsConfigPath,
-            element: <CategoryNewsConfig />,
+            path: newsCategoryConfigPath,
+            element: <NewsCategoryConfig />,
           },
           {
             path: facebookConfigPath,
@@ -227,50 +210,48 @@ export const routers = createBrowserRouter([
             element: <TwitterConfig />,
           },
           {
-            path: gatheringDataConfigPath,
-            element: <GatheringDataConfig />,
+            path: collectDataConfigPath,
+            element: <CollectDataConfig />,
           },
           {
             path: proxyConfigPath,
             element: <ProxyConfig />,
           },
           {
-            path: newsFromAccountsConfigPath,
-            element: <NewsFromAccountsConfig />,
+            path: newsAccountConfigPath,
+            element: <NewsAccountConfig />,
           },
           {
-            path: sourceNewsConfigPath,
-            element: <SourceNewsConfig />,
+            path: newsSourceConfigPath,
+            element: <NewsSourceConfig />,
           },
           {
-            path: pipelineInformationGathering,
-            element: <InformationGathering />,
-          },
-        ],
-      },
-
-      {
-        element: <SourceConfigLayout />,
-        children: [
-          {
-            path: sourceConfigPath,
-            element: <SourceConfigList />,
+            path: pipelineListPath,
+            element: <PipelineList />,
           },
           {
-            path: userManagerListPath,
-            element: <UserManagerList />,
+            path: pipelineCreatePath,
+            element: <PipelineCreate />,
+          },
+          {
+            path: pipelineDetailPath,
+            element: <PipelineDetail />,
+          },
+          {
+            path: userManagementPath,
+            element: <UserManagement />,
           },
         ],
       },
       {
-        element: <SourceManaLayout />,
+        element: <SourceManagementLayout />,
         children: [
           {
-            path: appPath,
-            element: <ViewList />,
+            path: sourceGroupPath,
+            element: <SourceGroup />,
           },
           {
-            path: SourceListPath,
+            path: sourceListPath,
             element: <SourceList />,
           },
         ],
