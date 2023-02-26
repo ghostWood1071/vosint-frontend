@@ -27,7 +27,7 @@ export const BodyCate: React.FC<Props> = ({
   const [choosedCate, setChoosedCate] = useState<any>(null);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [typeModal, setTypeModal] = useState("");
-  const data = dataTable;
+  const [data, setData] = useState(dataTable);
 
   function handleSearch(value: string) {
     // console.log(value);

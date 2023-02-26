@@ -1,7 +1,6 @@
 import { uploadFile } from "@/services/cate-config.service";
 import { Form, Input, Modal, Upload } from "antd";
 import type { RcFile, UploadFile, UploadProps } from "antd/es/upload/interface";
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 
 import styles from "./add-cate.module.less";
