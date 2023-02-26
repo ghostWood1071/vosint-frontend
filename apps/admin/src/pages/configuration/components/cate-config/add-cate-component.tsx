@@ -1,6 +1,5 @@
-import { uploadImage } from "@/services/cate-config.service";
-import { InboxOutlined, UploadOutlined } from "@ant-design/icons";
-import { Button, Form, Input, Modal, Upload } from "antd";
+import { uploadFile } from "@/services/cate-config.service";
+import { Form, Input, Modal, Upload } from "antd";
 import type { RcFile, UploadFile, UploadProps } from "antd/es/upload/interface";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
@@ -55,6 +54,10 @@ export const AddCateComponent: React.FC<Props> = ({
 
   const onChange: UploadProps["onChange"] = async ({ fileList: newFileList }) => {
     setFileList(newFileList);
+  };
+
+  const onRemove: UploadProps["onRemove"] = async () => {
+    setFileList([]);
   };
 
   const onPreview = async (file: UploadFile) => {
@@ -115,12 +118,7 @@ export const AddCateComponent: React.FC<Props> = ({
       const formDataa: any = new FormData();
       formDataa.append("file", newFile);
 
-      const result = await axios.post("http://0.0.0.0:6082/upload/", formDataa, {
-        headers: {
-          accept: "application/json",
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const result = await uploadFile(formDataa);
       url = result.data[0].file_url;
     }
 
@@ -154,12 +152,7 @@ export const AddCateComponent: React.FC<Props> = ({
       const formDataa: any = new FormData();
       formDataa.append("file", newFile);
 
-      const result = await axios.post("http://0.0.0.0:6082/upload/", formDataa, {
-        headers: {
-          accept: "application/json",
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const result = await uploadFile(formDataa);
       url = result.data[0].file_url;
     } else {
       url = choosedCate.avatar_url;
@@ -248,6 +241,7 @@ export const AddCateComponent: React.FC<Props> = ({
               fileList={fileList}
               onChange={onChange}
               onPreview={onPreview}
+              onRemove={onRemove}
               accept={"image/*"}
             >
               {fileList.length < 1 && "+ Upload"}

@@ -38,8 +38,5 @@
   "volta": {
     "node": "16.17.1",
     "npm": "8.19.2"
-  },
-  "dependencies": {
-    "fs": "^0.0.1-security"
   }
 }

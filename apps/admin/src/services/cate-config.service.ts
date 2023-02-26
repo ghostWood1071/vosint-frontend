@@ -84,10 +84,11 @@ export const updateCountryCateConfig = async (countryCateId: string, data: any) 
 };
 
 //upload image
-export const uploadImage = async (data: any) => {
+export const uploadFile = async (data: any) => {
   const result = await apiClient.post(`${apiCateConfigBaseV2Url}/upload/`, data, {
     headers: {
-      "content-type": "multipart/form-data",
+      accept: "application/json",
+      "Content-Type": "multipart/form-data",
     },
   });
   return result;
