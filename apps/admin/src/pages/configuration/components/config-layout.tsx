@@ -1,9 +1,12 @@
 import { AppContainer } from "@/pages/app";
 import {
   categoryNewsConfigPath,
+  countryCateConfigPath,
   facebookConfigPath,
   gatheringDataConfigPath,
   newsFromAccountsConfigPath,
+  objectCateConfigPath,
+  organizationCateConfigPath,
   pipelineInformationGathering,
   proxyConfigPath,
   sourceNewsConfigPath,
@@ -41,6 +44,9 @@ const Sidebar = () => {
     { label: "DANH MỤC PROXY", key: proxyConfigPath },
     { label: "CÁC TÀI KHOẢN LẤY TIN", key: newsFromAccountsConfigPath },
     { label: "DANH MỤC NGUỒN TIN", key: sourceNewsConfigPath },
+    { label: "DANH MỤC TỔ CHỨC", key: organizationCateConfigPath },
+    { label: "DANH MỤC QUỐC GIA", key: countryCateConfigPath },
+    { label: "DANH MỤC ĐỐI TƯỢNG", key: objectCateConfigPath },
     { label: "THU THẬP TIN THEO PIPELINE", key: pipelineInformationGathering },
   ];
   function handleClickMenu({ key }: { key: string }) {

@@ -3,6 +3,7 @@ import { NewsForm } from "@/pages/news/components/news-form";
 import { useMutationNewsSidebar, useNewsSidebar } from "@/pages/news/news.loader";
 import { buildTree } from "@/pages/news/news.utils";
 import { PlusOutlined } from "@ant-design/icons";
+// import { DownOutlined } from "@ant-design/icons";
 import { Button, Input, List } from "antd";
 
 // import type { DataNode, TreeProps } from "antd/es/tree";
@@ -45,9 +46,6 @@ export const CategoryNewsConfig = () => {
             itemLayout="vertical"
             size="large"
             pagination={{
-              onChange: (page) => {
-                console.log(page);
-              },
               pageSize: 5,
               size: "default",
               position: "bottom",
@@ -105,7 +103,7 @@ export const CategoryNewsConfig = () => {
 //   },
 // ];
 
-// const TenplateCategory = () => {
+// const TemplateCategory = () => {
 //   const onSelect: TreeProps["onSelect"] = (selectedKeys, info) => {
 //     console.log("selected", selectedKeys, info);
 //   };
@@ -119,5 +117,5 @@ export const CategoryNewsConfig = () => {
 //         treeData={templateCategorydata}
 //       />
 //     </div>
-// );
+//   );
 // };

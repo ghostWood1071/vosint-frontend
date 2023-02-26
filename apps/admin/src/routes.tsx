@@ -8,9 +8,12 @@ import { LoginPage } from "./pages/auth/login/login";
 import {
   CategoryNewsConfig,
   ConfigLayout,
+  CountryCate,
   FacebookConfig,
   GatheringDataConfig,
   NewsFromAccountsConfig,
+  ObjectCate,
+  OrganizationCate,
   ProxyConfig,
   SourceNewsConfig,
   TiktokConfig,
@@ -40,6 +43,7 @@ import {
   authLoginPath,
   categoryNewsConfigPath,
   configPath,
+  countryCateConfigPath,
   dashboardAdminPath,
   dashboardExpertPath,
   dashboardLeaderPath,
@@ -49,6 +53,8 @@ import {
   homePath,
   newsFromAccountsConfigPath,
   newsPath,
+  objectCateConfigPath,
+  organizationCateConfigPath,
   organizationPath,
   pipelineDashboardPath,
   pipelineDataProcessingPath,
@@ -228,6 +234,18 @@ export const routers = createBrowserRouter([
           {
             path: sourceNewsConfigPath,
             element: <SourceNewsConfig />,
+          },
+          {
+            path: organizationCateConfigPath,
+            element: <OrganizationCate />,
+          },
+          {
+            path: countryCateConfigPath,
+            element: <CountryCate />,
+          },
+          {
+            path: objectCateConfigPath,
+            element: <ObjectCate />,
           },
           {
             path: pipelineInformationGathering,

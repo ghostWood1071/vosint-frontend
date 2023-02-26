@@ -52,6 +52,9 @@ export const facebookConfigPath = "/config/facebook-config";
 export const tiktokConfigPath = "/config/tiktok-config";
 export const twitterConfigPath = "/config/twitter-config";
 export const gatheringDataConfigPath = "/config/gathering-data-config";
+export const countryCateConfigPath = "/config/country-cate-config";
+export const objectCateConfigPath = "/config/object-cate-config";
+export const organizationCateConfigPath = "/config/organization-cate-config";
 
 export const proxyConfigPath = "/config/proxy-config";
 export const newsFromAccountsConfigPath = "/config/news-from-accounts-config";
