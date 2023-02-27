@@ -142,6 +142,7 @@ export function AppFilter(): JSX.Element {
           treeData={gioTinTree}
           onSelect={handleSelect}
           tag={ETreeTag.GIO_TIN}
+          selectedKeys={[newsletterId]}
         />
       </Modal>
     </>

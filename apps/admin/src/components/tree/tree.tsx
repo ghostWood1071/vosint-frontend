@@ -11,6 +11,7 @@ interface Props {
   treeData: DataNode[];
   title: string;
   isSpinning?: boolean;
+  selectedKeys?: string[];
 
   isEditable?: boolean;
   tag: ETreeTag;
@@ -24,6 +25,7 @@ export const Tree: React.FC<Props> = ({
   title,
   tag,
   isEditable = false,
+  selectedKeys,
   onClickTitle,
   onSelect,
 }) => {
@@ -44,11 +46,11 @@ export const Tree: React.FC<Props> = ({
       <TreeAntd
         className={styles.treeAnt}
         blockNode
-        selectable={!isEditable && tag !== ETreeTag.LINH_VUC}
         treeData={treeData}
         titleRender={(node: any) => (
           <TreeTitle {...node} isEditable={isEditable} onClick={onClickTitle} tag={tag} />
         )}
+        selectedKeys={selectedKeys}
         onSelect={onSelect}
       />
     </div>

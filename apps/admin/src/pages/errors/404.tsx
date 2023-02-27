@@ -1,13 +1,13 @@
 import { Button, Result } from "antd";
 import { useNavigate } from "react-router-dom";
 
-import { homePath } from "../router";
+import { searchPath } from "../router";
 
 export const NotFoundPage: React.FC = () => {
   const navigate = useNavigate();
 
   function handleResetError() {
-    navigate(homePath);
+    navigate(searchPath);
   }
 
   return (

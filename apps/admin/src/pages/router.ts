@@ -40,11 +40,11 @@ export const getReportSyntheticUrl = (reportId: string | number) => `/report/syn
 
 export const pipelineDashboardPath = "/pipeline/dashboard";
 export const pipelineDataProcessingPath = "/pipeline/data-processing";
-export const pipelineCreatePath = "/pipeline/information-gathering/create";
-export const pipelineListPath = "/pipeline/information-gathering";
-export const pipelineDetailPath = "/pipeline/information-gathering/:id";
+export const pipelineCreatePath = "/config/pipeline/create";
+export const pipelineListPath = "/config/pipeline";
+export const pipelineDetailPath = "/config/pipeline/:id";
 export const getPipelineDetailPath = (pipelineId: string | number) =>
-  `/pipeline/information-gathering/${pipelineId}`;
+  `/config/pipeline/${pipelineId}`;
 
 export const pipelinePath = pipelineDashboardPath;
 

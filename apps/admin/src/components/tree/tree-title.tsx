@@ -20,7 +20,6 @@ interface Props extends TreeDataNode {
 
 export const TreeTitle: React.FC<Props> = ({ onClick, children, isEditable, ...node }) => {
   const setValues = useTreeStore((state) => state.setValues);
-
   // TODO: update translation
   const { t } = useTranslation("translation", { keyPrefix: "news" });
   const [isOpen, setIsOpen] = useState(false);
