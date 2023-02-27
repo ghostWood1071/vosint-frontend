@@ -67,7 +67,8 @@ export const NewsForm: React.FC<Props> = ({ onFinish, confirmLoading }) => {
           <Form.Item
             label="Tên danh mục"
             name={"title"}
-            rules={[{ message: "Hãy nhập vào tên danh mục!" }]}
+            validateTrigger={["onChange", "onBlur"]}
+            rules={[{ required: true, message: "Hãy nhập vào tên danh mục!", whitespace: true }]}
           >
             <Input placeholder="Nhập tên danh mục" disabled={action === ETreeAction.DELETE} />
           </Form.Item>
@@ -99,7 +100,7 @@ export const NewsForm: React.FC<Props> = ({ onFinish, confirmLoading }) => {
                         {
                           required: true,
                           whitespace: true,
-                          message: "Please input passenger's name or delete this field.",
+                          message: "Nhập vào từ khoá.",
                         },
                       ]}
                       noStyle

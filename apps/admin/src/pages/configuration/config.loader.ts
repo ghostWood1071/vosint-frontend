@@ -1,0 +1,115 @@
+import {
+  addNewCountryCateConfig,
+  addNewObjectCateConfig,
+  addNewOrganizationCateConfig,
+  deleteCountryCateConfig,
+  deleteObjectCateConfig,
+  deleteOrganizationCateConfig,
+  getCountryCateConfig,
+  getObjectCateConfig,
+  getOrganizationCateConfig,
+  updateCountryCateConfig,
+  updateObjectCateConfig,
+  updateOrganizationCateConfig,
+} from "@/services/cate-config.service";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+
+export const CACHE_KEYS = {
+  OrganizationCate: "ORGANIZATIONCATE",
+  CountryCate: "CountryCate",
+  ObjectCate: "ObjectCate",
+};
+
+export const useOrganizationCate = () => {
+  return useQuery([CACHE_KEYS.OrganizationCate], () => getOrganizationCateConfig());
+};
+
+export const useCountryCate = () => {
+  return useQuery([CACHE_KEYS.CountryCate], () => getCountryCateConfig());
+};
+
+export const useObjectCate = () => {
+  return useQuery([CACHE_KEYS.ObjectCate], () => getObjectCateConfig());
+};
+
+export const useMutationOrganizationCate = () => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    ({ action, _id, ...data }: any) => {
+      if (action === "delete") {
+        return deleteOrganizationCateConfig(_id);
+      }
+
+      if (action === "update") {
+        return updateOrganizationCateConfig(_id, data);
+      }
+
+      if (action === "add") {
+        console.log("this is data", data);
+        return addNewOrganizationCateConfig(data);
+      }
+
+      throw new Error("action invalid");
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(CACHE_KEYS.OrganizationCate);
+      },
+      onError: () => {},
+    },
+  );
+};
+
+export const useMutationCountryCate = () => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    ({ action, _id, ...data }: any) => {
+      if (action === "delete") {
+        return deleteCountryCateConfig(_id);
+      }
+
+      if (action === "update") {
+        return updateCountryCateConfig(_id, data);
+      }
+
+      if (action === "add") {
+        return addNewCountryCateConfig(data);
+      }
+
+      throw new Error("action invalid");
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(CACHE_KEYS.CountryCate);
+      },
+      onError: () => {},
+    },
+  );
+};
+
+export const useMutationObjectCate = () => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    ({ action, _id, ...data }: any) => {
+      if (action === "delete") {
+        return deleteObjectCateConfig(_id);
+      }
+
+      if (action === "update") {
+        return updateObjectCateConfig(_id, data);
+      }
+
+      if (action === "add") {
+        return addNewObjectCateConfig(data);
+      }
+
+      throw new Error("action invalid");
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(CACHE_KEYS.ObjectCate);
+      },
+      onError: () => {},
+    },
+  );
+};

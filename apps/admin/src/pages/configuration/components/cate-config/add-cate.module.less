@@ -1,0 +1,87 @@
+.delete-button {
+  width: 30px;
+  height: 30px;
+}
+
+.condition-container {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  margin-block: 20px;
+  .title-condition-container {
+    width: 125px;
+    font-size: 14px;
+    padding-right: 8px;
+    display: flex;
+    justify-content: flex-end;
+  }
+  .all-option-container {
+    width: calc(100% - 125px);
+
+    .all-item-condition {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+
+      .condition-option-container {
+        width: 25%;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+
+        .condition-option-type1 {
+          width: 100%;
+          padding-block: 5px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          font-size: 14px;
+          background-color: #2076be;
+          font-weight: bold;
+          color: white;
+        }
+
+        .condition-option-type2 {
+          width: 100%;
+          padding-block: 5px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          font-size: 14px;
+          background-color: #e4e4e4;
+          font-weight: bold;
+          color: gray;
+        }
+      }
+    }
+
+    .detail-option-item-container {
+      width: 100%;
+      border: 1px solid #e4e4e4;
+
+      .detail-option-item {
+        font-size: 14px;
+        padding-block: 5px;
+      }
+    }
+  }
+}
+.delete-body-container {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+
+  .left-delete-body {
+    width: 120px;
+    font-size: 14px;
+    color: black;
+  }
+
+  .right-delete-body {
+    font-size: 14px;
+    color: black;
+    width: calc(100% - 120px);
+  }
+}
