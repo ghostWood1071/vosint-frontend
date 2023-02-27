@@ -27,7 +27,7 @@ export const BodyCate: React.FC<Props> = ({
   const [choosedCate, setChoosedCate] = useState<any>(null);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [typeModal, setTypeModal] = useState("");
-  const [data, setData] = useState(dataTable);
+  const data = dataTable;
 
   function handleSearch(value: string) {
     // console.log(value);
@@ -69,7 +69,7 @@ export const BodyCate: React.FC<Props> = ({
             }}
             dataSource={data}
             renderItem={(item) => {
-              return <CateItem item={item} onclick={setChoosedCate} />;
+              return <CateItem functionEdit={functionEdit} item={item} onclick={setChoosedCate} />;
             }}
           />
         </div>

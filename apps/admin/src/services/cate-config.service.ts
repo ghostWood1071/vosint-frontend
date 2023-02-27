@@ -1,6 +1,6 @@
 import { apiClient } from "@/utils/api";
 
-const apiCateConfigBaseV2Url = "";
+const apiCateConfigBaseV2Url = "/v2";
 
 //get
 export const getOrganizationCateConfig = async () => {
@@ -20,32 +20,17 @@ export const getCountryCateConfig = async () => {
 
 //add
 export const addNewOrganizationCateConfig = async (data: any) => {
-  const result = await apiClient.post<any>(`${apiCateConfigBaseV2Url}/organize/`, data, {
-    headers: {
-      accept: "application/json",
-      "Content-Type": "application/json",
-    },
-  });
+  const result = await apiClient.post<any>(`${apiCateConfigBaseV2Url}/organize/`, data);
   return result.data;
 };
 
 export const addNewObjectCateConfig = async (data: any) => {
-  const result = await apiClient.post<any>(`${apiCateConfigBaseV2Url}/object/`, data, {
-    headers: {
-      accept: "application/json",
-      "Content-Type": "application/json",
-    },
-  });
+  const result = await apiClient.post<any>(`${apiCateConfigBaseV2Url}/object/`, data);
   return result.data;
 };
 
 export const addNewCountryCateConfig = async (data: any) => {
-  const result = await apiClient.post<any>(`${apiCateConfigBaseV2Url}/country/`, data, {
-    headers: {
-      accept: "application/json",
-      "Content-Type": "application/json",
-    },
-  });
+  const result = await apiClient.post<any>(`${apiCateConfigBaseV2Url}/country/`, data);
   return result.data;
 };
 

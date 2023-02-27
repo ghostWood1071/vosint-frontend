@@ -6,9 +6,17 @@ import styles from "./cate-item.module.less";
 interface CateItemProps {
   item: any;
   onclick: (value: any) => void;
+  functionEdit: (value: any) => void;
 }
 
-export const CateItem: React.FC<CateItemProps> = ({ item, onclick }) => {
+export const CateItem: React.FC<CateItemProps> = ({ item, onclick, functionEdit }) => {
+  function onClickStatus() {
+    if (item.status === "enable") {
+      functionEdit({ ...item, status: "disable" });
+    } else {
+      functionEdit({ ...item, status: "enable" });
+    }
+  }
   return (
     <div
       className={styles.mainContainer}
@@ -31,6 +39,10 @@ export const CateItem: React.FC<CateItemProps> = ({ item, onclick }) => {
           className={
             item.status.toLowerCase() === "enable" ? styles.enableStatus : styles.disableStatus
           }
+          onClick={(event) => {
+            event.stopPropagation();
+            onClickStatus();
+          }}
         >
           <div className={styles.nameStatus}>
             {item.status === "enable" ? "Kích hoạt" : "Vô hiệu"}

@@ -15,9 +15,9 @@ import {
 import { useMutation, useQuery, useQueryClient } from "react-query";
 
 export const CACHE_KEYS = {
-  OrganizationCate: "ORGANIZATIONCATE",
-  CountryCate: "CountryCate",
-  ObjectCate: "ObjectCate",
+  OrganizationCate: "ORGANIZATION_CATEGORY",
+  CountryCate: "COUNTRY_CATEGORY",
+  ObjectCate: "OBJECT_CATEGORY",
 };
 
 export const useOrganizationCate = () => {

@@ -5,6 +5,7 @@ import { useMutationObjectCate, useObjectCate } from "../config.loader";
 
 export const ObjectCate = () => {
   const { data } = useObjectCate();
+  console.log("this is data", data);
   const { mutate, isLoading: isObjectCateLoading } = useMutationObjectCate();
   return (
     <BodyCate
