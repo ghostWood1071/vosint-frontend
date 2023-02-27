@@ -72,3 +72,27 @@ export const UserManagement = lazyLoad(
     fallback: <SplashScreen />,
   },
 );
+
+export const OrganizationCate = lazyLoad(
+  () => import("./organization-cate"),
+  (module) => module.OrganizationCate,
+  {
+    fallback: <SplashScreen />,
+  },
+);
+
+export const CountryCate = lazyLoad(
+  () => import("./country-cate"),
+  (module) => module.CountryCate,
+  {
+    fallback: <SplashScreen />,
+  },
+);
+
+export const ObjectCate = lazyLoad(
+  () => import("./object-cate"),
+  (module) => module.ObjectCate,
+  {
+    fallback: <SplashScreen />,
+  },
+);

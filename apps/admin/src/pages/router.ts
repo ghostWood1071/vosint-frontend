@@ -57,6 +57,9 @@ export const collectDataConfigPath = "/config/collect-data";
 export const proxyConfigPath = "/config/proxy-config";
 export const newsAccountConfigPath = "/config/news-account";
 export const newsSourceConfigPath = "/config/news-source";
+export const countryCateConfigPath = "/config/country-cate-config";
+export const objectCateConfigPath = "/config/object-cate-config";
+export const organizationCateConfigPath = "/config/organization-cate-config";
 
 export const sourceConfigPath = "/config/news";
 export const userManagementPath = "/config/user";

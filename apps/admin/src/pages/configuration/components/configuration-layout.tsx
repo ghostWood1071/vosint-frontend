@@ -1,10 +1,13 @@
 import { AppContainer } from "@/pages/app";
 import {
   collectDataConfigPath,
+  countryCateConfigPath,
   facebookConfigPath,
   newsAccountConfigPath,
   newsCategoryConfigPath,
   newsSourceConfigPath,
+  objectCateConfigPath,
+  organizationCateConfigPath,
   pipelineListPath,
   proxyConfigPath,
   tiktokConfigPath,
@@ -42,6 +45,9 @@ const Sidebar = () => {
     { label: "DANH MỤC PROXY", key: proxyConfigPath },
     { label: "CÁC TÀI KHOẢN LẤY TIN", key: newsAccountConfigPath },
     { label: "DANH MỤC NGUỒN TIN", key: newsSourceConfigPath },
+    { label: "DANH MỤC TỔ CHỨC", key: organizationCateConfigPath },
+    { label: "DANH MỤC QUỐC GIA", key: countryCateConfigPath },
+    { label: "DANH MỤC ĐỐI TƯỢNG", key: objectCateConfigPath },
     { label: "THU THẬP TIN THEO PIPELINE", key: pipelineListPath },
     { label: "QUẢN LÝ NGƯỜI DÙNG", key: userManagementPath },
   ];
