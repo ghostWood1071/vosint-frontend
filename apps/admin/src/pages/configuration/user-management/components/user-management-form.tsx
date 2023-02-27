@@ -42,7 +42,7 @@ export const UserManagerForm: React.FC<Props> = ({ form, onFinish }) => {
         <Input />
       </Form.Item>
       <Form.Item
-        name="name"
+        name="full_name"
         label="Họ tên"
         rules={[
           {
@@ -58,7 +58,6 @@ export const UserManagerForm: React.FC<Props> = ({ form, onFinish }) => {
         label="Mật khẩu"
         rules={[
           {
-            required: true,
             message: "Please input your password!",
           },
         ]}
@@ -72,7 +71,6 @@ export const UserManagerForm: React.FC<Props> = ({ form, onFinish }) => {
         hasFeedback
         rules={[
           {
-            required: true,
             message: "Please confirm your password!",
           },
           ({ getFieldValue }) => ({
@@ -87,6 +85,7 @@ export const UserManagerForm: React.FC<Props> = ({ form, onFinish }) => {
       >
         <Input.Password />
       </Form.Item>
+      <Form.Item name="_id" hidden></Form.Item>
     </Form>
   );
 };

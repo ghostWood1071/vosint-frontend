@@ -16,18 +16,34 @@ import {
   TableColumnsType,
   Typography,
 } from "antd";
+import qs from "query-string";
 import React from "react";
+import { useLocation, useSearchParams } from "react-router-dom";
 
 interface Props {
-  data: any;
-  loading: boolean;
+  dataSource?: any[];
+  totalRecord: number;
+  isLoading?: boolean;
+  onUpdate?: (values: any) => void;
+  onDelete?: (_id: string) => void;
 }
 
-export const UserManagerTable: React.FC<Props> = ({ data, loading }) => {
+export const UserManagerTable: React.FC<Props> = ({
+  dataSource,
+  isLoading,
+  totalRecord,
+  onUpdate,
+  onDelete,
+}) => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const page = searchParams.get("page_number");
+  const pageSize = searchParams.get("page_size");
+  const location = useLocation();
+
   const columns: TableColumnsType<any> = [
     {
       title: "Danh sách người dùng",
-      dataIndex: "name",
+      dataIndex: "full_name",
       render: (name: string) => {
         return (
           <Space>
@@ -38,12 +54,8 @@ export const UserManagerTable: React.FC<Props> = ({ data, loading }) => {
       },
     },
     {
-      title: "Tên tài khoản",
+      title: "Username",
       dataIndex: "username",
-    },
-    {
-      title: "Email",
-      dataIndex: "email",
     },
     {
       title: "Quyền",
@@ -51,11 +63,12 @@ export const UserManagerTable: React.FC<Props> = ({ data, loading }) => {
     },
     {
       title: "Hoạt động",
+      dataIndex: "_id",
       align: "center",
       render: (_, record) => {
         return (
           <Space>
-            <Button icon={<FormOutlined />} />
+            {onUpdate && <Button icon={<FormOutlined />} onClick={handleClickUpdate} />}
             <Button icon={<KeyOutlined />} />
             <Button icon={<UserDeleteOutlined />} danger onClick={handleDelete} />
           </Space>
@@ -64,6 +77,10 @@ export const UserManagerTable: React.FC<Props> = ({ data, loading }) => {
         function handleDelete() {
           showConfirmDeleteUser(record);
         }
+
+        function handleClickUpdate() {
+          onUpdate?.(record);
+        }
       },
     },
   ];
@@ -71,10 +88,16 @@ export const UserManagerTable: React.FC<Props> = ({ data, loading }) => {
   return (
     <Table
       columns={columns}
-      dataSource={data}
+      dataSource={dataSource}
       rowKey="_id"
-      pagination={{ position: ["bottomCenter"] }}
-      loading={loading}
+      loading={isLoading}
+      pagination={{
+        position: ["bottomCenter"],
+        total: totalRecord,
+        current: page ? +page : 1,
+        onChange: handlePaginationChange,
+        pageSize: pageSize ? +pageSize : 10,
+      }}
     />
   );
 
@@ -83,6 +106,7 @@ export const UserManagerTable: React.FC<Props> = ({ data, loading }) => {
       icon: <ExclamationCircleOutlined />,
       title: "Xác nhận xoá người dùng",
       okCancel: true,
+      onOk: () => onDelete?.(record._id),
       content: (
         <Row>
           <Col span={10}>
@@ -98,5 +122,15 @@ export const UserManagerTable: React.FC<Props> = ({ data, loading }) => {
         </Row>
       ),
     });
+  }
+
+  function handlePaginationChange(page: number, pageSize: number) {
+    setSearchParams(
+      qs.stringify({
+        ...qs.parse(location.search),
+        page_number: page + "",
+        page_size: pageSize + "",
+      }),
+    );
   }
 };
