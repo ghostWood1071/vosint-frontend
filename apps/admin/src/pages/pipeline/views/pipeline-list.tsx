@@ -1,7 +1,7 @@
 import { ActionReloadIcon, ActionRunIcon, ActionStopIcon } from "@/assets/svg";
 import { pipelineCreatePath } from "@/pages/router";
 import { PlusOutlined } from "@ant-design/icons";
-import { Button, Col, Input, Modal, Row, Space, Typography } from "antd";
+import { Button, Col, Input, Modal, PageHeader, Row, Space, Typography } from "antd";
 import classNames from "classnames";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -42,37 +42,31 @@ export const PipelineList: React.FC = () => {
 
   return (
     <div id="pipeline-gathering" className={classNames(styles.informationGathering, "modal-mount")}>
-      <Title level={2} className={styles.title}>
-        {t("title_information_gathering")}
-      </Title>
-      <Row justify="space-between">
-        <Col span={6}>
-          <Search placeholder={t("search_here")} onSearch={handleSearch} />
-        </Col>
-        <Col>
-          <Space align="end">
-            <Button title="Dung tat ca" icon={<ActionStopIcon />} />
-            <Button title="Chay tat ca" icon={<ActionRunIcon />} />
-            <Button title="Làm mới trang" icon={<ActionReloadIcon />} />
-            <Button
-              title="Them moi pipeline"
-              icon={<PlusOutlined />}
-              onClick={navigateCreatePipeline}
-            />
-          </Space>
-        </Col>
-      </Row>
-      <br />
-      <PipelineTable
-        isLoading={isLoading || isCloning || isDeleting}
-        data={pipelines?.data ?? []}
-        onHistory={showHistory}
-        onChangeEnabled={handleChangeEnabled}
-        onChangeActive={handleChangeActive}
-        onClonePipeline={handleClonePipeline}
-        onDeletePipeline={handleDeletePipeline}
-        totalRecord={pipelines?.total}
-      />
+      <PageHeader
+        title={t("title_information_gathering")}
+        extra={[
+          <Search placeholder={t("search_here")} onSearch={handleSearch} />,
+          <Button title="Dung tat ca" icon={<ActionStopIcon />} />,
+          <Button title="Chay tat ca" icon={<ActionRunIcon />} />,
+          <Button title="Làm mới trang" icon={<ActionReloadIcon />} />,
+          <Button
+            title="Them moi pipeline"
+            icon={<PlusOutlined />}
+            onClick={navigateCreatePipeline}
+          />,
+        ]}
+      >
+        <PipelineTable
+          isLoading={isLoading || isCloning || isDeleting}
+          data={pipelines?.data ?? []}
+          onHistory={showHistory}
+          onChangeEnabled={handleChangeEnabled}
+          onChangeActive={handleChangeActive}
+          onClonePipeline={handleClonePipeline}
+          onDeletePipeline={handleDeletePipeline}
+          totalRecord={pipelines?.total}
+        />
+      </PageHeader>
       <Modal
         title={t("pipeline_history")}
         open={isHistoryOpen}

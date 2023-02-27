@@ -3,7 +3,7 @@ import { buildTree } from "@/pages/news/news.utils";
 import { getNewsDetailUrl } from "@/pages/router";
 import { Space } from "antd";
 import classNames from "classnames";
-import { NavLink, Outlet, useNavigate } from "react-router-dom";
+import { NavLink, Outlet, useNavigate, useParams } from "react-router-dom";
 
 import { Tree } from "../../../components/tree";
 import { ETreeTag, useTreeStore } from "../../../components/tree/tree.store";
@@ -21,6 +21,7 @@ export const NewsLayout: React.FC = () => {
 
 function Sidebar() {
   const { data, isLoading } = useNewsSidebar();
+  const { newsletterId } = useParams();
   const { mutate, isLoading: isMutateLoading } = useMutationNewsSidebar();
   const navigate = useNavigate();
   const setValues = useTreeStore((state) => state.setValues);
@@ -42,6 +43,7 @@ function Sidebar() {
             isEditable
             onClickTitle={handleClickTitle}
             tag={ETreeTag.GIO_TIN}
+            selectedKeys={newsletterId ? [newsletterId] : []}
           />
         )}
 
@@ -52,6 +54,7 @@ function Sidebar() {
             isSpinning={isLoading}
             onClickTitle={handleClickTitle}
             tag={ETreeTag.LINH_VUC}
+            selectedKeys={newsletterId ? [newsletterId] : []}
           />
         )}
 
@@ -63,6 +66,7 @@ function Sidebar() {
             isEditable
             onClickTitle={handleClickTitle}
             tag={ETreeTag.CHU_DE}
+            selectedKeys={newsletterId ? [newsletterId] : []}
           />
         )}
 

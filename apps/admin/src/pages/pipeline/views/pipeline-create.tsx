@@ -19,8 +19,9 @@ export const PipelineCreate: React.FC = () => {
 
   return (
     <div>
-      <PageHeader title={t("create_new_pipeline")} onBack={goBack} />
-      <PipelineForm onSave={handleCreatePipeline} isLoading={isLoading} />
+      <PageHeader title={t("create_new_pipeline")} onBack={goBack}>
+        <PipelineForm onSave={handleCreatePipeline} isLoading={isLoading} />
+      </PageHeader>
     </div>
   );
 

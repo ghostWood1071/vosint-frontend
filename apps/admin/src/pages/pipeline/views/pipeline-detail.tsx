@@ -48,8 +48,7 @@ export const PipelineDetail: React.FC = () => {
   if (loadingActions || loadingPipeline) return null;
 
   return (
-    <>
-      <PageHeader title="Thông tin chi tiết pipeline" onBack={handleBack} />
+    <PageHeader title="Thông tin chi tiết pipeline" onBack={handleBack}>
       <Pipeline
         initialCron={pipeline?.cron_expr ?? ""}
         initialActions={generateIdToActions(actions ?? [])}
@@ -58,7 +57,7 @@ export const PipelineDetail: React.FC = () => {
         onSavePipeline={handleSavePipeline}
         onVerifyPipeline={handleVerifyPipeline}
       />
-    </>
+    </PageHeader>
   );
 
   function handleBack() {
