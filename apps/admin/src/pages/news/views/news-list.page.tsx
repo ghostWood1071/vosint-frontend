@@ -20,7 +20,7 @@ export const NewsListPage: React.FC<Props> = () => {
   const { mutateAsync: mutateDelete } = useDeleteNewsInNewsletter();
   const { mutate: mutateAdd } = useNewsIdToNewsletter();
 
-  const dataSource = data?.result.map((e: any) => ({
+  const dataSource = data?.result?.map((e: any) => ({
     ...e,
     isStar: dataIAm?.news_bookmarks.includes(e._id),
   }));

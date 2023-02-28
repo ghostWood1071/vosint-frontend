@@ -39,16 +39,16 @@ export const NAVBAR_HEADER = [
     to: socialPath,
     icon: <SocialIcon />,
   },
-  {
-    title: "Analysis",
-    to: analysisPath,
-    icon: <AnalysisIcon />,
-  },
-  {
-    title: "Database",
-    to: databasePath,
-    icon: <DatabaseIcon />,
-  },
+  // {
+  //   title: "Analysis",
+  //   to: analysisPath,
+  //   icon: <AnalysisIcon />,
+  // },
+  // {
+  //   title: "Database",
+  //   to: databasePath,
+  //   icon: <DatabaseIcon />,
+  // },
   {
     title: "Report",
     to: reportPath,

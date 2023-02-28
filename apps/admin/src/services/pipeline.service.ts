@@ -49,7 +49,9 @@ export const deletePipeline = async (id: string) => {
 
 export const verifyPipeline = async (id: string) => {
   const url = `${apiJobBaseUrl}/run_only_job/${id}`;
-  const result = await apiClient.post<APIResponse<any>>(url);
+  const result = await apiClient.post<APIResponse<any>>(url, null, {
+    timeout: 1_000 * 60 * 5,
+  });
   return result.data.payload;
 };
 
