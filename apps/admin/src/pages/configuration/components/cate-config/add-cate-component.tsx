@@ -1,3 +1,4 @@
+import { BASE_URL } from "@/constants/config";
 import { uploadFile } from "@/services/cate-config.service";
 import { Form, Input, Modal, Upload } from "antd";
 import type { RcFile, UploadFile, UploadProps } from "antd/es/upload/interface";
@@ -118,7 +119,7 @@ export const AddCateComponent: React.FC<Props> = ({
       formDataa.append("file", newFile);
 
       const result = await uploadFile(formDataa);
-      url = result.data[0].file_url;
+      url = BASE_URL + "/" + result.data[0].file_url;
     }
 
     const result = { ...data, keywords: key, avatar_url: url, status: "enable" };
@@ -152,7 +153,7 @@ export const AddCateComponent: React.FC<Props> = ({
       formDataa.append("file", newFile);
 
       const result = await uploadFile(formDataa);
-      url = result.data[0].file_url;
+      url = BASE_URL + "/" + result.data[0].file_url;
     } else {
       url = choosedCate.avatar_url;
     }
@@ -161,10 +162,6 @@ export const AddCateComponent: React.FC<Props> = ({
     setChoosedCate(result);
     setIsOpen(false);
   }
-
-  useEffect(() => {
-    setIsOpen(true);
-  }, []);
 
   if (type === "delete") {
     return (

@@ -18,6 +18,11 @@ export const getCountryCateConfig = async () => {
   return result.data;
 };
 
+export const getProxyConfig = async () => {
+  const result = await apiClient.get<any>(`${apiCateConfigBaseV2Url}/Proxy`);
+  return result.data;
+};
+
 //add
 export const addNewOrganizationCateConfig = async (data: any) => {
   const result = await apiClient.post<any>(`${apiCateConfigBaseV2Url}/organize/`, data);
@@ -31,6 +36,11 @@ export const addNewObjectCateConfig = async (data: any) => {
 
 export const addNewCountryCateConfig = async (data: any) => {
   const result = await apiClient.post<any>(`${apiCateConfigBaseV2Url}/country/`, data);
+  return result.data;
+};
+
+export const addNewProxyConfig = async (data: any) => {
+  const result = await apiClient.post<any>(`${apiCateConfigBaseV2Url}/Proxy/`, data);
   return result.data;
 };
 
@@ -51,6 +61,11 @@ export const deleteObjectCateConfig = async (objectCateId: string) => {
   return result.data;
 };
 
+export const deleteProxyConfig = async (proxyId: string) => {
+  const result = await apiClient.delete<any>(`${apiCateConfigBaseV2Url}/Proxy/${proxyId}`);
+  return result.data;
+};
+
 //update
 export const updateOrganizationCateConfig = async (organizationCateId: string, data: any) => {
   const result = await apiClient.put(
@@ -65,6 +80,11 @@ export const updateObjectCateConfig = async (objectCateId: string, data: any) =>
 };
 export const updateCountryCateConfig = async (countryCateId: string, data: any) => {
   const result = await apiClient.put(`${apiCateConfigBaseV2Url}/country/${countryCateId}`, data);
+  return result.data;
+};
+
+export const updateProxyConfig = async (proxyId: string, data: any) => {
+  const result = await apiClient.put(`${apiCateConfigBaseV2Url}/Proxy/${proxyId}`, data);
   return result.data;
 };
 
