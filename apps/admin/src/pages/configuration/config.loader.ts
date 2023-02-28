@@ -2,15 +2,19 @@ import {
   addNewCountryCateConfig,
   addNewObjectCateConfig,
   addNewOrganizationCateConfig,
+  addNewProxyConfig,
   deleteCountryCateConfig,
   deleteObjectCateConfig,
   deleteOrganizationCateConfig,
+  deleteProxyConfig,
   getCountryCateConfig,
   getObjectCateConfig,
   getOrganizationCateConfig,
+  getProxyConfig,
   updateCountryCateConfig,
   updateObjectCateConfig,
   updateOrganizationCateConfig,
+  updateProxyConfig,
 } from "@/services/cate-config.service";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 
@@ -18,6 +22,7 @@ export const CACHE_KEYS = {
   OrganizationCate: "ORGANIZATION_CATEGORY",
   CountryCate: "COUNTRY_CATEGORY",
   ObjectCate: "OBJECT_CATEGORY",
+  ProxyConfig: "PROXY_CONFIG",
 };
 
 export const useOrganizationCate = () => {
@@ -30,6 +35,10 @@ export const useCountryCate = () => {
 
 export const useObjectCate = () => {
   return useQuery([CACHE_KEYS.ObjectCate], () => getObjectCateConfig());
+};
+
+export const useProxyConfig = () => {
+  return useQuery([CACHE_KEYS.ProxyConfig], () => getProxyConfig());
 };
 
 export const useMutationOrganizationCate = () => {
@@ -108,6 +117,33 @@ export const useMutationObjectCate = () => {
     {
       onSuccess: () => {
         queryClient.invalidateQueries(CACHE_KEYS.ObjectCate);
+      },
+      onError: () => {},
+    },
+  );
+};
+
+export const useMutationProxy = () => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    ({ action, _id, ...data }: any) => {
+      if (action === "delete") {
+        return deleteProxyConfig(_id);
+      }
+
+      if (action === "update") {
+        return updateProxyConfig(_id, data);
+      }
+
+      if (action === "add") {
+        return addNewProxyConfig(data);
+      }
+
+      throw new Error("action invalid");
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(CACHE_KEYS.ProxyConfig);
       },
       onError: () => {},
     },
