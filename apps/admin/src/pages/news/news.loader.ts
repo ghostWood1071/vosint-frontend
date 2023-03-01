@@ -13,6 +13,7 @@ import {
   getNewsList,
   getNewsSidebar,
   getNewsVitals,
+  getNewsletterDetail,
   updateNewsletter,
 } from "@/services/news.service";
 import { message } from "antd";
@@ -25,19 +26,27 @@ export const CACHE_KEYS = {
   NewsList: "NEWS_LIST",
   CreateNewsletter: "CREATE_NEWSLETTER",
   NewsDetail: "NEWS_DETAIL",
+  NewsletterDetail: "NEWSLETTER_DETAIL",
 };
 
 export const useNewsSidebar = () => {
   return useQuery([CACHE_KEYS.NewsSidebar], () => getNewsSidebar());
 };
 
-export const useNewsList = (filter: any) => {
-  return useQuery([CACHE_KEYS.NewsList, filter], () => getNewsList(filter));
+export const useNewsList = (filter: any, enabled = true) => {
+  return useQuery([CACHE_KEYS.NewsList, filter], () => getNewsList(filter), { enabled });
 };
 
 export const useNewsDetail = (id: string | null) => {
   return useQuery([CACHE_KEYS.NewsDetail, id], () => getNewsDetail(id!), {
     enabled: !!id,
+  });
+};
+
+export const useNewsletterDetail = (id: string | null, { onSuccess }: any) => {
+  return useQuery([CACHE_KEYS.NewsletterDetail, id], () => getNewsletterDetail(id!), {
+    enabled: !!id,
+    onSuccess,
   });
 };
 
@@ -75,7 +84,8 @@ export const useMutationNewsSidebar = () => {
     },
     {
       onSuccess: () => {
-        queryClient.invalidateQueries(CACHE_KEYS.NewsSidebar);
+        queryClient.invalidateQueries([CACHE_KEYS.NewsSidebar]);
+        queryClient.invalidateQueries([CACHE_KEYS.NewsletterDetail]);
       },
       onError: () => {},
     },
@@ -108,6 +118,7 @@ export const useNewsIdToNewsletter = () => {
     {
       onSuccess: () => {
         queryClient.invalidateQueries([CACHE_KEYS.NewsList]);
+        queryClient.invalidateQueries([CACHE_KEYS.NewsletterDetail]);
         queryClient.invalidateQueries(["ME"]);
         message.success("Thêm tin thành công");
       },
@@ -133,6 +144,7 @@ export const useDeleteNewsInNewsletter = () => {
     {
       onSuccess: () => {
         queryClient.invalidateQueries([CACHE_KEYS.NewsList]);
+        queryClient.invalidateQueries([CACHE_KEYS.NewsletterDetail]);
         queryClient.invalidateQueries(["ME"]);
         message.success("Xoá tin thành công");
       },

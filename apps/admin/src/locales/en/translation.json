@@ -13,7 +13,8 @@
     "open sidebar": "Lock sidebar open",
     "newsletters": "GIỎ TIN",
     "fields": "LĨNH VỰC TIN",
-    "topics": "DANH MỤC CHỦ ĐỀ"
+    "topics": "DANH MỤC CHỦ ĐỀ",
+    "Configuration": "Cấu hình"
   },
   "auth": {
     "login": "Sign in",

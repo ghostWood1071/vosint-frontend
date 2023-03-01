@@ -1,20 +1,25 @@
 import { ETreeAction, ETreeTag, useTreeStore } from "@/components/tree/tree.store";
 import { NewsForm } from "@/pages/news/components/news-form";
-import { useMutationNewsSidebar, useNewsSidebar } from "@/pages/news/news.loader";
+import {
+  useMutationNewsSidebar,
+  useNewsSidebar,
+  useNewsletterDetail,
+} from "@/pages/news/news.loader";
 import { buildTree } from "@/pages/news/news.utils";
 import { PlusOutlined } from "@ant-design/icons";
-// import { DownOutlined } from "@ant-design/icons";
-import { Button, Input, List } from "antd";
+import { Button, Card, Col, Descriptions, Input, List, Row, Typography } from "antd";
+import { useSearchParams } from "react-router-dom";
 
 import { TableItem } from "./components/table-item";
-// import type { DataNode, TreeProps } from "antd/es/tree";
 import styles from "./news-category-config.module.less";
 
 export const CategoryNewsConfig = () => {
   const setValues = useTreeStore((state) => state.setValues);
   const { data } = useNewsSidebar();
+  const [searchParams] = useSearchParams();
   const { mutate, isLoading: isMutateLoading } = useMutationNewsSidebar();
-
+  const newsletterId = searchParams.get("newsletter_id");
+  const { data: dataDetail } = useNewsletterDetail(newsletterId ?? null, {});
   const linhVucTree = data?.linh_vuc && buildTree(data.linh_vuc);
 
   return (
@@ -36,27 +41,52 @@ export const CategoryNewsConfig = () => {
           </Button>
         </div>
       </div>
-      <div className={styles.body}>
-        <div className={styles.titleTableContainer}>
+      <Row>
+        <Col span={13} className={styles.col}>
           <div className={styles.nameCategory}>Tên danh mục</div>
-          <div className={styles.detailCategory}>Mô tả</div>
-        </div>
-        <div className={styles.detailTable}>
-          <List
-            itemLayout="vertical"
-            size="large"
-            pagination={{
-              pageSize: 5,
-              size: "default",
-              position: "bottom",
-            }}
-            dataSource={linhVucTree}
-            renderItem={(values) => {
-              return <TableItem values={values} />;
-            }}
-          />
-        </div>
-      </div>
+          <TableItem values={linhVucTree} />
+        </Col>
+        <Col span={11} className={styles.col}>
+          <div className={styles.nameCategory}>Mô tả</div>
+          <Descriptions bordered>
+            <Descriptions.Item label="Tên danh mục" span={3}>
+              {dataDetail?.title}
+            </Descriptions.Item>
+            {dataDetail?.required_keyword && (
+              <Descriptions.Item label="Từ khoá bắt buộc" span={3}>
+                {dataDetail?.required_keyword?.map((i: any) => i + ", ")}
+              </Descriptions.Item>
+            )}
+            {dataDetail?.required_keyword && (
+              <Descriptions.Item label="Từ khoá loại trừ" span={3}>
+                {dataDetail?.exclusion_keyword}
+              </Descriptions.Item>
+            )}
+          </Descriptions>
+          {dataDetail?.news_samples?.length > 0 && (
+            <Card>
+              <Typography.Text>Tin mẫu</Typography.Text>
+              <List
+                dataSource={dataDetail?.news_samples}
+                renderItem={(item: any) => {
+                  return (
+                    <List.Item>
+                      <Typography.Link
+                        target="_blank"
+                        href={item?.["data:url"] ?? item?.["data_url"]}
+                        rel="noreferrer"
+                      >
+                        {item?.["data:title"] ?? item?.["data_title"]}
+                      </Typography.Link>
+                    </List.Item>
+                  );
+                }}
+              />
+            </Card>
+          )}
+        </Col>
+      </Row>
+
       <NewsForm onFinish={handleFinish} confirmLoading={isMutateLoading} />
     </div>
   );
@@ -81,41 +111,3 @@ export const CategoryNewsConfig = () => {
     });
   }
 };
-
-// const templateCategorydata: DataNode[] = [
-//   {
-//     title: "Danh sách tin mẫu",
-//     key: "0-0",
-//     children: [
-//       {
-//         title: "Tin mẫu 1",
-//         key: "0-0-0",
-//       },
-//       {
-//         title: "Tin mẫu 2",
-//         key: "0-0-1",
-//       },
-//       {
-//         title: "Tin mẫu 3",
-//         key: "0-0-2",
-//       },
-//     ],
-//   },
-// ];
-
-// const TemplateCategory = () => {
-//   const onSelect: TreeProps["onSelect"] = (selectedKeys, info) => {
-//     console.log("selected", selectedKeys, info);
-//   };
-//   return (
-//     <div className={styles.itemContainer}>
-//       <Tree
-//         showLine
-//         switcherIcon={<DownOutlined />}
-//         // defaultExpandedKeys={["0-0-0"]}
-//         onSelect={onSelect}
-//         treeData={templateCategorydata}
-//       />
-//     </div>
-//   );
-// };
