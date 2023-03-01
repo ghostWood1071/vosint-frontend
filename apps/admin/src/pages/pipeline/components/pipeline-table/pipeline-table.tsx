@@ -4,10 +4,9 @@ import { getPipelineDetailPath } from "@/pages/router";
 import { IPipelines } from "@/services/pipeline.types";
 import Icon, { DeleteOutlined } from "@ant-design/icons";
 import { Button, Popconfirm, Space, Table, TableColumnsType, Tooltip } from "antd";
-import qs from "query-string";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Link, useLocation, useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 
 interface Props {
   data?: IPipelines[];
@@ -34,7 +33,6 @@ export const PipelineTable: React.FC<Props> = ({
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const page = searchParams.get("page_number");
-  const location = useLocation();
   const { t } = useTranslation("translation", { keyPrefix: "pipeline" });
   const columns: TableColumnsType<IPipelines> = [
     {
@@ -163,12 +161,8 @@ export const PipelineTable: React.FC<Props> = ({
   );
 
   function handlePaginationChange(page: number, pageSize: number) {
-    setSearchParams(
-      qs.stringify({
-        ...qs.parse(location.search),
-        page_number: page + "",
-        page_size: pageSize + "",
-      }),
-    );
+    searchParams.set("page_number", page + "");
+    searchParams.set("page_size", pageSize + "");
+    setSearchParams(searchParams);
   }
 };

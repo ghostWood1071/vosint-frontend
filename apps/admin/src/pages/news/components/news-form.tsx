@@ -48,6 +48,7 @@ export const NewsForm: React.FC<Props> = ({ onFinish, confirmLoading }) => {
       onCancel={handleCancel}
       maskClosable={false}
       destroyOnClose
+      getContainer="#modal-mount"
     >
       {tag === ETreeTag.GIO_TIN && (
         <Form form={form} initialValues={initialValues ?? {}} preserve={false}>

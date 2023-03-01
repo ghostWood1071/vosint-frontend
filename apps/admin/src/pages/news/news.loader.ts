@@ -1,14 +1,18 @@
 import {
-  addNewsToBookmarkUser as addNewsIdsToBookmarkUser,
+  addNewsIdsToBookmarkUser,
   addNewsIdsToNewsletter,
+  addNewsIdsToVitalUser,
   addNewsletter,
   deleteNewsIdInNewsletter,
   deleteNewsInBookmarkUser,
+  deleteNewsInVitalUser,
   deleteNewsletter,
   getNewsBookmarks,
+  getNewsByNewsletter,
   getNewsDetail,
   getNewsList,
   getNewsSidebar,
+  getNewsVitals,
   updateNewsletter,
 } from "@/services/news.service";
 import { message } from "antd";
@@ -20,6 +24,7 @@ export const CACHE_KEYS = {
   NewsSidebar: "NEWS_SIDEBAR",
   NewsList: "NEWS_LIST",
   CreateNewsletter: "CREATE_NEWSLETTER",
+  NewsDetail: "NEWS_DETAIL",
 };
 
 export const useNewsSidebar = () => {
@@ -30,13 +35,23 @@ export const useNewsList = (filter: any) => {
   return useQuery([CACHE_KEYS.NewsList, filter], () => getNewsList(filter));
 };
 
-export const useNewsDetail = (id: string, filter: any) => {
+export const useNewsDetail = (id: string | null) => {
+  return useQuery([CACHE_KEYS.NewsDetail, id], () => getNewsDetail(id!), {
+    enabled: !!id,
+  });
+};
+
+export const useNewsByNewsletter = (id: string, filter: any) => {
   return useQuery([CACHE_KEYS.NewsList, id, filter], () => {
+    if (id === ETreeTag.QUAN_TRONG) {
+      return getNewsVitals(filter);
+    }
+
     if (id === ETreeTag.DANH_DAU) {
       return getNewsBookmarks(filter);
     }
 
-    return getNewsDetail(id, filter);
+    return getNewsByNewsletter(id, filter);
   });
 };
 
@@ -80,12 +95,12 @@ export const useNewsIdToNewsletter = () => {
   const queryClient = useQueryClient();
   return useMutation(
     ({ newsletterId, newsIds }: { newsletterId: string; newsIds: string[] }) => {
-      if (newsletterId === ETreeTag.DANH_DAU) {
-        return addNewsIdsToBookmarkUser(newsIds);
+      if (newsletterId === ETreeTag.QUAN_TRONG) {
+        return addNewsIdsToVitalUser(newsIds);
       }
 
-      if (newsletterId === ETreeTag.QUAN_TRONG) {
-        return new Promise(() => "pending...");
+      if (newsletterId === ETreeTag.DANH_DAU) {
+        return addNewsIdsToBookmarkUser(newsIds);
       }
 
       return addNewsIdsToNewsletter(newsletterId, newsIds);
@@ -105,6 +120,10 @@ export const useDeleteNewsInNewsletter = () => {
 
   return useMutation<any, any, { newsletterId: string; newsId: string[] }>(
     ({ newsletterId, newsId }) => {
+      if (newsletterId === ETreeTag.QUAN_TRONG) {
+        return deleteNewsInVitalUser(newsId);
+      }
+
       if (newsletterId === ETreeTag.DANH_DAU) {
         return deleteNewsInBookmarkUser(newsId);
       }

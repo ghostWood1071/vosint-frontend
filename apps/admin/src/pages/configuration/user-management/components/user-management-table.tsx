@@ -16,9 +16,8 @@ import {
   TableColumnsType,
   Typography,
 } from "antd";
-import qs from "query-string";
 import React from "react";
-import { useLocation, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 
 interface Props {
   dataSource?: any[];
@@ -38,7 +37,6 @@ export const UserManagerTable: React.FC<Props> = ({
   const [searchParams, setSearchParams] = useSearchParams();
   const page = searchParams.get("page_number");
   const pageSize = searchParams.get("page_size");
-  const location = useLocation();
 
   const columns: TableColumnsType<any> = [
     {
@@ -125,12 +123,8 @@ export const UserManagerTable: React.FC<Props> = ({
   }
 
   function handlePaginationChange(page: number, pageSize: number) {
-    setSearchParams(
-      qs.stringify({
-        ...qs.parse(location.search),
-        page_number: page + "",
-        page_size: pageSize + "",
-      }),
-    );
+    searchParams.set("page_number", page + "");
+    searchParams.set("page_size", pageSize + "");
+    setSearchParams(searchParams);
   }
 };
