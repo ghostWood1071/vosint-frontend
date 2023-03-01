@@ -3,7 +3,7 @@ import { useGetMe } from "@/pages/auth/auth.loader";
 import React from "react";
 import { useSearchParams } from "react-router-dom";
 
-// import { NewsCarousel } from "../components/news-carousel";
+import { NewsDetail } from "../components/news-detail";
 import { NewsTable } from "../components/news-table";
 import { useDeleteNewsInNewsletter, useNewsIdToNewsletter, useNewsList } from "../news.loader";
 
@@ -23,6 +23,7 @@ export const NewsListPage: React.FC<Props> = () => {
   const dataSource = data?.result?.map((e: any) => ({
     ...e,
     isStar: dataIAm?.news_bookmarks.includes(e._id),
+    isBell: dataIAm?.vital_list.includes(e._id),
   }));
 
   return (
@@ -31,13 +32,14 @@ export const NewsListPage: React.FC<Props> = () => {
         isLoading={isLoading && isLoadingIAm}
         dataSource={dataSource}
         total_record={data?.total_record}
-        onDelete={handeDelete}
+        onDelete={handleDelete}
         onAdd={handleAdd}
       />
+      <NewsDetail onDelete={handleDelete} onAdd={handleAdd} />
     </>
   );
 
-  function handeDelete(newsId: string, tag?: ETreeTag) {
+  function handleDelete(newsId: string, tag?: ETreeTag) {
     return mutateDelete({
       newsId: [newsId],
       newsletterId: tag!,

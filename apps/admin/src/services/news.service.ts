@@ -15,7 +15,12 @@ export const getNewsList = async (filter: any) => {
   return result.data;
 };
 
-export const getNewsDetail = async (newsletterId: string, filter: Record<string, string>) => {
+export const getNewsDetail = async (id: string) => {
+  const result = await apiClient.get(`${apiNewsBaseV2Url}/news/${id}`);
+  return result.data;
+};
+
+export const getNewsByNewsletter = async (newsletterId: string, filter: Record<string, string>) => {
   const result = await apiClient.get(`${apiNewsBaseV2Url}/newsletters/${newsletterId}/news`, {
     params: filterEmptyString(filter),
   });
@@ -63,12 +68,29 @@ export const getNewsBookmarks = async (filter: Record<string, string>) => {
   return result.data;
 };
 
-export const addNewsToBookmarkUser = async (newsIds: string[]) => {
+export const addNewsIdsToBookmarkUser = async (newsIds: string[]) => {
   const result = await apiClient.post<any>(`${apiNewsBaseV2Url}/user/bookmarks`, newsIds);
   return result;
 };
 
 export const deleteNewsInBookmarkUser = async (newsIds: string[]) => {
   const result = await apiClient.put<any>(`${apiNewsBaseV2Url}/user/bookmarks`, newsIds);
+  return result;
+};
+
+export const getNewsVitals = async (filter: Record<string, string>) => {
+  const result = await apiClient.get(`${apiNewsBaseV2Url}/user/vital`, {
+    params: filterEmptyString(filter),
+  });
+  return result.data;
+};
+
+export const addNewsIdsToVitalUser = async (newsIds: string[]) => {
+  const result = await apiClient.post<any>(`${apiNewsBaseV2Url}/user/vital`, newsIds);
+  return result;
+};
+
+export const deleteNewsInVitalUser = async (newsIds: string[]) => {
+  const result = await apiClient.put<any>(`${apiNewsBaseV2Url}/user/vital`, newsIds);
   return result;
 };

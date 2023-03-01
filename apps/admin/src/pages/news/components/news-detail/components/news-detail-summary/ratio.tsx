@@ -1,6 +1,12 @@
 import { Slider } from "antd";
 import React, { useState } from "react";
 
+export const RatioSummary: React.FC = () => (
+  <div>
+    <DecimalStep />
+  </div>
+);
+
 const DecimalStep = () => {
   const [inputValue, setInputValue] = useState(0.5);
 
@@ -22,9 +28,3 @@ const DecimalStep = () => {
     />
   );
 };
-
-export const Ratiosummary: React.FC = () => (
-  <div>
-    <DecimalStep />
-  </div>
-);
