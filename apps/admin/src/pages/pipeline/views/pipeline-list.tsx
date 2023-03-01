@@ -1,7 +1,7 @@
 import { ActionReloadIcon, ActionRunIcon, ActionStopIcon } from "@/assets/svg";
 import { pipelineCreatePath } from "@/pages/router";
 import { PlusOutlined } from "@ant-design/icons";
-import { Button, Col, Input, Modal, PageHeader, Row, Space, Typography } from "antd";
+import { Button, Input, Modal, PageHeader } from "antd";
 import classNames from "classnames";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -18,7 +18,6 @@ import {
 } from "../pipeline.loader";
 import styles from "./pipeline-list.module.less";
 
-const { Title } = Typography;
 const { Search } = Input;
 
 export const PipelineList: React.FC = () => {

@@ -79,7 +79,13 @@ export const TreeTitle: React.FC<Props> = ({ onClick, children, isEditable, ...n
   }
 
   function handleEdit() {
-    const data = pick(node, ["title", "_id", "required_keyword", "exclusion_keyword"]);
+    const data = pick(node, [
+      "title",
+      "_id",
+      "required_keyword",
+      "exclusion_keyword",
+      "news_samples",
+    ]);
 
     setValues({
       tag: node.tag,
@@ -89,7 +95,13 @@ export const TreeTitle: React.FC<Props> = ({ onClick, children, isEditable, ...n
   }
 
   function handleDelete() {
-    const data = pick(node, ["title", "_id", "required_keyword", "exclusion_keyword"]);
+    const data = pick(node, [
+      "title",
+      "_id",
+      "required_keyword",
+      "exclusion_keyword",
+      "news_samples",
+    ]);
 
     setValues({
       tag: node.tag,

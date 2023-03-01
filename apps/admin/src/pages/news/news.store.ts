@@ -1,8 +1,8 @@
 import create from "zustand";
 
 interface NewsState {
-  newsIds: string[];
-  setNewsIds: (selected: string[]) => void;
+  newsIds: any[];
+  setNewsIds: (selected: any[]) => void;
   show: boolean;
   setShow: (show: boolean) => void;
   newsletterId: string;

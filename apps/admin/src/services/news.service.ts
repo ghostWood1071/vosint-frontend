@@ -94,3 +94,8 @@ export const deleteNewsInVitalUser = async (newsIds: string[]) => {
   const result = await apiClient.put<any>(`${apiNewsBaseV2Url}/user/vital`, newsIds);
   return result;
 };
+
+export const getNewsletterDetail = async (id: string) => {
+  const result = await apiClient.get(`${apiNewsBaseV2Url}/newsletters/${id}`);
+  return result.data;
+};
