@@ -1,6 +1,7 @@
 import { PlusOutlined } from "@ant-design/icons";
 import { Button, Input, List } from "antd";
 import React, { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
 import { useMutationProxy, useProxyConfig } from "../config.loader";
 import { AddProxyComponent } from "./components/add-proxy-component";
@@ -8,11 +9,19 @@ import { ProxyItem } from "./components/proxy-item";
 import styles from "./proxy-config.module.less";
 
 export const ProxyConfig = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [typeModal, setTypeModal] = useState("");
   const [choosedProxy, setChoosedProxy] = useState(null);
-  const { data } = useProxyConfig();
+  const { data } = useProxyConfig({
+    skip: searchParams.get("page_number") ?? 1,
+    limit: searchParams.get("page_size") ?? 10,
+    text_search: searchParams.get("text_search") ?? "",
+  });
+  const page = searchParams.get("page_number");
+  const pageSize = searchParams.get("page_size");
   const { mutate, isLoading: isProxyLoading } = useMutationProxy();
+
   return (
     <div className={styles.mainContainer}>
       <div className={styles.header}>
@@ -45,11 +54,14 @@ export const ProxyConfig = () => {
             itemLayout="vertical"
             size="large"
             pagination={{
-              pageSize: 15,
+              current: page ? +page : 1,
+              pageSize: pageSize ? +pageSize : 10,
               size: "default",
               position: "bottom",
+              total: data?.total_record,
+              onChange: handlePaginationChange,
             }}
-            dataSource={data === null ? [] : data}
+            dataSource={data?.data}
             renderItem={(item) => {
               return (
                 <ProxyItem
@@ -78,7 +90,11 @@ export const ProxyConfig = () => {
     </div>
   );
 
-  function handleSearch() {}
+  function handleSearch(value: string) {
+    setSearchParams({
+      text_search: value,
+    });
+  }
   function handleClickCreate() {
     setIsOpenModal(true);
     setTypeModal("add");
@@ -106,5 +122,11 @@ export const ProxyConfig = () => {
 
   function handleDelete(value: any) {
     mutate({ ...value, action: "delete" });
+  }
+
+  function handlePaginationChange(page: number, pageSize: number) {
+    searchParams.set("page_number", page + "");
+    searchParams.set("page_size", pageSize + "");
+    setSearchParams(searchParams);
   }
 };

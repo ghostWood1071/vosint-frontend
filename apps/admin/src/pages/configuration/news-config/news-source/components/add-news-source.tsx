@@ -1,43 +1,43 @@
-import { Form, Input, Modal } from "antd";
+import { Form, Input, Modal, Select } from "antd";
 import React from "react";
 
-import styles from "./add-proxy-component.module.less";
+import styles from "./add-news-source.module.less";
 
 interface Props {
   type: string;
   confirmLoading?: boolean;
   isOpen: boolean;
   setIsOpen: (value: any) => void;
-  choosedProxy: any;
+  choosedNewsSource: any;
   functionAdd: (value: any) => void;
   functionEdit: (value: any) => void;
   functionDelete: (value: any) => void;
 }
 
 const formItemLayoutWithOutLabel = {
-  labelCol: { span: 4 },
+  labelCol: { span: 5 },
   wrapperCol: {
     xs: { span: 24, offset: 0 },
     sm: { span: 24, offset: 0 },
   },
 };
 
-export const AddProxyComponent: React.FC<Props> = ({
+export const AddNewsSourceComponent: React.FC<Props> = ({
   type,
   confirmLoading,
   isOpen,
   setIsOpen,
-  choosedProxy,
+  choosedNewsSource,
   functionAdd,
   functionDelete,
   functionEdit,
 }) => {
-  const initialValues = type === "edit" ? choosedProxy : null;
+  const initialValues = type === "edit" ? choosedNewsSource : null;
 
   const [form] = Form.useForm<Record<string, any>>();
 
   function handleDelete() {
-    functionDelete({ _id: choosedProxy._id });
+    functionDelete({ _id: choosedNewsSource._id });
     setIsOpen(false);
   }
   function handleCancel() {
@@ -47,9 +47,6 @@ export const AddProxyComponent: React.FC<Props> = ({
     form
       .validateFields()
       .then((values) => {
-        if (values.note === undefined) {
-          values.note = "";
-        }
         functionAdd(values);
         setIsOpen(false);
       })
@@ -60,9 +57,6 @@ export const AddProxyComponent: React.FC<Props> = ({
     form
       .validateFields()
       .then((values) => {
-        if (values.note === undefined) {
-          values.note = "";
-        }
         functionEdit({ ...initialValues, ...values });
         setIsOpen(false);
       })
@@ -72,7 +66,7 @@ export const AddProxyComponent: React.FC<Props> = ({
   if (type === "delete") {
     return (
       <Modal
-        title={"Xoá proxy"}
+        title={"Xoá tên nguồn tin"}
         open={isOpen}
         destroyOnClose
         confirmLoading={confirmLoading}
@@ -81,8 +75,8 @@ export const AddProxyComponent: React.FC<Props> = ({
         okText={"Xoá"}
       >
         <div className={styles.deleteBodyContainer}>
-          <div className={styles.leftDeleteBody}>Tên proxy:</div>
-          <div className={styles.rightDeleteBody}>{choosedProxy.name}</div>
+          <div className={styles.leftDeleteBody}>Tên nguồn tin:</div>
+          <div className={styles.rightDeleteBody}>{choosedNewsSource.name}</div>
         </div>
       </Modal>
     );
@@ -105,31 +99,49 @@ export const AddProxyComponent: React.FC<Props> = ({
           preserve={false}
         >
           <Form.Item
-            label={"Tên proxy"}
+            label={"Tên nguồn tin"}
             name={"name"}
             validateTrigger={["onChange", "onBlur"]}
-            rules={[{ required: true, message: "Hãy nhập vào tên proxy!" }]}
+            rules={[{ required: true, message: "Hãy nhập vào tên nguồn tin!" }]}
           >
             <Input />
           </Form.Item>
           <Form.Item
             validateTrigger={["onChange", "onBlur"]}
-            label="Địa chỉ IP"
-            name={"ip_address"}
-            rules={[{ required: true, message: "Hãy nhập vào địa chỉ IP!" }]}
+            label="Tên miền"
+            name={"host_name"}
+            rules={[{ required: true, message: "Hãy nhập vào tên miền!" }]}
           >
             <Input />
           </Form.Item>
           <Form.Item
             validateTrigger={["onChange", "onBlur"]}
-            label="Cổng (port)"
-            name={"port"}
-            rules={[{ required: true, message: "Hãy nhập vào tên cổng!" }]}
+            label="Ngôn ngữ"
+            name={"language"}
+            rules={[{ required: true, message: "Hãy nhập vào ngôn ngữ!" }]}
           >
             <Input />
           </Form.Item>
-          <Form.Item validateTrigger={["onChange", "onBlur"]} label="Ghi chú" name={"note"}>
+          <Form.Item
+            validateTrigger={["onChange", "onBlur"]}
+            label="Quốc gia xuất bản"
+            name={"publishing_country"}
+            rules={[{ required: true, message: "Hãy nhập vào quốc gia xuất bản!" }]}
+          >
             <Input />
+          </Form.Item>
+          <Form.Item
+            validateTrigger={["onChange", "onBlur"]}
+            label="Loại nguồn"
+            name={"source_type"}
+            rules={[{ required: true, message: "Hãy nhập vào loại nguồn!" }]}
+          >
+            <Select>
+              <Select.Option value="Báo điện tử">Báo điện tử</Select.Option>
+              <Select.Option value="Báo chính thống">Báo chính thống</Select.Option>
+              <Select.Option value="Blog cá nhân">Blog cá nhân</Select.Option>
+              <Select.Option value="Báo phản động">Báo phản động</Select.Option>
+            </Select>
           </Form.Item>
         </Form>
       </Modal>

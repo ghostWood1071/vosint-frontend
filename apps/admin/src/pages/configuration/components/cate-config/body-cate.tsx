@@ -1,7 +1,9 @@
 import { PlusOutlined } from "@ant-design/icons";
 import { Button, Input, List } from "antd";
 import React, { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
+import { useMutationObjectCate, useObjectCate } from "../../config.loader";
 import { AddCateComponent } from "./add-cate-component";
 import styles from "./body-cate.module.less";
 import { CateItem } from "./cate-item";
@@ -9,25 +11,23 @@ import { DetailCate } from "./detail-cate";
 
 interface Props {
   title: string;
-  dataTable: any[];
-  functionAdd: (value: any) => void;
-  functionEdit: (value: any) => void;
-  functionDelete: (value: any) => void;
-  confirmLoading?: any;
 }
 
-export const BodyCate: React.FC<Props> = ({
-  title,
-  dataTable,
-  functionAdd,
-  functionDelete,
-  functionEdit,
-  confirmLoading,
-}) => {
+export const BodyCate: React.FC<Props> = ({ title }) => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [choosedCate, setChoosedCate] = useState<any>(null);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [typeModal, setTypeModal] = useState("");
-  const data = dataTable;
+  const typeObject =
+    title === "đối tượng" ? "Đối tượng" : title === "tổ chức" ? "Tổ chức" : "Quốc gia";
+  const { data } = useObjectCate({
+    type: typeObject,
+    skip: searchParams.get("page_number") ?? 1,
+    limit: searchParams.get("page_size") ?? 10,
+  });
+  const page = searchParams.get("page_number");
+  const pageSize = searchParams.get("page_size");
+  const { mutate, isLoading: isObjectCateLoading } = useMutationObjectCate();
 
   function handleSearch(value: string) {
     // console.log(value);
@@ -63,13 +63,16 @@ export const BodyCate: React.FC<Props> = ({
             itemLayout="vertical"
             size="large"
             pagination={{
-              pageSize: 15,
+              current: page ? +page : 1,
+              pageSize: pageSize ? +pageSize : 10,
               size: "default",
               position: "bottom",
+              total: data?.total,
+              onChange: handlePaginationChange,
             }}
-            dataSource={data}
+            dataSource={data?.data}
             renderItem={(item) => {
-              return <CateItem functionEdit={functionEdit} item={item} onclick={setChoosedCate} />;
+              return <CateItem functionEdit={handleUpdate} item={item} onclick={setChoosedCate} />;
             }}
           />
         </div>
@@ -91,11 +94,12 @@ export const BodyCate: React.FC<Props> = ({
           setIsOpen={setIsOpenModal}
           nameTitle={title}
           choosedCate={choosedCate}
-          functionAdd={functionAdd}
-          functionDelete={functionDelete}
-          functionEdit={functionEdit}
-          confirmLoading={confirmLoading}
+          functionAdd={handleAdd}
+          functionDelete={handleDelete}
+          functionEdit={handleUpdate}
+          confirmLoading={isObjectCateLoading}
           setChoosedCate={setChoosedCate}
+          typeObject={typeObject}
         />
       ) : null}
     </div>
@@ -113,5 +117,22 @@ export const BodyCate: React.FC<Props> = ({
   function handleOpenDeleteCate(value: any) {
     setIsOpenModal(true);
     setTypeModal("delete");
+  }
+  function handleAdd(value: any) {
+    mutate({ ...value, action: "add", typeObject: typeObject, status: "enable" });
+  }
+
+  function handleUpdate(value: any) {
+    mutate({ ...value, action: "update" });
+  }
+
+  function handleDelete(value: any) {
+    mutate({ ...value, action: "delete" });
+  }
+
+  function handlePaginationChange(page: number, pageSize: number) {
+    searchParams.set("page_number", page + "");
+    searchParams.set("page_size", pageSize + "");
+    setSearchParams(searchParams);
   }
 };

@@ -2,7 +2,7 @@ import { BASE_URL } from "@/constants/config";
 import { uploadFile } from "@/services/cate-config.service";
 import { Form, Input, Modal, Upload } from "antd";
 import type { RcFile, UploadFile, UploadProps } from "antd/es/upload/interface";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import styles from "./add-cate.module.less";
 
@@ -17,6 +17,7 @@ interface Props {
   functionEdit: (value: any) => void;
   functionDelete: (value: any) => void;
   setChoosedCate: (value: any) => void;
+  typeObject: string;
 }
 
 const formItemLayoutWithOutLabel = {
@@ -38,6 +39,7 @@ export const AddCateComponent: React.FC<Props> = ({
   functionDelete,
   functionEdit,
   setChoosedCate,
+  typeObject,
 }) => {
   const [fileList, setFileList] = useState<any[]>(
     type === "edit"
@@ -122,8 +124,9 @@ export const AddCateComponent: React.FC<Props> = ({
       url = BASE_URL + "/" + result.data[0].file_url;
     }
 
-    const result = { ...data, keywords: key, avatar_url: url, status: "enable" };
+    const result = { ...data, keywords: key, avatar_url: url, status: "enable", type: typeObject };
     functionAdd(result);
+
     setIsOpen(false);
   }
 
