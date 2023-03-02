@@ -1,41 +1,30 @@
-import { apiClient } from "@/utils/api";
+import { apiClient, filterEmptyString } from "@/utils/api";
 
 const apiCateConfigBaseV2Url = "/v2";
 
 //get
-export const getOrganizationCateConfig = async () => {
-  const result = await apiClient.get<any>(`${apiCateConfigBaseV2Url}/organize`);
+export const getObjectCateConfig = async (filter: any) => {
+  const result = await apiClient.get<any>(`${apiCateConfigBaseV2Url}/object/${filter.type}`, {
+    params: filterEmptyString(filter),
+  });
   return result.data;
 };
 
-export const getObjectCateConfig = async () => {
-  const result = await apiClient.get<any>(`${apiCateConfigBaseV2Url}/object`);
-  return result.data;
-};
-
-export const getCountryCateConfig = async () => {
-  const result = await apiClient.get<any>(`${apiCateConfigBaseV2Url}/country`);
-  return result.data;
-};
-
-export const getProxyConfig = async () => {
-  const result = await apiClient.get<any>(`${apiCateConfigBaseV2Url}/Proxy`);
+export const getProxyConfig = async (filter: any) => {
+  const result = await apiClient.get<any>(`${apiCateConfigBaseV2Url}/Proxy/${filter.text_search}`, {
+    params: filterEmptyString(filter),
+  });
   return result.data;
 };
 
 //add
-export const addNewOrganizationCateConfig = async (data: any) => {
-  const result = await apiClient.post<any>(`${apiCateConfigBaseV2Url}/organize/`, data);
-  return result.data;
-};
-
-export const addNewObjectCateConfig = async (data: any) => {
-  const result = await apiClient.post<any>(`${apiCateConfigBaseV2Url}/object/`, data);
-  return result.data;
-};
-
-export const addNewCountryCateConfig = async (data: any) => {
-  const result = await apiClient.post<any>(`${apiCateConfigBaseV2Url}/country/`, data);
+export const addNewObjectCateConfig = async (data: any, typeObject: any, statusData: any) => {
+  const result = await apiClient.post<any>(`${apiCateConfigBaseV2Url}/object/`, data, {
+    params: {
+      type: typeObject,
+      Status: statusData,
+    },
+  });
   return result.data;
 };
 
@@ -45,19 +34,8 @@ export const addNewProxyConfig = async (data: any) => {
 };
 
 //delete
-export const deleteCountryCateConfig = async (countryCateId: string) => {
-  const result = await apiClient.delete<any>(`${apiCateConfigBaseV2Url}/country/${countryCateId}`);
-  return result.data;
-};
-
-export const deleteOrganizationCateConfig = async (organizationCateId: string) => {
-  const result = await apiClient.delete<any>(
-    `${apiCateConfigBaseV2Url}/organize/${organizationCateId}`,
-  );
-  return result.data;
-};
-export const deleteObjectCateConfig = async (objectCateId: string) => {
-  const result = await apiClient.delete<any>(`${apiCateConfigBaseV2Url}/object/${objectCateId}`);
+export const deleteObjectCateConfig = async (objectId: string) => {
+  const result = await apiClient.delete<any>(`${apiCateConfigBaseV2Url}/object/${objectId}`);
   return result.data;
 };
 
@@ -67,19 +45,8 @@ export const deleteProxyConfig = async (proxyId: string) => {
 };
 
 //update
-export const updateOrganizationCateConfig = async (organizationCateId: string, data: any) => {
-  const result = await apiClient.put(
-    `${apiCateConfigBaseV2Url}/organize/${organizationCateId}`,
-    data,
-  );
-  return result.data;
-};
-export const updateObjectCateConfig = async (objectCateId: string, data: any) => {
-  const result = await apiClient.put(`${apiCateConfigBaseV2Url}/object/${objectCateId}`, data);
-  return result.data;
-};
-export const updateCountryCateConfig = async (countryCateId: string, data: any) => {
-  const result = await apiClient.put(`${apiCateConfigBaseV2Url}/country/${countryCateId}`, data);
+export const updateObjectCateConfig = async (objectId: string, data: any) => {
+  const result = await apiClient.put(`${apiCateConfigBaseV2Url}/object/${objectId}`, data);
   return result.data;
 };
 
