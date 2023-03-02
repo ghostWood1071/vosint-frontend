@@ -1,13 +1,9 @@
-import { Tree } from "@/components";
-import { ETreeTag } from "@/components/tree/tree.store";
 import { AppContainer } from "@/pages/app";
-import { organizationGraphPath } from "@/pages/router";
-import { Input, Modal, Space } from "antd";
-import { useTranslation } from "react-i18next";
+import { getOrganizationsDetailUrl, organizationGraphPath } from "@/pages/router";
+import { Input, Menu, MenuProps, Pagination } from "antd";
 import { Outlet, useNavigate } from "react-router-dom";
 
-import { useOrganizationsSidebar } from "../organizations.loader";
-import styles from "./organizations-layout.module.less";
+import { OBJECT_TYPE, useObjectList } from "../organizations.loader";
 
 export const OrganizationsLayout: React.FC = () => {
   return (
@@ -17,45 +13,85 @@ export const OrganizationsLayout: React.FC = () => {
   );
 };
 
-function Sidebar() {
-  const { t } = useTranslation("translation", { keyPrefix: "news" });
-  const { data, isLoading } = useOrganizationsSidebar();
-  const navigate = useNavigate();
+function buildMenuItem(items: any[]) {
+  return items?.map((i) => ({
+    label: i.name,
+    key: i._id,
+  }));
+}
 
-  if (isLoading) return null;
+function Sidebar() {
+  const navigate = useNavigate();
+  const { data: dataDoiTuong } = useObjectList(OBJECT_TYPE.DOI_TUONG, "", {});
+  const { data: dataToChuc } = useObjectList(OBJECT_TYPE.TO_CHUC, "", {});
+  const { data: dataQuocGia } = useObjectList(OBJECT_TYPE.QUOC_GIA, "", {});
+
+  const items: MenuProps["items"] = [
+    {
+      label: "Danh mục đối tượng",
+      key: "doi_tuong",
+      children: [
+        {
+          label: <Input.Search placeholder="Tìm kiếm" style={{ marginTop: 3 }} />,
+          key: "doi_tuong_search",
+        },
+        ...buildMenuItem(dataDoiTuong?.data ?? []),
+        {
+          label: <Pagination simple defaultCurrent={1} pageSize={5} total={dataDoiTuong?.total} />,
+          key: "doi_tuong_pagination",
+        },
+      ],
+    },
+    {
+      label: "Danh mục tổ chức",
+      key: "to_chuc",
+      children: [
+        {
+          label: <Input.Search placeholder="Tìm kiếm" style={{ marginTop: 3 }} />,
+          key: "to_chuc_search",
+        },
+        ...buildMenuItem(dataToChuc?.data ?? []),
+        {
+          label: <Pagination simple defaultCurrent={1} pageSize={5} total={dataToChuc?.total} />,
+          key: "to_chuc_pagination",
+        },
+      ],
+    },
+    {
+      label: "Danh mục quốc gia",
+      key: "quoc_gia",
+      children: [
+        {
+          label: <Input.Search placeholder="Tìm kiếm" style={{ marginTop: 3 }} />,
+          key: "quoc_gia_search",
+        },
+        ...buildMenuItem(dataQuocGia?.data ?? []),
+        {
+          label: <Pagination simple defaultCurrent={1} pageSize={5} total={dataQuocGia?.total} />,
+          key: "quoc_gia_pagination",
+        },
+      ],
+    },
+    {
+      label: "Đồ thị quan hệ quốc tế",
+      key: organizationGraphPath,
+    },
+  ];
 
   return (
-    <>
-      <Space direction="vertical" className={styles.sidebar}>
-        {data.map((basket: { name: string; data: any[] }) => (
-          <Tree
-            key={basket.name}
-            isSpinning={isLoading}
-            title={basket.name}
-            treeData={basket.data}
-            tag={ETreeTag.CHU_DE}
-            // onAdd={basket.name !== "Đồ thị quan hệ quốc tế" ? handleAdd : undefined}
-          />
-        ))}
-        <div className={styles.text} onClick={handleNavigate}>
-          Đồ thị quan hệ quốc tế
-        </div>
-      </Space>
-    </>
+    <Menu
+      mode="inline"
+      items={items}
+      defaultOpenKeys={["doi_tuong", "to_chuc", "quoc_gia"]}
+      onClick={handleClickMenu}
+    />
   );
 
-  function handleNavigate() {
-    navigate(organizationGraphPath);
+  function handleClickMenu({ key }: { key: string }) {
+    if (key === organizationGraphPath) {
+      navigate(organizationGraphPath);
+    } else {
+      navigate(getOrganizationsDetailUrl(key));
+    }
   }
-
-  // function handleAdd(values: any) {
-  //   Modal.confirm({
-  //     title: t("add_basket"),
-  //     content: <Input placeholder="Tên giỏ tin" />,
-  //     getContainer: "#modal-mount",
-  //     okText: "Thêm",
-  //     cancelText: "Huỷ",
-  //     onOk: function () {},
-  //   });
-  // }
 }

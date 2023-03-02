@@ -26,7 +26,7 @@ import { ExpertPage } from "./pages/dashboard/expert/expert.page";
 import { LeaderLayout } from "./pages/dashboard/leader/leader.page";
 import { ErrorBoundary } from "./pages/errors/error-boundary";
 import { NewsDetailPage, NewsLayout, NewsListPage } from "./pages/news";
-import { OrganizationsLayout, OrganizationsListPage } from "./pages/organization";
+import { OrganizationsLayout } from "./pages/organization";
 import { InternationalRelationshipGraph } from "./pages/organization/international-relationship-graph/component/international-relationship-graph";
 import {
   DashboardStatistics,
@@ -55,6 +55,7 @@ import {
   newsSourceConfigPath,
   objectCateConfigPath,
   organizationCateConfigPath,
+  organizationDetailPath,
   organizationGraphPath,
   organizationPath,
   pipelineCreatePath,
@@ -115,7 +116,11 @@ export const routers = createBrowserRouter([
         children: [
           {
             path: organizationPath,
-            element: <OrganizationsListPage />,
+            element: <NewsListPage />,
+          },
+          {
+            path: organizationDetailPath,
+            element: <NewsListPage />,
           },
           {
             path: organizationGraphPath,

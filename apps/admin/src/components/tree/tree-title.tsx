@@ -1,5 +1,6 @@
 import { DeleteOutlined, EditOutlined, EllipsisOutlined, PlusOutlined } from "@ant-design/icons";
 import { Col, Row, Space, Tooltip, TreeDataNode, Typography } from "antd";
+import classNames from "classnames";
 import { pick } from "lodash";
 import React, { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -28,11 +29,20 @@ export const TreeTitle: React.FC<Props> = ({ onClick, children, isEditable, ...n
   useClickAway(ref, handleClickAway);
 
   return (
-    <Row className={styles.treeTitle}>
+    <Row className={styles.treeTitle} align="middle">
       <Col span={16}>
-        <Paragraph ellipsis={{ rows: 1 }} className={styles.paragraph} onClick={handleClick}>
-          {node.title?.toString()}
-        </Paragraph>
+        <Space className={styles.title}>
+          <Paragraph
+            ellipsis={{ rows: 1 }}
+            className={classNames({
+              [styles.paragraph]: true,
+              [styles.isOpen]: isOpen,
+            })}
+            onClick={handleClick}
+          >
+            {node.title?.toString()}
+          </Paragraph>
+        </Space>
       </Col>
       {isEditable && (
         <Col span={8} className={styles.menu} ref={ref}>
