@@ -22,7 +22,7 @@ export const NewsLayout: React.FC = () => {
 function Sidebar() {
   const { data, isLoading } = useNewsSidebar();
   const { newsletterId } = useParams();
-  const { mutate, isLoading: isMutateLoading } = useMutationNewsSidebar();
+  const { mutateAsync, isLoading: isMutateLoading } = useMutationNewsSidebar();
   const navigate = useNavigate();
   const setValues = useTreeStore((state) => state.setValues);
 
@@ -87,7 +87,7 @@ function Sidebar() {
   }
 
   function handleFinish(values: Record<string, any>) {
-    mutate(values, {
+    return mutateAsync(values, {
       onSuccess: () => {
         setValues({
           tag: null,

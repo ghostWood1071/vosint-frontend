@@ -36,7 +36,7 @@ const formItemLayoutWithOutLabel2 = {
 };
 
 interface Props {
-  onFinish: (values: Record<string, any>) => void;
+  onFinish: (values: Record<string, any>) => Promise<any>;
   confirmLoading?: boolean;
 }
 
@@ -238,8 +238,7 @@ export const NewsForm: React.FC<Props> = ({ onFinish, confirmLoading }) => {
       ...values,
       tag,
       action,
-    });
-    reset();
+    }).then(() => reset());
   }
 
   function handleCancel() {
