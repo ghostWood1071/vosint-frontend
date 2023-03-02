@@ -1,7 +1,7 @@
 import { LOCAL_ROLE, LOCAL_TOKEN } from "@/constants/config";
 import { authLoginPath, dashboardPathWithRole, searchPath } from "@/pages/router";
 import { SearchOutlined, UserOutlined } from "@ant-design/icons";
-import { Button, Col, Dropdown, Menu, Row } from "antd";
+import { Button, Col, Dropdown, Row } from "antd";
 import classNames from "classnames";
 import { useTranslation } from "react-i18next";
 import { Link, NavLink, useNavigate } from "react-router-dom";
@@ -16,16 +16,12 @@ export const AppHeader: React.FC = () => {
   const [value, __, remove] = useLocalStorage<string>(LOCAL_ROLE);
   const [_, ___, removeToken] = useLocalStorage<string>(LOCAL_TOKEN);
 
-  const menu = (
-    <Menu
-      items={[
-        {
-          key: "logout",
-          label: <Button onClick={handleLogout}>Logout</Button>,
-        },
-      ]}
-    />
-  );
+  const items = [
+    {
+      key: "logout",
+      label: <Button onClick={handleLogout}>Logout</Button>,
+    },
+  ];
 
   return (
     <Row className={styles.header} align="middle">
@@ -48,7 +44,7 @@ export const AppHeader: React.FC = () => {
       <Col span={4}>
         <Row justify="end" className={styles.userSetting}>
           <SearchOutlined onClick={handlerNavigateSearch} className={styles.icon} />
-          <Dropdown overlay={menu}>
+          <Dropdown menu={{ items }}>
             <UserOutlined className={styles.icon} />
           </Dropdown>
         </Row>

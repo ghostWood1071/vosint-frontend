@@ -66,6 +66,7 @@
     "confirm_delete_news_basket": "Xác nhận xoá giỏ tin",
     "create": "Tạo mới giỏ tin",
     "update": "Cập nhật giỏ tin",
-    "delete": "Xoá giỏ tin"
+    "delete": "Xoá giỏ tin",
+    "null": ""
   }
 }

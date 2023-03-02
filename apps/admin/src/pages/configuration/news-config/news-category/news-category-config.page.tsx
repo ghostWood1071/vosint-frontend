@@ -17,7 +17,7 @@ export const CategoryNewsConfig = () => {
   const setValues = useTreeStore((state) => state.setValues);
   const { data } = useNewsSidebar();
   const [searchParams] = useSearchParams();
-  const { mutate, isLoading: isMutateLoading } = useMutationNewsSidebar();
+  const { mutateAsync, isLoading: isMutateLoading } = useMutationNewsSidebar();
   const newsletterId = searchParams.get("newsletter_id");
   const { data: dataDetail } = useNewsletterDetail(newsletterId ?? null, {});
   const linhVucTree = data?.linh_vuc && buildTree(data.linh_vuc);
@@ -100,7 +100,7 @@ export const CategoryNewsConfig = () => {
   }
 
   function handleFinish(values: any) {
-    mutate(values, {
+    return mutateAsync(values, {
       onSuccess: () => {
         setValues({
           tag: null,
