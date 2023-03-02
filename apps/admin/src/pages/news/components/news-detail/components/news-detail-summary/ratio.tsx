@@ -24,7 +24,7 @@ const DecimalStep = () => {
       max={1}
       onChange={onChange}
       value={typeof inputValue === "number" ? inputValue : 0}
-      step={0.01}
+      step={0.2}
     />
   );
 };
