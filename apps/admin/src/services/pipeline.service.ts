@@ -55,8 +55,34 @@ export const verifyPipeline = async (id: string) => {
   return result.data.payload;
 };
 
-export const getHistory = async (id: string) => {
+export const getHistory = async (id: string, filter: Record<string, any>) => {
   const url = `${apiJobBaseUrl}/get_log_history_error_or_getnews/${id}`;
-  const result = await apiClient.get<APIResponse<IPipeline>>(url);
+  const result = await apiClient.get<APIResponse<IPipeline>>(url, {
+    params: filterEmptyString(filter),
+  });
+  return result.data;
+};
+
+export const startJobById = async (id: string) => {
+  const url = `${apiJobBaseUrl}/start_job/${id}`;
+  const result = await apiClient.post(url);
+  return result.data;
+};
+
+export const stopJobById = async (id: string) => {
+  const url = `${apiJobBaseUrl}/stop_job/${id}`;
+  const result = await apiClient.post(url);
+  return result.data;
+};
+
+export const startAllJob = async () => {
+  const url = `${apiJobBaseUrl}/start_all_jobs`;
+  const result = await apiClient.post(url);
+  return result.data;
+};
+
+export const stopAllJob = async () => {
+  const url = `${apiJobBaseUrl}/stop_all_jobs`;
+  const result = await apiClient.post(url);
   return result.data;
 };

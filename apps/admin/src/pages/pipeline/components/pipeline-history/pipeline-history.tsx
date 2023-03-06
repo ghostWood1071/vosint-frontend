@@ -1,8 +1,6 @@
-import { PipelineNewIcon } from "@/assets/svg";
-import { Card, Col, List, Row, Space } from "antd";
-import VirtualList from "rc-virtual-list";
+import { Table, TableColumnsType, Typography } from "antd";
 import React from "react";
-import { useTranslation } from "react-i18next";
+import { useSearchParams } from "react-router-dom";
 
 interface Props {
   data: any;
@@ -10,37 +8,44 @@ interface Props {
 }
 
 export const PipelineHistory: React.FC<Props> = ({ data, isLoading }) => {
-  const { t } = useTranslation("translation", { keyPrefix: "pipeline" });
+  const [searchParams, setSearchParams] = useSearchParams();
+  const page = searchParams.get("page_number_history");
 
-  if (isLoading) {
-    return null;
-  }
+  const columns: TableColumnsType<any> = [
+    {
+      key: "link",
+      dataIndex: "link",
+      render: (link: string) => (
+        <Typography.Link href={link} target="_blank" rel="noreferrer">
+          {link}
+        </Typography.Link>
+      ),
+    },
+    {
+      dataIndex: "created_at",
+    },
+  ];
 
   return (
-    <Row gutter={22}>
-      <Col span={24}>
-        <Card title={t("links_information")}>
-          <List>
-            <VirtualList
-              data={data.result}
-              height={550}
-              itemHeight={35}
-              itemKey={({ start_time, url }) => start_time + url}
-            >
-              {(item: (typeof data.detail)[0]) => (
-                <List.Item key={item.start_time + item.url}>
-                  <Space>
-                    <a href={item.link} target="_blank" rel="noreferrer">
-                      {item.link}
-                    </a>
-                    {item.log !== "completed" && <PipelineNewIcon />}
-                  </Space>
-                </List.Item>
-              )}
-            </VirtualList>
-          </List>
-        </Card>
-      </Col>
-    </Row>
+    <div>
+      <Table
+        loading={isLoading}
+        columns={columns}
+        dataSource={data?.result ?? []}
+        rowKey="_created_at"
+        pagination={{
+          position: ["bottomCenter"],
+          onChange: handlePaginationChange,
+          current: page ? +page : 1,
+          total: data?.totalRecord,
+        }}
+      />
+    </div>
   );
+
+  function handlePaginationChange(page: number, pageSize: number) {
+    searchParams.set("page_number_history", page + "");
+    searchParams.set("page_size_history", pageSize + "");
+    setSearchParams(searchParams);
+  }
 };
