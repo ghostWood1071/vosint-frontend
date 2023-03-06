@@ -6,6 +6,10 @@ import {
   getPipelineDetail,
   getPipelines,
   putPipeline,
+  startAllJob,
+  startJobById,
+  stopAllJob,
+  stopJobById,
   verifyPipeline,
 } from "@/services/pipeline.service";
 import { message } from "antd";
@@ -32,8 +36,10 @@ export const usePipelineDetail = (id: string, enabled: boolean) => {
   return useQuery([CACHE_KEYS.PipelineDetail, id], () => getPipelineDetail(id), { enabled });
 };
 
-export const usePipelineHistory = (id: string) => {
-  return useQuery([CACHE_KEYS.PipelineHistory, id], () => getHistory(id), { enabled: !!id });
+export const usePipelineHistory = (id: string, filter: Record<string, any>) => {
+  return useQuery([CACHE_KEYS.PipelineHistory, id, filter], () => getHistory(id, filter), {
+    enabled: !!id,
+  });
 };
 
 export const usePutPipeline = ({ onSuccess = () => {}, onError = () => {} }) => {
@@ -74,5 +80,29 @@ export const useDeletePipeline = () => {
       queryClient.invalidateQueries([CACHE_KEYS.Pipelines]);
       message.success("Deleted pipeline");
     },
+  });
+};
+
+export const useMutateRunOrStopJob = () => {
+  return useMutation<unknown, unknown, { _id: string; enabled: boolean }>(({ _id, enabled }) => {
+    if (enabled) {
+      return startJobById(_id);
+    } else {
+      return stopJobById(_id);
+    }
+  });
+};
+
+export const useMutateRunOrStopAllJob = () => {
+  return useMutation<unknown, unknown, { status: "start" | "stop" }>(({ status }) => {
+    if (status === "start") {
+      return startAllJob();
+    }
+
+    if (status === "stop") {
+      return stopAllJob();
+    }
+
+    throw new Error("not found status");
   });
 };

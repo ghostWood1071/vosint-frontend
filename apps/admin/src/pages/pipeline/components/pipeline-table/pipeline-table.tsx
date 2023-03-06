@@ -1,4 +1,9 @@
-import { PipelineCloneIcon, PipelineHistoryIcon } from "@/assets/svg";
+import {
+  PipelineCloneIcon,
+  PipelineHistoryIcon,
+  PipelineRunIcon,
+  PipelineSleepIcon,
+} from "@/assets/svg";
 import { SwitchCustom } from "@/components/";
 import { getPipelineDetailPath } from "@/pages/router";
 import { IPipelines } from "@/services/pipeline.types";
@@ -16,7 +21,6 @@ interface Props {
   onHistory?(id: string): void;
 
   onChangeEnabled: (_id: string, enabled: boolean) => void;
-  onChangeActive: (_id: string, actived: boolean) => void;
   onClonePipeline: (_id: string) => void;
   onDeletePipeline: (_id: string) => void;
 }
@@ -26,7 +30,6 @@ export const PipelineTable: React.FC<Props> = ({
   isLoading,
   onHistory,
   onChangeEnabled,
-  onChangeActive,
   onClonePipeline,
   onDeletePipeline,
   totalRecord,
@@ -69,38 +72,18 @@ export const PipelineTable: React.FC<Props> = ({
       },
     },
     {
-      title: t("activity"),
+      title: t("status"),
       dataIndex: "actived",
-      render: (actived: boolean, { _id }) => {
+      align: "center",
+      render: (status: number) => {
         return (
-          <SwitchCustom
-            checkedChildren="Stop"
-            unCheckedChildren="Run"
-            defaultChecked={actived}
-            isColorful
-            onChange={handleChange}
-          />
+          <Space align="center">
+            <PipelineSleepIcon className={!status ? "active" : ""} />
+            <PipelineRunIcon className={status ? "active" : ""} />
+          </Space>
         );
-
-        function handleChange(checked: boolean) {
-          onChangeActive(_id, checked);
-        }
       },
     },
-    // TODO: Need confirm
-    // {
-    //   title: t("status"),
-    //   dataIndex: "status",
-    //   render: (status: number) => {
-    //     return (
-    //       <Space align="center">
-    //         <PipelineStandIcon className={status === 0 ? "active" : ""} />
-    //         <PipelineSleepIcon className={status === 1 ? "active" : ""} />
-    //         <PipelineRunIcon className={status === 2 ? "active" : ""} />
-    //       </Space>
-    //     );
-    //   },
-    // },
     {
       title: t("collect_history"),
       align: "center",
