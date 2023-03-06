@@ -37,8 +37,13 @@ export const usePipelineHistory = (id: string) => {
 };
 
 export const usePutPipeline = ({ onSuccess = () => {}, onError = () => {} }) => {
+  const queryClient = useQueryClient();
+
   return useMutation((data: any) => putPipeline(data), {
-    onSuccess,
+    onSuccess: () => {
+      onSuccess();
+      queryClient.invalidateQueries([CACHE_KEYS.Pipelines]);
+    },
     onError,
   });
 };
