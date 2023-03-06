@@ -277,6 +277,11 @@ export function Pipeline({
       const activeTreeItem = clonedItems[activeIndex];
 
       clonedItems[activeIndex] = { ...activeTreeItem, depth, parentId };
+      const defaultParams = activeTreeItem?.param_infos?.reduce(
+        (acc, curr) => ({ ...acc, [curr.name]: curr.default_val }),
+        {},
+      );
+      clonedItems[activeIndex].params = { ...defaultParams, ...activeTreeItem.params };
 
       const sortedItems = arrayMove(clonedItems, activeIndex, overIndex);
       const newItems = buildTree(sortedItems);
@@ -325,7 +330,6 @@ export function Pipeline({
   }
 
   function handleOptionFormValueChange(_changedValues: any, values: Record<string, any>) {
-    console.log(values);
     optionId && setItems((items) => setProperty(items, optionId, "params", () => values));
   }
 }
