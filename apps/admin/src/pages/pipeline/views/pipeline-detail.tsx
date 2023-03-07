@@ -1,9 +1,10 @@
 import { pipelineListPath } from "@/pages/router";
-import { IActionInfos, IPipelineSchema } from "@/services/pipeline.types";
+import { IActionInfos, IPipelineSchema } from "@/services/pipeline.type";
 import { PageHeader, message } from "antd";
 import { pick } from "lodash";
 import { nanoid } from "nanoid";
 import React from "react";
+import { useQueryClient } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { Pipeline } from "../components/pipeline/pipeline";
@@ -18,14 +19,17 @@ import {
 
 export const PipelineDetail: React.FC = () => {
   const { id } = useParams();
+  const queryClient = useQueryClient();
   const { data: actions, isLoading: loadingActions } = usePipelineActionInfos();
   const { data: pipeline, isLoading: loadingPipeline } = usePipelineDetail(id!, !!actions);
   const { mutate: updatePipeline } = usePutPipeline({
-    onSuccess: () =>
+    onSuccess: () => {
       message.success({
         content: "Update pipeline success",
         key: CACHE_KEYS.PipelineUpdate,
-      }),
+      });
+      queryClient.invalidateQueries([CACHE_KEYS.Pipelines]);
+    },
   });
 
   const { mutate: verifyPipeline } = useVerifyPipeline({

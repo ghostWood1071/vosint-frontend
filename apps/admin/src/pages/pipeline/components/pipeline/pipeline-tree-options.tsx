@@ -1,10 +1,10 @@
-import { IActionParamInfo } from "@/services/pipeline.types";
+import { IActionParamInfo } from "@/services/pipeline.type";
 import { CloseCircleOutlined } from "@ant-design/icons";
 import { Card, Form, Input, Select } from "antd";
 import { useEffect } from "react";
 
 import styles from "./pipeline-tree-options.module.less";
-import { FlattenedItem } from "./pipeline.types";
+import { FlattenedItem } from "./pipeline.type";
 
 const { Option } = Select;
 const { TextArea } = Input;

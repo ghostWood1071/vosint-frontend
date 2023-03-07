@@ -1,6 +1,6 @@
 import { apiClient, filterEmptyString } from "@/utils/api";
 
-import { IActionInfos, IPipeline, IPipelines } from "./pipeline.types";
+import { IActionInfos, IPipeline, IPipelines } from "./pipeline.type";
 import { APIResponse } from "./service.types";
 
 const apiPipelineBaseUrl = "/pipeline/Pipeline/api";

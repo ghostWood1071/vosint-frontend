@@ -12,8 +12,9 @@ import {
   stopJobById,
   verifyPipeline,
 } from "@/services/pipeline.service";
+import { IPipelineRunAllJob, IPipelineRunJob } from "@/services/pipeline.type";
 import { message } from "antd";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { UseMutationOptions, useMutation, useQuery, useQueryClient } from "react-query";
 
 export const CACHE_KEYS = {
   Pipelines: "PIPELINES",
@@ -42,23 +43,12 @@ export const usePipelineHistory = (id: string, filter: Record<string, any>) => {
   });
 };
 
-export const usePutPipeline = ({ onSuccess = () => {}, onError = () => {} }) => {
-  const queryClient = useQueryClient();
-
-  return useMutation((data: any) => putPipeline(data), {
-    onSuccess: () => {
-      onSuccess();
-      queryClient.invalidateQueries([CACHE_KEYS.Pipelines]);
-    },
-    onError,
-  });
+export const usePutPipeline = (options?: UseMutationOptions<unknown, unknown, any>) => {
+  return useMutation((data) => putPipeline(data), options);
 };
 
-export const useVerifyPipeline = ({ onSuccess = () => {}, onError = () => {} }) => {
-  return useMutation((id: string) => verifyPipeline(id), {
-    onSuccess,
-    onError,
-  });
+export const useVerifyPipeline = (options?: UseMutationOptions<unknown, unknown, string>) => {
+  return useMutation((id) => verifyPipeline(id), options);
 };
 
 export const useClonePipeline = () => {
@@ -83,18 +73,22 @@ export const useDeletePipeline = () => {
   });
 };
 
-export const useMutateRunOrStopJob = () => {
-  return useMutation<unknown, unknown, { _id: string; enabled: boolean }>(({ _id, enabled }) => {
-    if (enabled) {
+export const useMutateRunOrStopJob = (
+  options?: UseMutationOptions<unknown, unknown, IPipelineRunJob>,
+) => {
+  return useMutation(({ _id, activated }) => {
+    if (activated) {
       return startJobById(_id);
     } else {
       return stopJobById(_id);
     }
-  });
+  }, options);
 };
 
-export const useMutateRunOrStopAllJob = () => {
-  return useMutation<unknown, unknown, { status: "start" | "stop" }>(({ status }) => {
+export const useMutateRunOrStopAllJob = (
+  options?: UseMutationOptions<unknown, unknown, IPipelineRunAllJob>,
+) => {
+  return useMutation(({ status }) => {
     if (status === "start") {
       return startAllJob();
     }
@@ -104,5 +98,5 @@ export const useMutateRunOrStopAllJob = () => {
     }
 
     throw new Error("not found status");
-  });
+  }, options);
 };
