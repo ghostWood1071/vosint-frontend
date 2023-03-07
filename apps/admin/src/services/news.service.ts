@@ -1,6 +1,9 @@
 import { apiClient, filterEmptyString } from "@/utils/api";
 
+import type { INewsSummaryDto } from "./news.type";
+
 const apiNewsBaseV2Url = "/v2";
+const apiSummBaseUrl = "/summ";
 
 export const getNewsSidebar = async () => {
   const result = await apiClient.get<any>(`${apiNewsBaseV2Url}/newsletters`);
@@ -98,4 +101,12 @@ export const deleteNewsInVitalUser = async (newsIds: string[]) => {
 export const getNewsletterDetail = async (id: string) => {
   const result = await apiClient.get(`${apiNewsBaseV2Url}/newsletters/${id}`);
   return result.data;
+};
+
+export const getNewsSummary = async ({ k, ...data }: INewsSummaryDto) => {
+  const query = new URLSearchParams({ k });
+
+  return apiClient
+    .post(`http://vosint.aiacademy.edu.vn/api${apiSummBaseUrl}/summary/?${query.toString()}`, data)
+    .then((res) => res.data);
 };

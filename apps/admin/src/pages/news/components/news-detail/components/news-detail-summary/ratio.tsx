@@ -1,30 +1,13 @@
 import { Slider } from "antd";
-import React, { useState } from "react";
+import React from "react";
 
-export const RatioSummary: React.FC = () => (
-  <div>
-    <DecimalStep />
-  </div>
-);
+interface Props {
+  onAfterChange?: (value: number) => void;
+  defaultValue?: number;
+}
 
-const DecimalStep = () => {
-  const [inputValue, setInputValue] = useState(0.5);
-
-  const onChange = (value: any) => {
-    if (isNaN(value)) {
-      return;
-    }
-    console.log(value);
-    setInputValue(value);
-  };
-
+export const RatioSummary: React.FC<Props> = ({ onAfterChange, defaultValue = 0 }) => {
   return (
-    <Slider
-      min={0}
-      max={1}
-      onChange={onChange}
-      value={typeof inputValue === "number" ? inputValue : 0}
-      step={0.2}
-    />
+    <Slider min={0} max={1} step={0.2} defaultValue={defaultValue} onAfterChange={onAfterChange} />
   );
 };

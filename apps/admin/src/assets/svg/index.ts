@@ -54,3 +54,7 @@ export { ReactComponent as CartIcon } from "./cart.svg";
 export { ReactComponent as TickIcon } from "./tick.svg";
 export { ReactComponent as HeartIcon } from "./heart.svg";
 export { ReactComponent as ActionFallbackIcon } from "./action-fallback.svg";
+export { ReactComponent as EarthIcon } from "./earth.svg";
+export { ReactComponent as FlagIcon } from "./flag.svg";
+export { ReactComponent as GroupIcon } from "./group.svg";
+export { ReactComponent as UserTieIcon } from "./user-tie.svg";
