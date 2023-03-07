@@ -1,8 +1,9 @@
 import { EarthIcon, FlagIcon, GroupIcon, UserTieIcon } from "@/assets/svg";
 import { AppContainer } from "@/pages/app";
 import { getOrganizationsDetailUrl, organizationGraphPath } from "@/pages/router";
-import { Input, Menu, MenuProps, Pagination } from "antd";
-import { Outlet, useNavigate } from "react-router-dom";
+import { UserOutlined } from "@ant-design/icons";
+import { Avatar, Input, Menu, MenuProps, Pagination, Space, Typography } from "antd";
+import { Outlet, useNavigate, useSearchParams } from "react-router-dom";
 
 import { OBJECT_TYPE, useObjectList } from "../organizations.loader";
 import styles from "./organizations-layout.module.less";
@@ -18,18 +19,30 @@ export const OrganizationsLayout: React.FC = () => {
 function buildMenuItem(
   { data, total }: { data: any[]; total: number },
   key: string,
-  { onSearch }: { onSearch: () => void },
-  { onChange }: { onChange: () => void },
+  { onSearch }: { onSearch: (key: string) => (value: string) => void },
+  { onChange }: { onChange: (key: string) => (page: number) => void },
 ) {
   return [
     {
-      label: <Input.Search placeholder="Tìm kiếm" onSearch={onSearch} />,
+      label: (
+        <Input.Search placeholder="Tìm kiếm" onSearch={onSearch(key)} className={styles.input} />
+      ),
       key: key + "search",
       className: styles.search,
       disabled: true,
     },
     ...data?.map((i) => ({
-      label: i.name,
+      label: (
+        <Space>
+          <Avatar
+            src={i?.avatar_url ? i.avatar_url : <UserOutlined />}
+            style={{ backgroundColor: "#cccccc" }}
+          >
+            {i?.name}
+          </Avatar>
+          <Typography.Text>{i?.name}</Typography.Text>
+        </Space>
+      ),
       key: i._id,
     })),
     {
@@ -39,53 +52,71 @@ function buildMenuItem(
           showSizeChanger={false}
           pageSize={5}
           total={total}
-          onChange={onChange}
+          onChange={onChange(key)}
+          size="small"
         />
       ),
       key: key + "paginate",
       className: styles.pagination,
+      disabled: true,
     },
   ];
 }
 
-function Sidebar() {
+function Sidebar(): JSX.Element {
   const navigate = useNavigate();
-  const { data: dataDoiTuong } = useObjectList(OBJECT_TYPE.DOI_TUONG, "", {});
-  const { data: dataToChuc } = useObjectList(OBJECT_TYPE.TO_CHUC, "", {});
-  const { data: dataQuocGia } = useObjectList(OBJECT_TYPE.QUOC_GIA, "", {});
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const { data: dataDoiTuong } = useObjectList(OBJECT_TYPE.DOI_TUONG, {
+    name: searchParams.get(OBJECT_TYPE.DOI_TUONG + "_name") ?? "",
+    skip: searchParams.get(OBJECT_TYPE.DOI_TUONG + "_skip") ?? 1,
+    limit: 5,
+  });
+
+  const { data: dataToChuc } = useObjectList(OBJECT_TYPE.TO_CHUC, {
+    name: searchParams.get(OBJECT_TYPE.TO_CHUC + "_name") ?? "",
+    skip: searchParams.get(OBJECT_TYPE.TO_CHUC + "_skip") ?? 1,
+    limit: 5,
+  });
+
+  const { data: dataQuocGia } = useObjectList(OBJECT_TYPE.QUOC_GIA, {
+    name: searchParams.get(OBJECT_TYPE.QUOC_GIA + "_name") ?? "",
+    skip: searchParams.get(OBJECT_TYPE.QUOC_GIA + "_skip") ?? 1,
+    limit: 5,
+  });
 
   const items: MenuProps["items"] = [
     {
       label: "Danh mục đối tượng",
-      key: "doi_tuong",
+      key: OBJECT_TYPE.DOI_TUONG,
       icon: <UserTieIcon />,
       children: buildMenuItem(
         dataDoiTuong ?? { data: [], total: 0 },
-        "doi_tuong",
-        { onSearch: () => {} },
-        { onChange: () => {} },
+        OBJECT_TYPE.DOI_TUONG,
+        { onSearch: handleChangeName },
+        { onChange: handleChangePaginate },
       ),
     },
     {
       label: "Danh mục tổ chức",
-      key: "to_chuc",
+      key: OBJECT_TYPE.TO_CHUC,
       icon: <GroupIcon />,
       children: buildMenuItem(
         dataToChuc ?? { data: [], total: 0 },
-        "to_chuc",
-        { onSearch: () => {} },
-        { onChange: () => {} },
+        OBJECT_TYPE.TO_CHUC,
+        { onSearch: handleChangeName },
+        { onChange: handleChangePaginate },
       ),
     },
     {
       label: "Danh mục quốc gia",
-      key: "quoc_gia",
+      key: OBJECT_TYPE.QUOC_GIA,
       icon: <FlagIcon />,
       children: buildMenuItem(
         dataQuocGia ?? { data: [], total: 0 },
-        "quoc_gia",
-        { onSearch: () => {} },
-        { onChange: () => {} },
+        OBJECT_TYPE.QUOC_GIA,
+        { onSearch: handleChangeName },
+        { onChange: handleChangePaginate },
       ),
     },
     {
@@ -95,14 +126,7 @@ function Sidebar() {
     },
   ];
 
-  return (
-    <Menu
-      mode="inline"
-      items={items}
-      defaultOpenKeys={["doi_tuong", "to_chuc", "quoc_gia"]}
-      onClick={handleClickMenu}
-    />
-  );
+  return <Menu mode="inline" items={items} onClick={handleClickMenu} />;
 
   function handleClickMenu({ key }: { key: string }) {
     if (key === organizationGraphPath) {
@@ -110,5 +134,19 @@ function Sidebar() {
     } else {
       navigate(getOrganizationsDetailUrl(key));
     }
+  }
+
+  function handleChangePaginate(key: string) {
+    return function (page: number) {
+      searchParams.set(key + "_skip", page + "");
+      setSearchParams(searchParams);
+    };
+  }
+
+  function handleChangeName(key: string) {
+    return function (value: string) {
+      searchParams.set(key + "_name", value);
+      setSearchParams(searchParams);
+    };
   }
 }

@@ -1,6 +1,5 @@
 // import { DownNewsIcon, UpNewsIcon } from "@/assets/svg";
 import { ETreeTag } from "@/components/tree/tree.store";
-import { generateExternalLink } from "@/utils/href";
 import {
   BellTwoTone,
   ExclamationCircleOutlined,
@@ -117,9 +116,9 @@ export const NewsTable: React.FC<Props> = ({
       key: "url",
       dataIndex: "data:url",
       render: (url) => (
-        <a href={generateExternalLink(url)} target="_blank" rel="noreferrer">
+        <Typography.Link href={url} target="_blank" rel="noreferrer">
           {truncate(url, { length: 30 })}
-        </a>
+        </Typography.Link>
       ),
     },
     {

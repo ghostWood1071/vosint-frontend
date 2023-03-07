@@ -1,5 +1,4 @@
 import { DownNewsIcon, UpNewsIcon } from "@/assets/svg";
-import { generateExternalLink } from "@/utils/href";
 import {
   BellTwoTone,
   MinusCircleTwoTone,
@@ -74,9 +73,9 @@ export const OrganizationsTable: React.FC<Props> = ({ dataSource }) => {
       key: "url",
       dataIndex: "url",
       render: (url) => (
-        <a href={generateExternalLink(url)} target="_blank" rel="noreferrer">
+        <Typography.Link href={url} target="_blank" rel="noreferrer">
           {url}
-        </a>
+        </Typography.Link>
       ),
     },
     {
