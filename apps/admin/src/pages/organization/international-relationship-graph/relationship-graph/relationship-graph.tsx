@@ -32,8 +32,7 @@ export const RelationshipGraph = () => {
           </Modal>
 
           <h3 className={styles.title}>ĐỒ THỊ QUAN HỆ QUỐC TẾ</h3>
-          <Image src="/placeholder.jpg" />
-          <img src="/1.png" alt="" />
+          <Image src="/1.png" preview={false} />
         </Col>
       </Row>
     </>

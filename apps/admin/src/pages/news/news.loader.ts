@@ -12,12 +12,14 @@ import {
   getNewsDetail,
   getNewsList,
   getNewsSidebar,
+  getNewsSummary,
   getNewsVitals,
   getNewsletterDetail,
   updateNewsletter,
 } from "@/services/news.service";
+import { INewsSummaryDto, TNewsSummary } from "@/services/news.type";
 import { message } from "antd";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { UseMutationOptions, useMutation, useQuery, useQueryClient } from "react-query";
 
 import { ETreeAction, ETreeTag } from "../../components/tree/tree.store";
 
@@ -27,6 +29,7 @@ export const CACHE_KEYS = {
   CreateNewsletter: "CREATE_NEWSLETTER",
   NewsDetail: "NEWS_DETAIL",
   NewsletterDetail: "NEWSLETTER_DETAIL",
+  Summary: "SUMMARY",
 };
 
 export const useNewsSidebar = () => {
@@ -149,5 +152,15 @@ export const useDeleteNewsInNewsletter = () => {
         message.success("Xoá tin thành công");
       },
     },
+  );
+};
+
+export const useGetNewsSummaryLazy = (
+  options?: UseMutationOptions<TNewsSummary, unknown, INewsSummaryDto>,
+) => {
+  return useMutation(
+    [CACHE_KEYS.Summary],
+    (data: INewsSummaryDto) => getNewsSummary(data),
+    options,
   );
 };

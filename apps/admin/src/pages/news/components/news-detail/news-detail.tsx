@@ -41,7 +41,7 @@ export const NewsDetail: React.FC<Props> = ({ onDelete, onAdd }) => {
     {
       label: "Tóm tắt",
       key: "tom-tat",
-      children: <NewDetailSummary />,
+      children: <NewDetailSummary content={data?.["data:content"]} title={data?.["data:title"]} />,
     },
     {
       label: "Mind map",
@@ -86,10 +86,10 @@ export const NewsDetail: React.FC<Props> = ({ onDelete, onAdd }) => {
               </Tooltip>
             </Space>
           </Col>
-          <Col span={13}>
-            <h3 style={{ color: "#00A94E" }}>{data?.["data:title"]}</h3>
+          <Col span={12}>
+            <h3 style={{ color: "#00A94E", textAlign: "center" }}>{data?.["data:title"]}</h3>
           </Col>
-          <Col span={5} pull={1}>
+          <Col span={4} push={1}>
             <Typography.Link
               target="_blank"
               href={data?.["data:url"]}
