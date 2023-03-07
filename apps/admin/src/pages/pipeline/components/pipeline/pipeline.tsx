@@ -1,6 +1,6 @@
 import { ActionLogIcon } from "@/assets/svg";
 import { VI_LOCALE } from "@/locales/cron";
-import { IActionInfos, IPipelineSchema } from "@/services/pipeline.types";
+import { IActionInfos, IPipelineSchema } from "@/services/pipeline.type";
 import { EditOutlined, SaveOutlined } from "@ant-design/icons";
 import {
   DndContext,
@@ -30,7 +30,7 @@ import { PipelineAction } from "./pipeline-action";
 import { PipelineSortableItem } from "./pipeline-sortable-item";
 import { PipelineTreeOptions } from "./pipeline-tree-options";
 import "./pipeline.less";
-import { FlattenedItem } from "./pipeline.types";
+import { FlattenedItem } from "./pipeline.type";
 import {
   buildTree,
   flattenTree,

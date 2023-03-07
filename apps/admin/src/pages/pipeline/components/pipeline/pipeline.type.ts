@@ -1,4 +1,4 @@
-import { IActionParamInfo, IPipelineSchema } from "@/services/pipeline.types";
+import { IActionParamInfo, IPipelineSchema } from "@/services/pipeline.type";
 import { UniqueIdentifier } from "@dnd-kit/core";
 
 export interface TreeItem extends IPipelineSchema {

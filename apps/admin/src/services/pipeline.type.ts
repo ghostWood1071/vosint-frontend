@@ -51,3 +51,12 @@ export interface IActionParamInfo {
   z_index: number;
   options?: string[];
 }
+
+export interface IPipelineRunJob {
+  _id: string;
+  activated: boolean;
+}
+
+export interface IPipelineRunAllJob {
+  status: "start" | "stop";
+}

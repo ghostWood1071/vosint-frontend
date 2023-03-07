@@ -13,7 +13,7 @@ import {
   ActionWhileIcon,
 } from "@/assets/svg";
 
-import { TreeItems } from "./pipeline.types";
+import { TreeItems } from "./pipeline.type";
 
 export const PIPELINE_ACTION_ICON: Record<string, JSX.Element> = {
   goto: <ActionGotoIcon />,

@@ -1,9 +1,9 @@
-import { IActionInfos } from "@/services/pipeline.types";
+import { IActionInfos } from "@/services/pipeline.type";
 import { UniqueIdentifier } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
 import { nanoid } from "nanoid";
 
-import { FlattenedItem, TreeItem, TreeItems } from "./pipeline.types";
+import { FlattenedItem, TreeItem, TreeItems } from "./pipeline.type";
 
 export const iOS = /iPad|iPhone|iPod/.test(navigator.platform);
 

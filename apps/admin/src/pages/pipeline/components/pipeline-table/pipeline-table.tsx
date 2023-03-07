@@ -6,7 +6,7 @@ import {
 } from "@/assets/svg";
 import { SwitchCustom } from "@/components/";
 import { getPipelineDetailPath } from "@/pages/router";
-import { IPipelines } from "@/services/pipeline.types";
+import { IPipelines } from "@/services/pipeline.type";
 import Icon, { DeleteOutlined } from "@ant-design/icons";
 import { Button, Popconfirm, Space, Table, TableColumnsType, Tooltip } from "antd";
 import React from "react";
@@ -23,16 +23,18 @@ interface Props {
   onChangeEnabled: (_id: string, enabled: boolean) => void;
   onClonePipeline: (_id: string) => void;
   onDeletePipeline: (_id: string) => void;
+  onChangeActive: (_id: string, enabled: boolean) => void;
 }
 
 export const PipelineTable: React.FC<Props> = ({
   data,
   isLoading,
+  totalRecord,
   onHistory,
   onChangeEnabled,
   onClonePipeline,
   onDeletePipeline,
-  totalRecord,
+  onChangeActive,
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const page = searchParams.get("page_number");
@@ -52,14 +54,14 @@ export const PipelineTable: React.FC<Props> = ({
       dataIndex: "created_at",
     },
     {
-      title: t("active"),
+      title: "Kích hoạt",
       dataIndex: "enabled",
       align: "center",
       render: (enabled: boolean, { _id }) => {
         return (
           <SwitchCustom
-            checkedChildren="Enable"
-            unCheckedChildren="Disable"
+            checkedChildren="Enabled"
+            unCheckedChildren="Disabled"
             defaultChecked={enabled}
             isSquare
             onChange={handleChange}
@@ -68,6 +70,27 @@ export const PipelineTable: React.FC<Props> = ({
 
         function handleChange(checked: boolean) {
           onChangeEnabled(_id, checked);
+        }
+      },
+    },
+    {
+      title: "Hoạt động",
+      dataIndex: "actived",
+      align: "center",
+      render: (actived: boolean, { _id, enabled }) => {
+        return (
+          <SwitchCustom
+            checkedChildren="Stop"
+            unCheckedChildren="Run"
+            defaultChecked={actived}
+            isColorful
+            onChange={handleChange}
+            disabled={!enabled}
+          />
+        );
+
+        function handleChange(checked: boolean) {
+          onChangeActive(_id, checked);
         }
       },
     },
@@ -84,6 +107,7 @@ export const PipelineTable: React.FC<Props> = ({
         );
       },
     },
+
     {
       title: t("collect_history"),
       align: "center",
