@@ -7,8 +7,8 @@ export const getOrganizationsSidebar = async () => {
   return result.data;
 };
 
-export const getObject = async (filter: Record<string, string>, type: any, name: any) => {
-  const result = await apiClient.get(`${apiBaseUrlV2}/object/${type}/${name}`, {
+export const getObject = async (filter: Record<string, string>, type: any) => {
+  const result = await apiClient.get(`${apiBaseUrlV2}/object/${type}`, {
     params: filterEmptyString(filter),
   });
   return result.data;

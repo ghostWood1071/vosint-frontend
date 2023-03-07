@@ -16,8 +16,8 @@ export const useNewsList = () => {
   return useQuery([CACHE_KEYS.NewsList], () => getNewsList({}));
 };
 
-export const useObjectList = (type: string, name: string, filter: any) => {
-  return useQuery([CACHE_KEYS.Object, type, name], () => getObject(filter, type, name));
+export const useObjectList = (type: string, filter: any) => {
+  return useQuery([CACHE_KEYS.Object, type, filter], () => getObject(filter, type));
 };
 
 export enum OBJECT_TYPE {
