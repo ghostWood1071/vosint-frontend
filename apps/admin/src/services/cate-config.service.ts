@@ -23,11 +23,11 @@ export const getFacebookSetting = async (filter: any) => {
   var url = apiCateConfigBaseV2Url + "/Social-media/social_type/";
   if (filter.type_data === "Fanpage") url += "Fanpage";
 
-  if (filter.type_data === "Group") url += "Nh%C3%B3m";
+  if (filter.type_data === "Group") url += "Group";
 
-  if (filter.type_data === "Đối tượng") url += "%C4%90%E1%BB%91i%20t%C6%B0%E1%BB%A3ng";
+  if (filter.type_data === "Đối tượng") url += "Object";
 
-  const result = await apiClient.get<APIResponse<any>>(url, {
+  const result = await apiClient.get<any>(url, {
     params: filterEmptyString(filter),
   });
   return result.data;
@@ -35,7 +35,7 @@ export const getFacebookSetting = async (filter: any) => {
 
 export const getTwitterSetting = async (filter: any) => {
   const url = `${apiCateConfigBaseV2Url}/Social-media/social_media/Twitter`;
-  const result = await apiClient.get<APIResponse<any>>(url, {
+  const result = await apiClient.get<any>(url, {
     params: filterEmptyString(filter),
   });
   return result.data;
@@ -43,7 +43,7 @@ export const getTwitterSetting = async (filter: any) => {
 
 export const getTiktokSetting = async (filter: any) => {
   const url = `${apiCateConfigBaseV2Url}/Social-media/social_media/Tiktok`;
-  const result = await apiClient.get<APIResponse<any>>(url, {
+  const result = await apiClient.get<any>(url, {
     params: filterEmptyString(filter),
   });
   return result.data;

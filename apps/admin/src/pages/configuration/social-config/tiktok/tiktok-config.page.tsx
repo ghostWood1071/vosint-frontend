@@ -30,7 +30,7 @@ export const TiktokConfig: React.FC = () => {
           </Button>,
         ]}
       >
-        <TTSettingTable data={tiktokData} loading={isLoading} />
+        <TTSettingTable data={tiktokData?.result ?? []} loading={isLoading} />
       </PageHeader>
       <Modal
         title="Thêm mới cấu hình Mạng xã hội"
