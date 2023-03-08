@@ -3,16 +3,27 @@ import {
   addNewProxyConfig,
   deleteObjectCateConfig,
   deleteProxyConfig,
+  deleteSocialConfig,
+  getFacebookSetting,
   getObjectCateConfig,
   getProxyConfig,
+  getTiktokSetting,
+  getTwitterSetting,
+  postSetting,
   updateObjectCateConfig,
   updateProxyConfig,
+  updateSocialConfig,
 } from "@/services/cate-config.service";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { UseMutationOptions, useMutation, useQuery, useQueryClient } from "react-query";
 
 export const CACHE_KEYS = {
   ObjectCate: "OBJECT_CATEGORY",
   ProxyConfig: "PROXY_CONFIG",
+  InfoFBSetting: "INFO_FB_SETTING",
+  InfoTWSetting: "INFO_TW_SETTING",
+  InfoTTSetting: "INFO_TT_SETTING",
+  SocialConfig: "SOCIAL_CONFIG",
+  DeleteInfoConfig: "DELETE_SOCIAL_CONFIG",
 };
 
 export const useObjectCate = (filter: any) => {
@@ -75,4 +86,76 @@ export const useMutationProxy = () => {
       onError: () => {},
     },
   );
+};
+
+export const useMutationUpdateSocial = (options?: UseMutationOptions<unknown, unknown, any>) => {
+  const queryClient = useQueryClient();
+  return useMutation((data: any) => {
+    return updateSocialConfig(data);
+  }, options);
+};
+
+export const useMutationDeleteSocial = (options?: UseMutationOptions<unknown, unknown, any>) => {
+  const queryClient = useQueryClient();
+  return useMutation((id: any) => {
+    console.log(id);
+    return deleteSocialConfig(id);
+  }, options);
+};
+
+export const useMutationUpdateTWSocial = (options?: UseMutationOptions<unknown, unknown, any>) => {
+  const queryClient = useQueryClient();
+  return useMutation((data: any) => {
+    return updateSocialConfig(data);
+  }, options);
+};
+
+export const useMutationDeleteTWSocial = (options?: UseMutationOptions<unknown, unknown, any>) => {
+  const queryClient = useQueryClient();
+  return useMutation((id: any) => {
+    console.log(id);
+    return deleteSocialConfig(id);
+  }, options);
+};
+
+export const useFBSetting = (filter: any) => {
+  return useQuery([CACHE_KEYS.InfoFBSetting, filter], () => getFacebookSetting(filter));
+};
+
+export const useTWSetting = (filter: any) => {
+  return useQuery([CACHE_KEYS.InfoTWSetting, filter], () => getTwitterSetting(filter));
+};
+
+export const useTTSetting = (filter: any) => {
+  return useQuery([CACHE_KEYS.InfoTTSetting, filter], () => getTiktokSetting(filter));
+};
+
+export const usePostFBSetting = () => {
+  const queryClient = useQueryClient();
+  return useMutation((data: any) => postSetting(data), {
+    onSuccess: () => {
+      queryClient.invalidateQueries([CACHE_KEYS.InfoFBSetting]);
+    },
+    onError: () => {},
+  });
+};
+
+export const usePostTWSetting = () => {
+  const queryClient = useQueryClient();
+  return useMutation((data: any) => postSetting(data), {
+    onSuccess: () => {
+      queryClient.invalidateQueries([CACHE_KEYS.InfoTWSetting]);
+    },
+    onError: () => {},
+  });
+};
+
+export const usePostTTSetting = () => {
+  const queryClient = useQueryClient();
+  return useMutation((data: any) => postSetting(data), {
+    onSuccess: () => {
+      queryClient.invalidateQueries([CACHE_KEYS.InfoTTSetting]);
+    },
+    onError: () => {},
+  });
 };

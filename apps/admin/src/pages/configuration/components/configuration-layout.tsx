@@ -34,7 +34,7 @@ const Sidebar = () => {
     { label: "CẤU HÌNH LĨNH VỰC TIN", key: newsCategoryConfigPath },
     {
       label: "CẤU HÌNH MẠNG XÃ HỘI",
-      key: "ok",
+      key: facebookConfigPath,
       children: [
         { label: "FACEBOOK", key: facebookConfigPath },
         { label: "TWITTER", key: twitterConfigPath },
