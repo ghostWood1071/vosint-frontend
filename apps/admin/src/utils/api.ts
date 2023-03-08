@@ -22,16 +22,13 @@ apiClient.interceptors.response.use(
     return response;
   },
   function (error) {
-    if (error.response.status === HttpStatusCode.unauthorized) {
-      // apiClient
-      //   .post("/refresh")
-      //   .then((res) => {
-      //     console.log(res.data);
-      //   })
-      //   .catch((err) => {
-      //     console.log(err);
-      //     console.log("error");
-      //   });
+    if (
+      error.response.status === HttpStatusCode.unprocessableentity &&
+      error?.response?.data?.detail === "Signature has expired"
+    ) {
+      localStorage.clear();
+      // eslint-disable-next-line no-restricted-globals
+      location.reload();
     }
     return Promise.reject(error);
   },

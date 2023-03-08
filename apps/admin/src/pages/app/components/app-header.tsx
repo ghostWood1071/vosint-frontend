@@ -1,32 +1,56 @@
-import { LOCAL_ROLE, LOCAL_TOKEN } from "@/constants/config";
+import { LOCAL_ROLE, LOCAL_USER_PROFILE } from "@/constants/config";
 import { authLoginPath, dashboardPathWithRole, searchPath } from "@/pages/router";
-import { SearchOutlined, UserOutlined } from "@ant-design/icons";
-import { Button, Col, Dropdown, Row } from "antd";
+import { LogoutOutlined, SearchOutlined, UserOutlined } from "@ant-design/icons";
+import { Avatar, Col, Dropdown, MenuProps, Row, Space, Typography } from "antd";
 import classNames from "classnames";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useLocalStorage } from "react-use";
 
 import { NAVBAR_HEADER } from "../app.constants";
 import styles from "./app-header.module.less";
+import { UserProfile } from "./user-profile";
 
 export const AppHeader: React.FC = () => {
   const { t } = useTranslation("translation", { keyPrefix: "app" });
   const navigate = useNavigate();
-  const [value, __, remove] = useLocalStorage<string>(LOCAL_ROLE);
-  const [_, ___, removeToken] = useLocalStorage<string>(LOCAL_TOKEN);
+  const [role] = useLocalStorage<string>(LOCAL_ROLE);
+  const [userProfile] = useLocalStorage<any>(LOCAL_USER_PROFILE);
+  const [openUser, setOpenUser] = useState(false);
 
-  const items = [
+  const items: MenuProps["items"] = [
+    {
+      key: "avatar",
+      label: (
+        <Space>
+          <Avatar
+            src={userProfile?.avatar_url ? userProfile.avatar_url : <UserOutlined />}
+            style={{ backgroundColor: "#cccccc" }}
+          />
+          <Typography.Text>{userProfile?.full_name}</Typography.Text>
+        </Space>
+      ),
+      onClick: handleOpenUser,
+    },
+    {
+      key: "user-profile",
+      icon: <UserOutlined />,
+      label: "Thông tin người dùng",
+      onClick: handleOpenUser,
+    },
     {
       key: "logout",
-      label: <Button onClick={handleLogout}>Logout</Button>,
+      icon: <LogoutOutlined />,
+      label: "Đăng xuất",
+      onClick: handleLogout,
     },
   ];
 
   return (
     <Row className={styles.header} align="middle">
       <Col span={4}>
-        <Link to={dashboardPathWithRole(value ?? "admin")}>
+        <Link to={dashboardPathWithRole(role ?? "admin")}>
           <img className={styles.logo} src="/logo-header.jpg" alt="Logo" width={200} height={30} />
         </Link>
       </Col>
@@ -49,6 +73,7 @@ export const AppHeader: React.FC = () => {
           </Dropdown>
         </Row>
       </Col>
+      <UserProfile open={openUser} setOpen={setOpenUser} />
     </Row>
   );
 
@@ -58,11 +83,14 @@ export const AppHeader: React.FC = () => {
 
   function handleLogout() {
     navigate(authLoginPath);
-    remove();
-    removeToken();
+    localStorage.clear();
   }
 
   function handlerNavigateSearch() {
     navigate(searchPath);
+  }
+
+  function handleOpenUser() {
+    setOpenUser(true);
   }
 };

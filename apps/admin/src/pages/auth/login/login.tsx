@@ -1,4 +1,4 @@
-import { LOCAL_ROLE, LOCAL_TOKEN } from "@/constants/config";
+import { LOCAL_ROLE, LOCAL_USER_PROFILE } from "@/constants/config";
 import { CACHE_KEYS, useLogin } from "@/pages/auth/auth.loader";
 import { Button, Checkbox, Form, Input, message } from "antd";
 import { useTranslation } from "react-i18next";
@@ -18,14 +18,14 @@ export const LoginPage = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [_, setRole] = useLocalStorage(LOCAL_ROLE);
-  const [__, setToken] = useLocalStorage(LOCAL_TOKEN);
+  const [__, setUserProfile] = useLocalStorage(LOCAL_USER_PROFILE);
   const { mutate } = useLogin({
     onSuccess: ({ detail }: any) => {
       message.success({
         content: "Login successfully",
         key: CACHE_KEYS.Login,
       });
-      setToken(JSON.stringify(detail));
+      setUserProfile(detail);
       setRole(detail.role);
       navigate(dashboardPathWithRole(detail.role));
     },

@@ -1,5 +1,6 @@
-import { getMe, loginAuth } from "@/services/auth.service";
-import { useMutation, useQuery } from "react-query";
+import { changePassword, getMe, loginAuth } from "@/services/auth.service";
+import { IChangePasswordDto } from "@/services/auth.type";
+import { UseMutationOptions, useMutation, useQuery } from "react-query";
 
 export const CACHE_KEYS = {
   Login: "LOGIN",
@@ -18,4 +19,10 @@ export const useLogin = ({
 
 export const useGetMe = () => {
   return useQuery([CACHE_KEYS.ME], () => getMe());
+};
+
+export const useChangePassword = (
+  options?: UseMutationOptions<unknown, unknown, IChangePasswordDto>,
+) => {
+  return useMutation((data) => changePassword(data), options);
 };
