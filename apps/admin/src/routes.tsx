@@ -6,11 +6,13 @@ import { AuthLayout } from "./pages/auth/";
 import { ForgotPasswordPage } from "./pages/auth/forgot-password/forgot-password";
 import { LoginPage } from "./pages/auth/login/login";
 import {
+  AccountForMonitoringFacebook,
+  AccountForMonitoringTiktok,
+  AccountForMonitoringTwitter,
   CollectDataConfig,
   ConfigurationLayout,
   CountryCate,
   FacebookConfig,
-  NewsAccountConfig,
   NewsCategoryConfig,
   NewsSourceConfig,
   ObjectCate,
@@ -37,6 +39,9 @@ import {
 } from "./pages/pipeline";
 import { PeriodicReport, QuickReport, ReportLayout, SyntheticReport } from "./pages/reports";
 import {
+  accountForMonitoringFacebookPath,
+  accountForMonitoringTiktokPath,
+  accountForMonitoringTwitterPath,
   analysisPath,
   authForgotPasswordPath,
   authLoginPath,
@@ -49,7 +54,6 @@ import {
   databasePath,
   facebookConfigPath,
   homePath,
-  newsAccountConfigPath,
   newsCategoryConfigPath,
   newsPath,
   newsSourceConfigPath,
@@ -229,8 +233,16 @@ export const routers = createBrowserRouter([
             element: <ProxyConfig />,
           },
           {
-            path: newsAccountConfigPath,
-            element: <NewsAccountConfig />,
+            path: accountForMonitoringFacebookPath,
+            element: <AccountForMonitoringFacebook />,
+          },
+          {
+            path: accountForMonitoringTiktokPath,
+            element: <AccountForMonitoringTiktok />,
+          },
+          {
+            path: accountForMonitoringTwitterPath,
+            element: <AccountForMonitoringTwitter />,
           },
           {
             path: newsSourceConfigPath,

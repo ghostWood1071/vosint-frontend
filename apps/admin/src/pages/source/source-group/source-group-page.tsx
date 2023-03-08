@@ -1,232 +1,171 @@
-import { AddIcon, DelIcon, ViewIcon } from "@/assets/svg";
-import { PlusCircleOutlined } from "@ant-design/icons";
-import { Button, Col, Form, Grid, Input, Modal, Row, Table, TableColumnsType } from "antd";
-import layout from "antd/lib/layout";
+import { AddIcon, DelIcon, ViewHideIcon, ViewIcon } from "@/assets/svg";
+import { EyeInvisibleOutlined, EyeOutlined, PlusOutlined } from "@ant-design/icons";
+import { Button, Col, Input, Space, Table, TableColumnsType, Tooltip } from "antd";
 import React, { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
-import "./source-group-page.less";
-
-interface DataType {
-  key: React.Key;
-  name: string;
-}
-
-interface ExpandedDataType {
-  key: React.Key;
-  date: string;
-  name: string;
-}
+import { AddGroupModal } from "./components/add-group-modal";
+import styles from "./source-group-page.module.less";
+import { useGroupSourceList, useMutationGroupSource } from "./source-group.loader";
 
 export const ViewList = () => {
-  const { Search } = Input;
-  const [name_user, setNameUser] = useState("");
-  const [name, setName] = useState("");
-  const [pass, setPass] = useState("");
-  const [checkPass, setCheckPass] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isModal2Open, setIsModal2Open] = useState(false);
-  const { useBreakpoint } = Grid;
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [isOpenGroupModal, setIsOpenGroupModal] = useState(false);
+  const [typeGroupModal, setTypeGroupModal] = useState("");
+  const [choosedGroupSource, setChoosedGroupSource] = useState(null);
+  const { data } = useGroupSourceList({
+    skip: searchParams.get("page_number") ?? 1,
+    limit: searchParams.get("page_size") ?? 10,
+    text_search: searchParams.get("text_search") ?? "",
+  });
+  const page = searchParams.get("page_number");
+  const pageSize = searchParams.get("page_size");
+  const { mutate, isLoading: isGroupSourceLoading } = useMutationGroupSource();
 
-  const [form] = Form.useForm();
-
-  const handleFinish = (values: any) => {};
-
-  const handlevalNameUser = (values: any) => {
-    console.log(values.target.value);
-    setNameUser(values.target.value);
-  };
-  const handlevalName = (values: any) => {
-    setName(values.target.value);
-    console.log(values.target.value);
-  };
-  const handlevalPass = (values: any) => {
-    setPass(values.target.value);
-    console.log(values.target.value);
-  };
-  const handleOk = (event: any) => {
-    setIsModalOpen(false);
-    setIsModal2Open(false);
-  };
-  const handleCancel = () => {
-    setIsModalOpen(false);
-    setIsModal2Open(false);
-  };
-  const handleOpenAdd = () => {
-    setIsModalOpen(true);
-  };
-  const handleOpenAddModal2 = () => {
-    setIsModal2Open(true);
-  };
-
-  const expandedRowRender = () => {
-    const columns: TableColumnsType<ExpandedDataType> = [
+  const expandedRow = (data: any, idGroup: any) => {
+    const columns: TableColumnsType<any> = [
+      { title: "Tên nguồn tin", dataIndex: "name", align: "left", width: "40%" },
+      { title: "Tên miền", dataIndex: "host_name", width: "30%" },
       {
-        title: <span className="headerTable">Tên nguồn tin</span>,
-        dataIndex: "date",
-        key: "date",
-        align: "center",
-      },
-      {
-        title: <span className="headerTable">Quốc gia</span>,
-        dataIndex: "name",
-        key: "name",
-        align: "center",
-      },
-      {
-        dataIndex: "operation",
-        key: "operation",
-        render: () => (
-          <Row gutter={7}>
-            <Col push={13}>
-              <DelIcon />
-              <ViewIcon />
-            </Col>
-          </Row>
-        ),
+        title: "",
+        align: "right",
+        render: (item: any) => {
+          return (
+            <Space>
+              <Col push={0}>
+                <DelIcon onClick={() => handleClickRemoveItem({ data: item, idGroup: idGroup })} />
+              </Col>
+            </Space>
+          );
+        },
       },
     ];
-
-    const data = [];
-    for (let i = 0; i < 4; ++i) {
-      data.push({
-        key: i.toString(),
-        date: "2014-12-24 23:12:00",
-        name: "This is production name",
-      });
-    }
-    return <Table columns={columns} dataSource={data} pagination={false} />;
+    return <Table columns={columns} dataSource={data ?? []} pagination={false} />;
   };
-  const screens = useBreakpoint();
 
-  const columns: TableColumnsType<DataType> = [
-    { title: "Name", dataIndex: "name", key: "name", width: 380 },
+  const columns: TableColumnsType<any> = [
+    { title: "Name", dataIndex: "source_name" },
     {
-      title: "icon",
-      key: "icon",
-      render: () => (
-        <>
-          {screens.xl && !screens.xxl && (
-            <Row>
-              <Col push={19}>
-                <AddIcon onClick={handleOpenAddModal2} />
-                <DelIcon />
-                <ViewIcon />
-              </Col>
-            </Row>
-          )}
-          {screens.xxl && (
-            <Row>
-              <Col push={20}>
-                <AddIcon onClick={handleOpenAddModal2} />
-                <DelIcon />
-                <ViewIcon />
-              </Col>
-            </Row>
-          )}
-        </>
+      align: "right",
+      render: (item: any) => (
+        <Space>
+          <Col push={0}>
+            <AddIcon onClick={() => handleClickEditGroup(item)} />
+            <DelIcon onClick={() => handleClickDeleteGroup(item)} />
+            {item.is_hide ? (
+              <ViewHideIcon
+                onClick={() => handleClickHideGroup(item)}
+                className={styles.hideIcon}
+              />
+            ) : (
+              <ViewIcon onClick={() => handleClickHideGroup(item)} />
+            )}
+          </Col>
+        </Space>
       ),
     },
   ];
 
-  const data: DataType[] = [];
-  for (let i = 0; i < 3; ++i) {
-    data.push({
-      key: i.toString(),
-      name: "Tin tức tổng hợp",
+  return (
+    <div className={styles.rootList}>
+      <div className={styles.header}>
+        <div className={styles.leftHeader}>
+          <div className={styles.searchButton}>
+            <Input.Search placeholder="Tìm kiếm" onSearch={handleSearch} />
+          </div>
+        </div>
+        <div className={styles.rightHeader}>
+          <Button
+            onClick={handleClickAddGroup}
+            type="primary"
+            className={styles.addButton}
+            icon={<PlusOutlined />}
+          >
+            Thêm
+          </Button>
+        </div>
+      </div>
+      <Table
+        columns={columns}
+        expandable={{
+          expandedRowRender: (item) =>
+            item.news[0] !== undefined ? expandedRow(item.news, item._id) : null,
+          rowExpandable: (item) => item._id !== "Not Expandable",
+        }}
+        pagination={{
+          position: ["bottomCenter"],
+          total: data?.total_record,
+          current: page ? +page : 1,
+          onChange: handlePaginationChange,
+          pageSize: pageSize ? +pageSize : 10,
+          size: "default",
+        }}
+        rowKey="_id"
+        dataSource={data?.data}
+        showHeader={false}
+      />
+      {isOpenGroupModal ? (
+        <AddGroupModal
+          type={typeGroupModal}
+          isOpen={isOpenGroupModal}
+          setIsOpen={setIsOpenGroupModal}
+          choosedGroupSource={choosedGroupSource}
+          functionAdd={functionAdd}
+          functionDelete={functionDelete}
+          functionEdit={functionEdit}
+          confirmLoading={isGroupSourceLoading}
+        />
+      ) : null}
+    </div>
+  );
+
+  function handleSearch(value: string) {
+    setSearchParams({
+      text_search: value,
     });
   }
 
-  return (
-    <div className={"rootList"}>
-      <div>
-        <Row>
-          <Col span={12}>
-            <div className="inputHeaderSource">
-              <Col span={5} offset={1}>
-                <div>
-                  <Button
-                    onClick={handleOpenAdd}
-                    className="buttonHeadSource colorBlueButton"
-                    type="primary"
-                  >
-                    <PlusCircleOutlined />
-                    Thêm nguồn
-                  </Button>
-                </div>
-              </Col>
-            </div>
-          </Col>
-          <Col span={9} push={3}>
-            <div>
-              <Search className="buttonHeadSource" placeholder="Tim kiem" />
-            </div>
-          </Col>
-        </Row>
-        <Table
-          columns={columns}
-          expandable={{ expandedRowRender, defaultExpandedRowKeys: ["0"] }}
-          dataSource={data}
-          showHeader={false}
-        />
-      </div>
-      <Modal
-        className=""
-        title="Thêm mới nhóm nguồn tin"
-        open={isModalOpen}
-        onOk={handleOk}
-        onCancel={handleCancel}
-      >
-        <Form {...layout} form={form} name="control-hooks" onFinish={handleFinish}>
-          <Form.Item
-            label="Tên nhóm nguồn tin:"
-            name="name_user"
-            getValueFromEvent={handlevalNameUser}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item label="Tên nguồn tin:" name="fullName" getValueFromEvent={handlevalName}>
-            <Input />
-          </Form.Item>
-          <Form.Item label="Quốc gia:" name="pass" getValueFromEvent={handlevalPass}>
-            <Input />
-          </Form.Item>
-          <Form.Item label="Nhóm:" name="pass" getValueFromEvent={handlevalPass}>
-            <Input />
-          </Form.Item>
-          <Form.Item label="URL:" name="pass" getValueFromEvent={handlevalPass}>
-            <Input />
-          </Form.Item>
-        </Form>
-      </Modal>
-      <Modal
-        className=""
-        title="Thêm mới nguồn tin"
-        open={isModal2Open}
-        onOk={handleOk}
-        onCancel={handleCancel}
-      >
-        <Form {...layout} form={form} name="control-hooks" onFinish={handleFinish}>
-          <Form.Item
-            label="Tên nhóm nguồn tin:"
-            name="name_user"
-            getValueFromEvent={handlevalNameUser}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item label="Tên nguồn tin:" name="fullName" getValueFromEvent={handlevalName}>
-            <Input />
-          </Form.Item>
-          <Form.Item label="Quốc gia:" name="pass" getValueFromEvent={handlevalPass}>
-            <Input />
-          </Form.Item>
-          <Form.Item label="Nhóm:" name="pass" getValueFromEvent={handlevalPass}>
-            <Input />
-          </Form.Item>
-          <Form.Item label="URL:" name="pass" getValueFromEvent={handlevalPass}>
-            <Input />
-          </Form.Item>
-        </Form>
-      </Modal>
-    </div>
-  );
+  function handleClickAddGroup() {
+    setIsOpenGroupModal(true);
+    setTypeGroupModal("add");
+  }
+
+  function handleClickDeleteGroup(value: any) {
+    setIsOpenGroupModal(true);
+    setTypeGroupModal("delete");
+    setChoosedGroupSource(value);
+  }
+
+  function handleClickHideGroup(value: any) {
+    functionEdit({ ...value, is_hide: !value.is_hide });
+  }
+
+  function handleClickRemoveItem(value: any) {
+    const dataItem = data.data.find((e: any) => e._id === value.idGroup);
+    const dataNewsResult = dataItem.news.filter((e: any) => e.id !== value.data.id);
+    functionEdit({ ...dataItem, news: dataNewsResult });
+  }
+  function handleClickEditGroup(value: any) {
+    setIsOpenGroupModal(true);
+    setTypeGroupModal("edit");
+    setChoosedGroupSource(value);
+  }
+
+  function functionAdd(value: any) {
+    mutate({ ...value, action: "add" });
+  }
+
+  function functionEdit(value: any) {
+    mutate({ ...value, action: "update" });
+  }
+
+  function functionDelete(value: any) {
+    mutate({ ...value, action: "delete" });
+  }
+
+  function handlePaginationChange(page: number, pageSize: number) {
+    searchParams.set("page_number", page + "");
+    searchParams.set("page_size", pageSize + "");
+    setSearchParams(searchParams);
+  }
 };
