@@ -87,7 +87,7 @@ export const ViewList = () => {
     ];
 
     const data = [];
-    for (let i = 0; i < 3; ++i) {
+    for (let i = 0; i < 4; ++i) {
       data.push({
         key: i.toString(),
         date: "2014-12-24 23:12:00",
