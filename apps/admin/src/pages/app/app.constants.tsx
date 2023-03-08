@@ -1,7 +1,5 @@
 import {
-  AnalysisIcon,
   AppIcon,
-  DatabaseIcon,
   NewsIcon,
   OrganizationIcon,
   ReportIcon,
@@ -9,9 +7,7 @@ import {
   SocialIcon,
 } from "@/assets/svg";
 import {
-  analysisPath,
   configPath,
-  databasePath,
   newsPath,
   organizationPath,
   reportPath,

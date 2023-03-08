@@ -100,7 +100,7 @@ export function AppFilter(): JSX.Element {
             <Select placeholder="Điểm tin" />
             <Button disabled={newsIds.length === 0}>Tóm tắt đa tin ({newsIds.length})</Button>
             <Search placeholder="Từ khoá" />
-            <Select placeholder="Kiểu danh sách" />
+            {/* <Select placeholder="Kiểu danh sách" /> */}
             <Button
               icon={<PlusCircleTwoTone />}
               onClick={handleAddBasket}
