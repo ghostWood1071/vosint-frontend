@@ -16,7 +16,7 @@ export const FacebookConfig: React.FC = () => {
   const [value, setValue] = useState<string | number>("Fanpage");
   const { data: facebookData } = useFBSetting({
     page_number: searchParams.get("page") ?? 1,
-    page_size: searchParams.get("limit") ?? 10,
+    page_size: searchParams.get("limit") ?? 20,
     type_data: value,
   });
 
@@ -39,7 +39,7 @@ export const FacebookConfig: React.FC = () => {
           </Button>,
         ]}
       >
-        <SettingTable data={facebookData} loading={isLoading} />
+        <SettingTable data={facebookData?.result ?? []} loading={isLoading} />
       </PageHeader>
       <Modal
         title="Thêm mới cấu hình Mạng xã hội"

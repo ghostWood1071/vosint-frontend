@@ -30,7 +30,7 @@ export const TwitterConfig: React.FC = () => {
           </Button>,
         ]}
       >
-        <TwSettingTable data={twitterData ?? []} loading={isLoading} />
+        <TwSettingTable data={twitterData?.result ?? []} loading={isLoading} />
       </PageHeader>
       <Modal
         title="Thêm mới cấu hình Mạng xã hội"
