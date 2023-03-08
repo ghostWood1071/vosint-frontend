@@ -17,9 +17,23 @@ export const NewsSourceConfig = lazyLoad(
   },
 );
 
-export const NewsAccountConfig = lazyLoad(
-  () => import("./news-config/news-accounts/news-from-accounts-config.page"),
-  (module) => module.NewsFromAccountsConfig,
+export const AccountForMonitoringFacebook = lazyLoad(
+  () => import("./news-config/news-accounts/facebook/accounts-for-monitoring-facebook"),
+  (module) => module.AccountForMonitoringFacebook,
+  {
+    fallback: <SplashScreen />,
+  },
+);
+export const AccountForMonitoringTwitter = lazyLoad(
+  () => import("./news-config/news-accounts/twitter/accounts-for-monitoring-twitter"),
+  (module) => module.AccountForMonitoringTwitter,
+  {
+    fallback: <SplashScreen />,
+  },
+);
+export const AccountForMonitoringTiktok = lazyLoad(
+  () => import("./news-config/news-accounts/tiktok/accounts-for-monitoring-tiktok"),
+  (module) => module.AccountForMonitoringTiktok,
   {
     fallback: <SplashScreen />,
   },
