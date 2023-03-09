@@ -5,8 +5,10 @@ import type { INewsSummaryDto } from "./news.type";
 const apiNewsBaseV2Url = "/v2";
 const apiSummBaseUrl = "/summ";
 
-export const getNewsSidebar = async () => {
-  const result = await apiClient.get<any>(`${apiNewsBaseV2Url}/newsletters`);
+export const getNewsSidebar = async (title?: string) => {
+  const result = await apiClient.get<any>(`${apiNewsBaseV2Url}/newsletters`, {
+    params: filterEmptyString({ title }),
+  });
   return result.data;
 };
 
