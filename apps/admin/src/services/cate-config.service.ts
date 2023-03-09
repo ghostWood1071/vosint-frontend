@@ -1,7 +1,5 @@
 import { apiClient, filterEmptyString } from "@/utils/api";
 
-import { APIResponse } from "./service.types";
-
 const apiCateConfigBaseV2Url = "/v2";
 
 //get
@@ -66,11 +64,10 @@ export const addNewProxyConfig = async (data: any) => {
 };
 
 export const postSetting = async (data: any) => {
-  const result = await apiClient.post<any>(`/Social-media/`, data);
+  const result = await apiClient.post<any>(`${apiCateConfigBaseV2Url}/Social-media/`, data);
   return result.data.playload;
 };
 
-//delete
 export const deleteObjectCateConfig = async (objectId: string) => {
   const result = await apiClient.delete<any>(`${apiCateConfigBaseV2Url}/object/${objectId}`);
   return result.data;
@@ -82,7 +79,9 @@ export const deleteProxyConfig = async (proxyId: string) => {
 };
 
 export const deleteSocialConfig = async (SocialId: string) => {
-  const result = await apiClient.delete<any>(`/Social-media/Social/${SocialId}`);
+  const result = await apiClient.delete<any>(
+    `${apiCateConfigBaseV2Url}/Social-media/Social/${SocialId}`,
+  );
   return result.data;
 };
 
