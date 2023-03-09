@@ -37,9 +37,9 @@ export const SettingCreateForm: React.FC<Props> = ({ form, onFinish }) => {
       <Form.Item name="social_type" label="Kiểu tài khoản">
         <Select
           options={[
-            { value: "Đối tượng", label: "Đối tượng" },
+            { value: "Object", label: "Object" },
             { value: "Fanpage", label: "Fanpage" },
-            { value: "Nhóm", label: "Nhóm" },
+            { value: "Group", label: "Group" },
           ]}
         />
       </Form.Item>
