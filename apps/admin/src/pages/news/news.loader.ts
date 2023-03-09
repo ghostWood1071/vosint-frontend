@@ -32,8 +32,8 @@ export const CACHE_KEYS = {
   Summary: "SUMMARY",
 };
 
-export const useNewsSidebar = () => {
-  return useQuery([CACHE_KEYS.NewsSidebar], () => getNewsSidebar());
+export const useNewsSidebar = (title?: string) => {
+  return useQuery([CACHE_KEYS.NewsSidebar, title], () => getNewsSidebar(title));
 };
 
 export const useNewsList = (filter: any, enabled = true) => {

@@ -1,6 +1,6 @@
 import { LOCAL_ROLE, LOCAL_USER_PROFILE } from "@/constants/config";
 import { authLoginPath, dashboardPathWithRole, searchPath } from "@/pages/router";
-import { LogoutOutlined, SearchOutlined, UserOutlined } from "@ant-design/icons";
+import { LogoutOutlined, UserOutlined } from "@ant-design/icons";
 import { Avatar, Col, Dropdown, MenuProps, Row, Space, Typography } from "antd";
 import classNames from "classnames";
 import { useState } from "react";
@@ -67,7 +67,7 @@ export const AppHeader: React.FC = () => {
       </Col>
       <Col span={4}>
         <Row justify="end" className={styles.userSetting}>
-          <SearchOutlined onClick={handlerNavigateSearch} className={styles.icon} />
+          {/* <SearchOutlined onClick={handlerNavigateSearch} className={styles.icon} /> */}
           <Dropdown menu={{ items }}>
             <UserOutlined className={styles.icon} />
           </Dropdown>
@@ -86,9 +86,9 @@ export const AppHeader: React.FC = () => {
     localStorage.clear();
   }
 
-  function handlerNavigateSearch() {
-    navigate(searchPath);
-  }
+  // function handlerNavigateSearch() {
+  //   navigate(searchPath);
+  // }
 
   function handleOpenUser() {
     setOpenUser(true);

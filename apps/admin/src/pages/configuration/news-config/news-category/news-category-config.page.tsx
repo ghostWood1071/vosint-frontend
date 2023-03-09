@@ -14,20 +14,28 @@ import { TableItem } from "./components/table-item";
 import styles from "./news-category-config.module.less";
 
 export const CategoryNewsConfig = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const setValues = useTreeStore((state) => state.setValues);
-  const { data } = useNewsSidebar();
-  const [searchParams] = useSearchParams();
+  let titleNewsletter = searchParams.get("title_newsletter") ?? "";
+  const { data } = useNewsSidebar(titleNewsletter);
+  const linhVucTree = data?.linh_vuc && buildTree(data.linh_vuc);
   const { mutateAsync, isLoading: isMutateLoading } = useMutationNewsSidebar();
   const newsletterId = searchParams.get("newsletter_id");
   const { data: dataDetail } = useNewsletterDetail(newsletterId ?? null, {});
-  const linhVucTree = data?.linh_vuc && buildTree(data.linh_vuc);
 
   return (
     <div className={styles.mainContainer}>
       <div className={styles.header}>
         <div className={styles.leftHeader}>
           <div className={styles.searchButton}>
-            <Input.Search placeholder="Tìm kiếm" />
+            <Input.Search
+              placeholder="Tìm kiếm"
+              defaultValue={titleNewsletter}
+              onSearch={(value) => {
+                searchParams.set("title_newsletter", value);
+                setSearchParams(searchParams);
+              }}
+            />
           </div>
         </div>
         <div className={styles.rightHeader}>
