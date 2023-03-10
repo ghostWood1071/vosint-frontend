@@ -24,20 +24,12 @@ export const BodyCate: React.FC<Props> = ({ title }) => {
     type: typeObject,
     skip: searchParams.get("page_number") ?? 1,
     limit: searchParams.get("page_size") ?? 10,
+    name: searchParams.get("text_search") ?? "",
   });
   const page = searchParams.get("page_number");
   const pageSize = searchParams.get("page_size");
   const { mutate, isLoading: isObjectCateLoading } = useMutationObjectCate();
 
-  function handleSearch(value: string) {
-    // console.log(value);
-    // const a = dataShow.filter((item) => {
-    //   const itemdata = item.name ? item.name.toUpperCase() : "".toUpperCase;
-    //   const textData = value.toUpperCase();
-    //   return itemdata.indexOf(textData) > -1;
-    // });
-    // setData(a);
-  }
   return (
     <div className={styles.mainContainer}>
       <div className={styles.header}>
@@ -104,6 +96,12 @@ export const BodyCate: React.FC<Props> = ({ title }) => {
       ) : null}
     </div>
   );
+
+  function handleSearch(value: string) {
+    setSearchParams({
+      text_search: value,
+    });
+  }
   function handleClickCreate() {
     setIsOpenModal(true);
     setTypeModal("add");

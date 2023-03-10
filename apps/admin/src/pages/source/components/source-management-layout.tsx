@@ -1,5 +1,5 @@
 import { AppContainer } from "@/pages/app";
-import { sourceGroupPath, sourceListPath } from "@/pages/router";
+import { sourceGroupPath } from "@/pages/router";
 import { Menu, MenuProps } from "antd";
 import React from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
@@ -16,10 +16,7 @@ const Sidebar: React.FC = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
-  const items: MenuProps["items"] = [
-    { label: "Nhóm nguồn tin", key: sourceGroupPath },
-    { label: "Danh sách nguồn tin", key: sourceListPath },
-  ];
+  const items: MenuProps["items"] = [{ label: "Nhóm nguồn tin", key: sourceGroupPath }];
 
   return <Menu mode="inline" items={items} selectedKeys={[pathname]} onClick={handleClickMenu} />;
 

@@ -77,5 +77,4 @@ export const dashboardPathWithRole = (role: string) => {
 };
 
 export const sourceGroupPath = "/source/group";
-export const sourceListPath = "/source/list";
 export const appPath = "/source/app";

@@ -80,7 +80,6 @@ import {
   socialTiktokPath,
   socialTwitterPath,
   sourceGroupPath,
-  sourceListPath,
   tiktokConfigPath,
   twitterConfigPath,
   userManagementPath,
@@ -94,7 +93,7 @@ import {
   Tiktok,
   Twitter,
 } from "./pages/social";
-import { SourceGroup, SourceList, SourceManagementLayout } from "./pages/source";
+import { SourceGroup, SourceManagementLayout } from "./pages/source";
 
 export const routers = createBrowserRouter([
   {
@@ -284,10 +283,6 @@ export const routers = createBrowserRouter([
           {
             path: sourceGroupPath,
             element: <SourceGroup />,
-          },
-          {
-            path: sourceListPath,
-            element: <SourceList />,
           },
         ],
       },

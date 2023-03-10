@@ -8,11 +8,3 @@ export const SourceGroup = lazyLoad(
   (module) => module.ViewList,
   { fallback: <SplashScreen /> },
 );
-
-export const SourceList = lazyLoad(
-  () => import("./source-list/source-list-page"),
-  (module) => module.SourceList,
-  {
-    fallback: <SplashScreen />,
-  },
-);
