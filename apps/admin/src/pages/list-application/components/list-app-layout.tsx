@@ -1,5 +1,5 @@
 import { AppContainer } from "@/pages/app/";
-import { appPath, sourceListPath } from "@/pages/router";
+import { appPath } from "@/pages/router";
 import { Menu, MenuProps } from "antd";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 
@@ -17,7 +17,7 @@ const Sidebar = () => {
 
   const items: MenuProps["items"] = [
     { label: "Quản lý tin theo nguồn", key: appPath },
-    { label: "Quản lý người dùng", key: sourceListPath },
+    // { label: "Quản lý người dùng", key: sourceListPath },
   ];
 
   return <Menu items={items} selectedKeys={[pathname]} onClick={handleClick} />;
