@@ -3,7 +3,9 @@ import { AppContainer } from "@/pages/app";
 import { getOrganizationsDetailUrl, organizationGraphPath } from "@/pages/router";
 import { UserOutlined } from "@ant-design/icons";
 import { Avatar, Input, Menu, MenuProps, Pagination, Space, Typography } from "antd";
-import { Outlet, useNavigate, useSearchParams } from "react-router-dom";
+import produce from "immer";
+import { useState } from "react";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 
 import { OBJECT_TYPE, useObjectList } from "../organizations.loader";
 import styles from "./organizations-layout.module.less";
@@ -18,16 +20,20 @@ export const OrganizationsLayout: React.FC = () => {
 
 function buildMenuItem(
   { data, total }: { data: any[]; total: number },
-  key: string,
-  { onSearch }: { onSearch: (key: string) => (value: string) => void },
-  { onChange }: { onChange: (key: string) => (page: number) => void },
-) {
+  objectType: OBJECT_TYPE,
+  { onSearch }: { onSearch: (objectType: OBJECT_TYPE) => (value: string) => void },
+  { onChange }: { onChange: (objectType: OBJECT_TYPE) => (page: number) => void },
+): MenuProps["items"] {
   return [
     {
       label: (
-        <Input.Search placeholder="Tìm kiếm" onSearch={onSearch(key)} className={styles.input} />
+        <Input.Search
+          placeholder="Tìm kiếm"
+          onSearch={onSearch(objectType)}
+          className={styles.input}
+        />
       ),
-      key: key + "search",
+      key: objectType + "search",
       className: styles.search,
       disabled: true,
     },
@@ -43,7 +49,7 @@ function buildMenuItem(
           <Typography.Text>{i?.name}</Typography.Text>
         </Space>
       ),
-      key: i._id,
+      key: getOrganizationsDetailUrl(i._id),
     })),
     {
       label: (
@@ -52,38 +58,54 @@ function buildMenuItem(
           showSizeChanger={false}
           pageSize={5}
           total={total}
-          onChange={onChange(key)}
+          onChange={onChange(objectType)}
           size="small"
         />
       ),
-      key: key + "paginate",
+      key: objectType + "paginate",
       className: styles.pagination,
       disabled: true,
     },
   ];
 }
 
+const defaultValue = {
+  [OBJECT_TYPE.DOI_TUONG]: {
+    name: "",
+    skip: 1,
+    limit: 5,
+  },
+  [OBJECT_TYPE.TO_CHUC]: {
+    name: "",
+    skip: 1,
+    limit: 5,
+  },
+  [OBJECT_TYPE.QUOC_GIA]: {
+    name: "",
+    skip: 1,
+    limit: 5,
+  },
+};
+
 function Sidebar(): JSX.Element {
   const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [sidebarFilter, setSidebarFilter] = useState(defaultValue);
+  const { pathname } = useLocation();
 
-  const { data: dataDoiTuong } = useObjectList(OBJECT_TYPE.DOI_TUONG, {
-    name: searchParams.get(OBJECT_TYPE.DOI_TUONG + "_name") ?? "",
-    skip: searchParams.get(OBJECT_TYPE.DOI_TUONG + "_skip") ?? 1,
-    limit: 5,
-  });
+  const { data: dataDoiTuong } = useObjectList(
+    OBJECT_TYPE.DOI_TUONG,
+    sidebarFilter[OBJECT_TYPE.DOI_TUONG],
+  );
 
-  const { data: dataToChuc } = useObjectList(OBJECT_TYPE.TO_CHUC, {
-    name: searchParams.get(OBJECT_TYPE.TO_CHUC + "_name") ?? "",
-    skip: searchParams.get(OBJECT_TYPE.TO_CHUC + "_skip") ?? 1,
-    limit: 5,
-  });
+  const { data: dataToChuc } = useObjectList(
+    OBJECT_TYPE.TO_CHUC,
+    sidebarFilter[OBJECT_TYPE.TO_CHUC],
+  );
 
-  const { data: dataQuocGia } = useObjectList(OBJECT_TYPE.QUOC_GIA, {
-    name: searchParams.get(OBJECT_TYPE.QUOC_GIA + "_name") ?? "",
-    skip: searchParams.get(OBJECT_TYPE.QUOC_GIA + "_skip") ?? 1,
-    limit: 5,
-  });
+  const { data: dataQuocGia } = useObjectList(
+    OBJECT_TYPE.QUOC_GIA,
+    sidebarFilter[OBJECT_TYPE.QUOC_GIA],
+  );
 
   const items: MenuProps["items"] = [
     {
@@ -126,27 +148,37 @@ function Sidebar(): JSX.Element {
     },
   ];
 
-  return <Menu mode="inline" items={items} onClick={handleClickMenu} />;
+  return <Menu mode="inline" items={items} onSelect={handleClickMenu} selectedKeys={[pathname]} />;
 
   function handleClickMenu({ key }: { key: string }) {
+    if (key.includes("search") || key.includes("paginate")) {
+      return;
+    }
+
     if (key === organizationGraphPath) {
       navigate(organizationGraphPath);
     } else {
-      navigate(getOrganizationsDetailUrl(key));
+      navigate(key);
     }
   }
 
-  function handleChangePaginate(key: string) {
+  function handleChangePaginate(key: OBJECT_TYPE) {
     return function (page: number) {
-      searchParams.set(key + "_skip", page + "");
-      setSearchParams(searchParams);
+      setSidebarFilter(
+        produce((draft) => {
+          draft[key].skip = page;
+        }),
+      );
     };
   }
 
-  function handleChangeName(key: string) {
+  function handleChangeName(key: OBJECT_TYPE) {
     return function (value: string) {
-      searchParams.set(key + "_name", value);
-      setSearchParams(searchParams);
+      setSidebarFilter(
+        produce((draft) => {
+          draft[key].name = value;
+        }),
+      );
     };
   }
 }

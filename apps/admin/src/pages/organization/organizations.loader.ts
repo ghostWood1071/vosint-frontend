@@ -1,5 +1,9 @@
 import { getNewsList } from "@/services/news.service";
-import { getObject, getOrganizationsSidebar } from "@/services/organizations.service";
+import {
+  getNewsByObjectId,
+  getObject,
+  getOrganizationsSidebar,
+} from "@/services/organizations.service";
 import { useQuery } from "react-query";
 
 export const CACHE_KEYS = {
@@ -18,6 +22,10 @@ export const useNewsList = () => {
 
 export const useObjectList = (type: string, filter: any) => {
   return useQuery([CACHE_KEYS.Object, type, filter], () => getObject(filter, type));
+};
+
+export const useNewsByObjectId = (id: string, filter: Record<string, any>) => {
+  return useQuery([CACHE_KEYS.NewsList, id, filter], () => getNewsByObjectId(id, filter));
 };
 
 export enum OBJECT_TYPE {

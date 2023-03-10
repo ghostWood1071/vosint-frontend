@@ -8,3 +8,9 @@ export const OrganizationsListPage = lazyLoad(
   (module) => module.OrganizationsListPage,
   { fallback: <SplashScreen /> },
 );
+
+export const OrganizationsDetailPage = lazyLoad(
+  () => import("./views/organizations-detail.page"),
+  (module) => module.OrganizationsDetailPage,
+  { fallback: <SplashScreen /> },
+);
