@@ -73,7 +73,7 @@ export const SettingTable: React.FC<Props> = ({ data, loading }) => {
         loading={loading}
       />
       <Modal
-        title="Sửa cấu hình Mạng xã hội"
+        title="Sửa cấu hình Facebook"
         open={isEditOpen}
         onCancel={handleCancelEdit}
         onOk={handleOkEdit}

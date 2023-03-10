@@ -7,6 +7,9 @@ interface Props {
 }
 
 export const SettingCreateForm: React.FC<Props> = ({ form, onFinish }) => {
+  const validateMessages = {
+    required: "Nhập ${label}",
+  };
   return (
     <Form
       labelCol={{ span: 8 }}
@@ -19,6 +22,7 @@ export const SettingCreateForm: React.FC<Props> = ({ form, onFinish }) => {
       initialValues={{
         role: "leader",
       }}
+      validateMessages={validateMessages}
     >
       <Form.Item
         name="social_name"
@@ -32,7 +36,7 @@ export const SettingCreateForm: React.FC<Props> = ({ form, onFinish }) => {
         <Input />
       </Form.Item>
       <Form.Item name="social_media" label="Mạng xã hội">
-        <Select options={[{ value: "Twitter", label: "Twitter" }]} />
+        <Select defaultValue={"Twitter"} options={[{ value: "Twitter", label: "Twitter" }]} />
       </Form.Item>
 
       <Form.Item
