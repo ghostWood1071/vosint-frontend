@@ -33,7 +33,7 @@ export const TiktokConfig: React.FC = () => {
         <TTSettingTable data={tiktokData?.result ?? []} loading={isLoading} />
       </PageHeader>
       <Modal
-        title="Thêm mới cấu hình Mạng xã hội"
+        title="Thêm mới cấu hình Tiktok"
         open={isCreateOpen}
         onCancel={handleCancelCreate}
         onOk={handleOkCreate}
@@ -57,6 +57,7 @@ export const TiktokConfig: React.FC = () => {
   }
 
   function handleFinishCreate(values: any) {
+    values.social_media = "Tiktok";
     values.social_type = "";
     mutate(values);
     setIsCreateOpen(false);

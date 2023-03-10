@@ -23,7 +23,7 @@ export const FacebookConfig: React.FC = () => {
   return (
     <>
       <Segmented
-        options={["Fanpage", "Group", "Đối tượng"]}
+        options={["Fanpage", "Group", "Object"]}
         value={value}
         onChange={handleAccountType}
       />
@@ -42,7 +42,7 @@ export const FacebookConfig: React.FC = () => {
         <SettingTable data={facebookData?.result ?? []} loading={isLoading} />
       </PageHeader>
       <Modal
-        title="Thêm mới cấu hình Mạng xã hội"
+        title="Thêm mới cấu hình Facebook"
         open={isCreateOpen}
         onCancel={handleCancelCreate}
         onOk={handleOkCreate}
@@ -57,7 +57,6 @@ export const FacebookConfig: React.FC = () => {
   }
   function handleAccountType(values: any) {
     setValue(values);
-    console.log(values);
   }
 
   function handleCancelCreate() {
@@ -70,6 +69,8 @@ export const FacebookConfig: React.FC = () => {
   }
 
   function handleFinishCreate(values: any) {
+    values.social_media = "Facebook";
+    values.social_type = value;
     mutate({ action: "add", ...values });
     setIsCreateOpen(false);
   }

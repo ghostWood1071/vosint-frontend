@@ -33,7 +33,7 @@ export const TwitterConfig: React.FC = () => {
         <TwSettingTable data={twitterData?.result ?? []} loading={isLoading} />
       </PageHeader>
       <Modal
-        title="Thêm mới cấu hình Mạng xã hội"
+        title="Thêm mới cấu hình Twitter"
         open={isCreateOpen}
         onCancel={handleCancelCreate}
         onOk={handleOkCreate}
@@ -58,6 +58,7 @@ export const TwitterConfig: React.FC = () => {
   }
 
   function handleFinishCreate(values: any) {
+    values.social_media = "Twitter";
     values.social_type = "";
     mutate(values);
     setIsCreateOpen(false);
