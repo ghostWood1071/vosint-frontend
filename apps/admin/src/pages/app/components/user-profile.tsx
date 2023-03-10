@@ -1,5 +1,10 @@
 import { LOCAL_USER_PROFILE } from "@/constants/config";
 import { useChangePassword } from "@/pages/auth/auth.loader";
+import {
+  CACHE_KEYS,
+  useUploadAvatar,
+} from "@/pages/configuration/user-management/user-management.loader";
+import { generateImage } from "@/utils/image";
 import { EditOutlined, UserOutlined } from "@ant-design/icons";
 import {
   Avatar,
@@ -15,10 +20,12 @@ import {
   Tabs,
   TabsProps,
   Typography,
+  message,
 } from "antd";
 import Modal from "antd/lib/modal/Modal";
 import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useQueryClient } from "react-query";
 import { useLocalStorage } from "react-use";
 
 interface Props {
@@ -27,8 +34,9 @@ interface Props {
 }
 
 export const UserProfile: React.FC<Props> = ({ open, setOpen }) => {
+  const queryClient = useQueryClient();
   const { t } = useTranslation();
-  const [userProfile] = useLocalStorage<Record<string, string>>(LOCAL_USER_PROFILE);
+  const [userProfile, setUserProfile] = useLocalStorage<Record<string, string>>(LOCAL_USER_PROFILE);
   const refInput = useRef<HTMLInputElement>(null);
 
   const [selectedFile, setSelectedFile] = useState<File>();
@@ -39,6 +47,13 @@ export const UserProfile: React.FC<Props> = ({ open, setOpen }) => {
       localStorage.clear();
       // eslint-disable-next-line no-restricted-globals
       location.reload();
+    },
+  });
+  const { mutate: mutateUploadAvatar, isLoading: isUpdatingAvatar } = useUploadAvatar({
+    onSuccess: (avatar_url) => {
+      message.success("Thay đổi avatar thành công");
+      setUserProfile({ ...userProfile, avatar_url });
+      queryClient.invalidateQueries([CACHE_KEYS.LIST]);
     },
   });
 
@@ -130,7 +145,7 @@ export const UserProfile: React.FC<Props> = ({ open, setOpen }) => {
                       preview ? (
                         preview
                       ) : userProfile?.avatar_url ? (
-                        userProfile.avatar_url
+                        generateImage(userProfile.avatar_url)
                       ) : (
                         <UserOutlined />
                       )
@@ -148,7 +163,12 @@ export const UserProfile: React.FC<Props> = ({ open, setOpen }) => {
                     <Button type="primary" onClick={() => refInput?.current?.click()}>
                       Chọn
                     </Button>
-                    <Button type="primary" disabled={!preview}>
+                    <Button
+                      type="primary"
+                      disabled={!preview}
+                      onClick={handleUploadAvatar}
+                      loading={isUpdatingAvatar}
+                    >
                       Lưu
                     </Button>
                     <Button type="text">Huỷ</Button>
@@ -281,5 +301,11 @@ export const UserProfile: React.FC<Props> = ({ open, setOpen }) => {
       password: values.password,
       new_password: values.new_password,
     });
+  }
+
+  function handleUploadAvatar() {
+    const formData = new FormData();
+    formData.append("file", selectedFile!);
+    mutateUploadAvatar(formData);
   }
 };

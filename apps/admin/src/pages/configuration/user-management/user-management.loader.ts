@@ -1,5 +1,11 @@
-import { createUser, deleteUser, getUsers, updateUser } from "@/services/user.service";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import {
+  createUser,
+  deleteUser,
+  getUsers,
+  updateUser,
+  uploadAvatar,
+} from "@/services/user.service";
+import { UseMutationOptions, useMutation, useQuery, useQueryClient } from "react-query";
 
 export const CACHE_KEYS = {
   LIST: "LIST",
@@ -40,4 +46,8 @@ export const useDeleteUser = ({ onSuccess }: any) => {
       onSuccess?.();
     },
   });
+};
+
+export const useUploadAvatar = (options?: UseMutationOptions<string, unknown, FormData>) => {
+  return useMutation((data) => uploadAvatar(data), options);
 };

@@ -1,5 +1,6 @@
 import { LOCAL_ROLE, LOCAL_USER_PROFILE } from "@/constants/config";
 import { authLoginPath, dashboardPathWithRole, searchPath } from "@/pages/router";
+import { generateImage } from "@/utils/image";
 import { LogoutOutlined, UserOutlined } from "@ant-design/icons";
 import { Avatar, Col, Dropdown, MenuProps, Row, Space, Typography } from "antd";
 import classNames from "classnames";
@@ -25,7 +26,7 @@ export const AppHeader: React.FC = () => {
       label: (
         <Space>
           <Avatar
-            src={userProfile?.avatar_url ? userProfile.avatar_url : <UserOutlined />}
+            src={userProfile?.avatar_url ? generateImage(userProfile.avatar_url) : <UserOutlined />}
             style={{ backgroundColor: "#cccccc" }}
           />
           <Typography.Text>{userProfile?.full_name}</Typography.Text>

@@ -24,3 +24,14 @@ export const deleteUser = async (id: string) => {
   const result = await apiClient.delete(`${apiUserBaseUrl}/user/${id}`);
   return result.data;
 };
+
+export const uploadAvatar = async (data: FormData) => {
+  return apiClient
+    .post<string>(`${apiUserBaseUrl}/user/avatar`, data, {
+      headers: {
+        accept: "application/json",
+        "Content-Type": "multipart/form-data",
+      },
+    })
+    .then((res) => res.data);
+};

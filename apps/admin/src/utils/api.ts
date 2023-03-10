@@ -23,8 +23,9 @@ apiClient.interceptors.response.use(
   },
   function (error) {
     if (
-      error.response.status === HttpStatusCode.unprocessableentity &&
-      error?.response?.data?.detail === "Signature has expired"
+      (error.response.status === HttpStatusCode.unprocessableentity &&
+        error?.response?.data?.detail === "Signature has expired") ||
+      error.response.status === HttpStatusCode.unauthorized
     ) {
       localStorage.clear();
       // eslint-disable-next-line no-restricted-globals

@@ -1,7 +1,5 @@
 import { apiClient, filterEmptyString } from "@/utils/api";
 
-import { APIResponse } from "./service.types";
-
 const apiCateConfigBaseV2Url = "/v2";
 
 //get
