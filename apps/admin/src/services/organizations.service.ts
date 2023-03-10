@@ -13,3 +13,10 @@ export const getObject = async (filter: Record<string, string>, type: any) => {
   });
   return result.data;
 };
+
+export const getNewsByObjectId = async (objectId: string, filter: Record<string, string>) => {
+  const result = await apiClient.get(`${apiBaseUrlV2}/object/${objectId}/news`, {
+    params: filterEmptyString(filter),
+  });
+  return result.data;
+};
