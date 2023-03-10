@@ -1,22 +1,14 @@
+import { generateImage } from "@/utils/image";
 import {
+  DeleteOutlined,
   ExclamationCircleOutlined,
   FormOutlined,
   KeyOutlined,
-  UserDeleteOutlined,
+  UserOutlined,
 } from "@ant-design/icons";
-import {
-  Avatar,
-  Button,
-  Col,
-  Image,
-  Modal,
-  Row,
-  Space,
-  Table,
-  TableColumnsType,
-  Typography,
-} from "antd";
+import { Avatar, Button, Col, Modal, Row, Space, Table, TableColumnsType, Typography } from "antd";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router-dom";
 
 interface Props {
@@ -34,18 +26,22 @@ export const UserManagerTable: React.FC<Props> = ({
   onUpdate,
   onDelete,
 }) => {
+  const { t } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
   const page = searchParams.get("page_number");
   const pageSize = searchParams.get("page_size");
 
   const columns: TableColumnsType<any> = [
     {
-      title: "Danh sách người dùng",
+      title: "Họ và tên",
       dataIndex: "full_name",
-      render: (name: string) => {
+      render: (name: string, record) => {
         return (
           <Space>
-            <Avatar />
+            <Avatar
+              src={record?.avatar_url ? generateImage(record.avatar_url) : <UserOutlined />}
+              style={{ backgroundColor: "#cccccc" }}
+            />
             <Typography.Text>{name}</Typography.Text>
           </Space>
         );
@@ -58,6 +54,7 @@ export const UserManagerTable: React.FC<Props> = ({
     {
       title: "Quyền",
       dataIndex: "role",
+      render: (role) => t(role),
     },
     {
       title: "Hoạt động",
@@ -68,7 +65,7 @@ export const UserManagerTable: React.FC<Props> = ({
           <Space>
             {onUpdate && <Button icon={<FormOutlined />} onClick={handleClickUpdate} />}
             <Button icon={<KeyOutlined />} />
-            <Button icon={<UserDeleteOutlined />} danger onClick={handleDelete} />
+            <Button icon={<DeleteOutlined />} danger onClick={handleDelete} />
           </Space>
         );
 
@@ -106,15 +103,20 @@ export const UserManagerTable: React.FC<Props> = ({
       okCancel: true,
       onOk: () => onDelete?.(record._id),
       content: (
-        <Row>
+        <Row align="middle">
           <Col span={10}>
-            <Image width={96} src="https://via.placeholder.com/96" preview={false} />
+            <Avatar
+              shape="square"
+              size={96}
+              src={record?.avatar_url ? record.avatar_url : <UserOutlined />}
+              style={{ backgroundColor: "#cccccc" }}
+            />
           </Col>
           <Col span={14}>
             <Space direction="vertical">
-              <Typography.Text>{record.name}</Typography.Text>
+              <Typography.Text>{record.full_name}</Typography.Text>
+              <Typography.Text>{record.username}</Typography.Text>
               <Typography.Text>{record.role}</Typography.Text>
-              <Typography.Text>{record.email}</Typography.Text>
             </Space>
           </Col>
         </Row>

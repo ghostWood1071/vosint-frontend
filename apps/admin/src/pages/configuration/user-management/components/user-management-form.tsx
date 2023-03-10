@@ -23,8 +23,8 @@ export const UserManagerForm: React.FC<Props> = ({ form, onFinish }) => {
       <Form.Item name="role" label="Loại tài khoản">
         <Select
           options={[
-            { value: "leader", label: "Lanh dao" },
-            { value: "expert", label: "Chuyen vien" },
+            { value: "leader", label: "Lãnh đạo" },
+            { value: "expert", label: "Chuyên viên" },
             { value: "admin", label: "Admin" },
           ]}
         />

@@ -72,5 +72,8 @@
     "linh_vuc": " lĩnh vực",
     "gio_tin": " giỏ tin",
     "null": ""
-  }
+  },
+  "admin": "Admin",
+  "expert": "Chuyên viên",
+  "leader": "Lãnh đạo"
 }

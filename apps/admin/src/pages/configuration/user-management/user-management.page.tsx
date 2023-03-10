@@ -1,4 +1,4 @@
-import { PlusSquareOutlined, SearchOutlined } from "@ant-design/icons";
+import { PlusSquareOutlined } from "@ant-design/icons";
 import { Button, Form, Input, Modal, PageHeader, Select } from "antd";
 import React, { useState } from "react";
 import { useSearchParams } from "react-router-dom";
@@ -12,10 +12,12 @@ import {
 } from "./user-management.loader";
 
 export const UserManagerList: React.FC = () => {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { data, isLoading } = useUserManager({
     skip: searchParams.get("page_number") ?? "1",
     limit: searchParams.get("page_size") ?? "10",
+    name: searchParams.get("name") ?? "",
+    role: searchParams.get("role") ?? "",
   });
   const [isOpen, setIsOpen] = useState<"create" | "update" | null>(null);
   const [form] = Form.useForm();
@@ -41,16 +43,34 @@ export const UserManagerList: React.FC = () => {
       <PageHeader
         title="Danh sách người dùng"
         extra={[
-          <Input placeholder="Tìm kiếm" suffix={<SearchOutlined />} key="input" />,
+          <Input.Search
+            placeholder="Tìm kiếm theo họ tên, username người dùng"
+            key="input"
+            onSearch={handleSearch}
+          />,
           <Select
             key="select"
-            defaultValue="all"
+            defaultValue=""
             options={[
               {
-                value: "all",
+                value: "",
                 label: "Tất cả người dùng",
               },
+              {
+                value: "admin",
+                label: "Admin",
+              },
+              {
+                value: "leader",
+                label: "Lãnh đạo",
+              },
+              {
+                value: "expert",
+                label: "Chuyên gia",
+              },
             ]}
+            onChange={handleSearchRole}
+            style={{ width: 200 }}
           />,
           <Button
             key="button"
@@ -117,5 +137,15 @@ export const UserManagerList: React.FC = () => {
 
   function handleDelete(id: string) {
     return mutateDelete(id);
+  }
+
+  function handleSearch(value: string) {
+    searchParams.set("name", value);
+    setSearchParams(searchParams);
+  }
+
+  function handleSearchRole(value: string) {
+    searchParams.set("role", value);
+    setSearchParams(searchParams);
   }
 };

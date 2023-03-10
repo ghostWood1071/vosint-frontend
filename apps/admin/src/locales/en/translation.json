@@ -68,5 +68,8 @@
     "update": "Cập nhật giỏ tin",
     "delete": "Xoá giỏ tin",
     "null": ""
-  }
+  },
+  "admin": "Admin",
+  "expert": "Chuyên viên",
+  "leader": "Lãnh đạo"
 }
