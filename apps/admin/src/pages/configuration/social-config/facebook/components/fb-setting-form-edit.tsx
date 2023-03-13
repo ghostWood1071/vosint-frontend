@@ -16,9 +16,6 @@ export const SettingEditForm: React.FC<Props> = ({ form, onFinish }) => {
       form={form}
       labelAlign="left"
       requiredMark={false}
-      initialValues={{
-        role: "leader",
-      }}
     >
       <Form.Item
         name="name"

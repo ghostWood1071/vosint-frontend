@@ -23,6 +23,8 @@ export const TTSettingTable: React.FC<Props> = ({ data, loading }) => {
   const { mutate: mutateUpdate } = useMutationUpdateTWSocial();
   const { mutate: mutateDelete } = useMutationDeleteSocial();
   const [form] = Form.useForm();
+  const [isValueTarget, setIsValueTarget] = useState<any>();
+
   const columns: TableColumnsType<any> = [
     {
       title: "Tên",
@@ -49,10 +51,10 @@ export const TTSettingTable: React.FC<Props> = ({ data, loading }) => {
       title: "",
       align: "right",
       dataIndex: "_id",
-      render: (_id: any) => {
+      render: (_id: any, values: any) => {
         return (
           <Space>
-            <Button icon={<EditOutlined />} onClick={() => handleShowEdit(_id)} />
+            <Button icon={<EditOutlined />} onClick={() => handleShowEdit(_id, values)} />
             <Button icon={<DeleteOutlined />} danger onClick={() => handleShowDelete(_id)} />
           </Space>
         );
@@ -76,7 +78,12 @@ export const TTSettingTable: React.FC<Props> = ({ data, loading }) => {
         onOk={handleOkEdit}
         destroyOnClose
       >
-        <SettingCreateForm form={form} onFinish={handleFinishEdit} />
+        <SettingCreateForm
+          valueTarget={isValueTarget}
+          value={"edit"}
+          form={form}
+          onFinish={handleFinishEdit}
+        />
       </Modal>
       <Modal
         title="Xác nhận xóa tài khoản"
@@ -101,8 +108,9 @@ export const TTSettingTable: React.FC<Props> = ({ data, loading }) => {
     setIsEditOpen(false);
   }
 
-  function handleShowEdit(value: any) {
+  function handleShowEdit(value: any, values: any) {
     setIsIdTarget(value);
+    setIsValueTarget(values);
     setIsEditOpen(true);
   }
 
