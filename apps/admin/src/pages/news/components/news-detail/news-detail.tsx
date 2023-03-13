@@ -4,7 +4,7 @@ import { BellTwoTone, ShoppingCartOutlined, StarTwoTone } from "@ant-design/icon
 import { Col, Modal, Row, Space, Tabs, TabsProps, Tooltip, Typography } from "antd";
 import React from "react";
 import { useSearchParams } from "react-router-dom";
-import shallow from "zustand/shallow";
+import { shallow } from "zustand/shallow";
 
 import { useNewsDetail } from "../../news.loader";
 import { useNewsStore } from "../../news.store";

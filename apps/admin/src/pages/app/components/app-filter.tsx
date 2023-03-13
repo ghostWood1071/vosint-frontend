@@ -20,7 +20,7 @@ import classNames from "classnames";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
-import shallow from "zustand/shallow";
+import { shallow } from "zustand/shallow";
 
 import { useSidebar } from "../app.store";
 import styles from "./app-filter.module.less";

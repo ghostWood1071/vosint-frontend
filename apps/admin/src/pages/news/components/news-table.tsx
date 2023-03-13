@@ -11,7 +11,7 @@ import { Modal, Space, Table, TableColumnsType, Tooltip, Typography } from "antd
 import { truncate } from "lodash";
 import React from "react";
 import { useSearchParams } from "react-router-dom";
-import shallow from "zustand/shallow";
+import { shallow } from "zustand/shallow";
 
 import { useNewsStore } from "../news.store";
 
