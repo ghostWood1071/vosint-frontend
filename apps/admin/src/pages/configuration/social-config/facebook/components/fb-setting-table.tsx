@@ -19,6 +19,8 @@ export const SettingTable: React.FC<Props> = ({ data, loading }) => {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [isIdTarget, setIsIdTarget] = useState("");
+  const [isValueTarget, setIsValueTarget] = useState<any>();
+
   const queryClient = useQueryClient();
 
   const [form] = Form.useForm();
@@ -52,10 +54,10 @@ export const SettingTable: React.FC<Props> = ({ data, loading }) => {
       title: "",
       align: "right",
       dataIndex: "_id",
-      render: (_id: string) => {
+      render: (_id: string, values) => {
         return (
           <Space>
-            <Button icon={<EditOutlined />} onClick={() => handleShowEdit(_id)} />
+            <Button icon={<EditOutlined />} onClick={() => handleShowEdit(_id, values)} />
             <Button icon={<DeleteOutlined />} danger onClick={() => handleShowDelete(_id)} />
           </Space>
         );
@@ -72,6 +74,7 @@ export const SettingTable: React.FC<Props> = ({ data, loading }) => {
         pagination={{ position: ["bottomCenter"] }}
         loading={loading}
       />
+
       <Modal
         title="Sửa cấu hình Facebook"
         open={isEditOpen}
@@ -79,7 +82,12 @@ export const SettingTable: React.FC<Props> = ({ data, loading }) => {
         onOk={handleOkEdit}
         destroyOnClose
       >
-        <SettingCreateForm form={form} onFinish={handleFinishEdit} />
+        <SettingCreateForm
+          valueTarget={isValueTarget}
+          value={"edit"}
+          form={form}
+          onFinish={handleFinishEdit}
+        />
       </Modal>
       <Modal
         title="Xác nhận xóa tài khoản"
@@ -90,9 +98,10 @@ export const SettingTable: React.FC<Props> = ({ data, loading }) => {
       ></Modal>
     </>
   );
-  function handleShowEdit(value: any) {
-    setIsIdTarget(value);
+  function handleShowEdit(value: any, values: any) {
     setIsEditOpen(true);
+    setIsValueTarget(values);
+    setIsIdTarget(value);
   }
 
   function handleCancelEdit() {
@@ -113,6 +122,8 @@ export const SettingTable: React.FC<Props> = ({ data, loading }) => {
       onError: () => {},
     });
     setIsEditOpen(false);
+    form.resetFields();
+    setIsValueTarget(null);
   }
 
   function handleShowDelete(value: any) {

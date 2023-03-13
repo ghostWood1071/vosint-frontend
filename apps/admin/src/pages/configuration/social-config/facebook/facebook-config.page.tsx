@@ -9,7 +9,6 @@ import { SettingTable } from "./components/fb-setting-table";
 
 export const FacebookConfig: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-
   const { mutate, isLoading } = usePostFBSetting();
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [form] = Form.useForm();
@@ -41,6 +40,7 @@ export const FacebookConfig: React.FC = () => {
       >
         <SettingTable data={facebookData?.result ?? []} loading={isLoading} />
       </PageHeader>
+
       <Modal
         title="Thêm mới cấu hình Facebook"
         open={isCreateOpen}
@@ -48,7 +48,12 @@ export const FacebookConfig: React.FC = () => {
         onOk={handleOkCreate}
         destroyOnClose
       >
-        <SettingCreateForm form={form} onFinish={handleFinishCreate} />
+        <SettingCreateForm
+          valueTarget
+          value={"add"}
+          form={form ?? []}
+          onFinish={handleFinishCreate}
+        />
       </Modal>
     </>
   );
@@ -73,5 +78,6 @@ export const FacebookConfig: React.FC = () => {
     values.social_type = value;
     mutate({ action: "add", ...values });
     setIsCreateOpen(false);
+    form.resetFields();
   }
 };

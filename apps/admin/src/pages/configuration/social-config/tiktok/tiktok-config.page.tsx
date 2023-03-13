@@ -39,7 +39,12 @@ export const TiktokConfig: React.FC = () => {
         onOk={handleOkCreate}
         destroyOnClose
       >
-        <SettingCreateForm form={form} onFinish={handleFinishCreate} />
+        <SettingCreateForm
+          valueTarget
+          value={"add"}
+          form={form ?? []}
+          onFinish={handleFinishCreate}
+        />
       </Modal>
     </>
   );
@@ -58,8 +63,9 @@ export const TiktokConfig: React.FC = () => {
 
   function handleFinishCreate(values: any) {
     values.social_media = "Tiktok";
-    values.social_type = "";
+    values.social_type = "Object";
     mutate(values);
     setIsCreateOpen(false);
+    form.resetFields();
   }
 };

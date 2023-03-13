@@ -2,14 +2,17 @@ import { Form, FormInstance, Input, Select } from "antd";
 import React from "react";
 
 interface Props {
+  valueTarget: any;
+  value: any;
   form: FormInstance<any>;
   onFinish: (values: any) => void;
 }
 
-export const SettingCreateForm: React.FC<Props> = ({ form, onFinish }) => {
+export const SettingCreateForm: React.FC<Props> = ({ valueTarget, value, form, onFinish }) => {
   const validateMessages = {
     required: "Nhập ${label}",
   };
+  const initialValues = value === "edit" ? valueTarget : null;
   return (
     <Form
       labelCol={{ span: 8 }}
@@ -19,10 +22,9 @@ export const SettingCreateForm: React.FC<Props> = ({ form, onFinish }) => {
       form={form}
       labelAlign="left"
       requiredMark={false}
-      initialValues={{
-        role: "leader",
-      }}
+      initialValues={initialValues ?? {}}
       validateMessages={validateMessages}
+      preserve={false}
     >
       <Form.Item
         name="social_name"
