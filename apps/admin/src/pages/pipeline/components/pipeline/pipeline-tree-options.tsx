@@ -3,8 +3,9 @@ import { CloseCircleOutlined } from "@ant-design/icons";
 import { Card, Form, Input, Select } from "antd";
 import { useEffect } from "react";
 
+import { usePipelineSource } from "../../pipeline.loader";
 import styles from "./pipeline-tree-options.module.less";
-import { FlattenedItem } from "./pipeline.type";
+import type { FlattenedItem } from "./pipeline.type";
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -57,4 +58,20 @@ const renderFormItemStrategies: Record<string, (props: IActionParamInfo) => JSX.
     </Select>
   ),
   str: () => <TextArea />,
+  source: SourceItem,
 };
+
+function SourceItem(): JSX.Element {
+  const { data, isLoading } = usePipelineSource();
+  return (
+    <Select
+      loading={isLoading}
+      options={data}
+      showSearch
+      optionFilterProp="children"
+      filterOption={(input, option) =>
+        (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
+      }
+    />
+  );
+}

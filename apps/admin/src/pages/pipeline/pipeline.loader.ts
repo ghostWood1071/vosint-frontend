@@ -13,8 +13,11 @@ import {
   verifyPipeline,
 } from "@/services/pipeline.service";
 import { IPipelineRunAllJob, IPipelineRunJob } from "@/services/pipeline.type";
+import { getPipelineSource } from "@/services/source-config.service";
+import type { IPipelineSource } from "@/services/source-config.type";
 import { message } from "antd";
-import { UseMutationOptions, useMutation, useQuery, useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import type { UseMutationOptions, UseQueryOptions } from "react-query";
 
 export const CACHE_KEYS = {
   Pipelines: "PIPELINES",
@@ -23,6 +26,7 @@ export const CACHE_KEYS = {
   PipelineUpdate: "PIPELINE_UPDATE",
   PipelineVerify: "PIPELINE_VERIFY",
   PipelineHistory: "PipelineHistory",
+  PipelineSource: "PIPELINE_SOURCE",
 };
 
 export const usePipelineActionInfos = () => {
@@ -49,6 +53,10 @@ export const usePutPipeline = (options?: UseMutationOptions<unknown, unknown, an
 
 export const useVerifyPipeline = (options?: UseMutationOptions<unknown, unknown, string>) => {
   return useMutation((id) => verifyPipeline(id), options);
+};
+
+export const usePipelineSource = (options?: UseQueryOptions<IPipelineSource[]>) => {
+  return useQuery<IPipelineSource[]>(CACHE_KEYS.PipelineSource, getPipelineSource, options);
 };
 
 export const useClonePipeline = () => {

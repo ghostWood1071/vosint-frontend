@@ -15,7 +15,7 @@ import { CheckboxChangeEvent } from "antd/lib/checkbox";
 import produce from "immer";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import shallow from "zustand/shallow";
+import { shallow } from "zustand/shallow";
 
 import { useNewsList, useNewsletterDetail } from "../news.loader";
 import { useNewsStore } from "../news.store";
