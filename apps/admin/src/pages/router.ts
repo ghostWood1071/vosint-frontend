@@ -1,3 +1,5 @@
+import { ETreeTag } from "@/components/tree/tree.store";
+
 export const homePath = "/";
 
 export const authLoginPath = "/login";
@@ -10,7 +12,7 @@ export const dashboardAdminPath = "/dashboard/admin";
 export const searchPath = "/search";
 
 export const newsPath = "/news";
-export const getNewsDetailUrl = (id: string | number) => `/news/${id}`;
+export const getNewsDetailUrl = (id: string | number, tag?: ETreeTag) => `/news/${id}/${tag ?? ""}`;
 
 export const organizationPath = "/organization";
 export const organizationDetailPath = "/organization/:id";

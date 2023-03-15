@@ -1,8 +1,8 @@
-import create from "zustand";
+import { create } from "zustand";
 
 interface NewsState {
-  newsIds: any[];
-  setNewsIds: (selected: any[]) => void;
+  news: any[];
+  setNews: (selected: any[]) => void;
   show: boolean;
   setShow: (show: boolean) => void;
   newsletterId: string;
@@ -11,8 +11,8 @@ interface NewsState {
 
 // Handle modal app filter
 export const useNewsStore = create<NewsState>((set) => ({
-  newsIds: [],
-  setNewsIds: (selected) => set(() => ({ newsIds: selected })),
+  news: [],
+  setNews: (selected) => set(() => ({ news: selected })),
   show: false,
   setShow: (show) => set(() => ({ show })),
   newsletterId: "",

@@ -1,10 +1,12 @@
 import { PlusSquareOutlined } from "@ant-design/icons";
 import { Button, Form, Input, Modal, PageHeader, Select } from "antd";
 import React, { useState } from "react";
+import { useQueryClient } from "react-query";
 import { useSearchParams } from "react-router-dom";
 
 import { UserManagerForm, UserManagerTable } from "./components";
 import {
+  CACHE_KEYS,
   useCreateUser,
   useDeleteUser,
   useUpdateUser,
@@ -12,6 +14,7 @@ import {
 } from "./user-management.loader";
 
 export const UserManagerList: React.FC = () => {
+  const queryClient = useQueryClient();
   const [searchParams, setSearchParams] = useSearchParams();
   const { data, isLoading } = useUserManager({
     skip: searchParams.get("page_number") ?? "1",
@@ -33,6 +36,7 @@ export const UserManagerList: React.FC = () => {
     onSuccess: () => {
       setIsOpen(null);
       form.resetFields();
+      queryClient.invalidateQueries([CACHE_KEYS.LIST]);
     },
   });
 

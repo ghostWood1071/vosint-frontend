@@ -2,6 +2,8 @@ import { LOCAL_USER_PROFILE } from "@/constants/config";
 import { useChangePassword } from "@/pages/auth/auth.loader";
 import {
   CACHE_KEYS,
+  useUpdateProfile,
+  useUpdateUser,
   useUploadAvatar,
 } from "@/pages/configuration/user-management/user-management.loader";
 import { generateImage } from "@/utils/image";
@@ -49,10 +51,19 @@ export const UserProfile: React.FC<Props> = ({ open, setOpen }) => {
       location.reload();
     },
   });
+
   const { mutate: mutateUploadAvatar, isLoading: isUpdatingAvatar } = useUploadAvatar({
     onSuccess: (avatar_url) => {
       message.success("Thay đổi avatar thành công");
       setUserProfile({ ...userProfile, avatar_url });
+      queryClient.invalidateQueries([CACHE_KEYS.LIST]);
+    },
+  });
+
+  const { mutateAsync: mutateUpdateProfile, isLoading: isUpdatingProfile } = useUpdateProfile({
+    onSuccess: (_, variables) => {
+      message.success("Thay đổi hồ sơ thành công");
+      setUserProfile({ ...userProfile, ...variables });
       queryClient.invalidateQueries([CACHE_KEYS.LIST]);
     },
   });
@@ -94,17 +105,20 @@ export const UserProfile: React.FC<Props> = ({ open, setOpen }) => {
                 labelCol={{
                   offset: 6,
                 }}
+                onFinish={handleUpdate}
               >
-                <Form.Item label="Họ">
+                <Form.Item label="Họ" name="first">
                   <Input />
                 </Form.Item>
-                <Form.Item label="Tên">
+                <Form.Item label="Tên" name="last">
                   <Input />
                 </Form.Item>
                 <Form.Item wrapperCol={{ offset: 6 }}>
                   <Row justify="end">
                     <Col pull={1}>
-                      <Button type="primary">Lưu</Button>
+                      <Button type="primary" htmlType="submit" loading={isUpdatingProfile}>
+                        Lưu
+                      </Button>
                     </Col>
                     <Col>
                       <Button>Huỷ</Button>
@@ -119,15 +133,19 @@ export const UserProfile: React.FC<Props> = ({ open, setOpen }) => {
                 labelCol={{
                   offset: 6,
                 }}
+                onFinish={handleUpdate}
+                initialValues={userProfile}
               >
-                <Form.Item label="Username">
+                <Form.Item label="Username" name="username">
                   <Input />
                 </Form.Item>
 
                 <Form.Item wrapperCol={{ offset: 6 }}>
                   <Row justify="end">
                     <Col pull={1}>
-                      <Button type="primary">Lưu</Button>
+                      <Button type="primary" htmlType="submit" loading={isUpdatingProfile}>
+                        Lưu
+                      </Button>
                     </Col>
                     <Col>
                       <Button>Huỷ</Button>
@@ -285,6 +303,20 @@ export const UserProfile: React.FC<Props> = ({ open, setOpen }) => {
   function handleCancel() {
     setOpen(false);
     setPreview(false);
+  }
+
+  function handleUpdate({ first, last, username }: Record<string, string>) {
+    if (first && last) {
+      return mutateUpdateProfile({
+        full_name: first ?? "" + last ?? "",
+      });
+    }
+
+    if (username) {
+      return mutateUpdateProfile({
+        username: username ?? "",
+      });
+    }
   }
 
   function handleSelectFile(e: React.ChangeEvent<HTMLInputElement>) {

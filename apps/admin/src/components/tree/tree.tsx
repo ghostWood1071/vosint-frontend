@@ -17,7 +17,7 @@ interface Props {
   tag: ETreeTag;
 
   onSelect?: (selectedKeys: React.Key[]) => void;
-  onClickTitle?: (_id: string) => void;
+  onClickTitle?: (_id: string, tag: ETreeTag) => void;
 }
 
 export const Tree: React.FC<Props> = ({

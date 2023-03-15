@@ -29,7 +29,6 @@ export const BodySearch: React.FC<BodySearchProps> = () => {
           className={styles.textInput}
           onChange={(e) => {
             setTextSearch(e.target.value);
-            console.log("okla");
           }}
           placeholder={"Tìm kiếm"}
         />

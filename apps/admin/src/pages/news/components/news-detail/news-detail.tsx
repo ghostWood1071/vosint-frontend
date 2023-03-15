@@ -1,5 +1,4 @@
 import { ETreeTag } from "@/components/tree/tree.store";
-import { useGetMe } from "@/pages/auth/auth.loader";
 import { BellTwoTone, ShoppingCartOutlined, StarTwoTone } from "@ant-design/icons";
 import { Col, Modal, Row, Space, Tabs, TabsProps, Tooltip, Typography } from "antd";
 import React from "react";
@@ -19,7 +18,7 @@ interface Props {
 export const NewsDetail: React.FC<Props> = ({ onDelete, onAdd }) => {
   const { setNewsIds, setShow } = useNewsStore(
     (state) => ({
-      setNewsIds: state.setNewsIds,
+      setNewsIds: state.setNews,
       setShow: state.setShow,
     }),
     shallow,
@@ -27,10 +26,6 @@ export const NewsDetail: React.FC<Props> = ({ onDelete, onAdd }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const newsId = searchParams.get("newsId");
   const { data } = useNewsDetail(newsId);
-  const { data: dataIAm } = useGetMe();
-
-  const isBell = dataIAm?.vital_list.includes(newsId);
-  const isStar = dataIAm?.news_bookmarks.includes(newsId);
 
   const items: TabsProps["items"] = [
     {
@@ -72,15 +67,21 @@ export const NewsDetail: React.FC<Props> = ({ onDelete, onAdd }) => {
               <Tooltip title="Thêm vào giỏ tin">
                 <ShoppingCartOutlined onClick={handleClickShop} />
               </Tooltip>
-              <Tooltip title={isBell ? "Xoá khỏi tin quan trọng" : "Thêm vào tin quan trọng"}>
+              <Tooltip
+                title={data?.["is_bell"] ? "Xoá khỏi tin quan trọng" : "Thêm vào tin quan trọng"}
+              >
                 <BellTwoTone
-                  twoToneColor={isBell ? "#00A94E" : "#A6A6A6"}
+                  twoToneColor={data?.["is_bell"] ? "#00A94E" : "#A6A6A6"}
                   onClick={handleClickBell}
                 />
               </Tooltip>
-              <Tooltip title={isStar ? "Xoá khỏi tin được đánh dấu" : "Thêm vào tin được đánh dấu"}>
+              <Tooltip
+                title={
+                  data?.["is_star"] ? "Xoá khỏi tin được đánh dấu" : "Thêm vào tin được đánh dấu"
+                }
+              >
                 <StarTwoTone
-                  twoToneColor={isStar ? "#FFCA10" : "#A6A6A6"}
+                  twoToneColor={data?.["is_star"] ? "#FFCA10" : "#A6A6A6"}
                   onClick={handleClickStar}
                 />
               </Tooltip>
@@ -102,6 +103,7 @@ export const NewsDetail: React.FC<Props> = ({ onDelete, onAdd }) => {
           </Col>
         </Row>
       }
+      destroyOnClose
     >
       <div className={styles.bodyTab}>
         <Tabs items={items} centered />
@@ -115,10 +117,15 @@ export const NewsDetail: React.FC<Props> = ({ onDelete, onAdd }) => {
   }
 
   function handleClickBell() {
-    isBell ? onDelete?.(newsId!, ETreeTag.QUAN_TRONG) : onAdd?.(newsId!, ETreeTag.QUAN_TRONG);
+    data?.["is_bell"]
+      ? onDelete?.(newsId!, ETreeTag.QUAN_TRONG)
+      : onAdd?.(newsId!, ETreeTag.QUAN_TRONG);
   }
+
   function handleClickStar() {
-    isStar ? onDelete?.(newsId!, ETreeTag.DANH_DAU) : onAdd?.(newsId!, ETreeTag.DANH_DAU);
+    data?.["is_star"]
+      ? onDelete?.(newsId!, ETreeTag.DANH_DAU)
+      : onAdd?.(newsId!, ETreeTag.DANH_DAU);
   }
 
   function handleCancelModel() {

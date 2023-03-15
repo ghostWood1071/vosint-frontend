@@ -11,11 +11,18 @@ interface Props {}
 
 export const NewsListPage: React.FC<Props> = () => {
   const [searchParams] = useSearchParams();
-  const { data, isLoading } = useNewsList({
-    order: "modified_at",
-    skip: searchParams.get("page_number") ?? 1,
-    limit: searchParams.get("page_size") ?? 10,
-  });
+  const skip = searchParams.get("page_number") ?? 1;
+  const limit = searchParams.get("page_size") ?? 10;
+  const { data, isFetching } = useNewsList(
+    {
+      order: "modified_at",
+      skip: skip ?? 1,
+      limit: limit ?? 10,
+    },
+    {
+      keepPreviousData: true,
+    },
+  );
   const { data: dataIAm, isLoading: isLoadingIAm } = useGetMe();
   const { mutateAsync: mutateDelete } = useDeleteNewsInNewsletter();
   const { mutate: mutateAdd } = useNewsIdToNewsletter();
@@ -29,7 +36,7 @@ export const NewsListPage: React.FC<Props> = () => {
   return (
     <>
       <NewsTable
-        isLoading={isLoading && isLoadingIAm}
+        isLoading={isFetching || isLoadingIAm}
         dataSource={dataSource}
         total_record={data?.total_record}
         onDelete={handleDelete}

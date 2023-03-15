@@ -19,7 +19,13 @@ import {
 } from "@/services/news.service";
 import { INewsSummaryDto, TNewsSummary } from "@/services/news.type";
 import { message } from "antd";
-import { UseMutationOptions, useMutation, useQuery, useQueryClient } from "react-query";
+import {
+  UseMutationOptions,
+  UseQueryOptions,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "react-query";
 
 import { ETreeAction, ETreeTag } from "../../components/tree/tree.store";
 
@@ -36,8 +42,8 @@ export const useNewsSidebar = (title?: string) => {
   return useQuery([CACHE_KEYS.NewsSidebar, title], () => getNewsSidebar(title));
 };
 
-export const useNewsList = (filter: any, enabled = true) => {
-  return useQuery([CACHE_KEYS.NewsList, filter], () => getNewsList(filter), { enabled });
+export const useNewsList = (filter: any, options?: UseQueryOptions<any, unknown>) => {
+  return useQuery<any>([CACHE_KEYS.NewsList, filter], () => getNewsList(filter), options);
 };
 
 export const useNewsDetail = (id: string | null) => {

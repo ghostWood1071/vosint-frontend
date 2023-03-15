@@ -2,6 +2,7 @@ import {
   createUser,
   deleteUser,
   getUsers,
+  updateProfile,
   updateUser,
   uploadAvatar,
 } from "@/services/user.service";
@@ -26,15 +27,16 @@ export const useCreateUser = ({ onSuccess }: any) => {
   });
 };
 
-export const useUpdateUser = ({ onSuccess }: any) => {
-  const queryClient = useQueryClient();
+export const useUpdateUser = (
+  options?: UseMutationOptions<any, unknown, { _id: string; values: any }>,
+) => {
+  return useMutation(({ _id, values }) => updateUser(_id, values), options);
+};
 
-  return useMutation(({ _id, values }: { _id: string; values: any }) => updateUser(_id, values), {
-    onSuccess() {
-      queryClient.invalidateQueries([CACHE_KEYS.LIST]);
-      onSuccess();
-    },
-  });
+export const useUpdateProfile = (
+  options?: UseMutationOptions<any, unknown, Record<string, string>>,
+) => {
+  return useMutation((body) => updateProfile(body), options);
 };
 
 export const useDeleteUser = ({ onSuccess }: any) => {

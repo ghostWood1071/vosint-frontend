@@ -15,7 +15,7 @@ interface Props extends TreeDataNode {
   isEditable?: boolean;
   _id: string;
   title: string;
-  onClick?: (_id: string) => void;
+  onClick?: (_id: string, tag: ETreeTag) => void;
   tag: ETreeTag;
 }
 
@@ -67,7 +67,7 @@ export const TreeTitle: React.FC<Props> = ({ onClick, children, isEditable, ...n
   );
 
   function handleClick() {
-    onClick?.(node._id);
+    onClick?.(node._id, node.tag);
   }
 
   function handleClickAway() {
