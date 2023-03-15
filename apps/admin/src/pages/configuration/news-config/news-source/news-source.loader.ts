@@ -4,6 +4,7 @@ import {
   getSourceConfig,
   updateNewsSource,
 } from "@/services/source-config.service";
+import { message } from "antd";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 
 export const CACHE_KEYS = {
@@ -36,7 +37,12 @@ export const useMutationNewsSource = () => {
       onSuccess: () => {
         queryClient.invalidateQueries(CACHE_KEYS.SourceNewsConfig);
       },
-      onError: () => {},
+      onError: () => {
+        message.error({
+          content: "Nguồn tin đã tồn tại!",
+          key: CACHE_KEYS.SourceNewsConfig,
+        });
+      },
     },
   );
 };

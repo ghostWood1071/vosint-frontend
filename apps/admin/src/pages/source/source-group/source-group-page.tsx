@@ -40,7 +40,7 @@ export const ViewList = () => {
         },
       },
     ];
-    return <Table columns={columns} dataSource={data ?? []} pagination={false} />;
+    return <Table columns={columns} dataSource={data ?? []} pagination={false} size={"small"} />;
   };
 
   const columns: TableColumnsType<any> = [
@@ -91,6 +91,7 @@ export const ViewList = () => {
           expandedRowRender: (item) =>
             item.news[0] !== undefined ? expandedRow(item.news, item._id) : null,
           rowExpandable: (item) => item._id !== "Not Expandable",
+          indentSize: 10,
         }}
         pagination={{
           position: ["bottomCenter"],
@@ -103,6 +104,7 @@ export const ViewList = () => {
         rowKey="_id"
         dataSource={data?.data}
         showHeader={false}
+        size={"small"}
       />
       {isOpenGroupModal ? (
         <AddGroupModal

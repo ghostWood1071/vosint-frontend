@@ -176,6 +176,8 @@ export const AddCateComponent: React.FC<Props> = ({
         onOk={handleDelete}
         onCancel={handleCancel}
         okText={"Xoá"}
+        closable={false}
+        maskClosable={false}
       >
         <div className={styles.deleteBodyContainer}>
           <div className={styles.leftDeleteBody}>Tên {nameTitle}:</div>
@@ -194,6 +196,8 @@ export const AddCateComponent: React.FC<Props> = ({
         onOk={type === "add" ? handleAdd : handleEdit}
         onCancel={handleCancel}
         width={800}
+        closable={false}
+        maskClosable={false}
       >
         <Form
           initialValues={initialValues ?? {}}
@@ -205,7 +209,14 @@ export const AddCateComponent: React.FC<Props> = ({
             label={"Tên " + nameTitle}
             name={"name"}
             validateTrigger={["onChange", "onBlur"]}
-            rules={[{ required: true, message: "Hãy nhập vào tên danh mục!" }]}
+            rules={[
+              {
+                required: true,
+                message: "Hãy nhập vào tên danh mục!",
+                whitespace: true,
+                pattern: new RegExp("[A-Za-z]{1}"),
+              },
+            ]}
           >
             <Input defaultValue={type === "edit" ? choosedCate.name : ""} />
           </Form.Item>

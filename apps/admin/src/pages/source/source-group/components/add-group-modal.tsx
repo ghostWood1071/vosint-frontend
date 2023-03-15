@@ -57,7 +57,7 @@ export const AddGroupModal: React.FC<Props> = ({
   const { data } = useSourceNewsConfigList({
     skip: 1,
     limit: 10,
-    text_search: searchParams.get("text_search") ?? "",
+    text_search: searchParams.get("text") ?? "",
   });
 
   const openNotification = (placement: any, type: any) => {
@@ -106,7 +106,7 @@ export const AddGroupModal: React.FC<Props> = ({
 
   function handleSearch(value: any) {
     setSearchParams({
-      text_search: value,
+      text: value,
     });
   }
 
@@ -143,6 +143,8 @@ export const AddGroupModal: React.FC<Props> = ({
         onOk={handleDelete}
         onCancel={handleCancel}
         okText={"Xoá"}
+        closable={false}
+        maskClosable={false}
       >
         <div className={styles.deleteBodyContainer}>
           <div className={styles.leftDeleteBody}>Tên nhóm nguồn tin:</div>
@@ -170,7 +172,7 @@ export const AddGroupModal: React.FC<Props> = ({
       render: (item) => {
         return (
           <Space>
-            <Tooltip title={"Xoá nguồn tin"}>
+            <Tooltip title={"Xoá nhóm nguồn tin"}>
               <DeleteOutlined
                 onClick={() => handleDeleteItemList(item)}
                 className={styles.delete}
@@ -185,13 +187,15 @@ export const AddGroupModal: React.FC<Props> = ({
   if (type === "add" || type === "edit") {
     return (
       <Modal
-        title={(type === "add" ? "Thêm mới " : "Sửa ") + "proxy"}
+        title={(type === "add" ? "Thêm mới " : "Sửa ") + "nhóm nguồn tin"}
         open={isOpen}
         destroyOnClose
         confirmLoading={confirmLoading}
         onOk={type === "add" ? handleAdd : handleEdit}
         onCancel={handleCancel}
         width={800}
+        closable={false}
+        maskClosable={false}
       >
         {contextHolder}
         <Form
@@ -204,7 +208,14 @@ export const AddGroupModal: React.FC<Props> = ({
             label={"Tên nhóm nguồn tin"}
             name={"source_name"}
             validateTrigger={["onChange", "onBlur"]}
-            rules={[{ required: true, message: "Hãy nhập vào tên nhóm nguồn tin!" }]}
+            rules={[
+              {
+                required: true,
+                message: "Hãy nhập vào tên nhóm nguồn tin!",
+                whitespace: true,
+                pattern: new RegExp("[A-Za-z]{1}"),
+              },
+            ]}
           >
             <Input />
           </Form.Item>
