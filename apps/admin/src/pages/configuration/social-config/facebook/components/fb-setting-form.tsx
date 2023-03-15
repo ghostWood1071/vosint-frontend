@@ -2,13 +2,20 @@ import { Form, FormInstance, Input, Select } from "antd";
 import React from "react";
 
 interface Props {
+  type: any;
   valueTarget: any;
   value: any;
   form: FormInstance<any>;
   onFinish: (values: any) => void;
 }
 
-export const SettingCreateForm: React.FC<Props> = ({ valueTarget, value, form, onFinish }) => {
+export const SettingCreateForm: React.FC<Props> = ({
+  type,
+  valueTarget,
+  value,
+  form,
+  onFinish,
+}) => {
   const validateMessages = {
     required: "Nhập ${label}",
   };
@@ -43,7 +50,7 @@ export const SettingCreateForm: React.FC<Props> = ({ valueTarget, value, form, o
       </Form.Item>
       <Form.Item name="social_type" label="Kiểu tài khoản">
         <Select
-          defaultValue={"Fanpage"}
+          defaultValue={type}
           options={[
             { value: "Object", label: "Object" },
             { value: "Fanpage", label: "Fanpage" },

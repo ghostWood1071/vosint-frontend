@@ -49,6 +49,7 @@ export const FacebookConfig: React.FC = () => {
         destroyOnClose
       >
         <SettingCreateForm
+          type={value}
           valueTarget
           value={"add"}
           form={form ?? []}
