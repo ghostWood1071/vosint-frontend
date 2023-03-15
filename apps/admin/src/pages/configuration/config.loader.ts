@@ -7,6 +7,7 @@ import {
   getFacebookSetting,
   getObjectCateConfig,
   getProxyConfig,
+  getSocialObjectList,
   getTiktokSetting,
   getTwitterSetting,
   postSetting,
@@ -24,6 +25,7 @@ export const CACHE_KEYS = {
   InfoTTSetting: "INFO_TT_SETTING",
   SocialConfig: "SOCIAL_CONFIG",
   DeleteInfoConfig: "DELETE_SOCIAL_CONFIG",
+  SocialObjectList: "SOCIALOBJECTLIST",
 };
 
 export const useObjectCate = (filter: any) => {
@@ -32,6 +34,10 @@ export const useObjectCate = (filter: any) => {
 
 export const useProxyConfig = (filter: any) => {
   return useQuery([CACHE_KEYS.ProxyConfig, filter], () => getProxyConfig(filter));
+};
+
+export const useSocialObjectList = (filter: any) => {
+  return useQuery([CACHE_KEYS.SocialObjectList, filter], () => getSocialObjectList(filter));
 };
 
 export const useMutationObjectCate = () => {

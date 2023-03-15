@@ -47,6 +47,13 @@ export const getTiktokSetting = async (filter: any) => {
   return result.data;
 };
 
+export const getSocialObjectList = async (filter: any) => {
+  const result = await apiClient.get<any>(`${apiCateConfigBaseV2Url}/Social-media/${filter.type}`, {
+    params: filterEmptyString(filter),
+  });
+  return result.data;
+};
+
 //add
 export const addNewObjectCateConfig = async (data: any, typeObject: any, statusData: any) => {
   const result = await apiClient.post<any>(`${apiCateConfigBaseV2Url}/object/`, data, {
