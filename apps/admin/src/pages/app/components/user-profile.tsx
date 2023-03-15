@@ -41,6 +41,19 @@ export const UserProfile: React.FC<Props> = ({ open, setOpen }) => {
   const [userProfile, setUserProfile] = useLocalStorage<Record<string, string>>(LOCAL_USER_PROFILE);
   const refInput = useRef<HTMLInputElement>(null);
 
+  const defaultActivePanel = [""];
+  const [activedPanel, setActivedPanel] = useState<string | string[]>(defaultActivePanel);
+  const clickButtonHuy = () => {
+    setActivedPanel([]);
+  };
+  const onChange = (key: string | string[]) => {
+    setActivedPanel(key);
+  };
+
+  const onFinishFailed = () => {
+    message.error("Vui lòng nhập dữ liệu!");
+  };
+
   const [selectedFile, setSelectedFile] = useState<File>();
   const [preview, setPreview] = useState<any>(null);
 
@@ -98,6 +111,9 @@ export const UserProfile: React.FC<Props> = ({ open, setOpen }) => {
             expandIcon={() => <EditOutlined />}
             bordered={false}
             ghost
+            defaultActiveKey={activedPanel}
+            activeKey={activedPanel}
+            onChange={onChange}
           >
             <Collapse.Panel header="Họ và tên" key="full-name">
               <Form
@@ -106,11 +122,20 @@ export const UserProfile: React.FC<Props> = ({ open, setOpen }) => {
                   offset: 6,
                 }}
                 onFinish={handleUpdate}
+                onFinishFailed={onFinishFailed}
               >
-                <Form.Item label="Họ" name="first">
+                <Form.Item
+                  label="Họ"
+                  name="first"
+                  rules={[{ required: true }, { warningOnly: true }]}
+                >
                   <Input />
                 </Form.Item>
-                <Form.Item label="Tên" name="last">
+                <Form.Item
+                  label="Tên"
+                  name="last"
+                  rules={[{ required: true }, { warningOnly: true }]}
+                >
                   <Input />
                 </Form.Item>
                 <Form.Item wrapperCol={{ offset: 6 }}>
@@ -121,7 +146,7 @@ export const UserProfile: React.FC<Props> = ({ open, setOpen }) => {
                       </Button>
                     </Col>
                     <Col>
-                      <Button>Huỷ</Button>
+                      <Button onClick={clickButtonHuy}>Huỷ</Button>
                     </Col>
                   </Row>
                 </Form.Item>
@@ -135,8 +160,13 @@ export const UserProfile: React.FC<Props> = ({ open, setOpen }) => {
                 }}
                 onFinish={handleUpdate}
                 initialValues={userProfile}
+                onFinishFailed={onFinishFailed}
               >
-                <Form.Item label="Username" name="username">
+                <Form.Item
+                  label="Username"
+                  name="username"
+                  rules={[{ required: true }, { warningOnly: true }]}
+                >
                   <Input />
                 </Form.Item>
 
@@ -148,7 +178,7 @@ export const UserProfile: React.FC<Props> = ({ open, setOpen }) => {
                       </Button>
                     </Col>
                     <Col>
-                      <Button>Huỷ</Button>
+                      <Button onClick={clickButtonHuy}>Huỷ</Button>
                     </Col>
                   </Row>
                 </Form.Item>
@@ -189,7 +219,9 @@ export const UserProfile: React.FC<Props> = ({ open, setOpen }) => {
                     >
                       Lưu
                     </Button>
-                    <Button type="text">Huỷ</Button>
+                    <Button type="text" onClick={clickButtonHuy}>
+                      Huỷ
+                    </Button>
                     <input type="file" ref={refInput} hidden onChange={handleSelectFile} />
                   </Space>
                 </Col>
