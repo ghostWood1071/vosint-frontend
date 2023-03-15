@@ -7,15 +7,21 @@
   .name-object {
     width: 315px;
     height: 100%;
+    border: 0.5px solid gray;
+    border-radius: 10px;
 
-    .user {
-      border-bottom: 1px solid gray;
-      height: 50%;
+    .option-container {
+      height: 50px;
       width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      padding-inline: 5px;
     }
-    .group {
+    .user {
+      height: calc(100% - 50px);
       width: 100%;
-      height: 50%;
+      background-color: aqua;
     }
   }
   .content {
