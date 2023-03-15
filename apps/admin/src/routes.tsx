@@ -112,6 +112,10 @@ export const routers = createBrowserRouter([
             path: "/news/:newsletterId",
             element: <NewsDetailPage />,
           },
+          {
+            path: "/news/:newsletterId/:tag",
+            element: <NewsDetailPage />,
+          },
         ],
       },
       {

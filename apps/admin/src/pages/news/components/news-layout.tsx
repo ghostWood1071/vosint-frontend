@@ -98,7 +98,7 @@ function Sidebar() {
     });
   }
 
-  function handleClickTitle(newsletterId: string) {
-    navigate(getNewsDetailUrl(newsletterId));
+  function handleClickTitle(newsletterId: string, tag: ETreeTag) {
+    navigate(getNewsDetailUrl(newsletterId, tag));
   }
 }

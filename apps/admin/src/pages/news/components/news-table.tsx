@@ -32,10 +32,11 @@ export const NewsTable: React.FC<Props> = ({
   onDelete,
   onAdd,
 }) => {
-  const { setNewsIds, setShow } = useNewsStore(
+  const { setNews, setShow, news } = useNewsStore(
     (state) => ({
-      setNewsIds: state.setNewsIds,
+      setNews: state.setNews,
       setShow: state.setShow,
+      news: state.news,
     }),
     shallow,
   );
@@ -56,8 +57,16 @@ export const NewsTable: React.FC<Props> = ({
       ellipsis: true,
       width: "30%",
       title: "Tiêu đề",
-      render: (title, { _id }) => {
-        return <Typography.Link onClick={handleChange}>{title}</Typography.Link>;
+      render: (title, { _id, "data:content": content }) => {
+        return (
+          <Typography.Link onClick={handleChange}>
+            {title ||
+              truncate(content, {
+                length: 50,
+                separator: "...",
+              })}
+          </Typography.Link>
+        );
 
         function handleChange() {
           searchParams.set("newsId", _id);
@@ -72,7 +81,7 @@ export const NewsTable: React.FC<Props> = ({
       align: "center",
       render: (_, record) => {
         function handleClickShop() {
-          setNewsIds([record._id]);
+          setNews([record._id]);
           setShow(true);
         }
 
@@ -158,13 +167,14 @@ export const NewsTable: React.FC<Props> = ({
   }
 
   const rowSelection = {
-    onChange: (selected: any) => {
-      setNewsIds(selected);
+    onChange: (_: any, selected: any) => {
+      setNews(selected);
     },
     getCheckboxProps: (record: any) => ({
       disabled: false,
       name: record.title,
     }),
+    selectedRowKeys: news.map((i) => i._id),
   };
 
   return (

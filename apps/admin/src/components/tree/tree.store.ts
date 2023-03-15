@@ -1,4 +1,4 @@
-import create from "zustand";
+import { create } from "zustand";
 
 export enum ETreeTag {
   CHU_DE = "chu_de",

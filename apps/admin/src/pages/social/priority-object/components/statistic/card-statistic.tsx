@@ -23,7 +23,6 @@ export const CardStatistic: React.FC<CardStatisticProps> = ({ title, number, col
   }
 
   function handleChangeTime(dates: any, dateStrings: any) {
-    console.log(dateStrings);
     setFilterDate(dateStrings);
   }
 

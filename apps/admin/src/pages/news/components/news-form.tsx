@@ -1,5 +1,5 @@
 import { ETreeAction, ETreeTag, useTreeStore } from "@/components/tree/tree.store";
-import { CloseCircleOutlined, MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
+import { DeleteOutlined, MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import {
   Button,
   Checkbox,
@@ -51,7 +51,7 @@ export const NewsForm: React.FC<Props> = ({ onFinish, confirmLoading }) => {
   const [checked, setChecked] = useState(false);
   const setValues = useTreeStore((state) => state.setValues);
   const [showAddNews, setShowAddNews] = useState(false);
-  const [news, setNews] = useNewsStore((state) => [state.newsIds, state.setNewsIds], shallow);
+  const [news, setNews] = useNewsStore((state) => [state.news, state.setNews], shallow);
 
   const { data } = useNewsletterDetail(initialValues?._id, {});
 
@@ -61,6 +61,10 @@ export const NewsForm: React.FC<Props> = ({ onFinish, confirmLoading }) => {
       setNews(data?.news_samples);
     }
   }, [data, initialValues?._id]);
+
+  useEffect(() => {
+    initialValues && form.setFieldsValue(initialValues);
+  }, [initialValues?._id]);
 
   if (action === ETreeAction.SELECT) {
     return null;
@@ -115,7 +119,7 @@ export const NewsForm: React.FC<Props> = ({ onFinish, confirmLoading }) => {
                   dataSource={news}
                   renderItem={(item) => {
                     return (
-                      <List.Item actions={[<CloseCircleOutlined onClick={handleDelete} />]}>
+                      <List.Item actions={[<DeleteOutlined onClick={handleDelete} />]}>
                         <Typography.Link
                           target="_blank"
                           href={item?.["data:url"] ?? item?.["data_url"]}
@@ -251,7 +255,6 @@ export const NewsForm: React.FC<Props> = ({ onFinish, confirmLoading }) => {
   }
 
   function reset() {
-    setNews([]);
     setChecked(false);
     form.resetFields();
   }
@@ -267,15 +270,12 @@ const ModalAddNews: React.FC<ModalAddNewsProps> = ({ open, setOpen }) => {
     pageNumber: 1,
     pageSize: 10,
   });
-  const [news, setNews] = useNewsStore((state) => [state.newsIds, state.setNewsIds], shallow);
+  const [news, setNews] = useNewsStore((state) => [state.news, state.setNews], shallow);
 
-  const { data, isLoading } = useNewsList(
-    {
-      skip: paginate.pageNumber,
-      limit: paginate.pageSize,
-    },
-    true,
-  );
+  const { data, isLoading } = useNewsList({
+    skip: paginate.pageNumber,
+    limit: paginate.pageSize,
+  });
 
   const columns: TableColumnsType<any> = [
     {

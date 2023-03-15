@@ -70,7 +70,12 @@ export const AppHeader: React.FC = () => {
         <Row justify="end" className={styles.userSetting}>
           {/* <SearchOutlined onClick={handlerNavigateSearch} className={styles.icon} /> */}
           <Dropdown menu={{ items }}>
-            <UserOutlined className={styles.icon} />
+            <Avatar
+              src={
+                userProfile?.avatar_url ? generateImage(userProfile.avatar_url) : <UserOutlined />
+              }
+              style={{ backgroundColor: "#cccccc" }}
+            />
           </Dropdown>
         </Row>
       </Col>

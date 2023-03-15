@@ -8,6 +8,7 @@ import {
 import { useNewsStore } from "@/pages/news/news.store";
 import { buildTree } from "@/pages/news/news.utils";
 import {
+  DeleteOutlined,
   DoubleLeftOutlined,
   DoubleRightOutlined,
   ExclamationCircleOutlined,
@@ -15,8 +16,21 @@ import {
   MinusCircleTwoTone,
   PlusCircleTwoTone,
 } from "@ant-design/icons";
-import { Button, Col, DatePicker, Input, Modal, Row, Select, Space, Tooltip } from "antd";
+import {
+  Button,
+  Col,
+  DatePicker,
+  Input,
+  List,
+  Modal,
+  Row,
+  Select,
+  Space,
+  Tooltip,
+  Typography,
+} from "antd";
 import classNames from "classnames";
+import produce from "immer";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
@@ -33,12 +47,13 @@ export function AppFilter(): JSX.Element {
   const { t } = useTranslation("translation", { keyPrefix: "app" });
   const [show, setShow] = useNewsStore((state) => [state.show, state.setShow], shallow);
   const { data, isLoading } = useNewsSidebar();
-  const { newsIds, setNewsIds } = useNewsStore(
-    (state) => ({ newsIds: state.newsIds, setNewsIds: state.setNewsIds }),
+  const { news, setNews } = useNewsStore(
+    (state) => ({ news: state.news, setNews: state.setNews }),
     shallow,
   );
+  const newsIds: string[] = news.map((i) => i._id);
   const [newsletterId, setNewsletterId] = useState("");
-  let { newsletterId: detailIds } = useParams();
+  let { newsletterId: detailIds, tag } = useParams();
 
   function handlePin() {
     setPinned(!pinned);
@@ -97,8 +112,13 @@ export function AppFilter(): JSX.Element {
               <Select.Option key="nuoc-ngoai">Dịch tiếng nước ngoài</Select.Option>
               <Select.Option key="nguon">Hiển thị ngôn ngữ nguồn</Select.Option>
             </Select>
-            <Select placeholder="Điểm tin" />
-            <Button disabled={newsIds.length === 0}>Tóm tắt đa tin ({newsIds.length})</Button>
+            <Select placeholder="Điểm tin" defaultValue="sac-thai-tin">
+              <Select.Option key="sac-thai-tin">Sắc thái tin</Select.Option>
+              <Select.Option key="tich-cuc">Tích cực</Select.Option>
+              <Select.Option key="tieu-cuc">Tiêu cực</Select.Option>
+              <Select.Option key="trung-tinh">Trung tính</Select.Option>
+            </Select>
+            <Button disabled={newsIds.length === 0}>Tóm tắt tin ({newsIds.length})</Button>
             <Search placeholder="Từ khoá" />
             {/* <Select placeholder="Kiểu danh sách" /> */}
             <Button
@@ -109,16 +129,17 @@ export function AppFilter(): JSX.Element {
               Thêm tin
             </Button>
 
-            {detailIds && (
-              <Button
-                icon={<MinusCircleTwoTone twoToneColor="#ff4d4f" />}
-                danger
-                disabled={newsIds.length === 0}
-                onClick={handleRemoveNewsIds}
-              >
-                Xoá tin
-              </Button>
-            )}
+            {detailIds &&
+              ![ETreeTag.LINH_VUC, ETreeTag.CHU_DE].includes((tag ?? "") as ETreeTag) && (
+                <Button
+                  icon={<MinusCircleTwoTone twoToneColor="#ff4d4f" />}
+                  danger
+                  disabled={newsIds.length === 0}
+                  onClick={handleRemoveNewsIds}
+                >
+                  Xoá tin
+                </Button>
+              )}
 
             <Button type="primary">Xuất file dữ liệu</Button>
           </Space>
@@ -143,6 +164,32 @@ export function AppFilter(): JSX.Element {
           onSelect={handleSelect}
           tag={ETreeTag.GIO_TIN}
           selectedKeys={[newsletterId]}
+        />
+        <br />
+        <Typography.Text>Danh sách tin:</Typography.Text>
+        <List
+          dataSource={news}
+          renderItem={(item) => {
+            return (
+              <List.Item actions={[<DeleteOutlined onClick={handleDelete} />]}>
+                <Typography.Link
+                  target="_blank"
+                  href={item?.["data:url"] ?? item?.["data_url"]}
+                  rel="noreferrer"
+                >
+                  {item?.["data:title"] ?? item?.["data_title"]}
+                </Typography.Link>
+              </List.Item>
+            );
+
+            function handleDelete() {
+              const deletedNews = produce(news, (draft) => {
+                const index = draft.findIndex((i) => i._id === item._id);
+                if (index !== -1) draft.splice(index, 1);
+              });
+              setNews(deletedNews);
+            }
+          }}
         />
       </Modal>
     </>
@@ -180,7 +227,7 @@ export function AppFilter(): JSX.Element {
       {
         onSuccess: () => {
           setShow(false);
-          setNewsIds([]);
+          setNews([]);
         },
       },
     );
