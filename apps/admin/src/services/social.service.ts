@@ -3,9 +3,12 @@ import { apiClient, filterEmptyString } from "@/utils/api";
 const apiPriorityObjectBaseV2Url = "/v2";
 
 export const gePriorityObject = async (filter: any) => {
-  const result = await apiClient.get<any>(`user/interested/${filter.type}`, {
-    params: filterEmptyString(filter),
-  });
+  const result = await apiClient.get<any>(
+    `${apiPriorityObjectBaseV2Url}/user/interested/${filter.type}`,
+    {
+      params: filterEmptyString(filter),
+    },
+  );
   return result.data;
 };
 
