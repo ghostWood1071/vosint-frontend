@@ -4,7 +4,7 @@ import {
   useMutationUpdateSocial,
 } from "@/pages/configuration/config.loader";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { Button, Form, Modal, Space, Switch, Table, TableColumnsType } from "antd";
+import { Avatar, Button, Form, Modal, Space, Switch, Table, TableColumnsType } from "antd";
 import React, { useState } from "react";
 import { useQueryClient } from "react-query";
 
@@ -28,6 +28,15 @@ export const SettingTable: React.FC<Props> = ({ data, loading }) => {
   const { mutate: mutateDelete } = useMutationDeleteSocial();
 
   const columns: TableColumnsType<any> = [
+    {
+      title: "",
+      dataIndex: "avatar_url",
+      render: (url: string) => {
+        return <Avatar src={url} style={{ marginTop: -20 }} />;
+      },
+      width: "10%",
+      align: "center",
+    },
     {
       title: "Tên",
       dataIndex: "social_name",
@@ -83,6 +92,7 @@ export const SettingTable: React.FC<Props> = ({ data, loading }) => {
         destroyOnClose
       >
         <SettingCreateForm
+          type
           valueTarget={isValueTarget}
           value={"edit"}
           form={form}
