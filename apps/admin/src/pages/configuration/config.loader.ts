@@ -1,16 +1,21 @@
 import {
   addNewObjectCateConfig,
   addNewProxyConfig,
+  deleteAccountMonitor,
   deleteObjectCateConfig,
   deleteProxyConfig,
   deleteSocialConfig,
+  getAccountMonitorSocialMedia,
+  getAdminMonitor,
   getFacebookSetting,
   getObjectCateConfig,
   getProxyConfig,
   getSocialObjectList,
   getTiktokSetting,
   getTwitterSetting,
+  postAccountMonitor,
   postSetting,
+  updateAccountMonitor,
   updateObjectCateConfig,
   updateProxyConfig,
   updateSocialConfig,
@@ -25,7 +30,9 @@ export const CACHE_KEYS = {
   InfoTTSetting: "INFO_TT_SETTING",
   SocialConfig: "SOCIAL_CONFIG",
   DeleteInfoConfig: "DELETE_SOCIAL_CONFIG",
-  SocialObjectList: "SOCIALOBJECTLIST",
+  InfoAccountMonitorFB: "INFO_ACCOUNT_MONITOR_FB",
+  InfoAccountMonitorTW: "INFO_ACCOUNT_MONITOR_TW",
+  InfoAccountMonitorTT: "INFO_ACCOUNT_MONITOR_TT",
 };
 
 export const useObjectCate = (filter: any) => {
@@ -94,32 +101,27 @@ export const useMutationProxy = () => {
   );
 };
 
+//
 export const useMutationUpdateSocial = (options?: UseMutationOptions<unknown, unknown, any>) => {
-  const queryClient = useQueryClient();
   return useMutation((data: any) => {
     return updateSocialConfig(data);
   }, options);
 };
 
 export const useMutationDeleteSocial = (options?: UseMutationOptions<unknown, unknown, any>) => {
-  const queryClient = useQueryClient();
   return useMutation((id: any) => {
-    console.log(id);
     return deleteSocialConfig(id);
   }, options);
 };
 
 export const useMutationUpdateTWSocial = (options?: UseMutationOptions<unknown, unknown, any>) => {
-  const queryClient = useQueryClient();
   return useMutation((data: any) => {
     return updateSocialConfig(data);
   }, options);
 };
 
 export const useMutationDeleteTWSocial = (options?: UseMutationOptions<unknown, unknown, any>) => {
-  const queryClient = useQueryClient();
   return useMutation((id: any) => {
-    console.log(id);
     return deleteSocialConfig(id);
   }, options);
 };
@@ -164,4 +166,39 @@ export const usePostTTSetting = () => {
     },
     onError: () => {},
   });
+};
+
+//
+export const useAdminMonitor = (filter: any) => {
+  return useQuery([CACHE_KEYS.InfoAccountMonitorFB, filter], () => getAdminMonitor(filter));
+};
+
+export const usePostAccountMonitor = () => {
+  const queryClient = useQueryClient();
+  return useMutation((data: any) => postAccountMonitor(data), {
+    onSuccess: () => {
+      queryClient.invalidateQueries([CACHE_KEYS.InfoAccountMonitorFB]);
+    },
+    onError: () => {},
+  });
+};
+
+export const useMutationDeleteAccountMonitor = (
+  options?: UseMutationOptions<unknown, unknown, any>,
+) => {
+  return useMutation((id: any) => {
+    return deleteAccountMonitor(id);
+  }, options);
+};
+
+export const useMutationUpdateAccountMonitor = (
+  options?: UseMutationOptions<unknown, unknown, any>,
+) => {
+  return useMutation((data: any) => {
+    return updateAccountMonitor(data);
+  }, options);
+};
+
+export const useAccountMonitor = (filter: any) => {
+  return useQuery([CACHE_KEYS.InfoFBSetting, filter], () => getAccountMonitorSocialMedia(filter));
 };
