@@ -149,3 +149,10 @@ export const uploadFile = async (data: any) => {
   });
   return result;
 };
+
+export const getSocialObjectList = async (filter: any) => {
+  const result = await apiClient.get<any>(`${apiCateConfigBaseV2Url}/Social-media/${filter.type}`, {
+    params: filterEmptyString(filter),
+  });
+  return result.data;
+};

@@ -25,6 +25,7 @@ import { UseMutationOptions, useMutation, useQuery, useQueryClient } from "react
 export const CACHE_KEYS = {
   ObjectCate: "OBJECT_CATEGORY",
   ProxyConfig: "PROXY_CONFIG",
+  SocialObjectList: "SOCIAL_OBJECT_LIST",
   InfoFBSetting: "INFO_FB_SETTING",
   InfoTWSetting: "INFO_TW_SETTING",
   InfoTTSetting: "INFO_TT_SETTING",
