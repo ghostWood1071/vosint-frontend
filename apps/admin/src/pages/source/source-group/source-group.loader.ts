@@ -4,6 +4,7 @@ import {
   getGroupSource,
   updateGroupSource,
 } from "@/services/group-source.service";
+import { message } from "antd";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 
 export const GROUP_SOURCE = "@GROUP_SOURCE";
@@ -34,7 +35,12 @@ export const useMutationGroupSource = () => {
       onSuccess: () => {
         queryClient.invalidateQueries(GROUP_SOURCE);
       },
-      onError: () => {},
+      onError: () => {
+        message.error({
+          content: "Nhóm nguồn tin đã tồn tại!",
+          key: GROUP_SOURCE,
+        });
+      },
     },
   );
 };

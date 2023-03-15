@@ -20,6 +20,7 @@ import {
   updateProxyConfig,
   updateSocialConfig,
 } from "@/services/cate-config.service";
+import { message } from "antd";
 import { UseMutationOptions, useMutation, useQuery, useQueryClient } from "react-query";
 
 export const CACHE_KEYS = {
@@ -70,7 +71,12 @@ export const useMutationObjectCate = () => {
       onSuccess: () => {
         queryClient.invalidateQueries(CACHE_KEYS.ObjectCate);
       },
-      onError: () => {},
+      onError: () => {
+        message.error({
+          content: "Đối tượng đã tồn tại!",
+          key: CACHE_KEYS.ObjectCate,
+        });
+      },
     },
   );
 };
@@ -97,7 +103,12 @@ export const useMutationProxy = () => {
       onSuccess: () => {
         queryClient.invalidateQueries(CACHE_KEYS.ProxyConfig);
       },
-      onError: () => {},
+      onError: () => {
+        message.error({
+          content: "Proxy đã tồn tại!",
+          key: CACHE_KEYS.ProxyConfig,
+        });
+      },
     },
   );
 };

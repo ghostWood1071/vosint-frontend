@@ -94,6 +94,7 @@ export const AddObjectModal: React.FC<Props> = ({
         onCancel={handleCancel}
         okText={"Xoá"}
         closable={false}
+        maskClosable={false}
       >
         <div className={styles.deleteBodyContainer}>
           <div className={styles.leftDeleteBody}>Tên {nameType}:</div>
@@ -113,6 +114,8 @@ export const AddObjectModal: React.FC<Props> = ({
         onOk={handleAdd}
         onCancel={handleCancel}
         width={800}
+        closable={false}
+        maskClosable={false}
       >
         {contextHolder}
 

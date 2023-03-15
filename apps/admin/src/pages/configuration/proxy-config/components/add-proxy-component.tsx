@@ -79,6 +79,8 @@ export const AddProxyComponent: React.FC<Props> = ({
         onOk={handleDelete}
         onCancel={handleCancel}
         okText={"Xoá"}
+        closable={false}
+        maskClosable={false}
       >
         <div className={styles.deleteBodyContainer}>
           <div className={styles.leftDeleteBody}>Tên proxy:</div>
@@ -97,6 +99,8 @@ export const AddProxyComponent: React.FC<Props> = ({
         onOk={type === "add" ? handleAdd : handleEdit}
         onCancel={handleCancel}
         width={800}
+        closable={false}
+        maskClosable={false}
       >
         <Form
           initialValues={initialValues ?? {}}
@@ -108,7 +112,13 @@ export const AddProxyComponent: React.FC<Props> = ({
             label={"Tên proxy"}
             name={"name"}
             validateTrigger={["onChange", "onBlur"]}
-            rules={[{ required: true, message: "Hãy nhập vào tên proxy!" }]}
+            rules={[
+              {
+                required: true,
+                message: "Hãy nhập vào tên proxy!",
+                whitespace: true,
+              },
+            ]}
           >
             <Input />
           </Form.Item>
@@ -116,7 +126,14 @@ export const AddProxyComponent: React.FC<Props> = ({
             validateTrigger={["onChange", "onBlur"]}
             label="Địa chỉ IP"
             name={"ip_address"}
-            rules={[{ required: true, message: "Hãy nhập vào địa chỉ IP!" }]}
+            rules={[
+              {
+                required: true,
+                message: "Hãy nhập vào địa chỉ IP(VD: 192.168.0.1)!",
+                whitespace: true,
+                pattern: new RegExp("^([0-9]{1,3}.){3}[0-9]{1,3}$"),
+              },
+            ]}
           >
             <Input />
           </Form.Item>
@@ -124,9 +141,16 @@ export const AddProxyComponent: React.FC<Props> = ({
             validateTrigger={["onChange", "onBlur"]}
             label="Cổng (port)"
             name={"port"}
-            rules={[{ required: true, message: "Hãy nhập vào tên cổng!" }]}
+            rules={[
+              {
+                required: true,
+                message: "Hãy nhập vào tên cổng(định dạng số)!",
+                whitespace: true,
+                pattern: new RegExp("[0-9]+"),
+              },
+            ]}
           >
-            <Input />
+            <Input type="number" />
           </Form.Item>
           <Form.Item validateTrigger={["onChange", "onBlur"]} label="Ghi chú" name={"note"}>
             <Input />

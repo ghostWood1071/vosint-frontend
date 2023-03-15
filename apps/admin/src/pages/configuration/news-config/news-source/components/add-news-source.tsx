@@ -66,13 +66,15 @@ export const AddNewsSourceComponent: React.FC<Props> = ({
   if (type === "delete") {
     return (
       <Modal
-        title={"Xoá tên nguồn tin"}
+        title={"Xoá nguồn tin"}
         open={isOpen}
         destroyOnClose
         confirmLoading={confirmLoading}
         onOk={handleDelete}
         onCancel={handleCancel}
         okText={"Xoá"}
+        closable={false}
+        maskClosable={false}
       >
         <div className={styles.deleteBodyContainer}>
           <div className={styles.leftDeleteBody}>Tên nguồn tin:</div>
@@ -84,13 +86,15 @@ export const AddNewsSourceComponent: React.FC<Props> = ({
   if (type === "add" || type === "edit") {
     return (
       <Modal
-        title={(type === "add" ? "Thêm mới " : "Sửa ") + "proxy"}
+        title={(type === "add" ? "Thêm mới " : "Sửa ") + "nguồn tin"}
         open={isOpen}
         destroyOnClose
         confirmLoading={confirmLoading}
         onOk={type === "add" ? handleAdd : handleEdit}
         onCancel={handleCancel}
         width={800}
+        closable={false}
+        maskClosable={false}
       >
         <Form
           initialValues={initialValues ?? {}}
@@ -102,7 +106,14 @@ export const AddNewsSourceComponent: React.FC<Props> = ({
             label={"Tên nguồn tin"}
             name={"name"}
             validateTrigger={["onChange", "onBlur"]}
-            rules={[{ required: true, message: "Hãy nhập vào tên nguồn tin!" }]}
+            rules={[
+              {
+                required: true,
+                message: "Hãy nhập vào tên nguồn tin!",
+                whitespace: true,
+                pattern: new RegExp("[A-Za-z]{1}"),
+              },
+            ]}
           >
             <Input />
           </Form.Item>
@@ -110,7 +121,14 @@ export const AddNewsSourceComponent: React.FC<Props> = ({
             validateTrigger={["onChange", "onBlur"]}
             label="Tên miền"
             name={"host_name"}
-            rules={[{ required: true, message: "Hãy nhập vào tên miền!" }]}
+            rules={[
+              {
+                required: true,
+                message: "Hãy nhập vào tên miền!",
+                whitespace: true,
+                pattern: new RegExp("[A-Za-z]{1}"),
+              },
+            ]}
           >
             <Input />
           </Form.Item>
@@ -118,7 +136,14 @@ export const AddNewsSourceComponent: React.FC<Props> = ({
             validateTrigger={["onChange", "onBlur"]}
             label="Ngôn ngữ"
             name={"language"}
-            rules={[{ required: true, message: "Hãy nhập vào ngôn ngữ!" }]}
+            rules={[
+              {
+                required: true,
+                message: "Hãy nhập vào ngôn ngữ!",
+                whitespace: true,
+                pattern: new RegExp("[A-Za-z]{1}"),
+              },
+            ]}
           >
             <Input />
           </Form.Item>
@@ -126,7 +151,14 @@ export const AddNewsSourceComponent: React.FC<Props> = ({
             validateTrigger={["onChange", "onBlur"]}
             label="Quốc gia xuất bản"
             name={"publishing_country"}
-            rules={[{ required: true, message: "Hãy nhập vào quốc gia xuất bản!" }]}
+            rules={[
+              {
+                required: true,
+                message: "Hãy nhập vào quốc gia xuất bản!",
+                whitespace: true,
+                pattern: new RegExp("[A-Za-z]{1}"),
+              },
+            ]}
           >
             <Input />
           </Form.Item>
@@ -134,7 +166,13 @@ export const AddNewsSourceComponent: React.FC<Props> = ({
             validateTrigger={["onChange", "onBlur"]}
             label="Loại nguồn"
             name={"source_type"}
-            rules={[{ required: true, message: "Hãy nhập vào loại nguồn!" }]}
+            rules={[
+              {
+                required: true,
+                message: "Hãy nhập vào loại nguồn!",
+                whitespace: true,
+              },
+            ]}
           >
             <Select>
               <Select.Option value="Báo điện tử">Báo điện tử</Select.Option>

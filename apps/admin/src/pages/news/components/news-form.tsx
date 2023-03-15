@@ -102,7 +102,14 @@ export const NewsForm: React.FC<Props> = ({ onFinish, confirmLoading }) => {
               label="Tên danh mục"
               name={"title"}
               validateTrigger={["onChange", "onBlur"]}
-              rules={[{ required: true, message: "Hãy nhập vào tên danh mục!", whitespace: true }]}
+              rules={[
+                {
+                  required: true,
+                  message: "Hãy nhập vào tên danh mục!",
+                  whitespace: true,
+                  pattern: new RegExp("[A-Za-z]{1}"),
+                },
+              ]}
             >
               <Input placeholder="Nhập tên danh mục" disabled={action === ETreeAction.DELETE} />
             </Form.Item>
@@ -171,6 +178,7 @@ export const NewsForm: React.FC<Props> = ({ onFinish, confirmLoading }) => {
                                 required: true,
                                 whitespace: true,
                                 message: "Nhập vào từ khoá.",
+                                pattern: new RegExp("[A-Za-z]{1}"),
                               },
                             ]}
                             noStyle
