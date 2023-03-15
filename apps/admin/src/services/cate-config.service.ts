@@ -23,7 +23,7 @@ export const getFacebookSetting = async (filter: any) => {
 
   if (filter.type_data === "Group") url += "Group";
 
-  if (filter.type_data === "Đối tượng") url += "Object";
+  if (filter.type_data === "Object") url += "Object";
 
   const result = await apiClient.get<any>(url, {
     params: filterEmptyString(filter),
@@ -47,8 +47,17 @@ export const getTiktokSetting = async (filter: any) => {
   return result.data;
 };
 
-export const getSocialObjectList = async (filter: any) => {
-  const result = await apiClient.get<any>(`${apiCateConfigBaseV2Url}/Social-media/${filter.type}`, {
+export const getAdminMonitor = async (filter: any) => {
+  const url = `${apiCateConfigBaseV2Url}/account-monitor/get_by_social/${filter.type_data}`;
+  const result = await apiClient.get<any>(url, {
+    params: filterEmptyString(filter),
+  });
+  return result.data;
+};
+
+export const getAccountMonitorSocialMedia = async (filter: any) => {
+  var url = apiCateConfigBaseV2Url + `/Social-media/social_media/${filter.type_data}`;
+  const result = await apiClient.get<any>(url, {
     params: filterEmptyString(filter),
   });
   return result.data;
@@ -75,6 +84,13 @@ export const postSetting = async (data: any) => {
   return result.data.playload;
 };
 
+export const postAccountMonitor = async (data: any) => {
+  const result = await apiClient.post<any>(`${apiCateConfigBaseV2Url}/account-monitor/`, data);
+  return result.data;
+};
+
+// delete
+
 export const deleteObjectCateConfig = async (objectId: string) => {
   const result = await apiClient.delete<any>(`${apiCateConfigBaseV2Url}/object/${objectId}`);
   return result.data;
@@ -92,6 +108,13 @@ export const deleteSocialConfig = async (SocialId: string) => {
   return result.data;
 };
 
+export const deleteAccountMonitor = async (SocialId: string) => {
+  const result = await apiClient.delete<any>(
+    `${apiCateConfigBaseV2Url}/account-monitor/delete/${SocialId}`,
+  );
+  return result.data;
+};
+
 //update
 export const updateObjectCateConfig = async (objectId: string, data: any) => {
   const result = await apiClient.put(`${apiCateConfigBaseV2Url}/object/${objectId}`, data);
@@ -105,6 +128,14 @@ export const updateProxyConfig = async (proxyId: string, data: any) => {
 
 export const updateSocialConfig = async (data: any) => {
   const result = await apiClient.put(`${apiCateConfigBaseV2Url}/Social-media/edit_social`, data);
+  return result.data;
+};
+
+export const updateAccountMonitor = async (data: any) => {
+  const result = await apiClient.put(
+    `${apiCateConfigBaseV2Url}/account-monitor/edit_account_monitor`,
+    data,
+  );
   return result.data;
 };
 
