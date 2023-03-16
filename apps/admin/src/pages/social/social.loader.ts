@@ -33,6 +33,10 @@ export const useMutationPriorityObject = () => {
     {
       onSuccess: () => {
         queryClient.invalidateQueries(PRIORITY_OBJECT);
+        message.success({
+          content: "Thành công!",
+          key: PRIORITY_OBJECT,
+        });
       },
       onError: () => {
         message.error({

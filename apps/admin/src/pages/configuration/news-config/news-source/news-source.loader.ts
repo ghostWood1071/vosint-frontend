@@ -36,6 +36,10 @@ export const useMutationNewsSource = () => {
     {
       onSuccess: () => {
         queryClient.invalidateQueries(CACHE_KEYS.SourceNewsConfig);
+        message.success({
+          content: "Thành công!",
+          key: CACHE_KEYS.SourceNewsConfig,
+        });
       },
       onError: () => {
         message.error({

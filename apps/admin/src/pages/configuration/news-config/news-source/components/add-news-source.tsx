@@ -124,9 +124,9 @@ export const AddNewsSourceComponent: React.FC<Props> = ({
             rules={[
               {
                 required: true,
-                message: "Hãy nhập vào tên miền!",
+                message: "Hãy nhập vào tên miền(VD: google.com)!",
                 whitespace: true,
-                pattern: new RegExp("[A-Za-z]{1}"),
+                pattern: new RegExp("^((?!-)[A-Za-z0-9-]{1,63}(?<!-)\\.)+[A-Za-z]{2,6}$"),
               },
             ]}
           >
@@ -141,11 +141,15 @@ export const AddNewsSourceComponent: React.FC<Props> = ({
                 required: true,
                 message: "Hãy nhập vào ngôn ngữ!",
                 whitespace: true,
-                pattern: new RegExp("[A-Za-z]{1}"),
               },
             ]}
           >
-            <Input />
+            <Select>
+              <Select.Option value="vi">Tiếng Việt</Select.Option>
+              <Select.Option value="en">Tiếng Anh</Select.Option>
+              <Select.Option value="cn">Tiếng Trung</Select.Option>
+              <Select.Option value="ru">Tiếng Nga</Select.Option>
+            </Select>
           </Form.Item>
           <Form.Item
             validateTrigger={["onChange", "onBlur"]}

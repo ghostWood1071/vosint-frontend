@@ -34,6 +34,10 @@ export const useMutationGroupSource = () => {
     {
       onSuccess: () => {
         queryClient.invalidateQueries(GROUP_SOURCE);
+        message.success({
+          content: "Thành công!",
+          key: GROUP_SOURCE,
+        });
       },
       onError: () => {
         message.error({

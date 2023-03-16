@@ -212,7 +212,7 @@ export const AddCateComponent: React.FC<Props> = ({
             rules={[
               {
                 required: true,
-                message: "Hãy nhập vào tên danh mục!",
+                message: "Hãy nhập vào tên " + nameTitle + "!",
                 whitespace: true,
                 pattern: new RegExp("[A-Za-z]{1}"),
               },
