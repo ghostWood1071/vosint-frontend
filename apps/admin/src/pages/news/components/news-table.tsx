@@ -175,6 +175,7 @@ export const NewsTable: React.FC<Props> = ({
       name: record.title,
     }),
     selectedRowKeys: news.map((i) => i._id),
+    preserveSelectedRowKeys: true,
   };
 
   return (

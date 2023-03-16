@@ -107,6 +107,7 @@ export const OrganizationsTable: React.FC<Props> = ({ dataSource }) => {
       disabled: false,
       name: record.title,
     }),
+    preserveSelectedRowKeys: true,
   };
 
   return (
