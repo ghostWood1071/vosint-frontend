@@ -70,6 +70,10 @@ export const useMutationObjectCate = () => {
     {
       onSuccess: () => {
         queryClient.invalidateQueries(CACHE_KEYS.ObjectCate);
+        message.success({
+          content: "Thành công!",
+          key: CACHE_KEYS.ObjectCate,
+        });
       },
       onError: () => {
         message.error({
@@ -102,6 +106,10 @@ export const useMutationProxy = () => {
     {
       onSuccess: () => {
         queryClient.invalidateQueries(CACHE_KEYS.ProxyConfig);
+        message.success({
+          content: "Thành công!",
+          key: CACHE_KEYS.ProxyConfig,
+        });
       },
       onError: () => {
         message.error({

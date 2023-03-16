@@ -1,4 +1,4 @@
-import { Form, Input, Modal } from "antd";
+import { Form, Input, InputNumber, Modal } from "antd";
 import React from "react";
 
 import styles from "./add-proxy-component.module.less";
@@ -131,7 +131,9 @@ export const AddProxyComponent: React.FC<Props> = ({
                 required: true,
                 message: "Hãy nhập vào địa chỉ IP(VD: 192.168.0.1)!",
                 whitespace: true,
-                pattern: new RegExp("^([0-9]{1,3}.){3}[0-9]{1,3}$"),
+                pattern: new RegExp(
+                  "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]).){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$",
+                ),
               },
             ]}
           >
@@ -144,13 +146,15 @@ export const AddProxyComponent: React.FC<Props> = ({
             rules={[
               {
                 required: true,
-                message: "Hãy nhập vào tên cổng(định dạng số)!",
+                message: "Hãy nhập vào tên cổng(từ 1-65535)!",
                 whitespace: true,
-                pattern: new RegExp("[0-9]+"),
+                min: 1,
+                max: 65535,
+                type: "number",
               },
             ]}
           >
-            <Input type="number" />
+            <InputNumber style={{ width: "100%" }} />
           </Form.Item>
           <Form.Item validateTrigger={["onChange", "onBlur"]} label="Ghi chú" name={"note"}>
             <Input />

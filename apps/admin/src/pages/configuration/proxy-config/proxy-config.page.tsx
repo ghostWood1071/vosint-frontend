@@ -1,11 +1,10 @@
-import { PlusOutlined } from "@ant-design/icons";
-import { Button, Input, List } from "antd";
+import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
+import { Button, Input, Space, Table, TableColumnsType, Tooltip } from "antd";
 import React, { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 import { useMutationProxy, useProxyConfig } from "../config.loader";
 import { AddProxyComponent } from "./components/add-proxy-component";
-import { ProxyItem } from "./components/proxy-item";
 import styles from "./proxy-config.module.less";
 
 export const ProxyConfig = () => {
@@ -22,6 +21,44 @@ export const ProxyConfig = () => {
   const pageSize = searchParams.get("page_size");
   const { mutate, isLoading: isProxyLoading } = useMutationProxy();
 
+  const columns: TableColumnsType<any> = [
+    {
+      title: "Tên",
+      align: "left",
+      dataIndex: "name",
+    },
+    {
+      title: "IP",
+      align: "left",
+      dataIndex: "ip_address",
+    },
+    {
+      title: "Cổng(port)",
+      align: "left",
+      dataIndex: "port",
+    },
+    {
+      title: "Ghi chú",
+      align: "left",
+      dataIndex: "note",
+    },
+    {
+      title: "",
+      align: "center",
+      render: (item: any) => {
+        return (
+          <Space className={styles.spaceStyle}>
+            <Tooltip title={"Sửa proxy"}>
+              <EditOutlined onClick={() => handleClickEdit(item)} className={styles.edit} />
+            </Tooltip>
+            <Tooltip title={"Xoá proxy"}>
+              <DeleteOutlined onClick={() => handleClickDelete(item)} className={styles.delete} />
+            </Tooltip>
+          </Space>
+        );
+      },
+    },
+  ];
   return (
     <div className={styles.mainContainer}>
       <div className={styles.header}>
@@ -42,38 +79,20 @@ export const ProxyConfig = () => {
         </div>
       </div>
       <div className={styles.body}>
-        <div className={styles.allTitleHeaderContainer}>
-          <div className={styles.titleContainer}>Tên</div>
-          <div className={styles.titleContainer}>IP</div>
-          <div className={styles.titleContainer}>Cổng(port)</div>
-          <div className={styles.titleContainer}>Ghi chú</div>
-          <div className={styles.functionTitleContainer}></div>
-        </div>
-        <div className={styles.listObject}>
-          <List
-            itemLayout="vertical"
-            size="large"
-            pagination={{
-              current: page ? +page : 1,
-              pageSize: pageSize ? +pageSize : 10,
-              size: "default",
-              position: "bottom",
-              total: data?.total_record,
-              onChange: handlePaginationChange,
-            }}
-            dataSource={data?.data}
-            renderItem={(item) => {
-              return (
-                <ProxyItem
-                  item={item}
-                  handleClickDelete={handleClickDelete}
-                  handleClickEdit={handleClickEdit}
-                  setChoosedProxy={setChoosedProxy}
-                />
-              );
-            }}
-          />
-        </div>
+        <Table
+          columns={columns}
+          dataSource={data?.data}
+          rowKey="id"
+          pagination={{
+            position: ["bottomCenter"],
+            total: data?.total_record,
+            current: page ? +page : 1,
+            onChange: handlePaginationChange,
+            pageSize: pageSize ? +pageSize : 10,
+            size: "default",
+          }}
+          loading={isProxyLoading}
+        />
       </div>
       {isOpenModal ? (
         <AddProxyComponent
