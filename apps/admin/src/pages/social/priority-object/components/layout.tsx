@@ -30,6 +30,7 @@ export const Layout: React.FC<LayoutProps> = ({
   let [, setSearchParams] = useSearchParams();
   const [typeModal, setTypeModal] = useState<any>("add");
   const [isOpenModal, setIsOpenModal] = useState<any>(false);
+  const [unnecessaryItem, setUnnecessaryItem] = useState<any>();
   const { mutate, isLoading: isPriorityObjectLoading } = useMutationPriorityObject();
   return (
     <div className={styles.mainContainer}>
@@ -70,6 +71,7 @@ export const Layout: React.FC<LayoutProps> = ({
           functionDelete={functionDelete}
           confirmLoading={isPriorityObjectLoading}
           nameType={typeName}
+          unnecessaryItem={unnecessaryItem}
         />
       ) : null}
     </div>
@@ -87,7 +89,7 @@ export const Layout: React.FC<LayoutProps> = ({
   }
 
   function handleClickDelete(value: any) {
-    setChoosedPriorityObject(value);
+    setUnnecessaryItem(value);
     setIsOpenModal(true);
     setTypeModal("delete");
   }
@@ -115,7 +117,7 @@ const Item: React.FC<ItemProps> = ({
   return (
     <div
       className={
-        choosedPriorityObject?._id === item?._id
+        choosedPriorityObject?._id === item?._id && choosedPriorityObject?.social_type !== undefined
           ? styles.itemContainerChoosed
           : styles.itemContainer
       }

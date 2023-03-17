@@ -1,5 +1,5 @@
 import { Radio } from "antd";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 import { Post } from "../components/post";
@@ -382,7 +382,7 @@ const groupData = {
 };
 
 export const PriorityObject = () => {
-  let [searchParams, setSearchParams] = useSearchParams();
+  let [searchParams] = useSearchParams();
   const [tabButton, setTabButton] = useState<any>("thongke");
   const [type, setType] = useState<any>("Object");
   const [choosedPriorityObject, setChoosedPriorityObject] = useState<any>();
@@ -411,7 +411,7 @@ export const PriorityObject = () => {
             <Radio.Button value="Fanpage">Fanpage</Radio.Button>
           </Radio.Group>
         </div>
-        <div className="scrollable-container" style={{ height: "90%" }}>
+        <div className={styles.listUserContainer}>
           <Layout
             items={data?.result}
             typeName={type === "Object" ? "đối tượng" : type === "Group" ? "nhóm" : "fanpage"}
@@ -420,7 +420,7 @@ export const PriorityObject = () => {
           />
         </div>
       </div>
-      {choosedPriorityObject?.social_name !== undefined ? (
+      {choosedPriorityObject?.social_type !== undefined ? (
         <div className={styles.content}>
           <div className={styles.allTabButtonContainer}>
             {type === "Group" ? (

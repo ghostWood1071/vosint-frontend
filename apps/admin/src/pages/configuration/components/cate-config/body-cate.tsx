@@ -64,7 +64,14 @@ export const BodyCate: React.FC<Props> = ({ title }) => {
             }}
             dataSource={data?.data}
             renderItem={(item) => {
-              return <CateItem functionEdit={handleUpdate} item={item} onclick={setChoosedCate} />;
+              return (
+                <CateItem
+                  choosedCateID={choosedCate?._id}
+                  functionEdit={handleUpdate}
+                  item={item}
+                  onclick={setChoosedCate}
+                />
+              );
             }}
           />
         </div>

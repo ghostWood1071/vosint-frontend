@@ -7,9 +7,15 @@ interface CateItemProps {
   item: any;
   onclick: (value: any) => void;
   functionEdit: (value: any) => void;
+  choosedCateID: any;
 }
 
-export const CateItem: React.FC<CateItemProps> = ({ item, onclick, functionEdit }) => {
+export const CateItem: React.FC<CateItemProps> = ({
+  item,
+  onclick,
+  functionEdit,
+  choosedCateID,
+}) => {
   function onClickStatus() {
     if (item.status === "enable") {
       functionEdit({ ...item, status: "disable" });
@@ -19,10 +25,11 @@ export const CateItem: React.FC<CateItemProps> = ({ item, onclick, functionEdit 
   }
   return (
     <div
-      className={styles.mainContainer}
+      className={item._id === choosedCateID ? styles.choosedItem : styles.mainContainer}
       onClick={() => {
         onclick(item);
       }}
+      key={item._id}
     >
       <div className={styles.iconUserContainer}>
         {item.avatar_url ? (
