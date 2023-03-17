@@ -14,6 +14,7 @@ interface Props {
   functionAdd: (value: any) => void;
   functionDelete: (value: any) => void;
   nameType: string;
+  unnecessaryItem: any;
 }
 
 export const AddObjectModal: React.FC<Props> = ({
@@ -25,6 +26,7 @@ export const AddObjectModal: React.FC<Props> = ({
   functionAdd,
   functionDelete,
   nameType,
+  unnecessaryItem,
 }) => {
   const [api, contextHolder] = notification.useNotification();
   const [value, setValue] = useState<string>();
@@ -50,7 +52,7 @@ export const AddObjectModal: React.FC<Props> = ({
   };
 
   function handleDelete() {
-    functionDelete({ id: choosedPriorityObject._id });
+    functionDelete({ id: unnecessaryItem._id });
     setIsOpen(false);
   }
   function handleCancel() {
@@ -98,7 +100,7 @@ export const AddObjectModal: React.FC<Props> = ({
       >
         <div className={styles.deleteBodyContainer}>
           <div className={styles.leftDeleteBody}>Tên {nameType}:</div>
-          <div className={styles.rightDeleteBody}>{choosedPriorityObject.social_name}</div>
+          <div className={styles.rightDeleteBody}>{unnecessaryItem.social_name}</div>
         </div>
       </Modal>
     );

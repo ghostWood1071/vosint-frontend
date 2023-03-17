@@ -78,7 +78,11 @@ export const AddCateComponent: React.FC<Props> = ({
   };
 
   const [conditionValue, setConditionValue] = useState("vi");
-  const initialValues = type === "edit" ? choosedCate : null;
+  const initialValues =
+    type === "edit"
+      ? choosedCate
+      : { facebook_link: "", twitter_link: "", profile: "", profile_link: "" };
+  console.log(choosedCate);
   const [key, setKey] = useState<Record<string, string>>({
     vi: type === "edit" ? choosedCate.keywords.vi : "",
     en: type === "edit" ? choosedCate.keywords.en : "",
@@ -96,74 +100,55 @@ export const AddCateComponent: React.FC<Props> = ({
     setIsOpen(false);
   }
   async function handleAdd() {
-    var data = form.getFieldsValue();
-    if (data.facebook_link === undefined) {
-      data.facebook_link = "";
-    }
-    if (data.twitter_link === undefined) {
-      data.twitter_link = "";
-    }
-    if (data.profile === undefined) {
-      data.profile = "";
-    }
-    if (data.profile_link === undefined) {
-      data.profile_link = "";
-    }
-    if (data.name === undefined || data.name === "") {
-      form.submit();
-      return;
-    }
-    var url = "";
-    if (fileList[0] !== undefined) {
-      var newFile: any = fileList[0].originFileObj;
-      delete newFile["uid"];
-      const formDataa: any = new FormData();
-      formDataa.append("file", newFile);
+    form
+      .validateFields()
+      .then(async (values) => {
+        var url = "";
+        if (fileList[0] !== undefined) {
+          var newFile: any = fileList[0].originFileObj;
+          delete newFile["uid"];
+          const formDataa: any = new FormData();
+          formDataa.append("file", newFile);
 
-      const result = await uploadFile(formDataa);
-      url = BASE_URL + "/v2/" + result.data[0].file_url;
-    }
-
-    const result = { ...data, keywords: key, avatar_url: url, status: "enable", type: typeObject };
-    functionAdd(result);
-
-    setIsOpen(false);
+          const result = await uploadFile(formDataa);
+          url = BASE_URL + "/v2/" + result.data[0].file_url;
+        }
+        const result = {
+          ...values,
+          keywords: key,
+          avatar_url: url,
+          status: "enable",
+          type: typeObject,
+        };
+        functionAdd(result);
+        setIsOpen(false);
+      })
+      .catch();
   }
 
   async function handleEdit() {
-    const data = form.getFieldsValue();
-    if (data.facebook_link === undefined) {
-      data.facebook_link = "";
-    }
-    if (data.twitter_link === undefined) {
-      data.twitter_link = "";
-    }
-    if (data.profile === undefined) {
-      data.profile = "";
-    }
-    if (data.profile_link === undefined) {
-      data.profile_link = "";
-    }
-    if (data.name === undefined) {
-      form.submit();
-      return;
-    }
-    var url = "";
-    if (fileList[0] !== undefined && fileList[0].url === undefined) {
-      var newFile: any = fileList[0].originFileObj;
-      delete newFile["uid"];
-      const formDataa: any = new FormData();
-      formDataa.append("file", newFile);
+    form
+      .validateFields()
+      .then(async (values) => {
+        var url = "";
+        if (fileList[0]?.url === undefined) {
+          var newFile: any = fileList[0].originFileObj;
+          delete newFile["uid"];
+          const formDataa: any = new FormData();
+          formDataa.append("file", newFile);
 
-      const result = await uploadFile(formDataa);
-      url = BASE_URL + "/v2/" + result.data[0].file_url;
-    } else {
-      url = choosedCate.avatar_url;
-    }
-    const result = { ...initialValues, ...data, keywords: key, avatar_url: url };
-    functionEdit(result);
-    setChoosedCate(result);
-    setIsOpen(false);
+          const result = await uploadFile(formDataa);
+          url = BASE_URL + "/v2/" + result.data[0].file_url;
+        } else {
+          url = choosedCate.avatar_url;
+        }
+        const result = { ...initialValues, ...values, keywords: key, avatar_url: url };
+        functionEdit(result);
+
+        setChoosedCate(result);
+        setIsOpen(false);
+      })
+      .catch();
   }
 
   if (type === "delete") {
