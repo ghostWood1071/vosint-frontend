@@ -20,6 +20,7 @@ import {
   Button,
   Col,
   DatePicker,
+  Grid,
   Input,
   List,
   Modal,
@@ -85,10 +86,12 @@ export function AppFilter(): JSX.Element {
       ...data.gio_tin.map((i: any) => ({ ...i, parent_id: i?.parent_id ?? ETreeTag.GIO_TIN })),
     ]);
 
+  const screens = Grid.useBreakpoint();
+
   return (
     <>
-      <Row className={styles.filter}>
-        <Col span={4}>
+      <Row className={styles.filter} align="middle">
+        <Col span={1} xl={4}>
           <Tooltip title={!pinned ? t("open sidebar") : t("close sidebar")} placement="bottomLeft">
             <div className={styles.containerIcon}>
               <MenuOutlined className={classNames(styles.menuIcon, styles.icon)} />
@@ -107,12 +110,18 @@ export function AppFilter(): JSX.Element {
             </div>
           </Tooltip>
         </Col>
-        <Col span={20}>
+        <Col span={23} xl={20}>
           <Space wrap>
             <DatePicker.RangePicker />
             <Select placeholder="Dịch" defaultValue="nuoc-ngoai">
               <Select.Option key="nuoc-ngoai">Dịch tiếng nước ngoài</Select.Option>
               <Select.Option key="nguon">Hiển thị ngôn ngữ nguồn</Select.Option>
+            </Select>
+            <Select placeholder="Ngôn ngữ" mode="multiple" allowClear style={{ minWidth: 100 }}>
+              <Select.Option key="anh">Anh</Select.Option>
+              <Select.Option key="viet">Việt</Select.Option>{" "}
+              <Select.Option key="trung">Trung</Select.Option>
+              <Select.Option key="nga">Nga</Select.Option>
             </Select>
             <Select placeholder="Điểm tin" defaultValue="sac-thai-tin">
               <Select.Option key="sac-thai-tin">Sắc thái tin</Select.Option>
@@ -120,6 +129,7 @@ export function AppFilter(): JSX.Element {
               <Select.Option key="tieu-cuc">Tiêu cực</Select.Option>
               <Select.Option key="trung-tinh">Trung tính</Select.Option>
             </Select>
+
             <Button disabled={newsSelectionIds.length === 0}>
               Tóm tắt tin ({newsSelectionIds.length})
             </Button>
@@ -129,8 +139,9 @@ export function AppFilter(): JSX.Element {
               icon={<PlusCircleTwoTone />}
               onClick={handleAddBasket}
               disabled={newsSelectionIds.length === 0}
+              title="Thêm tin"
             >
-              Thêm tin
+              {screens.xl && "Thêm tin"}
             </Button>
 
             {detailIds &&

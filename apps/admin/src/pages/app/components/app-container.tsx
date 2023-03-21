@@ -1,4 +1,5 @@
 import { Col, Row } from "antd";
+import classNames from "classnames";
 import React from "react";
 
 import { useSidebar } from "../app.store";
@@ -15,12 +16,12 @@ export const AppContainer: React.FC<AppContainerProps> = ({ children, sidebar })
   return (
     <Row className={styles.root} wrap={false}>
       {pinned && (
-        <Col flex="0 0 270px" className={styles.sidebar}>
+        <Col flex="0 0 270px" className={classNames(styles.sidebar, "scrollbar")}>
           {sidebar}
         </Col>
       )}
-      <Col flex="1 1 auto" id="modal-mount" className={styles.content}>
-        <div className={styles.container}>{children}</div>
+      <Col flex="1 1 auto" id="modal-mount">
+        <div className={classNames(styles.container, "scrollbar")}>{children}</div>
       </Col>
     </Row>
   );
