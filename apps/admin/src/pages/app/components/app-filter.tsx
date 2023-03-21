@@ -1,17 +1,17 @@
 import { Tree } from "@/components";
-import { ETreeTag } from "@/components/tree/tree.store";
+import { ETreeTag, useNewsSelection, useNewsState } from "@/components/news/news-state";
 import {
   useDeleteNewsInNewsletter,
   useNewsIdToNewsletter,
   useNewsSidebar,
 } from "@/pages/news/news.loader";
-import { useNewsStore } from "@/pages/news/news.store";
 import { buildTree } from "@/pages/news/news.utils";
 import {
   DeleteOutlined,
   DoubleLeftOutlined,
   DoubleRightOutlined,
   ExclamationCircleOutlined,
+  ExportOutlined,
   MenuOutlined,
   MinusCircleTwoTone,
   PlusCircleTwoTone,
@@ -31,7 +31,6 @@ import {
 } from "antd";
 import classNames from "classnames";
 import produce from "immer";
-import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { shallow } from "zustand/shallow";
@@ -45,14 +44,17 @@ export function AppFilter(): JSX.Element {
   const pinned = useSidebar((state) => state.pinned);
   const setPinned = useSidebar((state) => state.setPinned);
   const { t } = useTranslation("translation", { keyPrefix: "app" });
-  const [show, setShow] = useNewsStore((state) => [state.show, state.setShow], shallow);
   const { data, isLoading } = useNewsSidebar();
-  const { news, setNews } = useNewsStore(
-    (state) => ({ news: state.news, setNews: state.setNews }),
+  const [newsSelectId] = useNewsState((state) => [state.newsSelectId]);
+  const [openSelection, setOpenSelection] = useNewsSelection(
+    (state) => [state.open, state.setOpen],
     shallow,
   );
-  const newsIds: string[] = news.map((i) => i._id);
-  const [newsletterId, setNewsletterId] = useState("");
+  const [newsSelection, setNewsSelection] = useNewsSelection(
+    (state) => [state.newsSelection, state.setNewsSelection],
+    shallow,
+  );
+  const newsSelectionIds: string[] = newsSelection.map((i) => i?._id);
   let { newsletterId: detailIds, tag } = useParams();
 
   function handlePin() {
@@ -118,13 +120,15 @@ export function AppFilter(): JSX.Element {
               <Select.Option key="tieu-cuc">Tiêu cực</Select.Option>
               <Select.Option key="trung-tinh">Trung tính</Select.Option>
             </Select>
-            <Button disabled={newsIds.length === 0}>Tóm tắt tin ({newsIds.length})</Button>
+            <Button disabled={newsSelectionIds.length === 0}>
+              Tóm tắt tin ({newsSelectionIds.length})
+            </Button>
             <Search placeholder="Từ khoá" />
             {/* <Select placeholder="Kiểu danh sách" /> */}
             <Button
               icon={<PlusCircleTwoTone />}
               onClick={handleAddBasket}
-              disabled={newsIds.length === 0}
+              disabled={newsSelectionIds.length === 0}
             >
               Thêm tin
             </Button>
@@ -134,26 +138,26 @@ export function AppFilter(): JSX.Element {
                 <Button
                   icon={<MinusCircleTwoTone twoToneColor="#ff4d4f" />}
                   danger
-                  disabled={newsIds.length === 0}
+                  disabled={newsSelectionIds.length === 0}
                   onClick={handleRemoveNewsIds}
                 >
                   Xoá tin
                 </Button>
               )}
 
-            <Button type="primary">Xuất file dữ liệu</Button>
+            <Button type="primary" icon={<ExportOutlined />} title="Xuất file dữ liệu" />
           </Space>
         </Col>
       </Row>
 
       <Modal
         title={"Thêm tin vào giỏ tin"}
-        open={show}
+        open={openSelection}
         onOk={handleOK}
         onCancel={handleCancel}
         getContainer="#modal-mount"
         okText="Thêm"
-        okButtonProps={{ disabled: !newsletterId || newsletterId === ETreeTag.GIO_TIN }}
+        okButtonProps={{ disabled: !newsSelectId || newsSelectId === ETreeTag.GIO_TIN }}
         confirmLoading={isLoadingMutate}
         destroyOnClose
       >
@@ -161,33 +165,28 @@ export function AppFilter(): JSX.Element {
           isSpinning={isLoading}
           title={""}
           treeData={gioTinTree}
-          onSelect={handleSelect}
           tag={ETreeTag.GIO_TIN}
-          selectedKeys={[newsletterId]}
+          selectedKeys={[newsSelectId!]}
         />
         <br />
         <Typography.Text>Danh sách tin:</Typography.Text>
         <List
-          dataSource={news}
+          dataSource={newsSelection}
           renderItem={(item) => {
             return (
               <List.Item actions={[<DeleteOutlined onClick={handleDelete} />]}>
-                <Typography.Link
-                  target="_blank"
-                  href={item?.["data:url"] ?? item?.["data_url"]}
-                  rel="noreferrer"
-                >
-                  {item?.["data:title"] ?? item?.["data_title"]}
+                <Typography.Link target="_blank" href={item?.["data:url"]} rel="noreferrer">
+                  {item?.["data:title"]}
                 </Typography.Link>
               </List.Item>
             );
 
             function handleDelete() {
-              const deletedNews = produce(news, (draft) => {
+              const deletedNews = produce(newsSelection, (draft) => {
                 const index = draft.findIndex((i) => i._id === item._id);
                 if (index !== -1) draft.splice(index, 1);
               });
-              setNews(deletedNews);
+              setNewsSelection(deletedNews);
             }
           }}
         />
@@ -196,12 +195,11 @@ export function AppFilter(): JSX.Element {
   );
 
   function handleCancel() {
-    setShow(false);
-    setNewsletterId("");
+    setOpenSelection(false);
   }
 
   function handleAddBasket() {
-    setShow(true);
+    setOpenSelection(true);
   }
 
   function handleRemoveNewsIds() {
@@ -210,7 +208,7 @@ export function AppFilter(): JSX.Element {
       icon: <ExclamationCircleOutlined />,
       onOk() {
         return mutateDelete({
-          newsId: newsIds,
+          newsId: newsSelectionIds,
           newsletterId: detailIds!,
         });
       },
@@ -221,19 +219,15 @@ export function AppFilter(): JSX.Element {
   function handleOK() {
     mutate(
       {
-        newsIds,
-        newsletterId,
+        newsIds: newsSelectionIds,
+        newsletterId: newsSelectId! + "",
       },
       {
         onSuccess: () => {
-          setShow(false);
-          setNews([]);
+          setOpenSelection(false);
+          setNewsSelection([]);
         },
       },
     );
-  }
-
-  function handleSelect(selectedKeys: any[]) {
-    setNewsletterId(selectedKeys[0]);
   }
 }

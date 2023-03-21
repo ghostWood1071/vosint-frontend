@@ -1,5 +1,6 @@
 // import { DownNewsIcon, UpNewsIcon } from "@/assets/svg";
-import { ETreeTag } from "@/components/tree/tree.store";
+import { ETreeTag, useNewsSelection } from "@/components/news/news-state";
+import { TNews } from "@/services/news.type";
 import {
   BellTwoTone,
   ExclamationCircleOutlined,
@@ -12,8 +13,6 @@ import { truncate } from "lodash";
 import React from "react";
 import { useSearchParams } from "react-router-dom";
 import { shallow } from "zustand/shallow";
-
-import { useNewsStore } from "../news.store";
 
 interface Props {
   dataSource?: any[];
@@ -32,19 +31,17 @@ export const NewsTable: React.FC<Props> = ({
   onDelete,
   onAdd,
 }) => {
-  const { setNews, setShow, news } = useNewsStore(
-    (state) => ({
-      setNews: state.setNews,
-      setShow: state.setShow,
-      news: state.news,
-    }),
+  const [newsSelection, setNewsSelection] = useNewsSelection(
+    (state) => [state.newsSelection, state.setNewsSelection],
     shallow,
   );
+  const setOpenSelection = useNewsSelection((state) => state.setOpen);
+
   const [searchParams, setSearchParams] = useSearchParams();
   const page = searchParams.get("page_number");
   const pageSize = searchParams.get("page_size");
 
-  const columns: TableColumnsType<any> = [
+  const columns: TableColumnsType<TNews & { isBell: boolean; isStar: boolean }> = [
     // {
     //   key: "isUp",
     //   dataIndex: "isUp",
@@ -81,8 +78,8 @@ export const NewsTable: React.FC<Props> = ({
       align: "center",
       render: (_, record) => {
         function handleClickShop() {
-          setNews([record._id]);
-          setShow(true);
+          setNewsSelection([record]);
+          setOpenSelection(true);
         }
 
         function handleClickBell() {
@@ -168,13 +165,13 @@ export const NewsTable: React.FC<Props> = ({
 
   const rowSelection = {
     onChange: (_: any, selected: any) => {
-      setNews(selected);
+      setNewsSelection(selected);
     },
     getCheckboxProps: (record: any) => ({
       disabled: false,
       name: record.title,
     }),
-    selectedRowKeys: news.map((i) => i._id),
+    selectedRowKeys: newsSelection.map((i) => i?._id),
     preserveSelectedRowKeys: true,
   };
 

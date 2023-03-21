@@ -3,15 +3,15 @@ import { Col, Row, Tree as TreeAntd } from "antd";
 import type { DataNode } from "antd/lib/tree";
 import React from "react";
 
-import { TreeTitle } from "./tree-title";
+import { ETreeAction, ETreeTag, useNewsState } from "../news/news-state";
+import { TreeTitleGioTin } from "../news/tree-title/tree-title-gio-tin";
 import styles from "./tree.module.less";
-import { ETreeAction, ETreeTag, useTreeStore } from "./tree.store";
 
 interface Props {
   treeData: DataNode[];
   title: string;
   isSpinning?: boolean;
-  selectedKeys?: string[];
+  selectedKeys?: React.Key[];
 
   isEditable?: boolean;
   tag: ETreeTag;
@@ -27,9 +27,9 @@ export const Tree: React.FC<Props> = ({
   isEditable = false,
   selectedKeys,
   onClickTitle,
-  onSelect,
 }) => {
-  const setValues = useTreeStore((state) => state.setValues);
+  const setNews = useNewsState((state) => state.setNews);
+  const setNewsSelectId = useNewsState((state) => state.setNewsSelectId);
 
   return (
     <div className={styles.tree}>
@@ -48,16 +48,20 @@ export const Tree: React.FC<Props> = ({
         blockNode
         treeData={treeData}
         titleRender={(node: any) => (
-          <TreeTitle {...node} isEditable={isEditable} onClick={onClickTitle} tag={tag} />
+          <TreeTitleGioTin {...node} isEditable={isEditable} onClick={onClickTitle} tag={tag} />
         )}
         selectedKeys={selectedKeys}
-        onSelect={onSelect}
+        onSelect={handleSelect}
       />
     </div>
   );
 
+  function handleSelect(selectedKeys: React.Key[]) {
+    setNewsSelectId(selectedKeys[0]);
+  }
+
   function handleAdd() {
-    setValues({
+    setNews({
       tag,
       action: ETreeAction.CREATE,
       data: null,

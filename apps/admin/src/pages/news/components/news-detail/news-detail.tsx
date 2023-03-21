@@ -1,12 +1,10 @@
-import { ETreeTag } from "@/components/tree/tree.store";
+import { ETreeTag, useNewsSelection } from "@/components/news/news-state";
 import { BellTwoTone, ShoppingCartOutlined, StarTwoTone } from "@ant-design/icons";
 import { Col, Modal, Row, Space, Tabs, TabsProps, Tooltip, Typography } from "antd";
 import React from "react";
 import { useSearchParams } from "react-router-dom";
-import { shallow } from "zustand/shallow";
 
 import { useNewsDetail } from "../../news.loader";
-import { useNewsStore } from "../../news.store";
 import { NewDetailSummary, NewsDetailContent, NewsDetailKey } from "./components";
 import styles from "./news-detail.module.less";
 
@@ -16,13 +14,8 @@ interface Props {
 }
 
 export const NewsDetail: React.FC<Props> = ({ onDelete, onAdd }) => {
-  const { setNewsIds, setShow } = useNewsStore(
-    (state) => ({
-      setNewsIds: state.setNews,
-      setShow: state.setShow,
-    }),
-    shallow,
-  );
+  const setNewsSelection = useNewsSelection((state) => state.setNewsSelection);
+  const setOpenSelection = useNewsSelection((state) => state.setOpen);
   const [searchParams, setSearchParams] = useSearchParams();
   const newsId = searchParams.get("newsId");
   const { data } = useNewsDetail(newsId);
@@ -112,8 +105,8 @@ export const NewsDetail: React.FC<Props> = ({ onDelete, onAdd }) => {
   );
 
   function handleClickShop() {
-    setNewsIds([newsId!]);
-    setShow(true);
+    setNewsSelection([data]);
+    setOpenSelection(true);
   }
 
   function handleClickBell() {

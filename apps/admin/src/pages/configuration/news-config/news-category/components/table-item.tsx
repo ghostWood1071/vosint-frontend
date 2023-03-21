@@ -1,17 +1,17 @@
+import { useNewsState } from "@/components/news/news-state";
+import { TreeTitleLinhVuc } from "@/components/news/tree-title/tree-title-linh-vuc";
 import { DownOutlined } from "@ant-design/icons";
 import { Tree } from "antd";
 import React from "react";
-import { useSearchParams } from "react-router-dom";
 
 import styles from "./table-item.module.less";
-import { TreeTitle } from "./tree-title";
 
 interface TableItemProps {
   values: any;
 }
 
 export const TableItem: React.FC<TableItemProps> = ({ values }) => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const setNewsSelectId = useNewsState((state) => state.setNewsSelectId);
 
   return (
     <div className={styles.mainContainer}>
@@ -29,12 +29,11 @@ export const TableItem: React.FC<TableItemProps> = ({ values }) => {
 
   function handleSelect(e: any) {
     if (e.length > 0) {
-      searchParams.set("newsletter_id", e[0]);
-      setSearchParams(searchParams);
+      setNewsSelectId(e[0]);
     }
   }
 
   function renderTreeTitle(node: any) {
-    return <TreeTitle {...node} isEditable={true} />;
+    return <TreeTitleLinhVuc {...node} isEditable={true} />;
   }
 };

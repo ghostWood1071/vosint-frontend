@@ -1,12 +1,8 @@
-import { ETreeAction, ETreeTag, useTreeStore } from "@/components/tree/tree.store";
 import { DeleteOutlined, EditOutlined, FolderOutlined, PlusOutlined } from "@ant-design/icons";
 import { Col, Row, Space, Tooltip, TreeDataNode, Typography } from "antd";
-import { pick } from "lodash";
-import React from "react";
 
-import styles from "./tree-title.module.less";
-
-const { Paragraph } = Typography;
+import { ETreeAction, ETreeTag, useNewsState } from "../news-state";
+import styles from "./tree-title-linh-vuc.module.less";
 
 interface Props extends TreeDataNode {
   isEditable?: boolean;
@@ -16,8 +12,8 @@ interface Props extends TreeDataNode {
   tag: ETreeTag;
 }
 
-export const TreeTitle: React.FC<Props> = (node) => {
-  const setValues = useTreeStore((state) => state.setValues);
+export function TreeTitleLinhVuc(node: Props): JSX.Element {
+  const setNews = useNewsState((state) => state.setNews);
 
   return (
     <Row className={styles.treeTitle}>
@@ -25,18 +21,18 @@ export const TreeTitle: React.FC<Props> = (node) => {
         <FolderOutlined />
       </Col>
       <Col span={13}>
-        <Paragraph ellipsis={{ rows: 1 }} className={styles.paragraph}>
+        <Typography.Paragraph ellipsis={{ rows: 1 }} className={styles.paragraph}>
           {node.title?.toString()}
-        </Paragraph>
+        </Typography.Paragraph>
       </Col>
 
       <Col span={8} className={styles.menu}>
         <Space>
           <Tooltip title={"Thêm danh mục"}>
-            <PlusOutlined onClick={handleAdd} className={styles.add} />
+            <PlusOutlined onClick={handleCreate} className={styles.add} />
           </Tooltip>
           <Tooltip title={"Cập nhật danh mục"}>
-            <EditOutlined onClick={handleEdit} className={styles.edit} />
+            <EditOutlined onClick={handleUpdate} className={styles.edit} />
           </Tooltip>
           <Tooltip title={"Xoá danh mục"}>
             <DeleteOutlined onClick={handleDelete} className={styles.delete} />
@@ -46,8 +42,8 @@ export const TreeTitle: React.FC<Props> = (node) => {
     </Row>
   );
 
-  function handleAdd() {
-    setValues({
+  function handleCreate() {
+    setNews({
       tag: node.tag,
       action: ETreeAction.CREATE,
       data: {
@@ -56,23 +52,24 @@ export const TreeTitle: React.FC<Props> = (node) => {
     });
   }
 
-  function handleEdit() {
-    const data = pick(node, ["title", "_id", "required_keyword", "exclusion_keyword"]);
-
-    setValues({
+  function handleUpdate() {
+    setNews({
       tag: node.tag,
       action: ETreeAction.UPDATE,
-      data,
+      data: {
+        _id: node._id,
+      },
     });
   }
 
   function handleDelete() {
-    const data = pick(node, ["title", "_id", "required_keyword", "exclusion_keyword"]);
-
-    setValues({
+    setNews({
       tag: node.tag,
       action: ETreeAction.DELETE,
-      data: data,
+      data: {
+        _id: node._id,
+        title: node.title,
+      },
     });
   }
-};
+}

@@ -1,6 +1,6 @@
 // TODO: Implement type
 export function buildTree(flattenedItems: any[]) {
-  const root = { _id: "root", children: [] };
+  const root: { _id: string; children: any[] } = { _id: "root", children: [] };
   const nodes = { [root._id]: root };
   const items = flattenedItems.map((item) => ({ ...item, children: [], key: item._id }));
 
@@ -10,8 +10,12 @@ export function buildTree(flattenedItems: any[]) {
     const parent = nodes[parent_id] ?? findItem(items, parent_id);
 
     nodes[_id] = { _id, children };
-    // @ts-ignore
-    parent?.children.push(item);
+
+    if (parent) {
+      parent.children.push(item);
+    } else {
+      root.children.push(item);
+    }
   }
 
   return root.children;
@@ -29,4 +33,19 @@ export function removeItem(array: string[], item: string) {
     array.splice(index, 1);
   }
   return array;
+}
+
+export function getAllChildIds(flatArray: any[], id: string): string[] {
+  let result = [];
+  let stack = [id];
+  while (stack.length > 0) {
+    let currentId = stack.pop();
+    result.push(currentId!);
+    for (let obj of flatArray) {
+      if (obj.parent_id === currentId) {
+        stack.push(obj._id);
+      }
+    }
+  }
+  return result;
 }

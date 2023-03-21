@@ -70,7 +70,7 @@ export const UserManagerList: React.FC = () => {
               },
               {
                 value: "expert",
-                label: "Chuyên gia",
+                label: "Chuyên viên",
               },
             ]}
             onChange={handleSearchRole}

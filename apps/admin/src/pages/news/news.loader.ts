@@ -1,8 +1,10 @@
+import { ETreeAction, ETreeTag } from "@/components/news/news-state";
 import {
   addNewsIdsToBookmarkUser,
   addNewsIdsToNewsletter,
   addNewsIdsToVitalUser,
   addNewsletter,
+  deleteMultipleNewsletter,
   deleteNewsIdInNewsletter,
   deleteNewsInBookmarkUser,
   deleteNewsInVitalUser,
@@ -26,8 +28,6 @@ import {
   useQuery,
   useQueryClient,
 } from "react-query";
-
-import { ETreeAction, ETreeTag } from "../../components/tree/tree.store";
 
 export const CACHE_KEYS = {
   NewsSidebar: "NEWS_SIDEBAR",
@@ -76,9 +76,9 @@ export const useNewsByNewsletter = (id: string, filter: any) => {
 export const useMutationNewsSidebar = () => {
   const queryClient = useQueryClient();
   return useMutation(
-    ({ action, _id, ...data }: any) => {
+    ({ action, _id, newsletter_ids, ...data }: any) => {
       if (action === ETreeAction.DELETE) {
-        return deleteNewsletter(_id);
+        return deleteMultipleNewsletter({ newsletter_ids });
       }
 
       if (action === ETreeAction.UPDATE) {
