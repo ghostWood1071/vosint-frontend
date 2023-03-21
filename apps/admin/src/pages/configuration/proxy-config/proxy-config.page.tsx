@@ -1,5 +1,5 @@
 import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
-import { Button, Input, Space, Table, TableColumnsType, Tooltip } from "antd";
+import { Button, Input, PageHeader, Space, Table, TableColumnsType, Tooltip } from "antd";
 import React, { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
@@ -60,53 +60,57 @@ export const ProxyConfig = () => {
     },
   ];
   return (
-    <div className={styles.mainContainer}>
-      <div className={styles.header}>
-        <div className={styles.leftHeader}>
-          <div className={styles.searchButton}>
-            <Input.Search placeholder="Tìm kiếm" onSearch={handleSearch} />
-          </div>
+    <PageHeader
+      title="Danh sách cấu hình proxy"
+      extra={[
+        <Input.Search
+          placeholder="Tìm kiếm"
+          onSearch={handleSearch}
+          key="input"
+          style={{ width: 300 }}
+        />,
+        <Button
+          onClick={handleClickCreate}
+          type="primary"
+          className={styles.addButton}
+          icon={<PlusOutlined />}
+          key="button"
+        >
+          Thêm
+        </Button>,
+      ]}
+    >
+      <div className={styles.mainContainer}>
+        <div className={styles.body}>
+          <Table
+            columns={columns}
+            dataSource={data?.data}
+            rowKey="id"
+            pagination={{
+              position: ["bottomCenter"],
+              total: data?.total_record,
+              current: page ? +page : 1,
+              onChange: handlePaginationChange,
+              pageSize: pageSize ? +pageSize : 10,
+              size: "default",
+            }}
+            loading={isProxyLoading}
+          />
         </div>
-        <div className={styles.rightHeader}>
-          <Button
-            onClick={handleClickCreate}
-            type="primary"
-            className={styles.addButton}
-            icon={<PlusOutlined />}
-          >
-            Thêm
-          </Button>
-        </div>
+        {isOpenModal ? (
+          <AddProxyComponent
+            type={typeModal}
+            isOpen={isOpenModal}
+            setIsOpen={setIsOpenModal}
+            choosedProxy={choosedProxy}
+            functionAdd={handleAdd}
+            functionDelete={handleDelete}
+            functionEdit={handleUpdate}
+            confirmLoading={isProxyLoading}
+          />
+        ) : null}
       </div>
-      <div className={styles.body}>
-        <Table
-          columns={columns}
-          dataSource={data?.data}
-          rowKey="id"
-          pagination={{
-            position: ["bottomCenter"],
-            total: data?.total_record,
-            current: page ? +page : 1,
-            onChange: handlePaginationChange,
-            pageSize: pageSize ? +pageSize : 10,
-            size: "default",
-          }}
-          loading={isProxyLoading}
-        />
-      </div>
-      {isOpenModal ? (
-        <AddProxyComponent
-          type={typeModal}
-          isOpen={isOpenModal}
-          setIsOpen={setIsOpenModal}
-          choosedProxy={choosedProxy}
-          functionAdd={handleAdd}
-          functionDelete={handleDelete}
-          functionEdit={handleUpdate}
-          confirmLoading={isProxyLoading}
-        />
-      ) : null}
-    </div>
+    </PageHeader>
   );
 
   function handleSearch(value: string) {

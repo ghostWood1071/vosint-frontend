@@ -1,5 +1,5 @@
 import { PlusOutlined } from "@ant-design/icons";
-import { Button, Input, List } from "antd";
+import { Button, Input, List, PageHeader } from "antd";
 import React, { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
@@ -31,77 +31,81 @@ export const BodyCate: React.FC<Props> = ({ title }) => {
   const { mutate, isLoading: isObjectCateLoading } = useMutationObjectCate();
 
   return (
-    <div className={styles.mainContainer}>
-      <div className={styles.header}>
-        <div className={styles.leftHeader}>
-          <div className={styles.searchButton}>
-            <Input.Search placeholder="Tìm kiếm" onSearch={handleSearch} />
-          </div>
-        </div>
-        <div className={styles.rightHeader}>
-          <Button
-            onClick={handleClickCreate}
-            type="primary"
-            className={styles.addButton}
-            icon={<PlusOutlined />}
-          >
-            Thêm
-          </Button>
-        </div>
-      </div>
-      <div className={styles.body}>
-        <div className={styles.listObject}>
-          <List
-            itemLayout="vertical"
-            size="large"
-            pagination={{
-              current: page ? +page : 1,
-              pageSize: pageSize ? +pageSize : 10,
-              size: "default",
-              position: "bottom",
-              total: data?.total,
-              onChange: handlePaginationChange,
-            }}
-            dataSource={data?.data}
-            renderItem={(item) => {
-              return (
-                <CateItem
-                  choosedCateID={choosedCate?._id}
-                  functionEdit={handleUpdate}
-                  item={item}
-                  onclick={setChoosedCate}
-                />
-              );
-            }}
-          />
-        </div>
-        {choosedCate !== null ? (
-          <div className={styles.detailObject}>
-            <DetailCate
-              choosedCate={choosedCate}
-              handleOpenDeleteModal={handleOpenDeleteCate}
-              handleOpenEditModal={handleOpenEditCate}
-              nameTitle={title}
+    <PageHeader
+      title={`Danh mục ${title}`}
+      extra={[
+        <Input.Search
+          placeholder="Tìm kiếm"
+          onSearch={handleSearch}
+          key="search"
+          style={{ width: 300 }}
+        />,
+        <Button
+          onClick={handleClickCreate}
+          type="primary"
+          className={styles.addButton}
+          icon={<PlusOutlined />}
+          key="add"
+        >
+          Thêm
+        </Button>,
+      ]}
+    >
+      <div className={styles.mainContainer}>
+        <div className={styles.body}>
+          <div className={styles.listObject}>
+            <List
+              itemLayout="vertical"
+              size="large"
+              pagination={{
+                current: page ? +page : 1,
+                pageSize: pageSize ? +pageSize : 10,
+                size: "default",
+                position: "bottom",
+                total: data?.total,
+                onChange: handlePaginationChange,
+              }}
+              dataSource={data?.data}
+              renderItem={(item) => {
+                return (
+                  <CateItem
+                    choosedCateID={choosedCate?._id}
+                    functionEdit={handleUpdate}
+                    item={item}
+                    onclick={setChoosedCate}
+                  />
+                );
+              }}
             />
           </div>
+          {choosedCate !== null ? (
+            <div className={styles.detailObject}>
+              <DetailCate
+                choosedCate={choosedCate}
+                handleOpenDeleteModal={handleOpenDeleteCate}
+                handleOpenEditModal={handleOpenEditCate}
+                nameTitle={title}
+              />
+            </div>
+          ) : null}
+        </div>
+        {isOpenModal ? (
+          <AddCateComponent
+            type={typeModal}
+            isOpen={isOpenModal}
+            setIsOpen={setIsOpenModal}
+            nameTitle={title}
+            choosedCate={choosedCate}
+            functionAdd={handleAdd}
+            functionDelete={handleDelete}
+            functionEdit={handleUpdate}
+            confirmLoading={isObjectCateLoading}
+            setChoosedCate={setChoosedCate}
+            typeObject={typeObject}
+          />
         ) : null}
       </div>
-      {isOpenModal ? (
-        <AddCateComponent
-          type={typeModal}
-          isOpen={isOpenModal}
-          setIsOpen={setIsOpenModal}
-          nameTitle={title}
-          choosedCate={choosedCate}
-          functionAdd={handleAdd}
-          functionDelete={handleDelete}
-          functionEdit={handleUpdate}
-          confirmLoading={isObjectCateLoading}
-          setChoosedCate={setChoosedCate}
-          typeObject={typeObject}
-        />
-      ) : null}
-    </div>
+    </PageHeader>
   );
 
   function handleSearch(value: string) {

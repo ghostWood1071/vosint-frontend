@@ -1,7 +1,7 @@
 import { ActionReloadIcon, ActionRunIcon, ActionStopIcon } from "@/assets/svg";
 import { pipelineCreatePath } from "@/pages/router";
 import { PlusOutlined } from "@ant-design/icons";
-import { Button, Input, Modal, PageHeader } from "antd";
+import { Button, Input, Modal, PageHeader, message } from "antd";
 import classNames from "classnames";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -44,11 +44,23 @@ export const PipelineList: React.FC = () => {
     page_size: searchParams.get("page_size_history") ?? 10,
   });
 
-  const { mutate: mutateUpdate, isLoading: isUpdating } = usePutPipeline();
+  const { mutate: mutateUpdate, isLoading: isUpdating } = usePutPipeline({
+    onSuccess: (_, variables) => {
+      message.success(variables.enabled ? "Kích hoạt thành công" : "Vô hiệu hoá thành công");
+    },
+  });
   const { mutate: mutateClone, isLoading: isCloning } = useClonePipeline();
-  const { mutate: mutateDelete, isLoading: isDeleting } = useDeletePipeline();
-  const { mutate: mutateJobAll, isLoading: isLoadingJobAll } = useMutateRunOrStopAllJob();
-  const { mutate: mutateJobOnly } = useMutateRunOrStopJob();
+  const { mutateAsync: mutateDelete, isLoading: isDeleting } = useDeletePipeline();
+  const { mutate: mutateJobAll, isLoading: isLoadingJobAll } = useMutateRunOrStopAllJob({
+    onSuccess: (_, variables) => {
+      message.success(variables.status === "start" ? "Khởi động thành công" : "Dừng thành công");
+    },
+  });
+  const { mutate: mutateJobOnly } = useMutateRunOrStopJob({
+    onSuccess: (_, variables) => {
+      message.success(variables.activated ? "Khởi động thành công" : "Dừng thành công");
+    },
+  });
 
   return (
     <div id="pipeline-gathering" className={classNames(styles.informationGathering, "modal-mount")}>
@@ -57,18 +69,18 @@ export const PipelineList: React.FC = () => {
         extra={[
           <Search placeholder={t("search_here")} onSearch={handleSearch} />,
           <Button
-            title="Dung tat ca"
+            title="Dừng tất cả"
             loading={isLoadingJobAll}
             icon={<ActionStopIcon onClick={handleStopJobAll} />}
           />,
           <Button
-            title="Chay tat ca"
+            title="Chạy tất cả"
             loading={isLoadingJobAll}
             icon={<ActionRunIcon onClick={handleStartJobAll} />}
           />,
           <Button title="Làm mới trang" icon={<ActionReloadIcon />} onClick={handleRefresh} />,
           <Button
-            title="Them moi pipeline"
+            title="Tạo mới pipeline"
             icon={<PlusOutlined />}
             onClick={navigateCreatePipeline}
           />,
@@ -137,7 +149,7 @@ export const PipelineList: React.FC = () => {
   }
 
   function handleDeletePipeline(_id: string) {
-    mutateDelete(_id);
+    return mutateDelete(_id);
   }
 
   function handleSearch(value: string) {

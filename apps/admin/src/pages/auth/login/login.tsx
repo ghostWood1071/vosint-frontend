@@ -22,7 +22,7 @@ export const LoginPage = () => {
   const { mutate } = useLogin({
     onSuccess: ({ detail }: any) => {
       message.success({
-        content: "Login successfully",
+        content: "Đăng nhập thành công",
         key: CACHE_KEYS.Login,
       });
       setUserProfile(detail);
@@ -31,14 +31,14 @@ export const LoginPage = () => {
     },
     onError: () => {
       message.error({
-        content: "Invalid username or password",
+        content: "Đăng nhập không thành công",
         key: CACHE_KEYS.Login,
       });
     },
   });
   const onFinish = (values: FormLogin) => {
     message.loading({
-      content: "Loading...",
+      content: "Đang tải...",
       key: CACHE_KEYS.Login,
     });
     mutate(values);

@@ -4,9 +4,10 @@ import React from "react";
 interface Props {
   form: FormInstance<any>;
   onFinish: (values: any) => void;
+  isUpdate?: boolean;
 }
 
-export const UserManagerForm: React.FC<Props> = ({ form, onFinish }) => {
+export const UserManagerForm: React.FC<Props> = ({ form, onFinish, isUpdate }) => {
   return (
     <Form
       labelCol={{ span: 8 }}
@@ -15,7 +16,6 @@ export const UserManagerForm: React.FC<Props> = ({ form, onFinish }) => {
       id="user-create"
       form={form}
       labelAlign="left"
-      requiredMark={false}
       initialValues={{
         role: "leader",
       }}
@@ -35,7 +35,8 @@ export const UserManagerForm: React.FC<Props> = ({ form, onFinish }) => {
         rules={[
           {
             required: true,
-            message: "Please input your username!",
+            whitespace: true,
+            message: "Hãy nhập tên tài khoản!",
           },
         ]}
       >
@@ -47,7 +48,8 @@ export const UserManagerForm: React.FC<Props> = ({ form, onFinish }) => {
         rules={[
           {
             required: true,
-            message: "Please input your name!",
+            whitespace: true,
+            message: "Hãy nhập họ và tên!",
           },
         ]}
       >
@@ -58,7 +60,8 @@ export const UserManagerForm: React.FC<Props> = ({ form, onFinish }) => {
         label="Mật khẩu"
         rules={[
           {
-            message: "Please input your password!",
+            required: !isUpdate,
+            message: "Hãy nhập mật khẩu!",
           },
         ]}
       >
@@ -71,14 +74,15 @@ export const UserManagerForm: React.FC<Props> = ({ form, onFinish }) => {
         hasFeedback
         rules={[
           {
-            message: "Please confirm your password!",
+            required: !isUpdate,
+            message: "Hãy nhập lại mật khẩu!",
           },
           ({ getFieldValue }) => ({
             validator(_, value) {
               if (!value || getFieldValue("password") === value) {
                 return Promise.resolve();
               }
-              return Promise.reject(new Error("The two passwords that you entered do not match!"));
+              return Promise.reject(new Error("Hai mật khẩu bạn nhập không trùng khớp!"));
             },
           }),
         ]}

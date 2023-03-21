@@ -31,6 +31,7 @@ export const TwitterConfig: React.FC = () => {
   return (
     <>
       <PageHeader
+        title="Danh sách cấu hình Twitter "
         extra={[
           <Search
             placeholder="Tìm kiếm"
@@ -38,6 +39,7 @@ export const TwitterConfig: React.FC = () => {
             onSearch={onSearch}
             className={styles.search}
             onChange={(e) => setValueSearch(e.target.value)}
+            style={{ width: 300 }}
           />,
           <Button
             key="button"
@@ -49,7 +51,6 @@ export const TwitterConfig: React.FC = () => {
           </Button>,
         ]}
       >
-        <h3>Danh sách các tài khoản Twitter</h3>
         <TwSettingTable data={twitterData?.result ?? []} loading={isLoading} />
       </PageHeader>
       <Modal
