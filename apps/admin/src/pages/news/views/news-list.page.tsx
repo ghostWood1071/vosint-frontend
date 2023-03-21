@@ -1,4 +1,4 @@
-import { ETreeTag } from "@/components/tree/tree.store";
+import { ETreeTag } from "@/components/news/news-state";
 import { useGetMe } from "@/pages/auth/auth.loader";
 import React from "react";
 import { useSearchParams } from "react-router-dom";

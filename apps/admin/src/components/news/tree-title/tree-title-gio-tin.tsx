@@ -1,15 +1,11 @@
 import { DeleteOutlined, EditOutlined, EllipsisOutlined, PlusOutlined } from "@ant-design/icons";
 import { Col, Row, Space, Tooltip, TreeDataNode, Typography } from "antd";
 import classNames from "classnames";
-import { pick } from "lodash";
-import React, { useRef, useState } from "react";
-import { useTranslation } from "react-i18next";
+import { useRef, useState } from "react";
 import { useClickAway } from "react-use";
 
-import styles from "./tree-title.module.less";
-import { ETreeAction, ETreeTag, useTreeStore } from "./tree.store";
-
-const { Paragraph } = Typography;
+import { ETreeAction, ETreeTag, useNewsState } from "../news-state";
+import styles from "./tree-title-gio-tin.module.less";
 
 interface Props extends TreeDataNode {
   isEditable?: boolean;
@@ -19,10 +15,9 @@ interface Props extends TreeDataNode {
   tag: ETreeTag;
 }
 
-export const TreeTitle: React.FC<Props> = ({ onClick, children, isEditable, ...node }) => {
-  const setValues = useTreeStore((state) => state.setValues);
-  // TODO: update translation
-  const { t } = useTranslation("translation", { keyPrefix: "news" });
+export function TreeTitleGioTin({ onClick, children, isEditable, ...node }: Props): JSX.Element {
+  const setNews = useNewsState((state) => state.setNews);
+
   const [isOpen, setIsOpen] = useState(false);
   const ref = useRef(null);
 
@@ -32,7 +27,7 @@ export const TreeTitle: React.FC<Props> = ({ onClick, children, isEditable, ...n
     <Row className={styles.treeTitle} align="middle">
       <Col span={16}>
         <Space className={styles.title}>
-          <Paragraph
+          <Typography.Paragraph
             ellipsis={{ rows: 1 }}
             className={classNames({
               [styles.paragraph]: true,
@@ -41,20 +36,20 @@ export const TreeTitle: React.FC<Props> = ({ onClick, children, isEditable, ...n
             onClick={handleClick}
           >
             {node.title?.toString()}
-          </Paragraph>
+          </Typography.Paragraph>
         </Space>
       </Col>
       {isEditable && (
         <Col span={8} className={styles.menu} ref={ref}>
           {isOpen ? (
             <Space>
-              <Tooltip title={t(ETreeAction.CREATE) + t(node.tag)}>
-                <PlusOutlined onClick={handleAdd} className={styles.add} />
+              <Tooltip title={""}>
+                <PlusOutlined onClick={handleCreate} className={styles.add} />
               </Tooltip>
-              <Tooltip title={t(ETreeAction.UPDATE) + t(node.tag)}>
-                <EditOutlined onClick={handleEdit} className={styles.edit} />
+              <Tooltip title={""}>
+                <EditOutlined onClick={handleUpdate} className={styles.edit} />
               </Tooltip>
-              <Tooltip title={t(ETreeAction.DELETE) + t(node.tag)}>
+              <Tooltip title={""}>
                 <DeleteOutlined onClick={handleDelete} className={styles.delete} />
               </Tooltip>
             </Space>
@@ -78,8 +73,8 @@ export const TreeTitle: React.FC<Props> = ({ onClick, children, isEditable, ...n
     setIsOpen(true);
   }
 
-  function handleAdd() {
-    setValues({
+  function handleCreate() {
+    setNews({
       tag: node.tag,
       action: ETreeAction.CREATE,
       data: {
@@ -88,35 +83,24 @@ export const TreeTitle: React.FC<Props> = ({ onClick, children, isEditable, ...n
     });
   }
 
-  function handleEdit() {
-    const data = pick(node, [
-      "title",
-      "_id",
-      "required_keyword",
-      "exclusion_keyword",
-      "news_samples",
-    ]);
-
-    setValues({
+  function handleUpdate() {
+    setNews({
       tag: node.tag,
       action: ETreeAction.UPDATE,
-      data,
+      data: {
+        _id: node._id,
+      },
     });
   }
 
   function handleDelete() {
-    const data = pick(node, [
-      "title",
-      "_id",
-      "required_keyword",
-      "exclusion_keyword",
-      "news_samples",
-    ]);
-
-    setValues({
+    setNews({
       tag: node.tag,
       action: ETreeAction.DELETE,
-      data: data,
+      data: {
+        _id: node._id,
+        title: node.title,
+      },
     });
   }
-};
+}

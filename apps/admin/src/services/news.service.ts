@@ -50,6 +50,17 @@ export const deleteNewsletter = async (newsletterId: string) => {
   return result.data;
 };
 
+export const deleteMultipleNewsletter = async ({
+  newsletter_ids,
+}: {
+  newsletter_ids: string[];
+}) => {
+  const result = await apiClient.post<any>(`${apiNewsBaseV2Url}/newsletters/delete-many`, {
+    newsletter_ids,
+  });
+  return result.data;
+};
+
 export const updateNewsletter = async (newsletterId: string, newsletter: any) => {
   const result = await apiClient.patch(
     `${apiNewsBaseV2Url}/newsletters/${newsletterId}`,

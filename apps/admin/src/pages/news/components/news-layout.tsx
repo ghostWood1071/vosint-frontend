@@ -1,14 +1,14 @@
+import { Tree } from "@/components";
+import { NewsletterModal } from "@/components/news/news-modal";
+import { ETreeAction, ETreeTag, useNewsState } from "@/components/news/news-state";
 import { AppContainer } from "@/pages/app";
-import { buildTree } from "@/pages/news/news.utils";
+import { buildTree, getAllChildIds } from "@/pages/news/news.utils";
 import { getNewsDetailUrl } from "@/pages/router";
 import { Space } from "antd";
 import classNames from "classnames";
 import { NavLink, Outlet, useNavigate, useParams } from "react-router-dom";
 
-import { Tree } from "../../../components/tree";
-import { ETreeTag, useTreeStore } from "../../../components/tree/tree.store";
 import { useMutationNewsSidebar, useNewsSidebar } from "../news.loader";
-import { NewsForm } from "./news-form";
 import styles from "./news-layout.module.less";
 
 export const NewsLayout: React.FC = () => {
@@ -20,11 +20,12 @@ export const NewsLayout: React.FC = () => {
 };
 
 function Sidebar() {
+  const { action } = useNewsState((state) => state.news);
   const { data, isLoading } = useNewsSidebar();
   const { newsletterId } = useParams();
   const { mutateAsync, isLoading: isMutateLoading } = useMutationNewsSidebar();
   const navigate = useNavigate();
-  const setValues = useTreeStore((state) => state.setValues);
+  const resetNewsState = useNewsState((state) => state.reset);
 
   if (isLoading) return null;
 
@@ -78,7 +79,7 @@ function Sidebar() {
           Tin được đánh dấu
         </NavLink>
       </Space>
-      <NewsForm onFinish={handleFinish} confirmLoading={isMutateLoading} />
+      <NewsletterModal onFinish={handleFinish} confirmLoading={isMutateLoading} />
     </>
   );
 
@@ -87,14 +88,13 @@ function Sidebar() {
   }
 
   function handleFinish(values: Record<string, any>) {
+    if (action === ETreeAction.DELETE) {
+      const ids = getAllChildIds(data?.linh_vuc, values._id!) ?? [];
+      values.newsletter_ids = ids;
+    }
+
     return mutateAsync(values, {
-      onSuccess: () => {
-        setValues({
-          tag: null,
-          action: null,
-          data: null,
-        });
-      },
+      onSuccess: () => resetNewsState(),
     });
   }
 

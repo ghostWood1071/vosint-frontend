@@ -1,4 +1,4 @@
-import { ETreeTag } from "@/components/tree/tree.store";
+import { ETreeTag } from "@/components/news/news-state";
 
 export const homePath = "/";
 
