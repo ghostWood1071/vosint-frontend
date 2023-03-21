@@ -28,20 +28,22 @@ export const FacebookConfig: React.FC = () => {
   };
   return (
     <>
-      <Segmented
-        options={["Fanpage", "Group", "Object"]}
-        value={value}
-        onChange={handleAccountType}
-        className={styles.segmented}
-      />
       <PageHeader
+        title="Danh sách cấu hình Facebook "
         extra={[
+          <Segmented
+            options={["Fanpage", "Group", "Object"]}
+            value={value}
+            onChange={handleAccountType}
+            className={styles.segmented}
+          />,
           <Search
             placeholder="Tìm kiếm"
             value={valueSearch}
             onSearch={onSearch}
             className={styles.search}
             onChange={(e) => setValueSearch(e.target.value)}
+            style={{ width: 300 }}
           />,
           <Button
             key="button"
@@ -53,7 +55,6 @@ export const FacebookConfig: React.FC = () => {
           </Button>,
         ]}
       >
-        <h3>Danh sách các tài khoản Facebook</h3>
         <SettingTable data={facebookData?.result ?? []} loading={isLoading} />
       </PageHeader>
 

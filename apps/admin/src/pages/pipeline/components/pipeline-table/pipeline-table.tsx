@@ -8,7 +8,7 @@ import { SwitchCustom } from "@/components/";
 import { getPipelineDetailPath } from "@/pages/router";
 import { IPipelines } from "@/services/pipeline.type";
 import Icon, { DeleteOutlined } from "@ant-design/icons";
-import { Button, Popconfirm, Space, Table, TableColumnsType, Tooltip } from "antd";
+import { Button, Modal, Space, Table, TableColumnsType } from "antd";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useSearchParams } from "react-router-dom";
@@ -22,7 +22,7 @@ interface Props {
 
   onChangeEnabled: (_id: string, enabled: boolean) => void;
   onClonePipeline: (_id: string) => void;
-  onDeletePipeline: (_id: string) => void;
+  onDeletePipeline: (_id: string) => Promise<any>;
   onChangeActive: (_id: string, enabled: boolean) => void;
 }
 
@@ -123,21 +123,23 @@ export const PipelineTable: React.FC<Props> = ({
       align: "center",
       dataIndex: "_id",
 
-      render: (_id: string) => {
+      render: (_id: string, record) => {
         return (
           <Space>
-            <Tooltip title="Nhân bản pipeline">
-              <Icon style={{ fontSize: 16 }} component={PipelineCloneIcon} onClick={handleClone} />
-            </Tooltip>
-            <Popconfirm
-              placement="topRight"
-              title="Bạn có muốn xoá pipeline này không?"
-              onConfirm={handleDelete}
-            >
-              <Tooltip title="Xoá pipeline">
-                <Button danger icon={<DeleteOutlined />} type="text" />
-              </Tooltip>
-            </Popconfirm>
+            <Icon
+              style={{ fontSize: 16 }}
+              component={PipelineCloneIcon}
+              onClick={handleClone}
+              title="Nhân bản pipeline"
+            />
+
+            <Button
+              danger
+              icon={<DeleteOutlined />}
+              onClick={handleDelete}
+              type="text"
+              title="Xoá pipeline"
+            />
           </Space>
         );
 
@@ -146,7 +148,12 @@ export const PipelineTable: React.FC<Props> = ({
         }
 
         function handleDelete() {
-          onDeletePipeline(_id);
+          Modal.confirm({
+            title: "Bạn có muốn xoá pipeline này không?",
+            content: record.name,
+            onOk: () => onDeletePipeline(_id),
+            getContainer: "#modal-mount",
+          });
         }
       },
     },

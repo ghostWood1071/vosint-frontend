@@ -65,7 +65,7 @@ export const useClonePipeline = () => {
   return useMutation((id: string) => clonePipeline(id), {
     onSuccess: () => {
       queryClient.invalidateQueries([CACHE_KEYS.Pipelines]);
-      message.success("Cloned pipeline");
+      message.success("Nhân bản pipeline thành công");
     },
   });
 };
@@ -76,7 +76,7 @@ export const useDeletePipeline = () => {
   return useMutation((id: string) => deletePipeline(id), {
     onSuccess: () => {
       queryClient.invalidateQueries([CACHE_KEYS.Pipelines]);
-      message.success("Deleted pipeline");
+      message.success("Xoá pipeline thành công");
     },
   });
 };

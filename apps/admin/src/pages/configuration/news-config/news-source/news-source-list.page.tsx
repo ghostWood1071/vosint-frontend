@@ -1,5 +1,5 @@
 import { PlusOutlined } from "@ant-design/icons";
-import { Button, Input } from "antd";
+import { Button, Input, PageHeader } from "antd";
 import React, { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
@@ -20,47 +20,50 @@ export const SourceNewsConfigList: React.FC = () => {
   const [typeModal, setTypeModal] = useState("");
   const [choosedNewsSource, setChoosedNewsSource] = useState(null);
   return (
-    <div className={styles.mainContainer}>
-      <div className={styles.header}>
-        <div className={styles.leftHeader}>
-          <div className={styles.searchButton}>
-            <Input.Search placeholder="Tìm kiếm" onSearch={handleSearch} />
-          </div>
+    <PageHeader
+      title="Danh sách cấu hình nguồn tin"
+      extra={[
+        <Input.Search
+          placeholder="Tìm kiếm"
+          onSearch={handleSearch}
+          key="input"
+          style={{ width: 300 }}
+        />,
+        <Button
+          onClick={handleClickCreate}
+          type="primary"
+          className={styles.addButton}
+          icon={<PlusOutlined />}
+          key="button"
+        >
+          Thêm
+        </Button>,
+      ]}
+    >
+      <div className={styles.mainContainer}>
+        <div className={styles.body}>
+          <SourceNewsTable
+            total_record={data?.total_record}
+            data={data?.data}
+            loading={isNewsSourceLoading}
+            handleClickEdit={handleClickEdit}
+            handleClickDelete={handleClickDelete}
+          />
         </div>
-        <div className={styles.rightHeader}>
-          <Button
-            onClick={handleClickCreate}
-            type="primary"
-            className={styles.addButton}
-            icon={<PlusOutlined />}
-          >
-            Thêm
-          </Button>
-        </div>
+        {isOpenModal ? (
+          <AddNewsSourceComponent
+            type={typeModal}
+            isOpen={isOpenModal}
+            setIsOpen={setIsOpenModal}
+            choosedNewsSource={choosedNewsSource}
+            functionAdd={handleAdd}
+            functionDelete={handleDelete}
+            functionEdit={handleUpdate}
+            confirmLoading={isNewsSourceLoading}
+          />
+        ) : null}
       </div>
-
-      <div className={styles.body}>
-        <SourceNewsTable
-          total_record={data?.total_record}
-          data={data?.data}
-          loading={isNewsSourceLoading}
-          handleClickEdit={handleClickEdit}
-          handleClickDelete={handleClickDelete}
-        />
-      </div>
-      {isOpenModal ? (
-        <AddNewsSourceComponent
-          type={typeModal}
-          isOpen={isOpenModal}
-          setIsOpen={setIsOpenModal}
-          choosedNewsSource={choosedNewsSource}
-          functionAdd={handleAdd}
-          functionDelete={handleDelete}
-          functionEdit={handleUpdate}
-          confirmLoading={isNewsSourceLoading}
-        />
-      ) : null}
-    </div>
+    </PageHeader>
   );
   function handleSearch(value: string) {
     setSearchParams({

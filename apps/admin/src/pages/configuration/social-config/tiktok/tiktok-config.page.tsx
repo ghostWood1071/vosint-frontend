@@ -31,6 +31,7 @@ export const TiktokConfig: React.FC = () => {
   return (
     <>
       <PageHeader
+        title="Danh sách cấu hình Tiktok "
         extra={[
           <Search
             placeholder="Tìm kiếm"
@@ -38,6 +39,7 @@ export const TiktokConfig: React.FC = () => {
             onSearch={onSearch}
             className={styles.search}
             onChange={(e) => setValueSearch(e.target.value)}
+            style={{ width: 300 }}
           />,
           <Button
             key="button"
@@ -49,7 +51,6 @@ export const TiktokConfig: React.FC = () => {
           </Button>,
         ]}
       >
-        <h3>Danh sách các tài khoản Tiktok</h3>
         <TTSettingTable data={tiktokData?.result ?? []} loading={isLoading} />
       </PageHeader>
       <Modal

@@ -63,9 +63,22 @@ export const UserManagerTable: React.FC<Props> = ({
       render: (_, record) => {
         return (
           <Space>
-            {onUpdate && <Button icon={<FormOutlined />} onClick={handleClickUpdate} />}
-            <Button icon={<KeyOutlined />} />
-            <Button icon={<DeleteOutlined />} danger onClick={handleDelete} />
+            {onUpdate && (
+              <Button
+                icon={<FormOutlined />}
+                onClick={handleClickUpdate}
+                title="Cập nhật người dùng"
+                type="text"
+              />
+            )}
+            <Button icon={<KeyOutlined />} type="text" />
+            <Button
+              icon={<DeleteOutlined />}
+              danger
+              onClick={handleDelete}
+              title="Xoá người dùng"
+              type="text"
+            />
           </Space>
         );
 
@@ -74,7 +87,7 @@ export const UserManagerTable: React.FC<Props> = ({
         }
 
         function handleClickUpdate() {
-          onUpdate?.(record);
+          onUpdate?.({ ...record, isUpdate: true });
         }
       },
     },
@@ -108,7 +121,7 @@ export const UserManagerTable: React.FC<Props> = ({
             <Avatar
               shape="square"
               size={96}
-              src={record?.avatar_url ? record.avatar_url : <UserOutlined />}
+              src={record?.avatar_url ? generateImage(record.avatar_url) : <UserOutlined />}
               style={{ backgroundColor: "#cccccc" }}
             />
           </Col>

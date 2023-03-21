@@ -1,5 +1,6 @@
 import { PlusSquareOutlined } from "@ant-design/icons";
-import { Button, Form, Input, Modal, PageHeader, Select } from "antd";
+import { Button, Form, Input, Modal, PageHeader, Select, message } from "antd";
+import { trim } from "lodash";
 import React, { useState } from "react";
 import { useQueryClient } from "react-query";
 import { useSearchParams } from "react-router-dom";
@@ -27,15 +28,15 @@ export const UserManagerList: React.FC = () => {
 
   const { mutate: mutateCreate, isLoading: isCreating } = useCreateUser({
     onSuccess: () => {
+      message.success("Thêm người dùng thành công");
       setIsOpen(null);
-      form.resetFields();
     },
   });
 
   const { mutate: mutateUpdate, isLoading: isUpdating } = useUpdateUser({
     onSuccess: () => {
+      message.success("Cập nhật người dùng thành công");
       setIsOpen(null);
-      form.resetFields();
       queryClient.invalidateQueries([CACHE_KEYS.LIST]);
     },
   });
@@ -95,14 +96,15 @@ export const UserManagerList: React.FC = () => {
         />
       </PageHeader>
       <Modal
-        title="Thêm người dùng"
+        title={isOpen === "create" ? "Thêm người dùng" : "Cập nhật người dùng"}
         open={!!isOpen}
         onCancel={handleCancel}
         onOk={handleOk}
         confirmLoading={isCreating || isUpdating}
         destroyOnClose
+        maskClosable={false}
       >
-        <UserManagerForm form={form} onFinish={handleFinish} />
+        <UserManagerForm form={form} onFinish={handleFinish} isUpdate={isOpen === "update"} />
       </Modal>
     </>
   );
@@ -144,12 +146,15 @@ export const UserManagerList: React.FC = () => {
   }
 
   function handleSearch(value: string) {
-    searchParams.set("name", value);
-    setSearchParams(searchParams);
+    setSearchParams({
+      name: trim(value),
+    });
   }
 
   function handleSearchRole(value: string) {
     searchParams.set("role", value);
+    searchParams.delete("page_number");
+    searchParams.delete("page_size");
     setSearchParams(searchParams);
   }
 };
