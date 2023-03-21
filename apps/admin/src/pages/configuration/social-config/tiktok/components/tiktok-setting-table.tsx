@@ -3,8 +3,9 @@ import {
   useMutationDeleteSocial,
   useMutationUpdateTWSocial,
 } from "@/pages/configuration/config.loader";
+import styles from "@/pages/configuration/social-config/facebook/components/fb-setting.module.less";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { Avatar, Button, Form, Modal, Space, Table, TableColumnsType } from "antd";
+import { Avatar, Button, Form, Modal, Space, Table, TableColumnsType, message } from "antd";
 import React, { useState } from "react";
 import { useQueryClient } from "react-query";
 
@@ -27,19 +28,19 @@ export const TTSettingTable: React.FC<Props> = ({ data, loading }) => {
 
   const columns: TableColumnsType<any> = [
     {
-      title: "",
-      dataIndex: "avatar_url",
-      render: (url: string) => {
-        return <Avatar src={url} style={{ marginTop: -20 }} />;
-      },
-      width: "10%",
-      align: "center",
-    },
-    {
-      title: "Tên",
+      title: <p className={styles.namecolumn}>Tên</p>,
       dataIndex: "social_name",
-      render: (name: string) => {
-        return <p>{name}</p>;
+      render: (name: string, data: any) => {
+        return (
+          <div className={styles.namerow}>
+            <Avatar
+              src={data.avatar_url}
+              onClick={() => routerAccount(data)}
+              className={styles.avatar}
+            />
+            <p>{name}</p>
+          </div>
+        );
       },
     },
     {
@@ -47,13 +48,6 @@ export const TTSettingTable: React.FC<Props> = ({ data, loading }) => {
       dataIndex: "_id",
       render: (id: string) => {
         return <p>{id}</p>;
-      },
-    },
-    {
-      title: "Mạng xã hội",
-      dataIndex: "social_media",
-      render: (date: string) => {
-        return <p>{date}</p>;
       },
     },
     {
@@ -106,13 +100,22 @@ export const TTSettingTable: React.FC<Props> = ({ data, loading }) => {
 
   function handleFinishEdit(values: any) {
     values.id = isIdTarget;
-    values.social_type = "";
+    values.social_type = "Object";
 
     mutateUpdate(values, {
       onSuccess: () => {
-        queryClient.invalidateQueries([CACHE_KEYS.InfoTTSetting]);
+        queryClient.invalidateQueries(CACHE_KEYS.InfoTTSetting);
+        message.success({
+          content: "Cập nhật thành công!",
+          key: CACHE_KEYS.InfoTTSetting,
+        });
       },
-      onError: () => {},
+      onError: () => {
+        message.error({
+          content: "Trùng tên !",
+          key: CACHE_KEYS.InfoTTSetting,
+        });
+      },
     });
     setIsEditOpen(false);
   }
@@ -145,9 +148,16 @@ export const TTSettingTable: React.FC<Props> = ({ data, loading }) => {
     mutateDelete(isIdTarget, {
       onSuccess: () => {
         queryClient.invalidateQueries([CACHE_KEYS.InfoTTSetting]);
+        message.success({
+          content: "Xoá thành công!",
+          key: CACHE_KEYS.InfoTTSetting,
+        });
       },
       onError: () => {},
     });
     setIsDeleteOpen(false);
+  }
+  function routerAccount(data: any) {
+    window.open(data.account_link, "_blank");
   }
 };

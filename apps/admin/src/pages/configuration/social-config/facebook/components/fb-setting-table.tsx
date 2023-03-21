@@ -4,11 +4,12 @@ import {
   useMutationUpdateSocial,
 } from "@/pages/configuration/config.loader";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { Avatar, Button, Form, Modal, Space, Switch, Table, TableColumnsType } from "antd";
+import { Avatar, Button, Form, Modal, Space, Switch, Table, TableColumnsType, message } from "antd";
 import React, { useState } from "react";
 import { useQueryClient } from "react-query";
 
 import { SettingCreateForm } from "./fb-setting-form";
+import styles from "./fb-setting.module.less";
 
 interface Props {
   data: any;
@@ -20,7 +21,6 @@ export const SettingTable: React.FC<Props> = ({ data, loading }) => {
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [isIdTarget, setIsIdTarget] = useState("");
   const [isValueTarget, setIsValueTarget] = useState<any>();
-
   const queryClient = useQueryClient();
 
   const [form] = Form.useForm();
@@ -29,36 +29,35 @@ export const SettingTable: React.FC<Props> = ({ data, loading }) => {
 
   const columns: TableColumnsType<any> = [
     {
-      title: "",
-      dataIndex: "avatar_url",
-      render: (url: string) => {
-        return <Avatar src={url} style={{ marginTop: -20 }} />;
-      },
-      width: "10%",
-      align: "center",
-    },
-    {
-      title: "Tên",
+      title: <p className={styles.namecolumn}>Tên</p>,
       dataIndex: "social_name",
-      render: (name: string) => {
-        return <p>{name}</p>;
+      render: (name: string, data: any) => {
+        return (
+          <div className={styles.namerow}>
+            <Avatar
+              src={data.avatar_url}
+              onClick={() => routerAccount(data)}
+              className={styles.avatar}
+            />
+            <p>{name}</p>
+          </div>
+        );
       },
     },
     {
-      title: "Account",
+      title: "Kiểu tài khoản",
       dataIndex: "social_type",
       render: (id: string) => {
         return <p>{id}</p>;
       },
     },
     {
-      title: "Mạng xã hội",
-      dataIndex: "social_media",
-      render: (date: string) => {
-        return <p>{date}</p>;
+      title: "Các tài khoản theo dõi",
+      dataIndex: "social_type",
+      render: (id: string) => {
+        return <p>{id}</p>;
       },
     },
-
     {
       title: "",
       align: "right",
@@ -127,9 +126,18 @@ export const SettingTable: React.FC<Props> = ({ data, loading }) => {
     values.id = isIdTarget;
     mutateUpdate(values, {
       onSuccess: () => {
-        queryClient.invalidateQueries([CACHE_KEYS.InfoFBSetting]);
+        queryClient.invalidateQueries(CACHE_KEYS.InfoFBSetting);
+        message.success({
+          content: "Cập nhật thành công!",
+          key: CACHE_KEYS.InfoFBSetting,
+        });
       },
-      onError: () => {},
+      onError: () => {
+        message.error({
+          content: "Trùng tên !",
+          key: CACHE_KEYS.InfoFBSetting,
+        });
+      },
     });
     setIsEditOpen(false);
     form.resetFields();
@@ -149,9 +157,16 @@ export const SettingTable: React.FC<Props> = ({ data, loading }) => {
     mutateDelete(isIdTarget, {
       onSuccess: () => {
         queryClient.invalidateQueries([CACHE_KEYS.InfoFBSetting]);
+        message.success({
+          content: "Xoá thành công!",
+          key: CACHE_KEYS.InfoFBSetting,
+        });
       },
       onError: () => {},
     });
     setIsDeleteOpen(false);
+  }
+  function routerAccount(data: any) {
+    window.open(data.account_link, "_blank");
   }
 };

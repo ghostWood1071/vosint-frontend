@@ -1,5 +1,6 @@
+import styles from "@/pages/configuration/social-config/facebook/components/fb-setting.module.less";
 import { PlusSquareOutlined } from "@ant-design/icons";
-import { Button, Form, Modal, PageHeader } from "antd";
+import { Button, Form, Input, Modal, PageHeader } from "antd";
 import React, { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
@@ -9,17 +10,35 @@ import { TTSettingTable } from "./components/tiktok-setting-table";
 
 export const TiktokConfig: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+  let titleFilter = searchParams.get("social_name") ?? "";
+
   const { data: tiktokData } = useTTSetting({
     page_number: searchParams.get("page") ?? 1,
     page_size: searchParams.get("limit") ?? 10,
+    social_name: titleFilter,
+    type_data: "Object",
   });
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [form] = Form.useForm();
+  const [valueSearch, setValueSearch] = useState("");
   const { mutate, isLoading } = usePostTTSetting();
+  const { Search } = Input;
+  const onSearch = (valueFilter: string) => {
+    searchParams.set("social_name", valueFilter);
+    setSearchParams(searchParams);
+  };
+
   return (
     <>
       <PageHeader
         extra={[
+          <Search
+            placeholder="Tìm kiếm"
+            value={valueSearch}
+            onSearch={onSearch}
+            className={styles.search}
+            onChange={(e) => setValueSearch(e.target.value)}
+          />,
           <Button
             key="button"
             icon={<PlusSquareOutlined />}
@@ -30,6 +49,7 @@ export const TiktokConfig: React.FC = () => {
           </Button>,
         ]}
       >
+        <h3>Danh sách các tài khoản Tiktok</h3>
         <TTSettingTable data={tiktokData?.result ?? []} loading={isLoading} />
       </PageHeader>
       <Modal
