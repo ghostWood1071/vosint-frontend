@@ -41,6 +41,10 @@ export const SettingCreateForm: React.FC<Props> = ({
           {
             required: true,
           },
+          {
+            whitespace: true,
+            message: "Không được để khoảng trắng",
+          },
         ]}
       >
         <Input />
@@ -65,6 +69,10 @@ export const SettingCreateForm: React.FC<Props> = ({
           {
             required: true,
           },
+          {
+            type: "url",
+            message: "Account Link không hợp lệ",
+          },
         ]}
       >
         <Input />
@@ -75,6 +83,10 @@ export const SettingCreateForm: React.FC<Props> = ({
         rules={[
           {
             required: true,
+          },
+          {
+            type: "url",
+            message: "Url Avatar không hợp lệ",
           },
         ]}
       >

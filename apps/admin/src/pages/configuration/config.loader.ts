@@ -10,6 +10,7 @@ import {
   getFacebookSetting,
   getObjectCateConfig,
   getProxyConfig,
+  getSettingFilter,
   getSocialObjectList,
   getTiktokSetting,
   getTwitterSetting,
@@ -158,13 +159,26 @@ export const useTTSetting = (filter: any) => {
   return useQuery([CACHE_KEYS.InfoTTSetting, filter], () => getTiktokSetting(filter));
 };
 
+export const useSettingFilter = (filter: any) => {
+  return useQuery([CACHE_KEYS.InfoFBSetting, filter], () => getSettingFilter(filter));
+};
+
 export const usePostFBSetting = () => {
   const queryClient = useQueryClient();
   return useMutation((data: any) => postSetting(data), {
     onSuccess: () => {
-      queryClient.invalidateQueries([CACHE_KEYS.InfoFBSetting]);
+      queryClient.invalidateQueries(CACHE_KEYS.InfoFBSetting);
+      message.success({
+        content: "Thành công!",
+        key: CACHE_KEYS.InfoFBSetting,
+      });
     },
-    onError: () => {},
+    onError: () => {
+      message.error({
+        content: "Tài khoản đã tồn tại!",
+        key: CACHE_KEYS.InfoFBSetting,
+      });
+    },
   });
 };
 
@@ -172,9 +186,18 @@ export const usePostTWSetting = () => {
   const queryClient = useQueryClient();
   return useMutation((data: any) => postSetting(data), {
     onSuccess: () => {
-      queryClient.invalidateQueries([CACHE_KEYS.InfoTWSetting]);
+      queryClient.invalidateQueries(CACHE_KEYS.InfoTWSetting);
+      message.success({
+        content: "Thành công!",
+        key: CACHE_KEYS.InfoTWSetting,
+      });
     },
-    onError: () => {},
+    onError: () => {
+      message.error({
+        content: "Tài khoản đã tồn tại!",
+        key: CACHE_KEYS.InfoTWSetting,
+      });
+    },
   });
 };
 
@@ -182,9 +205,18 @@ export const usePostTTSetting = () => {
   const queryClient = useQueryClient();
   return useMutation((data: any) => postSetting(data), {
     onSuccess: () => {
-      queryClient.invalidateQueries([CACHE_KEYS.InfoTTSetting]);
+      queryClient.invalidateQueries(CACHE_KEYS.InfoTTSetting);
+      message.success({
+        content: "Thành công!",
+        key: CACHE_KEYS.InfoTTSetting,
+      });
     },
-    onError: () => {},
+    onError: () => {
+      message.error({
+        content: "Tài khoản đã tồn tại!",
+        key: CACHE_KEYS.InfoTTSetting,
+      });
+    },
   });
 };
 
