@@ -1,6 +1,6 @@
 import { AddIcon, DelIcon, ViewHideIcon, ViewIcon } from "@/assets/svg";
-import { EyeInvisibleOutlined, EyeOutlined, PlusOutlined } from "@ant-design/icons";
-import { Button, Col, Input, Space, Table, TableColumnsType, Tooltip } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
+import { Button, Col, Input, PageHeader, Space, Table, TableColumnsType } from "antd";
 import React, { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
@@ -67,58 +67,57 @@ export const ViewList = () => {
   ];
 
   return (
-    <div className={styles.rootList}>
-      <div className={styles.header}>
-        <div className={styles.leftHeader}>
-          <div className={styles.searchButton}>
-            <Input.Search placeholder="Tìm kiếm" onSearch={handleSearch} />
-          </div>
-        </div>
-        <div className={styles.rightHeader}>
-          <Button
-            onClick={handleClickAddGroup}
-            type="primary"
-            className={styles.addButton}
-            icon={<PlusOutlined />}
-          >
-            Thêm
-          </Button>
-        </div>
-      </div>
-      <Table
-        columns={columns}
-        expandable={{
-          expandedRowRender: (item) =>
-            item.news[0] !== undefined ? expandedRow(item.news, item._id) : null,
-          rowExpandable: (item) => item._id !== "Not Expandable",
-          indentSize: 10,
-        }}
-        pagination={{
-          position: ["bottomCenter"],
-          total: data?.total_record,
-          current: page ? +page : 1,
-          onChange: handlePaginationChange,
-          pageSize: pageSize ? +pageSize : 10,
-          size: "default",
-        }}
-        rowKey="_id"
-        dataSource={data?.data}
-        showHeader={false}
-        size={"small"}
-      />
-      {isOpenGroupModal ? (
-        <AddGroupModal
-          type={typeGroupModal}
-          isOpen={isOpenGroupModal}
-          setIsOpen={setIsOpenGroupModal}
-          choosedGroupSource={choosedGroupSource}
-          functionAdd={functionAdd}
-          functionDelete={functionDelete}
-          functionEdit={functionEdit}
-          confirmLoading={isGroupSourceLoading}
+    <PageHeader
+      title="Danh sách nhóm nguồn tin"
+      extra={[
+        <Input.Search placeholder="Tìm kiếm" onSearch={handleSearch} key="search" />,
+        <Button
+          onClick={handleClickAddGroup}
+          type="primary"
+          className={styles.addButton}
+          icon={<PlusOutlined />}
+          key="button"
+        >
+          Thêm
+        </Button>,
+      ]}
+    >
+      <div className={styles.rootList}>
+        <Table
+          columns={columns}
+          expandable={{
+            expandedRowRender: (item) =>
+              item.news[0] !== undefined ? expandedRow(item.news, item._id) : null,
+            rowExpandable: (item) => item._id !== "Not Expandable",
+            indentSize: 10,
+          }}
+          pagination={{
+            position: ["bottomCenter"],
+            total: data?.total_record,
+            current: page ? +page : 1,
+            onChange: handlePaginationChange,
+            pageSize: pageSize ? +pageSize : 10,
+            size: "default",
+          }}
+          rowKey="_id"
+          dataSource={data?.data}
+          showHeader={false}
+          size={"small"}
         />
-      ) : null}
-    </div>
+        {isOpenGroupModal ? (
+          <AddGroupModal
+            type={typeGroupModal}
+            isOpen={isOpenGroupModal}
+            setIsOpen={setIsOpenGroupModal}
+            choosedGroupSource={choosedGroupSource}
+            functionAdd={functionAdd}
+            functionDelete={functionDelete}
+            functionEdit={functionEdit}
+            confirmLoading={isGroupSourceLoading}
+          />
+        ) : null}
+      </div>
+    </PageHeader>
   );
 
   function handleSearch(value: string) {

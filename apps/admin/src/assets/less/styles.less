@@ -15,8 +15,12 @@
 }
 
 .scrollbar {
+  &:hover::-webkit-scrollbar-thumb {
+    background-color: #9da5b1;
+  }
+
   &::-webkit-scrollbar {
-    width: 12px;
+    width: 6px;
     height: 6px;
   }
 
@@ -25,9 +29,26 @@
   }
 
   &::-webkit-scrollbar-thumb {
-    background-color: #c1c9d4;
+    background-color: transparent;
     border: 2px solid transparent;
     background-clip: padding-box;
     border-radius: 6px;
+    transition: cubic-bezier(0.165, 0.84, 0.44, 1);
   }
+}
+
+.ant-page-header {
+  padding-top: 6px;
+
+  .ant-page-header-heading {
+    z-index: 1;
+    position: sticky;
+    top: 0;
+    padding: 10px 0;
+    background: #fff;
+  }
+}
+
+.p-10 {
+  padding: 10px;
 }
