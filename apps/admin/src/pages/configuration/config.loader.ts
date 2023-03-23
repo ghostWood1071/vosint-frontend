@@ -69,16 +69,25 @@ export const useMutationObjectCate = () => {
       throw new Error("action invalid");
     },
     {
-      onSuccess: () => {
+      onSuccess: (data, variables) => {
         queryClient.invalidateQueries(CACHE_KEYS.ObjectCate);
         message.success({
-          content: "Thành công!",
+          content:
+            (variables.action === "add" ? "Thêm" : variables.action === "update" ? "Sửa" : "Xoá") +
+            (variables.type !== undefined
+              ? variables.type === "Đối tượng"
+                ? " đối tượng"
+                : variables.type === "Tổ chức"
+                ? " tổ chức"
+                : " quốc gia"
+              : "") +
+            " thành công",
           key: CACHE_KEYS.ObjectCate,
         });
       },
       onError: () => {
         message.error({
-          content: "Đối tượng đã tồn tại!",
+          content: "Tên đã tồn tại. Nhập lại!",
           key: CACHE_KEYS.ObjectCate,
         });
       },
@@ -105,16 +114,17 @@ export const useMutationProxy = () => {
       throw new Error("action invalid");
     },
     {
-      onSuccess: () => {
+      onSuccess: (data: any) => {
         queryClient.invalidateQueries(CACHE_KEYS.ProxyConfig);
         message.success({
-          content: "Thành công!",
+          content: data.type + " proxy thành công!",
           key: CACHE_KEYS.ProxyConfig,
         });
       },
-      onError: () => {
+      onError: (data: any) => {
+        console.log(data);
         message.error({
-          content: "Proxy đã tồn tại!",
+          content: "Địa chỉ IP đã tồn tại. Hãy nhập lại!",
           key: CACHE_KEYS.ProxyConfig,
         });
       },

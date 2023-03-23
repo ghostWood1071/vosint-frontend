@@ -34,16 +34,18 @@ export const useMutationNewsSource = () => {
       throw new Error("action invalid");
     },
     {
-      onSuccess: () => {
+      onSuccess: (data, variables) => {
         queryClient.invalidateQueries(CACHE_KEYS.SourceNewsConfig);
         message.success({
-          content: "Thành công!",
+          content:
+            (variables.action === "add" ? "Thêm" : variables.action === "update" ? "Sửa" : "Xoá") +
+            " nguồn tin thành công",
           key: CACHE_KEYS.SourceNewsConfig,
         });
       },
       onError: () => {
         message.error({
-          content: "Nguồn tin đã tồn tại!",
+          content: "Tên nguồn tin đã tồn tại. Hãy nhập lại!",
           key: CACHE_KEYS.SourceNewsConfig,
         });
       },
