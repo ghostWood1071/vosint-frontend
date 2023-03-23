@@ -146,9 +146,10 @@ export const UserManagerList: React.FC = () => {
   }
 
   function handleSearch(value: string) {
-    setSearchParams({
-      name: trim(value),
-    });
+    searchParams.delete("page_number");
+    searchParams.delete("page_size");
+    searchParams.set("name", trim(value));
+    setSearchParams(searchParams);
   }
 
   function handleSearchRole(value: string) {
