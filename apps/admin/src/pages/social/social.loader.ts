@@ -31,16 +31,18 @@ export const useMutationPriorityObject = () => {
       throw new Error("action invalid");
     },
     {
-      onSuccess: () => {
+      onSuccess: (data, variables) => {
         queryClient.invalidateQueries(PRIORITY_OBJECT);
         message.success({
-          content: "Thành công!",
+          content:
+            (variables.action === "add" ? "Thêm" : variables.action === "update" ? "Sửa" : "Xoá") +
+            " đối tượng ưu tiên hành công!",
           key: PRIORITY_OBJECT,
         });
       },
       onError: () => {
         message.error({
-          content: "Tài khoản đã tồn tại!",
+          content: "Tài khoản đã tồn tại. Hãy nhập lại!",
           key: PRIORITY_OBJECT,
         });
       },
