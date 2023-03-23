@@ -37,7 +37,7 @@ export const BodySocialPage: React.FC<BodySocialPageProps> = ({ postData, statis
       </div>
       <div className={styles.content}>
         {tabButton === "baidang" ? (
-          <Post data={postData} pageSize={6} />
+          <Post data={postData} pageSize={30} />
         ) : (
           <Statistic data={statisticData} />
         )}

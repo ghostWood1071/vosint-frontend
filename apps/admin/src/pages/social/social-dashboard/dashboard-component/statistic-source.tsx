@@ -15,25 +15,19 @@ export const StatisticSource: React.FC<StatisticSourceProps> = ({ data }) => {
     setTypeShow(value);
   };
 
-  function getData() {
+  useEffect(() => {
     data.find((e) => {
       if (e.type === typeShow) {
         setDataShow(e.data);
       }
       return null;
     });
-  }
-
-  useEffect(() => {
-    getData();
   }, [typeShow]);
   return (
     <ItemDashboardContainer
       titleItem="THỐNG KÊ TƯƠNG TÁC 3 NGUỒN"
       chart={
-        <div style={{ marginTop: 20, height: "95%" }}>
-          <LineChart data={dataShow} smooth={false} point={true} color={["green", "blue", "red"]} />
-        </div>
+        <LineChart data={dataShow} smooth={false} point={true} color={["green", "blue", "red"]} />
       }
       rightComponent={
         <Select

@@ -1,5 +1,5 @@
 import { Input, List } from "antd";
-import React from "react";
+import React, { useRef } from "react";
 
 import styles from "./index.module.less";
 import { PostItem } from "./post-item";
@@ -25,18 +25,7 @@ export const Post: React.FC<PostProps> = ({ data, pageSize }) => {
         }}
         dataSource={data}
         renderItem={(item) => {
-          return (
-            <PostItem
-              title={item.title}
-              summary={item.summary}
-              goodPost={item.goodPost}
-              postDate={item.postDate}
-              numberOfComment={item.numberOfComment}
-              numberOfLike={item.numberOfLike}
-              numberOfShare={item.numberOfShare}
-              clonedDate={item.clonedDate}
-            />
-          );
+          return <PostItem item={item} />;
         }}
       />
     </div>
