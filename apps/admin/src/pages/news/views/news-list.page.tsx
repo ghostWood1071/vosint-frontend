@@ -34,7 +34,7 @@ export const NewsListPage: React.FC<Props> = () => {
   }));
 
   return (
-    <>
+    <div className="p-10">
       <NewsTable
         isLoading={isFetching || isLoadingIAm}
         dataSource={dataSource}
@@ -43,7 +43,7 @@ export const NewsListPage: React.FC<Props> = () => {
         onAdd={handleAdd}
       />
       <NewsDetail onDelete={handleDelete} onAdd={handleAdd} />
-    </>
+    </div>
   );
 
   function handleDelete(newsId: string, tag?: ETreeTag) {

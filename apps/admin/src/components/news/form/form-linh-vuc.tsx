@@ -3,11 +3,11 @@ import { TNews } from "@/services/news.type";
 import { DeleteOutlined, MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import {
   Button,
-  Checkbox,
   Form,
   Input,
   List,
   Modal,
+  Switch,
   Table,
   TableColumnsType,
   Typography,
@@ -38,7 +38,7 @@ export function NewsletterFormLinhVuc(): JSX.Element {
         <Input placeholder="Nhập tên danh muc" />
       </Form.Item>
       <Form.Item name="isSample" label="Định nghĩa tin mẫu" valuePropName="checked">
-        <Checkbox />
+        <Switch />
       </Form.Item>
       {isSample ? (
         <ListNewsSampleLinhVuc />

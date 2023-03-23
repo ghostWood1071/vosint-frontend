@@ -257,22 +257,24 @@ export const SocialDashboard = () => {
   ];
 
   return (
-    <Row gutter={[16, 20]}>
-      <Col xl={8} xs={24}>
-        <Card titleSource="Facebook" data={dataCardFacebook} />
-      </Col>
-      <Col xl={8} xs={24}>
-        <Card titleSource="Twitter" data={dataCardTwitter} />
-      </Col>
-      <Col xl={8} xs={24}>
-        <Card titleSource="Tiktok" data={dataCardTiktok} />
-      </Col>
-      <Col xs={24} xl={12}>
-        <StatisticSource data={dataLine} />
-      </Col>
-      <Col xs={24} xl={12}>
-        <CompareManySource data={dataCircle} />
-      </Col>
-    </Row>
+    <div className="p-10">
+      <Row gutter={[16, 20]}>
+        <Col xl={8} xs={24}>
+          <Card titleSource="Facebook" data={dataCardFacebook} />
+        </Col>
+        <Col xl={8} xs={24}>
+          <Card titleSource="Twitter" data={dataCardTwitter} />
+        </Col>
+        <Col xl={8} xs={24}>
+          <Card titleSource="Tiktok" data={dataCardTiktok} />
+        </Col>
+        <Col xs={24} xl={12}>
+          <StatisticSource data={dataLine} />
+        </Col>
+        <Col xs={24} xl={12}>
+          <CompareManySource data={dataCircle} />
+        </Col>
+      </Row>
+    </div>
   );
 };
