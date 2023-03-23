@@ -461,7 +461,10 @@ export const PriorityObject = () => {
           {tabButton === "thongke" ? (
             <Statistic objectChoosed={type === "Group" ? groupData : userData} />
           ) : tabButton === "baidang" ? (
-            <Post data={type === "Group" ? groupData.listPosts : userData.listPosts} pageSize={6} />
+            <Post
+              data={type === "Group" ? groupData.listPosts : userData.listPosts}
+              pageSize={30}
+            />
           ) : (
             <></>
           )}

@@ -1,4 +1,4 @@
-import { DatePicker, Select } from "antd";
+import { DatePicker, Modal, Select } from "antd";
 import React, { useState } from "react";
 
 import { DonutChart } from "../circle-chart/donut-chart";
@@ -10,38 +10,49 @@ interface CardProps {
 }
 
 export const Card: React.FC<CardProps> = ({ titleSource, data }) => {
-  const [typeShow, setTypeShow] = useState("7day");
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
+  const [isVisible, setIsVisible] = useState(false);
+  const [selectedValue, setSelectedValue] = useState({ value: "7day", label: "7 ngày gần nhất" });
+  const [filterDate, setFilterDate] = useState("");
 
-  const handleChangeDate = (date: any, dateString: any) => {
-    // setStartDate(date[0]);
-    // setEndDate(date[1]);
-    console.log(dateString);
-  };
+  function handleChange(value: any) {
+    if (value === "custom") {
+      setIsVisible(true);
+    } else {
+      setSelectedValue({ value: "7day", label: "7 ngày gần nhất" });
+    }
+  }
 
-  const handleChange = (value: string) => {
-    setTypeShow(value);
-  };
+  function handleChangeTime(dates: any, dateStrings: any) {
+    setFilterDate(dateStrings);
+  }
+
+  function handleSetDate() {
+    setIsVisible(false);
+    if (filterDate !== "") {
+      setSelectedValue({
+        value: "okla",
+        label: filterDate[0] + " - " + filterDate[1],
+      });
+    }
+  }
+
   return (
     <div className={styles.mainContainer}>
       <div className={styles.header}>
-        <div className={styles.leftHeader}>
-          <div className={styles.cardTitle}> Tổng số tin </div>
-          <div className={styles.sourceTitle}>{titleSource.toUpperCase()}</div>
-        </div>
+        <div className={styles.leftHeader}>{titleSource.toUpperCase()}</div>
         <div className={styles.selectContainer}>
           <Select
-            defaultValue="7 ngày gần nhất"
+            value={selectedValue}
             bordered={true}
             style={{
-              width: 150,
+              width: "auto",
             }}
             onChange={handleChange}
             options={[
               {
                 value: "7day",
                 label: "7 ngày gần nhất",
+                visible: false,
               },
               {
                 value: "custom",
@@ -49,14 +60,19 @@ export const Card: React.FC<CardProps> = ({ titleSource, data }) => {
               },
             ]}
           />
-          {typeShow === "custom" ? (
-            <DatePicker.RangePicker
-              format={"DD/MM/YYYY"}
-              onChange={(date, dateString) => {
-                handleChangeDate(date, dateString);
-              }}
-            />
-          ) : null}
+          <Modal
+            title="Chọn ngày để lọc"
+            centered
+            open={isVisible}
+            bodyStyle={{
+              height: 360,
+            }}
+            width={600}
+            onOk={handleSetDate}
+            onCancel={() => setIsVisible(false)}
+          >
+            <DatePicker.RangePicker format={"DD/MM/YYYY"} onChange={handleChangeTime} />
+          </Modal>
         </div>
       </div>
       <div className={styles.content}>
