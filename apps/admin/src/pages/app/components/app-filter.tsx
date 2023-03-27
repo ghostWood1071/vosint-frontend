@@ -185,7 +185,9 @@ export function AppFilter(): JSX.Element {
           dataSource={newsSelection}
           renderItem={(item) => {
             return (
-              <List.Item actions={[<DeleteOutlined onClick={handleDelete} />]}>
+              <List.Item
+                actions={[<DeleteOutlined style={{ color: "#ff1207" }} onClick={handleDelete} />]}
+              >
                 <Typography.Link target="_blank" href={item?.["data:url"]} rel="noreferrer">
                   {item?.["data:title"]}
                 </Typography.Link>
@@ -218,6 +220,7 @@ export function AppFilter(): JSX.Element {
       title: "Bạn có muốn xoá những bản tin này?",
       icon: <ExclamationCircleOutlined />,
       onOk() {
+        setNewsSelection([]);
         return mutateDelete({
           newsId: newsSelectionIds,
           newsletterId: detailIds!,
