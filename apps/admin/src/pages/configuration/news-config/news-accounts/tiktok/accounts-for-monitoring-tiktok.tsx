@@ -1,11 +1,12 @@
 import {
   CACHE_KEYS,
-  useAccountMonitor,
   useAdminMonitor,
   usePostAccountMonitor,
+  useProxyConfig,
+  useTTSetting,
 } from "@/pages/configuration/config.loader";
 import { PlusSquareOutlined } from "@ant-design/icons";
-import { Button, Form, Modal, PageHeader } from "antd";
+import { Button, Form, Input, Modal, PageHeader, message } from "antd";
 import React, { useState } from "react";
 import { useQueryClient } from "react-query";
 import { useSearchParams } from "react-router-dom";
@@ -18,21 +19,43 @@ export const AccountForMonitoringTiktok: React.FC = () => {
   const { mutate, isLoading } = usePostAccountMonitor();
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [form] = Form.useForm();
+  let titleFilter = searchParams.get("username") ?? "";
   const { data: tiktokData } = useAdminMonitor({
     skip: searchParams.get("skip") ?? 0,
     limit: searchParams.get("limit") ?? 10,
     type_data: "Tiktok",
+    username: titleFilter,
   });
-  const { data: accountMonitor } = useAccountMonitor({
+  const [proxysSelect, setProxysSelect] = useState([]);
+  const [usersSelect, setUsersSelect] = useState([]);
+  const { data: accountMonitor } = useTTSetting({
     page_number: searchParams.get("page") ?? 1,
-    page_size: searchParams.get("limit") ?? 20,
-    type_data: "Tiktok",
+    page_size: searchParams.get("limit") ?? 10,
+    social_name: "",
+    type_data: "Object",
+  });
+  const onSearch = (valueFilter: string) => {
+    searchParams.set("username", valueFilter);
+    setSearchParams(searchParams);
+  };
+  const { Search } = Input;
+  const [valueSearch, setValueSearch] = useState("");
+  const { data: listProxy } = useProxyConfig({
+    skip: searchParams.get("page_number") ?? 1,
+    limit: searchParams.get("page_size") ?? 10,
+    text_search: searchParams.get("text_search") ?? "",
   });
   const queryClient = useQueryClient();
   return (
     <>
       <PageHeader
         extra={[
+          <Search
+            placeholder="Tìm kiếm"
+            value={valueSearch}
+            onSearch={onSearch}
+            onChange={(e) => setValueSearch(e.target.value)}
+          />,
           <Button
             key="button"
             icon={<PlusSquareOutlined />}
@@ -43,6 +66,8 @@ export const AccountForMonitoringTiktok: React.FC = () => {
           </Button>,
         ]}
       >
+        <h3>Danh sách các tài khoản Tiktok</h3>
+
         <SettingTable data={tiktokData?.result ?? []} loading={isLoading} />
       </PageHeader>
       <Modal
@@ -53,9 +78,12 @@ export const AccountForMonitoringTiktok: React.FC = () => {
         destroyOnClose
       >
         <SettingCreateForm
+          setUsersSelect={setUsersSelect}
+          setProxysSelect={setProxysSelect}
+          listProxy={listProxy}
           accountMonitor={accountMonitor}
           valueTarget
-          value={"add"}
+          valueActive={"add"}
           form={form ?? []}
           onFinish={handleFinishCreate}
         />
@@ -77,11 +105,28 @@ export const AccountForMonitoringTiktok: React.FC = () => {
 
   function handleFinishCreate(values: any) {
     values.social = "Tiktok";
+    values.list_proxy = proxysSelect.map((item: any) => ({
+      proxy_id: item.value,
+      name: item.label,
+    }));
+    values.users_follow = usersSelect.map((item: any) => ({
+      follow_id: item.value,
+      social_name: item.label,
+    }));
     mutate(values, {
       onSuccess: () => {
         queryClient.invalidateQueries([CACHE_KEYS.InfoAccountMonitorTT]);
+        message.success({
+          content: "Thành công!",
+          key: CACHE_KEYS.InfoAccountMonitorTT,
+        });
       },
-      onError: () => {},
+      onError: () => {
+        message.error({
+          content: "Tài khoản đã tồn tại!",
+          key: CACHE_KEYS.InfoAccountMonitorTT,
+        });
+      },
     });
     setIsCreateOpen(false);
     form.resetFields();

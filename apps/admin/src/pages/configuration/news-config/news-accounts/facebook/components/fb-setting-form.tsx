@@ -2,27 +2,53 @@ import { Form, FormInstance, Input, Select, SelectProps } from "antd";
 import React from "react";
 
 interface Props {
+  setProxysSelect: any;
+  setUsersSelect: any;
+  listProxy: any;
   accountMonitor: any;
   valueTarget: any;
-  value: any;
+  valueActive: any;
   form: FormInstance<any>;
   onFinish: (values: any) => void;
 }
-const handleChange = (value: string | string[]) => {
-  console.log(value);
-};
+
 export const SettingCreateForm: React.FC<Props> = ({
+  setProxysSelect,
+  setUsersSelect,
+  listProxy,
   accountMonitor,
   valueTarget,
-  value,
+  valueActive,
   form,
   onFinish,
 }) => {
   const validateMessages = {
     required: "Nhập ${label}",
   };
-  const initialValues = value === "edit" ? valueTarget : null;
+
+  const initialValues =
+    valueActive === "edit"
+      ? {
+          ...valueTarget,
+          users_follow: valueTarget.users_follow.map((i: any) => ({
+            label: i.social_name,
+            value: i.follow_id,
+          })),
+          list_proxy: valueTarget.list_proxy.map((i: any) => ({
+            label: i.name,
+            value: i.proxy_id,
+          })),
+        }
+      : null;
+
   const initialaccountMonitor = accountMonitor.result;
+  const initialListProxy = listProxy.data;
+  const handleUsersChange = (value: string | string[], data: any) => {
+    setUsersSelect(data);
+  };
+  const handleProxysChange = (value: string | string[], data: any) => {
+    setProxysSelect(data);
+  };
   return (
     <>
       <Form
@@ -44,6 +70,10 @@ export const SettingCreateForm: React.FC<Props> = ({
             {
               required: true,
             },
+            {
+              whitespace: true,
+              message: "Không được để khoảng trắng",
+            },
           ]}
         >
           <Input />
@@ -54,6 +84,10 @@ export const SettingCreateForm: React.FC<Props> = ({
           rules={[
             {
               required: true,
+            },
+            {
+              whitespace: true,
+              message: "Không được để khoảng trắng",
             },
           ]}
         >
@@ -77,12 +111,35 @@ export const SettingCreateForm: React.FC<Props> = ({
           <Select
             mode="multiple"
             placeholder="Chọn tài khoản"
-            defaultValue={[]}
-            onChange={handleChange}
+            onChange={handleUsersChange}
             options={
               initialaccountMonitor.map((item: any) => ({
                 label: item.social_name,
-                value: item.social_name,
+                value: item._id,
+              })) ?? []
+            }
+          />
+        </Form.Item>
+        <Form.Item
+          name="list_proxy"
+          label="Proxy: "
+          labelCol={{
+            span: 10,
+          }}
+          rules={[
+            {
+              required: true,
+            },
+          ]}
+        >
+          <Select
+            mode="multiple"
+            placeholder="Chọn proxy"
+            onChange={handleProxysChange}
+            options={
+              initialListProxy.map((item: any) => ({
+                label: item.name,
+                value: item._id,
               })) ?? []
             }
           />
