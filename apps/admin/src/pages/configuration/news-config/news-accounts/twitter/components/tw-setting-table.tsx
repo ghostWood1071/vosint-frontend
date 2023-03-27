@@ -1,11 +1,12 @@
 import {
   CACHE_KEYS,
-  useAccountMonitor,
   useMutationDeleteAccountMonitor,
   useMutationUpdateAccountMonitor,
+  useProxyConfig,
+  useTWSetting,
 } from "@/pages/configuration/config.loader";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { Button, Form, List, Modal, Space, Table, TableColumnsType } from "antd";
+import { Button, Form, List, Modal, Space, Table, TableColumnsType, Tag, message } from "antd";
 import React, { useState } from "react";
 import { useQueryClient } from "react-query";
 import { useSearchParams } from "react-router-dom";
@@ -22,50 +23,55 @@ export const SettingTable: React.FC<Props> = ({ data, loading }) => {
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [isIdTarget, setIsIdTarget] = useState("");
   const [isValueTarget, setIsValueTarget] = useState<any>();
+  const [proxysSelect, setProxysSelect] = useState([]);
+  const [usersSelect, setUsersSelect] = useState([]);
   const queryClient = useQueryClient();
   const [form] = Form.useForm();
   const { mutate: mutateUpdate } = useMutationUpdateAccountMonitor();
   const { mutate: mutateDelete } = useMutationDeleteAccountMonitor();
   const [searchParams, setSearchParams] = useSearchParams();
-  const { data: accountMonitor } = useAccountMonitor({
+  const { data: accountMonitor } = useTWSetting({
     page_number: searchParams.get("page") ?? 1,
-    page_size: searchParams.get("limit") ?? 20,
-    type_data: "Twitter",
+    page_size: searchParams.get("limit") ?? 10,
+    social_name: "",
+    type_data: "Object",
+  });
+  const { data: listProxy } = useProxyConfig({
+    skip: searchParams.get("page_number") ?? 1,
+    limit: searchParams.get("page_size") ?? 10,
+    text_search: searchParams.get("text_search") ?? "",
   });
   const columns: TableColumnsType<any> = [
     {
-      title: "Tên",
+      title: "Tài khoản",
       dataIndex: "username",
       render: (name: string) => {
         return <p>{name}</p>;
       },
     },
     {
-      title: "Password",
+      title: "Mật khẩu",
       dataIndex: "password",
       render: (date: string) => {
         return <p>{date}</p>;
       },
     },
     {
-      title: "Account",
-      dataIndex: "social",
-      render: (id: string) => {
-        return <p>{id}</p>;
+      title: "Danh sách các proxy",
+      dataIndex: "list_proxy",
+      render: (list_users: any, data: any) => {
+        return list_users.map((item: any) => <Tag>{item.name}</Tag>);
       },
     },
     {
       title: "Danh sách các tài khoản được giảm sát",
       dataIndex: "users_follow",
       render: (list_users: any) => {
-        return (
-          <List
-            size="small"
-            bordered
-            dataSource={list_users}
-            renderItem={(item: any) => <List.Item>{item}</List.Item>}
-          />
-        );
+        return list_users.map((item: any) => (
+          <Space size={[0, 8]} wrap>
+            <Tag>{item.social_name}</Tag>
+          </Space>
+        ));
       },
     },
     {
@@ -100,9 +106,12 @@ export const SettingTable: React.FC<Props> = ({ data, loading }) => {
         destroyOnClose
       >
         <SettingCreateForm
+          setProxysSelect={setProxysSelect}
+          setUsersSelect={setUsersSelect}
+          listProxy={listProxy}
           accountMonitor={accountMonitor}
           valueTarget={isValueTarget}
-          value={"edit"}
+          valueActive={"edit"}
           form={form}
           onFinish={handleFinishEdit}
         />
@@ -133,11 +142,28 @@ export const SettingTable: React.FC<Props> = ({ data, loading }) => {
 
   function handleFinishEdit(values: any) {
     values.id = isIdTarget;
+    values.list_proxy = proxysSelect.map((item: any) => ({
+      proxy_id: item.value,
+      name: item.label,
+    }));
+    values.users_follow = usersSelect.map((item: any) => ({
+      follow_id: item.value,
+      social_name: item.label,
+    }));
     mutateUpdate(values, {
       onSuccess: () => {
         queryClient.invalidateQueries([CACHE_KEYS.InfoAccountMonitorFB]);
+        message.success({
+          content: "Cập nhật thành công!",
+          key: CACHE_KEYS.InfoAccountMonitorFB,
+        });
       },
-      onError: () => {},
+      onError: () => {
+        message.error({
+          content: "Trùng tên !",
+          key: CACHE_KEYS.InfoAccountMonitorFB,
+        });
+      },
     });
     setIsEditOpen(false);
     form.resetFields();
@@ -156,6 +182,10 @@ export const SettingTable: React.FC<Props> = ({ data, loading }) => {
     mutateDelete(isIdTarget, {
       onSuccess: () => {
         queryClient.invalidateQueries([CACHE_KEYS.InfoAccountMonitorFB]);
+        message.success({
+          content: "Xoá thành công!",
+          key: CACHE_KEYS.InfoAccountMonitorFB,
+        });
       },
       onError: () => {},
     });
