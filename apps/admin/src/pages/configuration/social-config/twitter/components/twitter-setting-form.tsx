@@ -2,17 +2,38 @@ import { Form, FormInstance, Input, Select } from "antd";
 import React from "react";
 
 interface Props {
+  setAdminSelect: any;
+  adminData: any;
   valueTarget: any;
   value: any;
   form: FormInstance<any>;
   onFinish: (values: any) => void;
 }
 
-export const SettingCreateForm: React.FC<Props> = ({ valueTarget, value, form, onFinish }) => {
+export const SettingCreateForm: React.FC<Props> = ({
+  setAdminSelect,
+  adminData,
+  valueTarget,
+  value,
+  form,
+  onFinish,
+}) => {
   const validateMessages = {
     required: "Nhập ${label}",
   };
-  const initialValues = value === "edit" ? valueTarget : null;
+  const initialValues =
+    value === "edit"
+      ? {
+          ...valueTarget,
+          followed_by: valueTarget.followed_by.map((i: any) => ({
+            label: i.username,
+            value: i.followed_id,
+          })),
+        }
+      : null;
+  const handleChange = (value: string | string[], data: any) => {
+    setAdminSelect(data);
+  };
   return (
     <Form
       labelCol={{ span: 8 }}
@@ -85,6 +106,31 @@ export const SettingCreateForm: React.FC<Props> = ({ valueTarget, value, form, o
         ]}
       >
         <Input />
+      </Form.Item>
+      <Form.Item
+        name="followed_by"
+        label="Chọn tài khoản giám sát: "
+        labelCol={{
+          span: 10,
+        }}
+        rules={[
+          {
+            required: true,
+            message: "Chọn tài khoản giám sát",
+          },
+        ]}
+      >
+        <Select
+          mode="multiple"
+          placeholder="Chọn tài khoản"
+          onChange={handleChange}
+          options={
+            adminData.result.map((item: any) => ({
+              label: item.username,
+              value: item._id,
+            })) ?? []
+          }
+        />
       </Form.Item>
     </Form>
   );

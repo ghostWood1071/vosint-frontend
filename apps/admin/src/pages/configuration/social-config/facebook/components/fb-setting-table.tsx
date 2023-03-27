@@ -4,7 +4,7 @@ import {
   useMutationUpdateSocial,
 } from "@/pages/configuration/config.loader";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { Avatar, Button, Form, Modal, Space, Switch, Table, TableColumnsType, message } from "antd";
+import { Avatar, Button, Form, Modal, Space, Table, TableColumnsType, Tag, message } from "antd";
 import React, { useState } from "react";
 import { useQueryClient } from "react-query";
 
@@ -12,17 +12,18 @@ import { SettingCreateForm } from "./fb-setting-form";
 import styles from "./fb-setting.module.less";
 
 interface Props {
+  adminData: any;
   data: any;
   loading: boolean;
 }
 
-export const SettingTable: React.FC<Props> = ({ data, loading }) => {
+export const SettingTable: React.FC<Props> = ({ adminData, data, loading }) => {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [isIdTarget, setIsIdTarget] = useState("");
   const [isValueTarget, setIsValueTarget] = useState<any>();
   const queryClient = useQueryClient();
-
+  const [adminSelect, setAdminSelect] = useState([]);
   const [form] = Form.useForm();
   const { mutate: mutateUpdate } = useMutationUpdateSocial();
   const { mutate: mutateDelete } = useMutationDeleteSocial();
@@ -53,9 +54,13 @@ export const SettingTable: React.FC<Props> = ({ data, loading }) => {
     },
     {
       title: "Các tài khoản theo dõi",
-      dataIndex: "social_type",
-      render: (id: string) => {
-        return <p>{id}</p>;
+      dataIndex: "followed_by",
+      render: (list_account: any) => {
+        return list_account.map((item: any) => (
+          <Space size={[0, 8]} wrap>
+            <Tag>{item.username}</Tag>
+          </Space>
+        ));
       },
     },
     {
@@ -91,6 +96,8 @@ export const SettingTable: React.FC<Props> = ({ data, loading }) => {
         destroyOnClose
       >
         <SettingCreateForm
+          setAdminSelect={setAdminSelect}
+          adminData={adminData}
           type
           valueTarget={isValueTarget}
           value={"edit"}
@@ -124,6 +131,10 @@ export const SettingTable: React.FC<Props> = ({ data, loading }) => {
 
   function handleFinishEdit(values: any) {
     values.id = isIdTarget;
+    values.followed_by = adminSelect.map((item: any) => ({
+      followed_id: item.value,
+      username: item.label,
+    }));
     mutateUpdate(values, {
       onSuccess: () => {
         queryClient.invalidateQueries(CACHE_KEYS.InfoFBSetting);

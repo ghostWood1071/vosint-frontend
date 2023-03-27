@@ -5,18 +5,19 @@ import {
 } from "@/pages/configuration/config.loader";
 import styles from "@/pages/configuration/social-config/facebook/components/fb-setting.module.less";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { Avatar, Button, Form, Modal, Space, Table, TableColumnsType, message } from "antd";
+import { Avatar, Button, Form, Modal, Space, Table, TableColumnsType, Tag, message } from "antd";
 import React, { useState } from "react";
 import { useQueryClient } from "react-query";
 
 import { SettingCreateForm } from "./tiktok-setting-form";
 
 interface Props {
+  adminData: any;
   data: any;
   loading: boolean;
 }
 
-export const TTSettingTable: React.FC<Props> = ({ data, loading }) => {
+export const TTSettingTable: React.FC<Props> = ({ adminData, data, loading }) => {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [isIdTarget, setIsIdTarget] = useState("");
@@ -25,7 +26,7 @@ export const TTSettingTable: React.FC<Props> = ({ data, loading }) => {
   const { mutate: mutateDelete } = useMutationDeleteSocial();
   const [form] = Form.useForm();
   const [isValueTarget, setIsValueTarget] = useState<any>();
-
+  const [adminSelect, setAdminSelect] = useState([]);
   const columns: TableColumnsType<any> = [
     {
       title: <p className={styles.namecolumn}>Tên</p>,
@@ -48,6 +49,17 @@ export const TTSettingTable: React.FC<Props> = ({ data, loading }) => {
       dataIndex: "_id",
       render: (id: string) => {
         return <p>{id}</p>;
+      },
+    },
+    {
+      title: "Các tài khoản theo dõi",
+      dataIndex: "followed_by",
+      render: (list_account: any) => {
+        return list_account.map((item: any) => (
+          <Space size={[0, 8]} wrap>
+            <Tag>{item.username}</Tag>
+          </Space>
+        ));
       },
     },
     {
@@ -82,6 +94,8 @@ export const TTSettingTable: React.FC<Props> = ({ data, loading }) => {
         destroyOnClose
       >
         <SettingCreateForm
+          setAdminSelect={setAdminSelect}
+          adminData={adminData}
           valueTarget={isValueTarget}
           value={"edit"}
           form={form}
@@ -101,7 +115,10 @@ export const TTSettingTable: React.FC<Props> = ({ data, loading }) => {
   function handleFinishEdit(values: any) {
     values.id = isIdTarget;
     values.social_type = "Object";
-
+    values.followed_by = adminSelect.map((item: any) => ({
+      followed_id: item.value,
+      username: item.label,
+    }));
     mutateUpdate(values, {
       onSuccess: () => {
         queryClient.invalidateQueries(CACHE_KEYS.InfoTTSetting);
