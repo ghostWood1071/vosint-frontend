@@ -4,7 +4,7 @@ import { Button, Form, Input, Modal, PageHeader } from "antd";
 import React, { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
-import { usePostTTSetting, useTTSetting } from "../../config.loader";
+import { useAdminMonitor, usePostTTSetting, useTTSetting } from "../../config.loader";
 import { SettingCreateForm } from "./components/tiktok-setting-form";
 import { TTSettingTable } from "./components/tiktok-setting-table";
 
@@ -27,6 +27,13 @@ export const TiktokConfig: React.FC = () => {
     searchParams.set("social_name", valueFilter);
     setSearchParams(searchParams);
   };
+  const [adminSelect, setAdminSelect] = useState([]);
+
+  const { data: adminData } = useAdminMonitor({
+    skip: searchParams.get("skip") ?? 0,
+    limit: searchParams.get("limit") ?? 10,
+    type_data: "Tiktok",
+  });
 
   return (
     <>
@@ -51,7 +58,7 @@ export const TiktokConfig: React.FC = () => {
           </Button>,
         ]}
       >
-        <TTSettingTable data={tiktokData?.result ?? []} loading={isLoading} />
+        <TTSettingTable adminData={adminData} data={tiktokData?.result ?? []} loading={isLoading} />
       </PageHeader>
       <Modal
         title="Thêm mới cấu hình Tiktok"
@@ -61,6 +68,8 @@ export const TiktokConfig: React.FC = () => {
         destroyOnClose
       >
         <SettingCreateForm
+          setAdminSelect={setAdminSelect}
+          adminData={adminData}
           valueTarget
           value={"add"}
           form={form ?? []}
@@ -85,6 +94,10 @@ export const TiktokConfig: React.FC = () => {
   function handleFinishCreate(values: any) {
     values.social_media = "Tiktok";
     values.social_type = "Object";
+    values.followed_by = adminSelect.map((item: any) => ({
+      followed_id: item.value,
+      username: item.label,
+    }));
     mutate(values);
     setIsCreateOpen(false);
     form.resetFields();

@@ -4,7 +4,7 @@ import { Button, Form, Input, Modal, PageHeader } from "antd";
 import React, { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
-import { usePostTWSetting, useTWSetting } from "../../config.loader";
+import { useAdminMonitor, usePostTWSetting, useTWSetting } from "../../config.loader";
 import { SettingCreateForm } from "../twitter/components/twitter-setting-form";
 import { TwSettingTable } from "./components/twitter-setting-table";
 
@@ -28,6 +28,13 @@ export const TwitterConfig: React.FC = () => {
     searchParams.set("social_name", valueFilter);
     setSearchParams(searchParams);
   };
+  const [adminSelect, setAdminSelect] = useState([]);
+
+  const { data: adminData } = useAdminMonitor({
+    skip: searchParams.get("skip") ?? 0,
+    limit: searchParams.get("limit") ?? 10,
+    type_data: "Twitter",
+  });
   return (
     <>
       <PageHeader
@@ -51,7 +58,11 @@ export const TwitterConfig: React.FC = () => {
           </Button>,
         ]}
       >
-        <TwSettingTable data={twitterData?.result ?? []} loading={isLoading} />
+        <TwSettingTable
+          adminData={adminData}
+          data={twitterData?.result ?? []}
+          loading={isLoading}
+        />
       </PageHeader>
       <Modal
         title="Thêm mới cấu hình Twitter"
@@ -61,6 +72,8 @@ export const TwitterConfig: React.FC = () => {
         destroyOnClose
       >
         <SettingCreateForm
+          setAdminSelect={setAdminSelect}
+          adminData={adminData}
           valueTarget
           value={"add"}
           form={form ?? []}
@@ -70,7 +83,6 @@ export const TwitterConfig: React.FC = () => {
     </>
   );
   function handleShowCreate() {
-    console.log(twitterData);
     setIsCreateOpen(true);
   }
 
@@ -86,6 +98,11 @@ export const TwitterConfig: React.FC = () => {
   function handleFinishCreate(values: any) {
     values.social_media = "Twitter";
     values.social_type = "Object";
+    values.followed_by = adminSelect.map((item: any) => ({
+      followed_id: item.value,
+      username: item.label,
+    }));
+
     mutate(values);
     setIsCreateOpen(false);
     form.resetFields();

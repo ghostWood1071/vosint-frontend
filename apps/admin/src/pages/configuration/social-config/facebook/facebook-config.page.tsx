@@ -3,7 +3,7 @@ import { Button, Form, Input, Modal, PageHeader, Segmented } from "antd";
 import React, { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
-import { useFBSetting, usePostFBSetting } from "../../config.loader";
+import { useAdminMonitor, useFBSetting, usePostFBSetting } from "../../config.loader";
 import styles from "../facebook/components/fb-setting.module.less";
 import { SettingCreateForm } from "./components/fb-setting-form";
 import { SettingTable } from "./components/fb-setting-table";
@@ -15,11 +15,19 @@ export const FacebookConfig: React.FC = () => {
   const [form] = Form.useForm();
   const [value, setValue] = useState<string | number>("Fanpage");
   const [valueSearch, setValueSearch] = useState("");
+  const [adminSelect, setAdminSelect] = useState([]);
+
   let titleFilter = searchParams.get("social_name") ?? "";
   const { data: facebookData } = useFBSetting({
     social_name: titleFilter,
     type_data: value,
   });
+  const { data: adminData } = useAdminMonitor({
+    skip: searchParams.get("skip") ?? 0,
+    limit: searchParams.get("limit") ?? 10,
+    type_data: "Facebook",
+  });
+
   const { Search } = Input;
 
   const onSearch = (valueFilter: string) => {
@@ -55,7 +63,7 @@ export const FacebookConfig: React.FC = () => {
           </Button>,
         ]}
       >
-        <SettingTable data={facebookData?.result ?? []} loading={isLoading} />
+        <SettingTable adminData={adminData} data={facebookData?.result ?? []} loading={isLoading} />
       </PageHeader>
 
       <Modal
@@ -66,6 +74,8 @@ export const FacebookConfig: React.FC = () => {
         destroyOnClose
       >
         <SettingCreateForm
+          setAdminSelect={setAdminSelect}
+          adminData={adminData}
           type={value}
           valueTarget
           value={"add"}
@@ -97,6 +107,10 @@ export const FacebookConfig: React.FC = () => {
   function handleFinishCreate(values: any) {
     values.social_media = "Facebook";
     values.social_type = value;
+    values.followed_by = adminSelect.map((item: any) => ({
+      followed_id: item.value,
+      username: item.label,
+    }));
     mutate({ action: "add", ...values });
     setIsCreateOpen(false);
     form.resetFields();
