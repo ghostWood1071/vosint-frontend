@@ -28,11 +28,11 @@ export const SettingCreateForm: React.FC<Props> = ({
     valueActive === "edit"
       ? {
           ...valueTarget,
-          users_follow: valueTarget.users_follow.map((i: any) => ({
+          users_follow: valueTarget.users_follow?.map((i: any) => ({
             label: i.social_name,
             value: i.follow_id,
           })),
-          list_proxy: valueTarget.list_proxy.map((i: any) => ({
+          list_proxy: valueTarget.list_proxy?.map((i: any) => ({
             label: i.name,
             value: i.proxy_id,
           })),
@@ -110,7 +110,7 @@ export const SettingCreateForm: React.FC<Props> = ({
             placeholder="Chọn tài khoản"
             onChange={handleUsersChange}
             options={
-              initialaccountMonitor.map((item: any) => ({
+              initialaccountMonitor?.map((item: any) => ({
                 label: item.social_name,
                 value: item._id,
               })) ?? []
@@ -134,7 +134,7 @@ export const SettingCreateForm: React.FC<Props> = ({
             placeholder="Chọn proxy"
             onChange={handleProxysChange}
             options={
-              initialListProxy.map((item: any) => ({
+              initialListProxy?.map((item: any) => ({
                 label: item.name,
                 value: item._id,
               })) ?? []
