@@ -60,14 +60,14 @@ export const SettingTable: React.FC<Props> = ({ data, loading }) => {
       title: "Danh sách các proxy",
       dataIndex: "list_proxy",
       render: (list_users: any, data: any) => {
-        return list_users.map((item: any) => <Tag>{item.name}</Tag>);
+        return list_users?.map((item: any) => <Tag>{item.name}</Tag>);
       },
     },
     {
       title: "Danh sách các tài khoản được giảm sát",
       dataIndex: "users_follow",
       render: (list_users: any) => {
-        return list_users.map((item: any) => (
+        return list_users?.map((item: any) => (
           <Space size={[0, 8]} wrap>
             <Tag>{item.social_name}</Tag>
           </Space>
