@@ -27,7 +27,7 @@ export const SettingCreateForm: React.FC<Props> = ({
     value === "edit"
       ? {
           ...valueTarget,
-          followed_by: valueTarget.followed_by.map((i: any) => ({
+          followed_by: valueTarget.followed_by?.map((i: any) => ({
             label: i.username,
             value: i.followed_id,
           })),
@@ -136,7 +136,7 @@ export const SettingCreateForm: React.FC<Props> = ({
           placeholder="Chọn tài khoản"
           onChange={handleChange}
           options={
-            adminData.result.map((item: any) => ({
+            adminData.result?.map((item: any) => ({
               label: item.username,
               value: item._id,
             })) ?? []
