@@ -55,7 +55,7 @@ export const TTSettingTable: React.FC<Props> = ({ adminData, data, loading }) =>
       title: "Các tài khoản theo dõi",
       dataIndex: "followed_by",
       render: (list_account: any) => {
-        return list_account.map((item: any) => (
+        return list_account?.map((item: any) => (
           <Space size={[0, 8]} wrap>
             <Tag>{item.username}</Tag>
           </Space>
