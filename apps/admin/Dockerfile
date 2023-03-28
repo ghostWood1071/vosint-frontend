@@ -1,4 +1,4 @@
-FROM node:alpine AS builder
+FROM node:16-alpine AS builder
 RUN apk add --no-cache libc6-compat
 RUN apk update
 # Set working directory
@@ -8,7 +8,7 @@ COPY . .
 RUN turbo prune --scope=admin --docker
 
 # Add lockfile and package.json's of isolated subworkspace
-FROM node:alpine AS installer
+FROM node:16-alpine AS installer
 RUN apk add --no-cache libc6-compat
 RUN apk update
 WORKDIR /app
