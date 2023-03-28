@@ -6,6 +6,7 @@ import { useSearchParams } from "react-router-dom";
 import { shallow } from "zustand/shallow";
 
 import { NewsItem } from "../components/news-item";
+import { useNewsFilter } from "../news.context";
 import { useDeleteNewsInNewsletter, useNewsIdToNewsletter, useNewsList } from "../news.loader";
 import styles from "./news-list.module.less";
 
@@ -19,11 +20,22 @@ export const NewsListPage: React.FC<Props> = () => {
   const pageSize = searchParams.get("page_size");
   const skip = searchParams.get("page_number") ?? 1;
   const limit = searchParams.get("page_size") ?? 10;
+  const newsFilter = useNewsFilter();
+  const [filter, setFilter] = useState<Record<string, any>>();
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setFilter(newsFilter);
+    }, 800);
+    return () => clearTimeout(timeout);
+  }, [newsFilter]);
+
   const { data, isFetching } = useNewsList(
     {
       order: "modified_at",
       skip: skip ?? 1,
       limit: limit ?? 10,
+      ...filter,
     },
     {
       keepPreviousData: true,

@@ -1,8 +1,9 @@
 import { useGetMe } from "@/pages/auth/auth.loader";
 import { NewsDetail } from "@/pages/news/components/news-detail";
 import { NewsTable } from "@/pages/news/components/news-table";
+import { useNewsFilter } from "@/pages/news/news.context";
 import { useDeleteNewsInNewsletter, useNewsIdToNewsletter } from "@/pages/news/news.loader";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 
 import { useNewsByObjectId } from "../organizations.loader";
@@ -12,10 +13,20 @@ interface Props {}
 export const OrganizationsDetailPage: React.FC<Props> = () => {
   let { id } = useParams();
   const [searchParams] = useSearchParams();
+  const newsFilter = useNewsFilter();
+  const [filter, setFilter] = useState<Record<string, any>>();
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setFilter(newsFilter);
+    }, 800);
+    return () => clearTimeout(timeout);
+  }, [newsFilter]);
 
   const { data, isLoading } = useNewsByObjectId(id!, {
     skip: searchParams.get("page_number") ?? 1,
     limit: searchParams.get("page_size") ?? 10,
+    ...filter,
   });
   const { data: dataIAm, isLoading: isLoadingIAm } = useGetMe();
 

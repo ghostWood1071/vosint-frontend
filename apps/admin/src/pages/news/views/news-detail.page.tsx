@@ -1,11 +1,12 @@
 import { useNewsSelection } from "@/components/news/news-state";
 import { useGetMe } from "@/pages/auth/auth.loader";
 import { Checkbox, List } from "antd";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import { shallow } from "zustand/shallow";
 
 import { NewsItem } from "../components/news-item";
+import { useNewsFilter } from "../news.context";
 import {
   useDeleteNewsInNewsletter,
   useNewsByNewsletter,
@@ -20,9 +21,20 @@ export const NewsDetailPage = () => {
     (state) => [state.newsSelection, state.setNewsSelection],
     shallow,
   );
+  const newsFilter = useNewsFilter();
+  const [filter, setFilter] = useState<Record<string, any>>();
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setFilter(newsFilter);
+    }, 800);
+    return () => clearTimeout(timeout);
+  }, [newsFilter]);
+
   const { data, isLoading } = useNewsByNewsletter(newsletterId!, {
     skip: searchParams.get("page_number") ?? 1,
     limit: searchParams.get("page_size") ?? 10,
+    ...filter,
   });
   const { data: dataIAm, isLoading: isLoadingIAm } = useGetMe();
 
@@ -39,7 +51,6 @@ export const NewsDetailPage = () => {
   }));
 
   useEffect(() => {
-    console.log(newsSelection);
     if (newsSelection.length === 0) {
       setCheckAll(false);
       setIndeterminate(false);
