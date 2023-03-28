@@ -17,8 +17,8 @@
   "devDependencies": {
     "husky": "^8.0.1",
     "lint-staged": "^13.0.3",
-    "prettier": "latest",
-    "turbo": "1.8.4"
+    "prettier": "^2.8.7",
+    "turbo": "^1.8.6"
   },
   "lint-staged": {
     "apps/**/*.{ts,tsx}": [
@@ -34,12 +34,5 @@
   "engines": {
     "node": ">=14.0.0"
   },
-  "packageManager": "npm@8.19.2",
-  "volta": {
-    "node": "16.17.1",
-    "npm": "8.19.2"
-  },
-  "dependencies": {
-    "react-infinite-scroll-component": "^6.1.0"
-  }
+  "packageManager": "yarn@1.22.19"
 }
