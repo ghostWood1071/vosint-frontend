@@ -8,14 +8,18 @@ import { Space } from "antd";
 import classNames from "classnames";
 import { NavLink, Outlet, useNavigate, useParams } from "react-router-dom";
 
+import { NewsFilterProvider } from "../news.context";
 import { useMutationNewsSidebar, useNewsSidebar } from "../news.loader";
+import { NewsFilter } from "./news-filter";
 import styles from "./news-layout.module.less";
 
 export const NewsLayout: React.FC = () => {
   return (
-    <AppContainer sidebar={<Sidebar />}>
-      <Outlet />
-    </AppContainer>
+    <NewsFilterProvider>
+      <AppContainer sidebar={<Sidebar />} filter={<NewsFilter />}>
+        <Outlet />
+      </AppContainer>
+    </NewsFilterProvider>
   );
 };
 

@@ -1,4 +1,5 @@
 import { AppContainer } from "@/pages/app";
+import { NewsFilterProvider } from "@/pages/news/news.context";
 import {
   socialDashboardPath,
   socialFacebookPath,
@@ -10,11 +11,15 @@ import { Menu, MenuProps } from "antd";
 import React from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 
+import { SocialFilter } from "./social-filter";
+
 export const SocialLayout: React.FC = () => {
   return (
-    <AppContainer sidebar={<Sidebar />}>
-      <Outlet />
-    </AppContainer>
+    <NewsFilterProvider>
+      <AppContainer sidebar={<Sidebar />} filter={<SocialFilter />}>
+        <Outlet />
+      </AppContainer>
+    </NewsFilterProvider>
   );
 };
 

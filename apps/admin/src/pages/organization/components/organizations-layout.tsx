@@ -1,5 +1,7 @@
 import { EarthIcon, FlagIcon, GroupIcon, UserTieIcon } from "@/assets/svg";
 import { AppContainer } from "@/pages/app";
+import { NewsFilter } from "@/pages/news/components/news-filter";
+import { NewsFilterProvider } from "@/pages/news/news.context";
 import { getOrganizationsDetailUrl, organizationGraphPath } from "@/pages/router";
 import { UserOutlined } from "@ant-design/icons";
 import { Avatar, Input, Menu, MenuProps, Pagination, Space, Typography } from "antd";
@@ -12,9 +14,11 @@ import styles from "./organizations-layout.module.less";
 
 export const OrganizationsLayout: React.FC = () => {
   return (
-    <AppContainer sidebar={<Sidebar />}>
-      <Outlet />
-    </AppContainer>
+    <NewsFilterProvider>
+      <AppContainer sidebar={<Sidebar />} filter={<NewsFilter />}>
+        <Outlet />
+      </AppContainer>
+    </NewsFilterProvider>
   );
 };
 

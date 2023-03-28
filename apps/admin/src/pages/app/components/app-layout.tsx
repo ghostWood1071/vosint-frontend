@@ -4,7 +4,6 @@ import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import { useLocalStorage } from "react-use";
 
-import { AppFilter } from "./app-filter";
 import { AppHeader } from "./app-header";
 
 export const AppLayout: React.FC = () => {
@@ -15,7 +14,6 @@ export const AppLayout: React.FC = () => {
   return (
     <>
       <AppHeader />
-      <AppFilter />
       <Outlet />
     </>
   );
