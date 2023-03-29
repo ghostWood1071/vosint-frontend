@@ -1,14 +1,13 @@
 import { useNewsSelection } from "@/components/news/news-state";
 import { useGetMe } from "@/pages/auth/auth.loader";
 import { Checkbox, List } from "antd";
-import lodash from "lodash";
-import React, { useEffect, useState } from "react";
+import { flatMap, unionBy } from "lodash";
+import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import { useParams, useSearchParams } from "react-router-dom";
 import { shallow } from "zustand/shallow";
 
 import { NewsItem } from "../components/news-item";
-import { useNewsFilter } from "../news.context";
 import {
   useDeleteNewsInNewsletter,
   useInfiniteNewsByNewsletter,
@@ -42,14 +41,14 @@ export const NewsDetailPage = () => {
         },
       },
     );
-  const { data: dataIAm, isLoading: isLoadingIAm } = useGetMe();
+  const { data: dataIAm } = useGetMe();
 
   const { mutateAsync: mutateDelete } = useDeleteNewsInNewsletter();
   const { mutate: mutateAdd } = useNewsIdToNewsletter();
   const [checkAll, setCheckAll] = useState(false);
   const [indeterminate, setIndeterminate] = useState(false);
-  const dataSource = lodash.unionBy(
-    lodash.flatMap(
+  const dataSource = unionBy(
+    flatMap(
       data?.pages.map((a) =>
         a?.result?.map((e: any) => ({
           ...e,
@@ -74,15 +73,15 @@ export const NewsDetailPage = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [newsSelection, dataSource]);
-  React.useEffect(() => {
+
+  useEffect(() => {
     if (inView && skip !== undefined && data?.pages[0]?.result.length >= 10) {
       fetchNextPage();
       searchParams.set("page_number", (Number(skip) + 1).toString());
-      console.log("hello");
     }
-    console.log(inView);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inView]);
+
   return (
     <div className={styles.mainContainer}>
       <div className={styles.titleListContainer}>

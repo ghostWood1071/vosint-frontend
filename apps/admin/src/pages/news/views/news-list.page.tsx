@@ -1,7 +1,7 @@
 import { ETreeTag, useNewsSelection } from "@/components/news/news-state";
 import { useGetMe } from "@/pages/auth/auth.loader";
 import { Checkbox, List } from "antd";
-import lodash from "lodash";
+import { flatMap, unionBy } from "lodash";
 import React, { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import { useSearchParams } from "react-router-dom";
@@ -47,8 +47,8 @@ export const NewsListPage: React.FC<Props> = () => {
     shallow,
   );
 
-  const dataSource = lodash.unionBy(
-    lodash.flatMap(
+  const dataSource = unionBy(
+    flatMap(
       data?.pages.map((a) =>
         a?.result?.map((e: any) => ({
           ...e,
