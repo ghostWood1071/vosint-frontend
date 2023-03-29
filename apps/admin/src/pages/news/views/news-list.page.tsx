@@ -1,44 +1,42 @@
 import { ETreeTag, useNewsSelection } from "@/components/news/news-state";
 import { useGetMe } from "@/pages/auth/auth.loader";
 import { Checkbox, List } from "antd";
+import lodash from "lodash";
 import React, { useEffect, useState } from "react";
+import { useInView } from "react-intersection-observer";
 import { useSearchParams } from "react-router-dom";
 import { shallow } from "zustand/shallow";
 
 import { NewsItem } from "../components/news-item";
-import { useNewsFilter } from "../news.context";
-import { useDeleteNewsInNewsletter, useNewsIdToNewsletter, useNewsList } from "../news.loader";
+import {
+  useDeleteNewsInNewsletter,
+  useInfiniteNewsList,
+  useNewsIdToNewsletter,
+} from "../news.loader";
 import styles from "./news-list.module.less";
 
 interface Props {}
 
 export const NewsListPage: React.FC<Props> = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const [checkAll, setCheckAll] = useState(false);
   const [indeterminate, setIndeterminate] = useState(false);
-  const page = searchParams.get("page_number");
-  const pageSize = searchParams.get("page_size");
   const skip = searchParams.get("page_number") ?? 1;
-  const limit = searchParams.get("page_size") ?? 10;
-  const newsFilter = useNewsFilter();
-  const [filter, setFilter] = useState<Record<string, any>>();
 
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      setFilter(newsFilter);
-    }, 800);
-    return () => clearTimeout(timeout);
-  }, [newsFilter]);
-
-  const { data, isFetching } = useNewsList(
+  const { ref, inView } = useInView();
+  const { data, isFetchingNextPage, isFetching, fetchNextPage, hasNextPage } = useInfiniteNewsList(
     {
       order: "modified_at",
       skip: skip ?? 1,
-      limit: limit ?? 10,
-      ...filter,
+      limit: 30,
     },
     {
-      keepPreviousData: true,
+      getNextPageParam: (lastPage: any) => {
+        if (Number(skip) * 10 < lastPage.total_record) {
+          return { skip: (Number(skip) + 1).toString(), limit: 30 };
+        }
+        return undefined;
+      },
     },
   );
   const { data: dataIAm, isLoading: isLoadingIAm } = useGetMe();
@@ -49,11 +47,18 @@ export const NewsListPage: React.FC<Props> = () => {
     shallow,
   );
 
-  const dataSource = data?.result?.map((e: any) => ({
-    ...e,
-    isStar: dataIAm?.news_bookmarks.includes(e._id),
-    isBell: dataIAm?.vital_list.includes(e._id),
-  }));
+  const dataSource = lodash.unionBy(
+    lodash.flatMap(
+      data?.pages.map((a) =>
+        a?.result?.map((e: any) => ({
+          ...e,
+          isStar: dataIAm?.news_bookmarks.includes(e._id),
+          isBell: dataIAm?.vital_list.includes(e._id),
+        })),
+      ),
+    ),
+    "_id",
+  );
 
   useEffect(() => {
     if (newsSelection.length === 0) {
@@ -69,6 +74,15 @@ export const NewsListPage: React.FC<Props> = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [newsSelection, dataSource]);
 
+  React.useEffect(() => {
+    if (inView && skip !== undefined && data?.pages[0]?.result.length >= 10) {
+      fetchNextPage();
+      searchParams.set("page_number", (Number(skip) + 1).toString());
+      console.log("hello");
+    }
+    console.log(inView);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [inView]);
   return (
     <div className={styles.mainContainer}>
       <div className={styles.titleListContainer}>
@@ -84,14 +98,6 @@ export const NewsListPage: React.FC<Props> = () => {
       <List
         itemLayout="vertical"
         size="small"
-        pagination={{
-          position: "bottom",
-          onChange: handlePaginationChange,
-          current: page ? +page : 1,
-          pageSize: pageSize ? +pageSize : 10,
-          size: "default",
-          total: data?.total_record,
-        }}
         dataSource={dataSource}
         renderItem={(item) => {
           return (
@@ -104,9 +110,25 @@ export const NewsListPage: React.FC<Props> = () => {
             />
           );
         }}
-        loading={isFetching || isLoadingIAm}
+        // loading={isFetching || isLoadingIAm}
       />
-      <div className={styles.footer} />
+      <div>
+        {skip >= 1 ? (
+          <button
+            ref={ref}
+            onClick={() => {
+              fetchNextPage();
+              searchParams.set("page_number", (Number(skip) + 1).toString());
+            }}
+            disabled={!hasNextPage || isFetchingNextPage}
+            style={{ padding: 0, margin: 0, border: 0 }}
+          >
+            {isFetchingNextPage ? "Loading more..." : ""}
+          </button>
+        ) : null}
+      </div>
+      <div>{isFetching && !isFetchingNextPage ? "Background Updating..." : null}</div>
+      {/* <div className={styles.footer} /> */}
     </div>
   );
 
@@ -132,11 +154,5 @@ export const NewsListPage: React.FC<Props> = () => {
       newsIds: [newsId],
       newsletterId: tag!,
     });
-  }
-
-  function handlePaginationChange(page: number, pageSize: number) {
-    searchParams.set("page_number", page + "");
-    searchParams.set("page_size", pageSize + "");
-    setSearchParams(searchParams);
   }
 };

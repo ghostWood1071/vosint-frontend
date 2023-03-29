@@ -24,6 +24,7 @@ import { message } from "antd";
 import {
   UseMutationOptions,
   UseQueryOptions,
+  useInfiniteQuery,
   useMutation,
   useQuery,
   useQueryClient,
@@ -152,8 +153,8 @@ export const useDeleteNewsInNewsletter = () => {
     },
     {
       onSuccess: () => {
-        queryClient.invalidateQueries([CACHE_KEYS.NewsList]);
-        queryClient.invalidateQueries([CACHE_KEYS.NewsletterDetail]);
+        // queryClient.invalidateQueries([CACHE_KEYS.NewsList]);
+        // queryClient.invalidateQueries([CACHE_KEYS.NewsletterDetail]);
         queryClient.invalidateQueries(["ME"]);
         message.success("Xoá tin thành công");
       },
@@ -167,6 +168,28 @@ export const useGetNewsSummaryLazy = (
   return useMutation(
     [CACHE_KEYS.Summary],
     (data: INewsSummaryDto) => getNewsSummary(data),
+    options,
+  );
+};
+
+export const useInfiniteNewsList = (filter: any, options?: any) => {
+  return useInfiniteQuery<any>([CACHE_KEYS.NewsList], () => getNewsList(filter), options);
+};
+
+export const useInfiniteNewsByNewsletter = (id: string, filter: any, options?: any) => {
+  return useInfiniteQuery(
+    [CACHE_KEYS.NewsList, id],
+    () => {
+      if (id === ETreeTag.QUAN_TRONG) {
+        return getNewsVitals(filter);
+      }
+
+      if (id === ETreeTag.DANH_DAU) {
+        return getNewsBookmarks(filter);
+      }
+
+      return getNewsByNewsletter(id, filter);
+    },
     options,
   );
 };

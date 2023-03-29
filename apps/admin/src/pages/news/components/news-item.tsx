@@ -183,7 +183,7 @@ export const NewsItem: React.FC<Props> = ({
           </div>
           {type === "edit" ? (
             <div className={styles.edit}>
-              <Tooltip title="Xoá bản tin khỏi giỏ">
+              <Tooltip title="Xoá tin khỏi giỏ" placement="topRight">
                 <DeleteOutlined style={{ color: "#ff1207" }} onClick={handleRemove} />
               </Tooltip>
             </div>
