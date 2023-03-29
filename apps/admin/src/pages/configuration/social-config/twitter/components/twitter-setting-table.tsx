@@ -116,7 +116,7 @@ export const TwSettingTable: React.FC<Props> = ({ adminData, data, loading }) =>
   function handleFinishEdit(values: any) {
     values.id = isIdTarget;
     values.social_type = "Object";
-    values.followed_by = adminSelect.map((item: any) => ({
+    values.followed_by = adminSelect?.map((item: any) => ({
       followed_id: item.value,
       username: item.label,
     }));

@@ -98,7 +98,7 @@ export const TwitterConfig: React.FC = () => {
   function handleFinishCreate(values: any) {
     values.social_media = "Twitter";
     values.social_type = "Object";
-    values.followed_by = adminSelect.map((item: any) => ({
+    values.followed_by = adminSelect?.map((item: any) => ({
       followed_id: item.value,
       username: item.label,
     }));

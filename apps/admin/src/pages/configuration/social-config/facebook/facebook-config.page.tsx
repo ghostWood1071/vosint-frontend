@@ -107,7 +107,7 @@ export const FacebookConfig: React.FC = () => {
   function handleFinishCreate(values: any) {
     values.social_media = "Facebook";
     values.social_type = value;
-    values.followed_by = adminSelect.map((item: any) => ({
+    values.followed_by = adminSelect?.map((item: any) => ({
       followed_id: item.value,
       username: item.label,
     }));
