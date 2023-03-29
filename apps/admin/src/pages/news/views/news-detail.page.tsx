@@ -1,7 +1,9 @@
 import { useNewsSelection } from "@/components/news/news-state";
 import { useGetMe } from "@/pages/auth/auth.loader";
 import { Checkbox, List } from "antd";
-import { useEffect, useState } from "react";
+import lodash from "lodash";
+import React, { useEffect, useState } from "react";
+import { useInView } from "react-intersection-observer";
 import { useParams, useSearchParams } from "react-router-dom";
 import { shallow } from "zustand/shallow";
 
@@ -9,46 +11,55 @@ import { NewsItem } from "../components/news-item";
 import { useNewsFilter } from "../news.context";
 import {
   useDeleteNewsInNewsletter,
-  useNewsByNewsletter,
+  useInfiniteNewsByNewsletter,
   useNewsIdToNewsletter,
 } from "../news.loader";
 import styles from "./news-detail.module.less";
 
 export const NewsDetailPage = () => {
   let { newsletterId } = useParams();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const [newsSelection, setNewsSelection] = useNewsSelection(
     (state) => [state.newsSelection, state.setNewsSelection],
     shallow,
   );
-  const newsFilter = useNewsFilter();
-  const [filter, setFilter] = useState<Record<string, any>>();
+  const { ref, inView } = useInView();
+  const skip = searchParams.get("page_number") ?? 1;
 
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      setFilter(newsFilter);
-    }, 800);
-    return () => clearTimeout(timeout);
-  }, [newsFilter]);
-
-  const { data, isLoading } = useNewsByNewsletter(newsletterId!, {
-    skip: searchParams.get("page_number") ?? 1,
-    limit: searchParams.get("page_size") ?? 10,
-    ...filter,
-  });
+  const { data, isFetchingNextPage, isFetching, fetchNextPage, hasNextPage } =
+    useInfiniteNewsByNewsletter(
+      newsletterId!,
+      {
+        skip: skip ?? 1,
+        limit: 30,
+      },
+      {
+        getNextPageParam: (lastPage: any) => {
+          if (Number(skip) * 10 < lastPage.total_record) {
+            return { skip: (Number(skip) + 1).toString(), limit: 30 };
+          }
+          return undefined;
+        },
+      },
+    );
   const { data: dataIAm, isLoading: isLoadingIAm } = useGetMe();
 
   const { mutateAsync: mutateDelete } = useDeleteNewsInNewsletter();
   const { mutate: mutateAdd } = useNewsIdToNewsletter();
   const [checkAll, setCheckAll] = useState(false);
   const [indeterminate, setIndeterminate] = useState(false);
-  const page = searchParams.get("page_number");
-  const pageSize = searchParams.get("page_size");
-  const dataSource = data?.result.map((e: any) => ({
-    ...e,
-    isStar: dataIAm?.news_bookmarks.includes(e._id),
-    isBell: dataIAm?.vital_list.includes(e._id),
-  }));
+  const dataSource = lodash.unionBy(
+    lodash.flatMap(
+      data?.pages.map((a) =>
+        a?.result?.map((e: any) => ({
+          ...e,
+          isStar: dataIAm?.news_bookmarks.includes(e._id),
+          isBell: dataIAm?.vital_list.includes(e._id),
+        })),
+      ),
+    ),
+    "_id",
+  );
 
   useEffect(() => {
     if (newsSelection.length === 0) {
@@ -63,7 +74,15 @@ export const NewsDetailPage = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [newsSelection, dataSource]);
-
+  React.useEffect(() => {
+    if (inView && skip !== undefined && data?.pages[0]?.result.length >= 10) {
+      fetchNextPage();
+      searchParams.set("page_number", (Number(skip) + 1).toString());
+      console.log("hello");
+    }
+    console.log(inView);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [inView]);
   return (
     <div className={styles.mainContainer}>
       <div className={styles.titleListContainer}>
@@ -80,14 +99,6 @@ export const NewsDetailPage = () => {
       <List
         itemLayout="vertical"
         size="small"
-        pagination={{
-          position: "bottom",
-          onChange: handlePaginationChange,
-          current: page ? +page : 1,
-          pageSize: pageSize ? +pageSize : 10,
-          size: "default",
-          total: data?.total_record,
-        }}
         dataSource={dataSource}
         renderItem={(item) => {
           return (
@@ -101,9 +112,25 @@ export const NewsDetailPage = () => {
             />
           );
         }}
-        loading={isLoading || isLoadingIAm}
+        // loading={isLoading || isLoadingIAm}
       />
-      <div className={styles.footer} />
+      <div>
+        {skip >= 1 ? (
+          <button
+            ref={ref}
+            onClick={() => {
+              fetchNextPage();
+              searchParams.set("page_number", (Number(skip) + 1).toString());
+            }}
+            disabled={!hasNextPage || isFetchingNextPage}
+            style={{ padding: 0, margin: 0, border: 0 }}
+          >
+            {isFetchingNextPage ? "Loading more..." : ""}
+          </button>
+        ) : null}
+      </div>
+      <div>{isFetching && !isFetchingNextPage ? "Background Updating..." : null}</div>
+      {/* <div className={styles.footer} /> */}
     </div>
   );
 
@@ -137,11 +164,5 @@ export const NewsDetailPage = () => {
       newsIds: [newsId],
       newsletterId: tag!,
     });
-  }
-
-  function handlePaginationChange(page: number, pageSize: number) {
-    searchParams.set("page_number", page + "");
-    searchParams.set("page_size", pageSize + "");
-    setSearchParams(searchParams);
   }
 };
