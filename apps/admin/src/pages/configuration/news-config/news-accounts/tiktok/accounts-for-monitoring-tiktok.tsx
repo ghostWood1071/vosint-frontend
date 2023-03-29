@@ -105,11 +105,11 @@ export const AccountForMonitoringTiktok: React.FC = () => {
 
   function handleFinishCreate(values: any) {
     values.social = "Tiktok";
-    values.list_proxy = proxysSelect.map((item: any) => ({
+    values.list_proxy = proxysSelect?.map((item: any) => ({
       proxy_id: item.value,
       name: item.label,
     }));
-    values.users_follow = usersSelect.map((item: any) => ({
+    values.users_follow = usersSelect?.map((item: any) => ({
       follow_id: item.value,
       social_name: item.label,
     }));

@@ -31,7 +31,7 @@ export const AccountForMonitoringFacebook: React.FC = () => {
 
   const { data: accountMonitor } = useFBSetting({
     social_name: "",
-    type_data: "Fanpage",
+    type_data: "All",
   });
   const { data: listProxy } = useProxyConfig({
     skip: searchParams.get("page_number") ?? 1,
@@ -106,11 +106,11 @@ export const AccountForMonitoringFacebook: React.FC = () => {
 
   function handleFinishCreate(values: any) {
     values.social = "Facebook";
-    values.list_proxy = proxysSelect.map((item: any) => ({
+    values.list_proxy = proxysSelect?.map((item: any) => ({
       proxy_id: item.value,
       name: item.label,
     }));
-    values.users_follow = usersSelect.map((item: any) => ({
+    values.users_follow = usersSelect?.map((item: any) => ({
       follow_id: item.value,
       social_name: item.label,
     }));
