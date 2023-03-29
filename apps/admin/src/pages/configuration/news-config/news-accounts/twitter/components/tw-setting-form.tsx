@@ -29,18 +29,18 @@ export const SettingCreateForm: React.FC<Props> = ({
     valueActive === "edit"
       ? {
           ...valueTarget,
-          users_follow: valueTarget.users_follow?.map((i: any) => ({
+          users_follow: valueTarget?.users_follow?.map((i: any) => ({
             label: i.social_name,
             value: i.follow_id,
           })),
-          list_proxy: valueTarget.list_proxy?.map((i: any) => ({
+          list_proxy: valueTarget?.list_proxy?.map((i: any) => ({
             label: i.name,
             value: i.proxy_id,
           })),
         }
       : null;
-  const initialaccountMonitor = accountMonitor.result;
-  const initialListProxy = listProxy.data;
+  const initialaccountMonitor = accountMonitor?.result;
+  const initialListProxy = listProxy?.data;
   const handleUsersChange = (value: string | string[], data: any) => {
     setUsersSelect(data);
   };
