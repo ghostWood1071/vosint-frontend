@@ -127,8 +127,6 @@ export const useNewsIdToNewsletter = () => {
     },
     {
       onSuccess: () => {
-        queryClient.invalidateQueries([CACHE_KEYS.NewsList]);
-        queryClient.invalidateQueries([CACHE_KEYS.NewsletterDetail]);
         queryClient.invalidateQueries(["ME"]);
         message.success("Thêm tin thành công");
       },
@@ -153,8 +151,6 @@ export const useDeleteNewsInNewsletter = () => {
     },
     {
       onSuccess: () => {
-        // queryClient.invalidateQueries([CACHE_KEYS.NewsList]);
-        // queryClient.invalidateQueries([CACHE_KEYS.NewsletterDetail]);
         queryClient.invalidateQueries(["ME"]);
         message.success("Xoá tin thành công");
       },
