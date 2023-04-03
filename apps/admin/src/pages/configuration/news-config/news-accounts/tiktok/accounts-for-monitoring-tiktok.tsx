@@ -5,7 +5,7 @@ import {
   useProxyConfig,
   useTTSetting,
 } from "@/pages/configuration/config.loader";
-import { PlusSquareOutlined } from "@ant-design/icons";
+import { PlusOutlined, PlusSquareOutlined } from "@ant-design/icons";
 import { Button, Form, Input, Modal, PageHeader, message } from "antd";
 import React, { useState } from "react";
 import { useQueryClient } from "react-query";
@@ -21,16 +21,12 @@ export const AccountForMonitoringTiktok: React.FC = () => {
   const [form] = Form.useForm();
   let titleFilter = searchParams.get("username") ?? "";
   const { data: tiktokData } = useAdminMonitor({
-    skip: searchParams.get("skip") ?? 0,
-    limit: searchParams.get("limit") ?? 10,
     type_data: "Tiktok",
     username: titleFilter,
   });
   const [proxysSelect, setProxysSelect] = useState([]);
   const [usersSelect, setUsersSelect] = useState([]);
   const { data: accountMonitor } = useTTSetting({
-    page_number: searchParams.get("page") ?? 1,
-    page_size: searchParams.get("limit") ?? 10,
     social_name: "",
     type_data: "Object",
   });
@@ -41,14 +37,13 @@ export const AccountForMonitoringTiktok: React.FC = () => {
   const { Search } = Input;
   const [valueSearch, setValueSearch] = useState("");
   const { data: listProxy } = useProxyConfig({
-    skip: searchParams.get("page_number") ?? 1,
-    limit: searchParams.get("page_size") ?? 10,
     text_search: searchParams.get("text_search") ?? "",
   });
   const queryClient = useQueryClient();
   return (
     <>
       <PageHeader
+        title="Danh sách cấu hình Tiktok "
         extra={[
           <Search
             placeholder="Tìm kiếm"
@@ -56,19 +51,19 @@ export const AccountForMonitoringTiktok: React.FC = () => {
             onSearch={onSearch}
             onChange={(e) => setValueSearch(e.target.value)}
           />,
-          <Button
-            key="button"
-            icon={<PlusSquareOutlined />}
-            type="primary"
-            onClick={handleShowCreate}
-          >
+          <Button key="button" icon={<PlusOutlined />} type="primary" onClick={handleShowCreate}>
             Thêm
           </Button>,
         ]}
       >
-        <h3>Danh sách các tài khoản Tiktok</h3>
-
-        <SettingTable data={tiktokData?.result ?? []} loading={isLoading} />
+        <SettingTable
+          searchParams={searchParams}
+          setSearchParams={setSearchParams}
+          data={tiktokData ?? []}
+          listProxy={listProxy}
+          accountMonitor={accountMonitor}
+          loading={isLoading}
+        />
       </PageHeader>
       <Modal
         title="Thêm mới cấu hình Tiktok"

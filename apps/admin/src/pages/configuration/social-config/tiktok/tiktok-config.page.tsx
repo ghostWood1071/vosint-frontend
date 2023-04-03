@@ -1,5 +1,5 @@
 import styles from "@/pages/configuration/social-config/facebook/components/fb-setting.module.less";
-import { PlusSquareOutlined } from "@ant-design/icons";
+import { PlusOutlined, PlusSquareOutlined } from "@ant-design/icons";
 import { Button, Form, Input, Modal, PageHeader } from "antd";
 import React, { useState } from "react";
 import { useSearchParams } from "react-router-dom";
@@ -13,8 +13,8 @@ export const TiktokConfig: React.FC = () => {
   let titleFilter = searchParams.get("social_name") ?? "";
 
   const { data: tiktokData } = useTTSetting({
-    page_number: searchParams.get("page") ?? 1,
-    page_size: searchParams.get("limit") ?? 10,
+    page: searchParams.get("page") ?? 1,
+    limit: searchParams.get("limit") ?? 10,
     social_name: titleFilter,
     type_data: "Object",
   });
@@ -30,8 +30,6 @@ export const TiktokConfig: React.FC = () => {
   const [adminSelect, setAdminSelect] = useState([]);
 
   const { data: adminData } = useAdminMonitor({
-    skip: searchParams.get("skip") ?? 0,
-    limit: searchParams.get("limit") ?? 10,
     type_data: "Tiktok",
   });
 
@@ -48,17 +46,18 @@ export const TiktokConfig: React.FC = () => {
             onChange={(e) => setValueSearch(e.target.value)}
             style={{ width: 300 }}
           />,
-          <Button
-            key="button"
-            icon={<PlusSquareOutlined />}
-            type="primary"
-            onClick={handleShowCreate}
-          >
+          <Button key="button" icon={<PlusOutlined />} type="primary" onClick={handleShowCreate}>
             Thêm
           </Button>,
         ]}
       >
-        <TTSettingTable adminData={adminData} data={tiktokData?.result ?? []} loading={isLoading} />
+        <TTSettingTable
+          searchParams={searchParams}
+          setSearchParams={setSearchParams}
+          adminData={adminData}
+          data={tiktokData ?? []}
+          loading={isLoading}
+        />
       </PageHeader>
       <Modal
         title="Thêm mới cấu hình Tiktok"

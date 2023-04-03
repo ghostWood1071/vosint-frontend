@@ -42,7 +42,6 @@ export const SettingCreateForm: React.FC<Props> = ({
       id="user-create"
       form={form}
       labelAlign="left"
-      requiredMark={false}
       initialValues={initialValues ?? {}}
       validateMessages={validateMessages}
       preserve={false}

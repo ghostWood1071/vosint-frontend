@@ -5,7 +5,7 @@ import {
   usePostAccountMonitor,
   useProxyConfig,
 } from "@/pages/configuration/config.loader";
-import { PlusSquareOutlined } from "@ant-design/icons";
+import { PlusOutlined, PlusSquareOutlined } from "@ant-design/icons";
 import { Button, Form, Input, Modal, PageHeader, message } from "antd";
 import React, { useState } from "react";
 import { useQueryClient } from "react-query";
@@ -21,8 +21,6 @@ export const AccountForMonitoringFacebook: React.FC = () => {
   const [form] = Form.useForm();
   let titleFilter = searchParams.get("username") ?? "";
   const { data: facebookData } = useAdminMonitor({
-    skip: searchParams.get("skip") ?? 0,
-    limit: searchParams.get("limit") ?? 10,
     type_data: "Facebook",
     username: titleFilter,
   });
@@ -34,8 +32,6 @@ export const AccountForMonitoringFacebook: React.FC = () => {
     type_data: "All",
   });
   const { data: listProxy } = useProxyConfig({
-    skip: searchParams.get("page_number") ?? 1,
-    limit: searchParams.get("page_size") ?? 10,
     text_search: searchParams.get("text_search") ?? "",
   });
   const onSearch = (valueFilter: string) => {
@@ -50,6 +46,7 @@ export const AccountForMonitoringFacebook: React.FC = () => {
   return (
     <>
       <PageHeader
+        title="Danh sách cấu hình Facebook "
         extra={[
           <Search
             placeholder="Tìm kiếm"
@@ -57,19 +54,19 @@ export const AccountForMonitoringFacebook: React.FC = () => {
             onSearch={onSearch}
             onChange={(e) => setValueSearch(e.target.value)}
           />,
-          <Button
-            key="button"
-            icon={<PlusSquareOutlined />}
-            type="primary"
-            onClick={handleShowCreate}
-          >
+          <Button key="button" icon={<PlusOutlined />} type="primary" onClick={handleShowCreate}>
             Thêm
           </Button>,
         ]}
       >
-        <h3>Danh sách các tài khoản Facebook</h3>
-
-        <SettingTable data={facebookData?.result ?? []} loading={isLoading} />
+        <SettingTable
+          searchParams={searchParams}
+          setSearchParams={setSearchParams}
+          data={facebookData ?? []}
+          listProxy={listProxy}
+          accountMonitor={accountMonitor}
+          loading={isLoading}
+        />
       </PageHeader>
       <Modal
         title="Thêm mới cấu hình Facebook"
