@@ -4,20 +4,40 @@ import {
   useMutationUpdateSocial,
 } from "@/pages/configuration/config.loader";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { Avatar, Button, Form, Modal, Space, Table, TableColumnsType, Tag, message } from "antd";
+import {
+  Avatar,
+  Button,
+  Form,
+  Modal,
+  Space,
+  Table,
+  TableColumnsType,
+  Tag,
+  Tooltip,
+  message,
+} from "antd";
 import React, { useState } from "react";
 import { useQueryClient } from "react-query";
+import { useSearchParams } from "react-router-dom";
 
 import { SettingCreateForm } from "./fb-setting-form";
 import styles from "./fb-setting.module.less";
 
 interface Props {
+  searchParams: any;
+  setSearchParams: any;
   adminData: any;
   data: any;
   loading: boolean;
 }
 
-export const SettingTable: React.FC<Props> = ({ adminData, data, loading }) => {
+export const SettingTable: React.FC<Props> = ({
+  searchParams,
+  setSearchParams,
+  adminData,
+  data,
+  loading,
+}) => {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [isIdTarget, setIsIdTarget] = useState("");
@@ -27,7 +47,9 @@ export const SettingTable: React.FC<Props> = ({ adminData, data, loading }) => {
   const [form] = Form.useForm();
   const { mutate: mutateUpdate } = useMutationUpdateSocial();
   const { mutate: mutateDelete } = useMutationDeleteSocial();
-
+  // const [searchParams, setSearchParams] = useSearchParams();
+  const page = searchParams.get("page_number");
+  const pageSize = searchParams.get("page_size");
   const columns: TableColumnsType<any> = [
     {
       title: <p className={styles.namecolumn}>Tên</p>,
@@ -65,13 +87,17 @@ export const SettingTable: React.FC<Props> = ({ adminData, data, loading }) => {
     },
     {
       title: "",
-      align: "right",
+      align: "center",
       dataIndex: "_id",
       render: (_id: string, values) => {
         return (
-          <Space>
-            <Button icon={<EditOutlined />} onClick={() => handleShowEdit(_id, values)} />
-            <Button icon={<DeleteOutlined />} danger onClick={() => handleShowDelete(_id)} />
+          <Space className={styles.spaceStyle}>
+            <Tooltip title={"Sửa "}>
+              <EditOutlined onClick={() => handleShowEdit(_id, values)} className={styles.edit} />
+            </Tooltip>
+            <Tooltip title={"Xoá "}>
+              <DeleteOutlined onClick={() => handleShowDelete(_id)} className={styles.delete} />
+            </Tooltip>
           </Space>
         );
       },
@@ -82,9 +108,16 @@ export const SettingTable: React.FC<Props> = ({ adminData, data, loading }) => {
     <>
       <Table
         columns={columns}
-        dataSource={data}
+        dataSource={data?.result}
         rowKey="name"
-        pagination={{ position: ["bottomCenter"] }}
+        pagination={{
+          position: ["bottomCenter"],
+          total: data?.total_record,
+          current: page ? +page : 1,
+          onChange: handlePaginationChange,
+          pageSize: pageSize ? +pageSize : 10,
+          size: "default",
+        }}
         loading={loading}
       />
 
@@ -179,5 +212,10 @@ export const SettingTable: React.FC<Props> = ({ adminData, data, loading }) => {
   }
   function routerAccount(data: any) {
     window.open(data.account_link, "_blank");
+  }
+  function handlePaginationChange(page: number, pageSize: number) {
+    searchParams.set("page_number", page + "");
+    searchParams.set("page_size", pageSize + "");
+    setSearchParams(searchParams);
   }
 };

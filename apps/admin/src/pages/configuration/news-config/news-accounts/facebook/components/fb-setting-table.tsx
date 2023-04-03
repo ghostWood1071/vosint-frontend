@@ -6,19 +6,35 @@ import {
   useProxyConfig,
 } from "@/pages/configuration/config.loader";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { Button, Form, Modal, Space, Table, TableColumnsType, Tag, message } from "antd";
+import {
+  Button,
+  Form,
+  Modal,
+  Popover,
+  Space,
+  Table,
+  TableColumnsType,
+  Tag,
+  Tooltip,
+  message,
+} from "antd";
 import React, { useState } from "react";
 import { useQueryClient } from "react-query";
 import { useSearchParams } from "react-router-dom";
 
 import { SettingCreateForm } from "./fb-setting-form";
+import styles from "./fb-setting.module.less";
 
 interface Props {
+  searchParams: any;
+  setSearchParams: any;
   data: any;
+  listProxy: any;
+  accountMonitor: any;
   loading: boolean;
 }
 
-export const SettingTable: React.FC<Props> = ({ data, loading }) => {
+export const SettingTable: React.FC<Props> = ({ data, listProxy, accountMonitor, loading }) => {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [isIdTarget, setIsIdTarget] = useState("");
@@ -30,17 +46,6 @@ export const SettingTable: React.FC<Props> = ({ data, loading }) => {
   const [form] = Form.useForm();
   const { mutate: mutateUpdate } = useMutationUpdateAccountMonitor();
   const { mutate: mutateDelete } = useMutationDeleteAccountMonitor();
-  const [searchParams, setSearchParams] = useSearchParams();
-  const { data: accountMonitor } = useFBSetting({
-    social_name: "",
-    type_data: "All",
-  });
-  const { data: listProxy } = useProxyConfig({
-    skip: searchParams.get("page_number") ?? 1,
-    limit: searchParams.get("page_size") ?? 10,
-    text_search: searchParams.get("text_search") ?? "",
-  });
-
   const columns: TableColumnsType<any> = [
     {
       title: "Tài khoản",
@@ -60,7 +65,19 @@ export const SettingTable: React.FC<Props> = ({ data, loading }) => {
       title: "Danh sách các proxy",
       dataIndex: "list_proxy",
       render: (list_users: any, data: any) => {
-        return list_users?.map((item: any) => <Tag>{item.name}</Tag>);
+        return list_users?.map((item: any) => (
+          <Popover
+            content={
+              <div>
+                <p>IP : {item.name}</p>
+                <p>Cổng : {item.name}</p>
+              </div>
+            }
+            title="Thông tin proxy"
+          >
+            <Tag className={styles.tag}>{item.name}</Tag>
+          </Popover>
+        ));
       },
     },
     {
@@ -77,13 +94,17 @@ export const SettingTable: React.FC<Props> = ({ data, loading }) => {
 
     {
       title: "",
-      align: "right",
+      align: "center",
       dataIndex: "_id",
       render: (_id: string, values) => {
         return (
-          <Space>
-            <Button icon={<EditOutlined />} onClick={() => handleShowEdit(_id, values)} />
-            <Button icon={<DeleteOutlined />} danger onClick={() => handleShowDelete(_id)} />
+          <Space className={styles.spaceStyle}>
+            <Tooltip title={"Sửa "}>
+              <EditOutlined onClick={() => handleShowEdit(_id, values)} className={styles.edit} />
+            </Tooltip>
+            <Tooltip title={"Xoá "}>
+              <DeleteOutlined onClick={() => handleShowDelete(_id)} className={styles.delete} />
+            </Tooltip>
           </Space>
         );
       },
@@ -94,7 +115,7 @@ export const SettingTable: React.FC<Props> = ({ data, loading }) => {
     <>
       <Table
         columns={columns}
-        dataSource={data}
+        dataSource={data?.result}
         rowKey="name"
         pagination={{ position: ["bottomCenter"] }}
         loading={loading}

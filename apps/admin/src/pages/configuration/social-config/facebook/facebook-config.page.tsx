@@ -1,4 +1,4 @@
-import { PlusSquareOutlined } from "@ant-design/icons";
+import { PlusOutlined, PlusSquareOutlined } from "@ant-design/icons";
 import { Button, Form, Input, Modal, PageHeader, Segmented } from "antd";
 import React, { useState } from "react";
 import { useSearchParams } from "react-router-dom";
@@ -19,12 +19,12 @@ export const FacebookConfig: React.FC = () => {
 
   let titleFilter = searchParams.get("social_name") ?? "";
   const { data: facebookData } = useFBSetting({
+    page: searchParams.get("page_number") ?? 1,
+    limit: searchParams.get("page_size") ?? 10,
     social_name: titleFilter,
     type_data: value,
   });
   const { data: adminData } = useAdminMonitor({
-    skip: searchParams.get("skip") ?? 0,
-    limit: searchParams.get("limit") ?? 10,
     type_data: "Facebook",
   });
 
@@ -53,17 +53,18 @@ export const FacebookConfig: React.FC = () => {
             onChange={(e) => setValueSearch(e.target.value)}
             style={{ width: 300 }}
           />,
-          <Button
-            key="button"
-            icon={<PlusSquareOutlined />}
-            type="primary"
-            onClick={handleShowCreate}
-          >
+          <Button key="button" icon={<PlusOutlined />} type="primary" onClick={handleShowCreate}>
             Thêm
           </Button>,
         ]}
       >
-        <SettingTable adminData={adminData} data={facebookData?.result ?? []} loading={isLoading} />
+        <SettingTable
+          searchParams={searchParams}
+          setSearchParams={setSearchParams}
+          adminData={adminData}
+          data={facebookData ?? []}
+          loading={isLoading}
+        />
       </PageHeader>
 
       <Modal
@@ -91,6 +92,8 @@ export const FacebookConfig: React.FC = () => {
   function handleAccountType(values: any) {
     setValue(values);
     searchParams.set("social_name", "");
+    searchParams.set("page_number", "1");
+    searchParams.set("page_size", "10");
     setSearchParams(searchParams);
     setValueSearch("");
   }
