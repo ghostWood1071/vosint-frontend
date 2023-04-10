@@ -148,10 +148,14 @@ export const TwSettingTable: React.FC<Props> = ({
   function handleFinishEdit(values: any) {
     values.id = isIdTarget;
     values.social_type = "Object";
-    values.followed_by = adminSelect?.map((item: any) => ({
-      followed_id: item.value,
-      username: item.label,
-    }));
+    const values_by_id = values.followed_by
+      .map((id: any) => adminData?.result.find((item: any) => item._id === id))
+      .filter((item: any) => item !== undefined);
+    values.followed_by =
+      values_by_id?.map((item: any) => ({
+        followed_id: item._id,
+        username: item.username,
+      })) ?? [];
     mutateUpdate(values, {
       onSuccess: () => {
         queryClient.invalidateQueries(CACHE_KEYS.InfoTWSetting);

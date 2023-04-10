@@ -101,14 +101,25 @@ export const AccountForMonitoringTwitter: React.FC = () => {
 
   function handleFinishCreate(values: any) {
     values.social = "Twitter";
-    values.list_proxy = proxysSelect?.map((item: any) => ({
-      proxy_id: item.value,
-      name: item.label,
-    }));
-    values.users_follow = usersSelect?.map((item: any) => ({
-      follow_id: item.value,
-      social_name: item.label,
-    }));
+    const values_by_id = values.list_proxy?.map((id: any) =>
+      listProxy?.data.find((item: any) => item._id === id),
+    );
+    values.list_proxy =
+      values_by_id?.map((item: any) => ({
+        proxy_id: item._id,
+        name: item.name,
+        ip_address: item.ip_address,
+        port: item.port,
+      })) ?? [];
+
+    const values_users_by_id = values.users_follow?.map((id: any) =>
+      accountMonitor?.result.find((item: any) => item._id === id),
+    );
+    values.users_follow =
+      values_users_by_id?.map((item: any) => ({
+        follow_id: item._id,
+        social_name: item.social_name,
+      })) ?? [];
     mutate(values, {
       onSuccess: () => {
         queryClient.invalidateQueries([CACHE_KEYS.InfoAccountMonitorTW]);
