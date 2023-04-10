@@ -1,7 +1,8 @@
 import { IActionParamInfo } from "@/services/pipeline.type";
 import { CloseCircleOutlined, MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
-import { Button, Card, Form, Input, Select, Space } from "antd";
+import { Button, Card, Form, Input, Select, Space, Typography } from "antd";
 import classNames from "classnames";
+import { FormInstance } from "rc-field-form";
 import { useEffect } from "react";
 
 import { usePipelineSource } from "../../pipeline.loader";
@@ -32,13 +33,18 @@ export function PipelineTreeOptions({ option, onClose, onValuesChange }: Props) 
   return (
     <Card title="Options" className={styles.root} extra={<CloseCircleOutlined onClick={onClose} />}>
       <Form form={form} layout="vertical" onValuesChange={onValuesChange}>
-        {option?.param_infos?.map((param) => renderFormItemStrategies?.[param?.val_type]?.(param))}
+        {option?.param_infos?.map((param) =>
+          renderFormItemStrategies?.[param?.val_type]?.(param, form),
+        )}
       </Form>
     </Card>
   );
 }
 
-const renderFormItemStrategies: Record<string, (props: IActionParamInfo) => JSX.Element> = {
+const renderFormItemStrategies: Record<
+  string,
+  (props: IActionParamInfo, form: FormInstance<any>) => JSX.Element
+> = {
   select: ({ options, name, display_name }) => (
     <Form.Item key={name} label={display_name} name={[name]}>
       <Select>
@@ -59,27 +65,39 @@ const renderFormItemStrategies: Record<string, (props: IActionParamInfo) => JSX.
   pubdate: PubDateItem,
 };
 
-function PubDateItem({ name, display_name, options }: IActionParamInfo): JSX.Element {
+function PubDateItem(
+  { name, display_name, options }: IActionParamInfo,
+  form: FormInstance<any>,
+): JSX.Element {
+  const display = Form.useWatch(name, form);
+
   return (
     <Form.Item label={display_name} key={name}>
-      <Form.Item name={[name, "time_expr"]}>
+      <Form.Item name={[name, "time_expr"]} noStyle>
         <Input />
       </Form.Item>
+      <div
+        style={{
+          margin: "8px 0",
+        }}
+      >
+        <Typography.Text strong>{display?.time_format.join(" ")}</Typography.Text>
+      </div>
       <Form.List name={[name, "time_format"]}>
         {(fields, { add, remove }) => (
           <Space align="start" className={classNames(styles.space, "scrollbar")}>
             {fields.map((field) => (
               <Space direction="vertical" key={field.key} align="center">
-                <Form.Item {...field}>
+                <Form.Item {...field} noStyle>
                   <Select className={styles.select}>
                     {options?.map((o) => (
                       <Option key={o}>{o}</Option>
                     ))}
                   </Select>
-                  <div className={styles.center}>
-                    <MinusCircleOutlined onClick={() => remove(field.name)} />
-                  </div>
                 </Form.Item>
+                <div className={styles.center}>
+                  <MinusCircleOutlined onClick={() => remove(field.name)} />
+                </div>
               </Space>
             ))}
             <Button className={styles.buttonRight} icon={<PlusOutlined />} onClick={() => add()} />
