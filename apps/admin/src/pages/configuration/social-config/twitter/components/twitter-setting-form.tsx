@@ -1,5 +1,5 @@
 import { Form, FormInstance, Input, Select } from "antd";
-import React from "react";
+import React, { useEffect } from "react";
 
 interface Props {
   setAdminSelect: any;
@@ -25,12 +25,12 @@ export const SettingCreateForm: React.FC<Props> = ({
     value === "edit"
       ? {
           ...valueTarget,
-          followed_by: valueTarget?.followed_by?.map((i: any) => ({
-            label: i.username,
-            value: i.followed_id,
-          })),
+          followed_by: valueTarget?.followed_by?.map((i: any) => i.followed_id),
         }
       : null;
+  useEffect(() => {
+    form.setFieldsValue(initialValues);
+  }, []);
   const handleChange = (value: string | string[], data: any) => {
     setAdminSelect(data);
   };
@@ -42,9 +42,7 @@ export const SettingCreateForm: React.FC<Props> = ({
       id="user-create"
       form={form}
       labelAlign="left"
-      initialValues={initialValues ?? {}}
       validateMessages={validateMessages}
-      preserve={false}
     >
       <Form.Item
         name="social_name"

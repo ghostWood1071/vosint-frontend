@@ -47,7 +47,6 @@ export const SettingTable: React.FC<Props> = ({
   const [form] = Form.useForm();
   const { mutate: mutateUpdate } = useMutationUpdateSocial();
   const { mutate: mutateDelete } = useMutationDeleteSocial();
-  // const [searchParams, setSearchParams] = useSearchParams();
   const page = searchParams.get("page_number");
   const pageSize = searchParams.get("page_size");
   const columns: TableColumnsType<any> = [
@@ -164,10 +163,14 @@ export const SettingTable: React.FC<Props> = ({
 
   function handleFinishEdit(values: any) {
     values.id = isIdTarget;
-    values.followed_by = adminSelect?.map((item: any) => ({
-      followed_id: item.value,
-      username: item.label,
-    }));
+    const values_by_id = values.followed_by
+      .map((id: any) => adminData?.result.find((item: any) => item._id === id))
+      .filter((item: any) => item !== undefined);
+    values.followed_by =
+      values_by_id?.map((item: any) => ({
+        followed_id: item._id,
+        username: item.username,
+      })) ?? [];
     mutateUpdate(values, {
       onSuccess: () => {
         queryClient.invalidateQueries(CACHE_KEYS.InfoFBSetting);

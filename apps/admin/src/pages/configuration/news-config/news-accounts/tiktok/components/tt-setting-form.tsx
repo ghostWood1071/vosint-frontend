@@ -1,5 +1,5 @@
 import { Form, FormInstance, Input, Select, SelectProps } from "antd";
-import React from "react";
+import React, { useEffect } from "react";
 
 interface Props {
   setProxysSelect: any;
@@ -28,24 +28,17 @@ export const SettingCreateForm: React.FC<Props> = ({
     valueActive === "edit"
       ? {
           ...valueTarget,
-          users_follow: valueTarget?.users_follow?.map((i: any) => ({
-            label: i.social_name,
-            value: i.follow_id,
-          })),
-          list_proxy: valueTarget?.list_proxy?.map((i: any) => ({
-            label: i.name,
-            value: i.proxy_id,
-          })),
+          users_follow: valueTarget?.users_follow?.map((i: any) => i.follow_id),
+          list_proxy: valueTarget?.list_proxy?.map((i: any) => i.proxy_id),
         }
       : null;
+  useEffect(() => {
+    form.setFieldsValue(initialValues);
+  }, []);
   const initialaccountMonitor = accountMonitor?.result;
   const initialListProxy = listProxy?.data;
-  const handleUsersChange = (value: string | string[], data: any) => {
-    setUsersSelect(data);
-  };
-  const handleProxysChange = (value: string | string[], data: any) => {
-    setProxysSelect(data);
-  };
+  const handleUsersChange = (value: string | string[], data: any) => {};
+  const handleProxysChange = (value: string | string[], data: any) => {};
   return (
     <>
       <Form
@@ -55,9 +48,7 @@ export const SettingCreateForm: React.FC<Props> = ({
         id="user-create"
         form={form}
         labelAlign="left"
-        initialValues={initialValues ?? {}}
         validateMessages={validateMessages}
-        preserve={false}
       >
         <Form.Item
           name="username"
