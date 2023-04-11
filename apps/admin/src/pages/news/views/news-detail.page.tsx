@@ -4,11 +4,14 @@ import { Checkbox, List } from "antd";
 import { flatMap, unionBy } from "lodash";
 import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
-import { useParams, useSearchParams } from "react-router-dom";
+import { useQueryClient } from "react-query";
+import { useParams } from "react-router-dom";
 import { shallow } from "zustand/shallow";
 
 import { NewsItem } from "../components/news-item";
+import { useNewsFilter } from "../news.context";
 import {
+  CACHE_KEYS,
   useDeleteNewsInNewsletter,
   useInfiniteNewsByNewsletter,
   useNewsIdToNewsletter,
@@ -17,32 +20,17 @@ import styles from "./news-detail.module.less";
 
 export const NewsDetailPage = () => {
   let { newsletterId } = useParams();
-  const [searchParams] = useSearchParams();
   const [newsSelection, setNewsSelection] = useNewsSelection(
     (state) => [state.newsSelection, state.setNewsSelection],
     shallow,
   );
   const { ref, inView } = useInView();
-  const skip = searchParams.get("page_number") ?? 1;
-
+  const queryClient = useQueryClient();
+  const [skip, setSkip] = useState(1);
+  const newsFilter = useNewsFilter();
   const { data, isFetchingNextPage, isFetching, fetchNextPage, hasNextPage } =
-    useInfiniteNewsByNewsletter(
-      newsletterId!,
-      {
-        skip: skip ?? 1,
-        limit: 30,
-      },
-      {
-        getNextPageParam: (lastPage: any) => {
-          if (Number(skip) * 10 < lastPage.total_record) {
-            return { skip: (Number(skip) + 1).toString(), limit: 30 };
-          }
-          return undefined;
-        },
-      },
-    );
+    useInfiniteNewsByNewsletter(newsletterId!, newsFilter);
   const { data: dataIAm } = useGetMe();
-
   const { mutateAsync: mutateDelete } = useDeleteNewsInNewsletter();
   const { mutate: mutateAdd } = useNewsIdToNewsletter();
   const [checkAll, setCheckAll] = useState(false);
@@ -75,12 +63,23 @@ export const NewsDetailPage = () => {
   }, [newsSelection, dataSource]);
 
   useEffect(() => {
-    if (inView && skip !== undefined && data?.pages[0]?.result.length >= 10) {
-      fetchNextPage();
-      searchParams.set("page_number", (Number(skip) + 1).toString());
+    queryClient.removeQueries([CACHE_KEYS.NewsList, newsletterId]);
+    setNewsSelection([]);
+    setSkip(1);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [newsletterId, newsFilter]);
+
+  useEffect(() => {
+    if (inView && skip * 30 < data?.pages[data?.pages.length - 1].total_record) {
+      setSkip(skip + 1);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inView]);
+
+  useEffect(() => {
+    fetchNextPage({ pageParam: { skip: skip, limit: 30 } });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [skip]);
 
   return (
     <div className={styles.mainContainer}>
@@ -111,25 +110,19 @@ export const NewsDetailPage = () => {
             />
           );
         }}
-        // loading={isLoading || isLoadingIAm}
       />
       <div>
         {skip >= 1 ? (
           <button
             ref={ref}
-            onClick={() => {
-              fetchNextPage();
-              searchParams.set("page_number", (Number(skip) + 1).toString());
-            }}
             disabled={!hasNextPage || isFetchingNextPage}
             style={{ padding: 0, margin: 0, border: 0 }}
           >
-            {isFetchingNextPage ? "Loading more..." : ""}
+            {isFetchingNextPage ? "Đang lấy thêm tin..." : ""}
           </button>
         ) : null}
       </div>
-      <div>{isFetching && !isFetchingNextPage ? "Background Updating..." : null}</div>
-      {/* <div className={styles.footer} /> */}
+      <div>{isFetching && !isFetchingNextPage ? "Giao diện đang cập nhật..." : null}</div>
     </div>
   );
 
@@ -144,7 +137,6 @@ export const NewsDetailPage = () => {
   }
 
   function handleDelete(newsId: string, tag = newsletterId) {
-    // setNewsSelection([...newsSelection].filter((e) => e._id !== newsId));
     return mutateDelete(
       {
         newsId: [newsId],

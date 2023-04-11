@@ -1,22 +1,25 @@
 // import { DownNewsIcon, UpNewsIcon } from "@/assets/svg";
 import { ETreeTag, useNewsSelection } from "@/components/news/news-state";
 import {
+  AreaChartOutlined,
   BellTwoTone,
   CaretDownFilled,
   CaretUpFilled,
   CloseOutlined,
+  ControlOutlined,
   DeleteOutlined,
   ExclamationCircleOutlined,
   LineOutlined,
   LinkOutlined,
+  ProfileOutlined,
   ShoppingCartOutlined,
   StarTwoTone,
 } from "@ant-design/icons";
-import { Checkbox, Modal, Radio, Space, Tag, Tooltip, Typography } from "antd";
-import type { RadioChangeEvent } from "antd";
+import { Checkbox, Modal, Space, Tag, Tooltip, Typography } from "antd";
 import React, { useEffect, useRef, useState } from "react";
 import { shallow } from "zustand/shallow";
 
+import { MindmapModal } from "./mindmap-modal";
 import { NewDetailSummary } from "./news-detail/components";
 import styles from "./news-item.module.less";
 
@@ -44,29 +47,10 @@ export const NewsItem: React.FC<Props> = ({
   const [checkbox, setCheckbox] = useState<boolean>(false);
   const setOpenSelection = useNewsSelection((state) => state.setOpen);
 
-  const keyword = [
-    "hello",
-    "Viet nam",
-    "Hai Duonng",
-    "Nghe an",
-    " okd la",
-    "Vietnam.net",
-    "Nong nghiep",
-    "Lam nghiep",
-    "Cong nghiep",
-    "Xuat khau",
-    "hang det may",
-  ];
-
-  const optionsRadio = [
-    { label: "Nội dung", value: "content" },
-    { label: "Tóm tắt", value: "summary" },
-    { label: "Mind map", value: "mindmap" },
-  ];
-
   const [typeShow, setTypeShow] = useState<boolean>(true);
   const [seen, setSeen] = useState<boolean>(false);
   const [typeDetail, setTypeDetail] = useState<any>("content");
+  const [isVisibleModalMindmap, setIsVisibleModalMindmap] = useState<boolean>(false);
   const Ref = useRef<any>();
 
   useEffect(() => {
@@ -143,11 +127,11 @@ export const NewsItem: React.FC<Props> = ({
               </Space>
             </div>
             <div className={styles.typePostContainer}>
-              {item["data:class_sacthai"] === "2" ? (
+              {item["data:class_sacthai"] === "1" ? (
                 <Tooltip title="Tích cực">
                   <CaretUpFilled className={styles.goodIcon} />
                 </Tooltip>
-              ) : item["data:class_sacthai"] === "0" ? (
+              ) : item["data:class_sacthai"] === "-1" ? (
                 <Tooltip title="Tiêu cực">
                   <CaretDownFilled className={styles.badIcon} />
                 </Tooltip>
@@ -178,7 +162,17 @@ export const NewsItem: React.FC<Props> = ({
                   </Typography.Link>
                 </Tooltip>
               </div>
-              <div className={styles.time}>{item["data:time"]}</div>
+              <div className={styles.time}>
+                {(new Date(item.pub_date).getDate() < 10
+                  ? "0" + new Date(item.pub_date).getDate()
+                  : new Date(item.pub_date).getDate()) +
+                  "-" +
+                  (new Date(item.pub_date).getMonth() < 9
+                    ? "0" + (new Date(item.pub_date).getMonth() + 1)
+                    : new Date(item.pub_date).getMonth() + 1) +
+                  "-" +
+                  new Date(item.pub_date).getFullYear()}
+              </div>
             </div>
           </div>
           {type === "edit" ? (
@@ -205,11 +199,11 @@ export const NewsItem: React.FC<Props> = ({
             <div className={styles.detailHeader}>
               <div className={styles.title}>
                 <span style={{ marginRight: 10 }}>
-                  {item["data:class_sacthai"] === "2" ? (
+                  {item["data:class_sacthai"] === "1" ? (
                     <Tooltip title="Tích cực">
                       <CaretUpFilled className={styles.goodIcon} />
                     </Tooltip>
-                  ) : item["data:class_sacthai"] === "0" ? (
+                  ) : item["data:class_sacthai"] === "-1" ? (
                     <Tooltip title="Tiêu cực">
                       <CaretDownFilled className={styles.badIcon} />
                     </Tooltip>
@@ -228,13 +222,15 @@ export const NewsItem: React.FC<Props> = ({
                 <div className={styles.time}>{item["data:time"]}</div>
               </div>
               <div className={styles.container2}>
-                {keyword.map((element, index) => {
-                  return (
-                    <Tag key={index} className={styles.tag}>
-                      {element}
-                    </Tag>
-                  );
-                })}
+                {item.keywords
+                  ? item.keywords.map((element: any, index: any) => {
+                      return (
+                        <Tag key={index} className={styles.tag}>
+                          {element}
+                        </Tag>
+                      );
+                    })
+                  : null}
               </div>
               <div className={styles.comtainer3}>
                 <div className={styles.leftContainer3}>
@@ -283,13 +279,43 @@ export const NewsItem: React.FC<Props> = ({
                   </Space>
                 </div>
                 <div className={styles.rightContainer3}>
-                  <Radio.Group
-                    options={optionsRadio}
-                    onChange={changeTypeDetail}
-                    value={typeDetail}
-                    optionType="button"
-                    buttonStyle="solid"
-                  />
+                  <Space>
+                    <Tooltip title="Nội dung">
+                      <ProfileOutlined
+                        className={
+                          typeDetail === "content"
+                            ? styles.choosedIconFilterContent
+                            : styles.iconFilterContent
+                        }
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          setTypeDetail("content");
+                        }}
+                      />
+                    </Tooltip>
+                    <Tooltip title={"Tóm tắt"}>
+                      <ControlOutlined
+                        className={
+                          typeDetail === "summary"
+                            ? styles.choosedIconFilterContent
+                            : styles.iconFilterContent
+                        }
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          setTypeDetail("summary");
+                        }}
+                      />
+                    </Tooltip>
+                    <Tooltip title={"Mind map "}>
+                      <AreaChartOutlined
+                        className={styles.iconFilterContent}
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          setIsVisibleModalMindmap(true);
+                        }}
+                      />
+                    </Tooltip>
+                  </Space>
                 </div>
               </div>
               {typeDetail === "content" ? (
@@ -298,11 +324,18 @@ export const NewsItem: React.FC<Props> = ({
                   className={styles.detailContent}
                   onClick={(event) => event.stopPropagation()}
                 />
-              ) : typeDetail === "summary" ? (
-                <NewDetailSummary content={item["data:content"]} title={item["data:title"]} />
               ) : (
-                <></>
+                <div className={styles.detailContent}>
+                  <NewDetailSummary content={item["data:content"]} title={item["data:title"]} />
+                </div>
               )}
+              {isVisibleModalMindmap ? (
+                <MindmapModal
+                  isVisible={isVisibleModalMindmap}
+                  item={item}
+                  setHideModal={setIsVisibleModalMindmap}
+                />
+              ) : null}
             </div>
           </div>
         </div>
@@ -332,9 +365,6 @@ export const NewsItem: React.FC<Props> = ({
     });
   }
 
-  function changeTypeDetail({ target: { value } }: RadioChangeEvent) {
-    setTypeDetail(value);
-  }
   function handleClickShop() {
     setNewsSelection([item]);
     setOpenSelection(true);

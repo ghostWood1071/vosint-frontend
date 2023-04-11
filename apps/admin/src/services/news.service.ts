@@ -13,8 +13,12 @@ export const getNewsSidebar = async (title?: string) => {
 };
 
 export const getNewsList = async (filter: any) => {
-  const result = await apiClient.get<any>(`${apiNewsBaseV2Url}/news`, {
-    params: filterEmptyString(filter),
+  const result = await apiClient.get<any>(`/Job/api/get_result_job/News`, {
+    params: filterEmptyString({
+      page_number: filter.skip,
+      page_size: filter.limit,
+      ...filter,
+    }),
   });
 
   return result.data;
@@ -26,8 +30,13 @@ export const getNewsDetail = async (id: string) => {
 };
 
 export const getNewsByNewsletter = async (newsletterId: string, filter: Record<string, string>) => {
-  const result = await apiClient.get(`${apiNewsBaseV2Url}/newsletters/${newsletterId}/news`, {
-    params: filterEmptyString(filter),
+  const result = await apiClient.get(`/Job/api/get_result_job/News`, {
+    params: filterEmptyString({
+      ...filter,
+      page_number: filter.skip,
+      page_size: filter.limit,
+      news_letter_id: newsletterId,
+    }),
   });
   return result.data;
 };
@@ -78,8 +87,13 @@ export const deleteNewsIdInNewsletter = async (newsletterId: string, newsIds: st
 };
 
 export const getNewsBookmarks = async (filter: Record<string, string>) => {
-  const result = await apiClient.get(`${apiNewsBaseV2Url}/user/bookmarks`, {
-    params: filterEmptyString(filter),
+  const result = await apiClient.get(`/Job/api/get_result_job/News`, {
+    params: filterEmptyString({
+      ...filter,
+      page_number: filter.skip,
+      page_size: filter.limit,
+      bookmarks: "1",
+    }),
   });
   return result.data;
 };
@@ -95,8 +109,13 @@ export const deleteNewsInBookmarkUser = async (newsIds: string[]) => {
 };
 
 export const getNewsVitals = async (filter: Record<string, string>) => {
-  const result = await apiClient.get(`${apiNewsBaseV2Url}/user/vital`, {
-    params: filterEmptyString(filter),
+  const result = await apiClient.get(`/Job/api/get_result_job/News`, {
+    params: filterEmptyString({
+      ...filter,
+      page_number: filter.skip,
+      page_size: filter.limit,
+      vital: "1",
+    }),
   });
   return result.data;
 };
@@ -122,4 +141,9 @@ export const getNewsSummary = async ({ k, ...data }: INewsSummaryDto) => {
   return apiClient
     .post(`http://vosint.aiacademy.edu.vn/api${apiSummBaseUrl}/summary/?${query.toString()}`, data)
     .then((res) => res.data);
+};
+
+export const getEventByIdNews = async (newsId: string) => {
+  const result = await apiClient.get<any>(`${apiNewsBaseV2Url}/event/news/${newsId}`);
+  return result.data;
 };

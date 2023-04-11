@@ -1,0 +1,150 @@
+.left-header {
+  padding-left: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  padding-block: 10px;
+}
+.right-header {
+  padding-left: 10px;
+  display: inline-flex;
+  width: 100%;
+  height: 40px;
+
+  .title-right-header {
+    font-size: 16px;
+    font-weight: bold;
+    padding-block: 10px;
+    width: 40%;
+  }
+  .add-event-button-container {
+    width: 60%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    .add-event-button {
+      width: auto;
+      height: 30px;
+      border-radius: 5px;
+    }
+  }
+}
+
+.left-body {
+  width: 100%;
+  height: 450px;
+  border: 1px solid rgb(200, 200, 200);
+  overflow: auto;
+  padding-left: 10px;
+  .scroll-class;
+  .detail-content {
+    font-family: serif;
+    font-size: 16px;
+    line-height: 1.7;
+    margin-block: 20px;
+    color: #1a2433;
+  }
+}
+.right-body {
+  width: 100%;
+  height: 450px;
+  border: 1px solid rgb(200, 200, 200);
+  overflow: auto;
+  padding-left: 10px;
+  .scroll-class;
+  .add-event-container {
+    padding: 10px;
+    .type-add-container {
+    }
+  }
+}
+
+.add-exist-event-container {
+  width: 100%;
+  overflow: auto;
+  .scroll-class;
+}
+.add-exist-event-header {
+  width: 100%;
+
+  display: inline-flex;
+  .left-add-exist-news-container {
+    width: calc(100% - 80px);
+    .news-event-select {
+      width: 100%;
+    }
+  }
+  .right-add-exist-news-container {
+    width: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .add-button {
+      border-radius: 5px;
+    }
+  }
+}
+
+.add-button-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+  .add-button {
+    width: auto;
+    border-radius: 5px;
+  }
+}
+.scroll-class {
+  &:hover::-webkit-scrollbar-thumb {
+    background-color: #9da5b1;
+  }
+
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  &::-webkit-scrollbar-corner {
+    background-color: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: transparent;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+    border-radius: 6px;
+    transition: cubic-bezier(0.165, 0.84, 0.44, 1);
+  }
+}
+
+.item-container {
+  display: inline-flex;
+  align-items: center;
+  width: 100%;
+  border-bottom: 1px solid rgb(220, 220, 220);
+
+  .collapse-container {
+    width: calc(100% - 50px);
+    .item-content-container {
+      width: 100%;
+      padding-left: 20px;
+    }
+  }
+
+  .edit-container {
+    width: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.delete {
+  color: red;
+}
+.title-child-item {
+  width: calc(100% - 10px);
+  background-color: green;
+}

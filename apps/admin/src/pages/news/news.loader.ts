@@ -9,6 +9,7 @@ import {
   deleteNewsInBookmarkUser,
   deleteNewsInVitalUser,
   deleteNewsletter,
+  getEventByIdNews,
   getNewsBookmarks,
   getNewsByNewsletter,
   getNewsDetail,
@@ -37,6 +38,7 @@ export const CACHE_KEYS = {
   NewsDetail: "NEWS_DETAIL",
   NewsletterDetail: "NEWSLETTER_DETAIL",
   Summary: "SUMMARY",
+  NewsEvent: "NEWS_EVENT",
 };
 
 export const useNewsSidebar = (title?: string) => {
@@ -60,18 +62,8 @@ export const useNewsletterDetail = (id: string | null, { onSuccess }: any) => {
   });
 };
 
-export const useNewsByNewsletter = (id: string, filter: any) => {
-  return useQuery([CACHE_KEYS.NewsList, id, filter], () => {
-    if (id === ETreeTag.QUAN_TRONG) {
-      return getNewsVitals(filter);
-    }
-
-    if (id === ETreeTag.DANH_DAU) {
-      return getNewsBookmarks(filter);
-    }
-
-    return getNewsByNewsletter(id, filter);
-  });
+export const useEventByIdNewsList = (newsId: string) => {
+  return useQuery<any>([CACHE_KEYS.NewsEvent, newsId], () => getEventByIdNews(newsId));
 };
 
 export const useMutationNewsSidebar = () => {
@@ -154,6 +146,28 @@ export const useDeleteNewsInNewsletter = () => {
         queryClient.invalidateQueries(["ME"]);
         message.success("Xoá tin thành công");
       },
+      onMutate: async (newTodo) => {
+        await queryClient.cancelQueries([CACHE_KEYS.NewsList, newTodo.newsletterId]);
+        const previousTask = await queryClient.getQueryData([
+          CACHE_KEYS.NewsList,
+          newTodo.newsletterId,
+        ]);
+
+        queryClient.setQueryData([CACHE_KEYS.NewsList, newTodo.newsletterId], (old: any) => {
+          const a = old.pages.map((i: any) => {
+            let data = i.result;
+            newTodo.newsId.map((element) => {
+              data = data.filter((o: any) => o._id !== element);
+              return null;
+            });
+            return { result: data, total_record: i.total_record };
+          });
+          return { pages: a, pageParams: old.pageParams };
+        });
+        return { previousTask };
+      },
+      onError: (err, newTodo, context) => {},
+      onSettled: (newTodo) => {},
     },
   );
 };
@@ -168,24 +182,27 @@ export const useGetNewsSummaryLazy = (
   );
 };
 
-export const useInfiniteNewsList = (filter: any, options?: any) => {
-  return useInfiniteQuery<any>([CACHE_KEYS.NewsList], () => getNewsList(filter), options);
+export const useInfiniteNewsList = (filter: any) => {
+  return useInfiniteQuery<any>([CACHE_KEYS.NewsList], (data) =>
+    getNewsList({ ...data.pageParam, ...filter } ?? { skip: "1", limit: 30, ...filter }),
+  );
 };
 
-export const useInfiniteNewsByNewsletter = (id: string, filter: any, options?: any) => {
-  return useInfiniteQuery(
-    [CACHE_KEYS.NewsList, id],
-    () => {
-      if (id === ETreeTag.QUAN_TRONG) {
-        return getNewsVitals(filter);
-      }
+export const useInfiniteNewsByNewsletter = (id: string, filter: any) => {
+  return useInfiniteQuery([CACHE_KEYS.NewsList, id], (data) => {
+    if (id === ETreeTag.QUAN_TRONG) {
+      return getNewsVitals({ ...data.pageParam, ...filter } ?? { skip: "1", limit: 30, ...filter });
+    }
 
-      if (id === ETreeTag.DANH_DAU) {
-        return getNewsBookmarks(filter);
-      }
+    if (id === ETreeTag.DANH_DAU) {
+      return getNewsBookmarks(
+        { ...data.pageParam, ...filter } ?? { skip: "1", limit: 30, ...filter },
+      );
+    }
 
-      return getNewsByNewsletter(id, filter);
-    },
-    options,
-  );
+    return getNewsByNewsletter(
+      id,
+      { ...data.pageParam, ...filter } ?? { skip: "1", limit: 30, ...filter },
+    );
+  });
 };

@@ -4,11 +4,13 @@ import { Checkbox, List } from "antd";
 import { flatMap, unionBy } from "lodash";
 import React, { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
-import { useSearchParams } from "react-router-dom";
+import { useQueryClient } from "react-query";
 import { shallow } from "zustand/shallow";
 
 import { NewsItem } from "../components/news-item";
+import { useNewsFilter } from "../news.context";
 import {
+  CACHE_KEYS,
   useDeleteNewsInNewsletter,
   useInfiniteNewsList,
   useNewsIdToNewsletter,
@@ -18,27 +20,14 @@ import styles from "./news-list.module.less";
 interface Props {}
 
 export const NewsListPage: React.FC<Props> = () => {
-  const [searchParams] = useSearchParams();
   const [checkAll, setCheckAll] = useState(false);
   const [indeterminate, setIndeterminate] = useState(false);
-  const skip = searchParams.get("page_number") ?? 1;
-
+  const [skip, setSkip] = useState(1);
+  const queryClient = useQueryClient();
   const { ref, inView } = useInView();
-  const { data, isFetchingNextPage, isFetching, fetchNextPage, hasNextPage } = useInfiniteNewsList(
-    {
-      order: "modified_at",
-      skip: skip ?? 1,
-      limit: 30,
-    },
-    {
-      getNextPageParam: (lastPage: any) => {
-        if (Number(skip) * 10 < lastPage.total_record) {
-          return { skip: (Number(skip) + 1).toString(), limit: 30 };
-        }
-        return undefined;
-      },
-    },
-  );
+  const newsFilter = useNewsFilter();
+  const { data, isFetchingNextPage, isFetching, fetchNextPage, hasNextPage } =
+    useInfiniteNewsList(newsFilter);
   const { data: dataIAm, isLoading: isLoadingIAm } = useGetMe();
   const { mutateAsync: mutateDelete } = useDeleteNewsInNewsletter();
   const { mutate: mutateAdd } = useNewsIdToNewsletter();
@@ -46,7 +35,6 @@ export const NewsListPage: React.FC<Props> = () => {
     (state) => [state.newsSelection, state.setNewsSelection],
     shallow,
   );
-
   const dataSource = unionBy(
     flatMap(
       data?.pages.map((a) =>
@@ -59,6 +47,12 @@ export const NewsListPage: React.FC<Props> = () => {
     ),
     "_id",
   );
+  useEffect(() => {
+    queryClient.removeQueries([CACHE_KEYS.NewsList]);
+    setSkip(1);
+    setNewsSelection([]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (newsSelection.length === 0) {
@@ -75,14 +69,22 @@ export const NewsListPage: React.FC<Props> = () => {
   }, [newsSelection, dataSource]);
 
   React.useEffect(() => {
-    if (inView && skip !== undefined && data?.pages[0]?.result.length >= 10) {
-      fetchNextPage();
-      searchParams.set("page_number", (Number(skip) + 1).toString());
-      console.log("hello");
+    if (inView && skip * 30 <= data?.pages[0].total_record) {
+      setSkip(skip + 1);
     }
-    console.log(inView);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inView]);
+
+  useEffect(() => {
+    queryClient.removeQueries([CACHE_KEYS.NewsList]);
+    setNewsSelection([]);
+    setSkip(1);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [newsFilter]);
+  useEffect(() => {
+    fetchNextPage({ pageParam: { skip: skip, limit: 30 } });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [skip]);
   return (
     <div className={styles.mainContainer}>
       <div className={styles.titleListContainer}>
@@ -110,25 +112,20 @@ export const NewsListPage: React.FC<Props> = () => {
             />
           );
         }}
-        // loading={isFetching || isLoadingIAm}
+        loading={isLoadingIAm}
       />
       <div>
         {skip >= 1 ? (
           <button
             ref={ref}
-            onClick={() => {
-              fetchNextPage();
-              searchParams.set("page_number", (Number(skip) + 1).toString());
-            }}
             disabled={!hasNextPage || isFetchingNextPage}
             style={{ padding: 0, margin: 0, border: 0 }}
           >
-            {isFetchingNextPage ? "Loading more..." : ""}
+            {isFetchingNextPage ? "Đang lấy thêm tin..." : ""}
           </button>
         ) : null}
       </div>
-      <div>{isFetching && !isFetchingNextPage ? "Background Updating..." : null}</div>
-      {/* <div className={styles.footer} /> */}
+      <div>{isFetching && !isFetchingNextPage ? "Giao diện đang cập nhật..." : null}</div>
     </div>
   );
 
