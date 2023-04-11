@@ -43,7 +43,7 @@ export function NewsFilter(): JSX.Element {
       <Form onValuesChange={handleFinish}>
         <Space wrap>
           <Form.Item noStyle name="datetime">
-            <DatePicker.RangePicker />
+            <DatePicker.RangePicker format={"DD/MM/YYYY"} />
           </Form.Item>
           {/* <Form.Item noStyle> */}
           <Select placeholder="Dịch" defaultValue="nuoc-ngoai">
@@ -53,23 +53,23 @@ export function NewsFilter(): JSX.Element {
           {/* </Form.Item> */}
           <Form.Item noStyle name="language_source">
             <Select placeholder="Ngôn ngữ" mode="multiple" allowClear style={{ minWidth: 100 }}>
-              <Select.Option key="anh">Anh</Select.Option>
-              <Select.Option key="viet">Việt</Select.Option>{" "}
-              <Select.Option key="trung">Trung</Select.Option>
-              <Select.Option key="nga">Nga</Select.Option>
+              <Select.Option key="en">Anh</Select.Option>
+              <Select.Option key="vi">Việt</Select.Option>{" "}
+              <Select.Option key="cn">Trung</Select.Option>
+              <Select.Option key="ru">Nga</Select.Option>
             </Select>
           </Form.Item>
           <Form.Item noStyle name="sac_thai">
-            <Select placeholder="Điểm tin" defaultValue="sac-thai-tin">
-              <Select.Option key="sac-thai-tin">Sắc thái tin</Select.Option>
-              <Select.Option key="tich-cuc">Tích cực</Select.Option>
-              <Select.Option key="tieu-cuc">Tiêu cực</Select.Option>
-              <Select.Option key="trung-tinh">Trung tính</Select.Option>
+            <Select placeholder="Điểm tin" defaultValue="all">
+              <Select.Option key="all">Sắc thái tin</Select.Option>
+              <Select.Option key="1">Tích cực</Select.Option>
+              <Select.Option key="-1">Tiêu cực</Select.Option>
+              <Select.Option key="0">Trung tính</Select.Option>
             </Select>
           </Form.Item>
-          <Form.Item noStyle name="title">
-            <Input placeholder="Từ khoá" />
-          </Form.Item>
+          {/* <Form.Item noStyle name="title"> */}
+          <Input placeholder="Từ khoá" />
+          {/* </Form.Item> */}
           <Button disabled={newsSelectionIds.length === 0}>
             Tóm tắt tin ({newsSelectionIds.length})
           </Button>
@@ -98,10 +98,12 @@ export function NewsFilter(): JSX.Element {
   function handleFinish(values: Record<string, any>) {
     if ("datetime" in values) {
       values.start_date = values.datetime?.[0].format("DD/MM/YYYY");
-      values.end_date = values.datetime?.[0].format("DD/MM/YYYY");
+      values.end_date = values.datetime?.[1].format("DD/MM/YYYY");
       delete values.datetime;
     }
-
+    if ("language_source" in values) {
+      values.language_source = values?.language_source?.join(",");
+    }
     setNewsFilter({ ...newsFilter, ...values });
   }
 
