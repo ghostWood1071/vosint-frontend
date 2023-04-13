@@ -1,4 +1,8 @@
+import { EventEditorParagraph } from "@/components/editor/plugins/event-plugin/event-component";
+import { useEventContext } from "@/components/editor/plugins/event-plugin/event-context";
 import { CaretRightOutlined, DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
+import { $generateHtmlFromNodes } from "@lexical/html";
+import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import {
   Button,
   Col,
@@ -15,14 +19,21 @@ import {
   Tabs,
   TabsProps,
   Tooltip,
-  notification,
+  message,
 } from "antd";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
-import React, { useState } from "react";
+import { LexicalEditor, createEditor } from "lexical";
+import moment from "moment";
+import React, { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
-import { useEventByIdNewsList } from "../news.loader";
+import {
+  useAllEventNewsList,
+  useEventByIdNewsList,
+  useMutationAddManyEvent,
+  useMutationEventNews,
+} from "../news.loader";
 import styles from "./mindmap-modal.module.less";
 
 dayjs.extend(customParseFormat);
@@ -42,31 +53,67 @@ const formItemLayoutWithOutLabel = {
   },
 };
 
+const defaultName = `{"root":{"children":[{"children":[],"direction":null,"format":"","indent":0,"type":"paragraph","version":1}],"direction":null,"format":"","indent":0,"type":"root","version":1}}`;
+const defaultContent = `{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"Nội dung sự kiện","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1}],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}`;
+
 export const MindmapModal: React.FC<props> = ({ item, isVisible, setHideModal }) => {
   const [isAddEventView, setIsAddEventView] = useState(false);
   const [listEvent, setListEvent] = useState<any[]>([]);
-  const [valueSelect, setValueSelect] = useState<any>({});
+  const [valueEventSelect, setValueEventSelect] = useState<any>({});
+  const [valueNewsSelect, setValueNewsSelect] = useState<any>({});
   const [choosedEvent, setChoosedEvent] = useState<any>({ start_date: "10/10/2022" });
   const [isOpenModalEditEvent, setIsOpenModalEditEvent] = useState<boolean>(false);
   const [searchParams, setSearchParams] = useSearchParams();
-  const [api] = notification.useNotification();
+  const [eventName, setEventName] = useState(defaultName);
+  const [eventContent, setEventContent] = useState(defaultContent);
   const [listNewsAdd, setListNewsAdd] = useState<any[]>([
     { _id: item._id, "data:title": item["data:title"] },
   ]);
   const { data: dataFilterByID } = useEventByIdNewsList(item._id);
+  const { data: dataAllEventNews } = useAllEventNewsList({
+    name: searchParams.get("text_search_event") ?? "",
+    skip: "1",
+    limit: "20",
+  });
+  const { mutate: mutateOneEvent } = useMutationEventNews();
+  const { mutate: mutateManyEvent } = useMutationAddManyEvent();
+
   const [form] = Form.useForm<Record<string, any>>();
 
-  const columns: TableColumnsType<any> = [
+  const [editor] = useLexicalComposerContext();
+  const { eventEditorConfig } = useEventContext();
+  const eventEditor = useMemo(() => {
+    if (eventEditorConfig === null) return null;
+
+    const _eventEditor = createEditor({
+      namespace: eventEditorConfig?.namespace,
+      nodes: eventEditorConfig?.nodes,
+      onError: (error) => eventEditorConfig?.onError(error, editor),
+      theme: eventEditorConfig?.theme,
+    });
+    return _eventEditor;
+  }, [eventEditorConfig]);
+
+  if (eventEditor === null) return null;
+
+  const columnsEventTable: TableColumnsType<any> = [
     {
       title: "Tên sự kiện",
       align: "left",
       dataIndex: "event_name",
+      render: (value) => (
+        <div
+          dangerouslySetInnerHTML={{
+            __html: generateHTMLFromJSON(value, eventEditor),
+          }}
+        />
+      ),
     },
     {
       title: "Ngày sự kiện",
       align: "left",
       width: 180,
-      dataIndex: "start_date",
+      dataIndex: "date_created",
     },
     {
       title: "",
@@ -125,6 +172,7 @@ export const MindmapModal: React.FC<props> = ({ item, isVisible, setHideModal })
               event_content: "",
               khach_the: "",
               chu_the: "",
+              date_created: moment("10/02/2023", dateFormat),
             }}
             form={form}
             {...formItemLayoutWithOutLabel}
@@ -134,22 +182,17 @@ export const MindmapModal: React.FC<props> = ({ item, isVisible, setHideModal })
               label={"Tên sự kiện"}
               name={"event_name"}
               validateTrigger={["onChange", "onBlur"]}
-              rules={[
-                {
-                  required: true,
-                  message: "Hãy nhập vào tên sự kiện!",
-                  whitespace: true,
-                },
-              ]}
+              rules={[{}]}
             >
-              <Input />
+              <EventEditorParagraph data={defaultName} setData={setEventName} />
             </Form.Item>
             <Form.Item
               validateTrigger={["onChange", "onBlur"]}
               label="Nội dung sự kiện"
               name={"event_content"}
             >
-              <Input.TextArea autoSize={{ minRows: 1, maxRows: 3 }} />
+              {/* <Input.TextArea autoSize={{ minRows: 1, maxRows: 3 }} /> */}
+              <EventEditorParagraph data={defaultContent} setData={setEventContent} />
             </Form.Item>
             <Form.Item
               validateTrigger={["onChange", "onBlur"]}
@@ -164,29 +207,28 @@ export const MindmapModal: React.FC<props> = ({ item, isVisible, setHideModal })
             <Form.Item
               validateTrigger={["onChange", "onBlur"]}
               label="Ngày sự kiện"
-              name={"datetime"}
+              name={"date_created"}
+              rules={[
+                { type: "object" as const, required: true, message: "Hãy nhập vào thời gian!" },
+              ]}
             >
               <DatePicker format={"DD/MM/YYYY"} />
             </Form.Item>
-            <Form.Item
-              validateTrigger={["onChange", "onBlur"]}
-              label="Danh sách tin"
-              name={"datetime"}
-            >
+            <Form.Item validateTrigger={["onChange", "onBlur"]} label="Danh sách tin" name={"news"}>
               <div className={styles.addExistEventHeader}>
                 <div className={styles.leftAddExistNewsContainer}>
                   <Select
                     showSearch
                     className={styles.newsEventSelect}
-                    value={valueSelect}
+                    value={valueNewsSelect}
                     placeholder={"Nhập tiêu đề tin"}
                     defaultActiveFirstOption={false}
                     showArrow={false}
                     filterOption={false}
-                    onSearch={handleSearch}
-                    onChange={handleChange}
+                    onSearch={handleSearchNews}
+                    onChange={handleChangeNewsSelect}
                     notFoundContent={null}
-                    // options={(data?.data || []).map((d: any) => ({
+                    // options={(dataNews?.data || []).map((d: any) => ({
                     //   value: d._id,
                     //   label: d.event_name,
                     // }))}
@@ -205,6 +247,11 @@ export const MindmapModal: React.FC<props> = ({ item, isVisible, setHideModal })
                 pagination={false}
               />
             </Form.Item>
+            <div className={styles.addButtonContainer}>
+              <Button type="primary" className={styles.addButton} onClick={addOneEvent}>
+                Thêm sự kiện
+              </Button>
+            </div>
           </Form>
         </div>
       ),
@@ -219,29 +266,47 @@ export const MindmapModal: React.FC<props> = ({ item, isVisible, setHideModal })
               <Select
                 showSearch
                 className={styles.newsEventSelect}
-                value={valueSelect}
+                value={valueEventSelect}
                 placeholder={"Nhập tên sự kiện"}
                 defaultActiveFirstOption={false}
                 showArrow={false}
                 filterOption={false}
-                onSearch={handleSearch}
-                onChange={handleChange}
+                onSearch={handleSearchEvent}
+                onChange={handleChangeEvent}
                 notFoundContent={null}
-                // options={(data?.data || []).map((d: any) => ({
-                //   value: d._id,
-                //   label: d.event_name,
-                // }))}
-              />
+              >
+                {(dataAllEventNews?.data || []).map((d: any) => {
+                  return (
+                    <Select.Option value={d._id}>
+                      <div
+                        dangerouslySetInnerHTML={{
+                          __html: generateHTMLFromJSON(d.event_name, eventEditor),
+                        }}
+                      />
+                    </Select.Option>
+                  );
+                })}
+              </Select>
             </div>
             <div className={styles.rightAddExistNewsContainer}>
-              <Button type="primary" className={styles.addButton} onClick={addSource}>
+              <Button type="primary" className={styles.addButton} onClick={addEventToTable}>
                 Thêm
               </Button>
             </div>
           </div>
           {listEvent.length > 0 ? (
-            <Table columns={columns} dataSource={listEvent} rowKey="id" pagination={false} />
+            <Table
+              columns={columnsEventTable}
+              dataSource={listEvent}
+              rowKey="id"
+              pagination={false}
+            />
           ) : null}
+          <div className={styles.addButtonContainer}>
+            <Button type="primary" className={styles.addButton} onClick={addManyEvent}>
+              Thêm sự kiện
+            </Button>
+          </div>
         </div>
       ),
     },
@@ -311,106 +376,124 @@ export const MindmapModal: React.FC<props> = ({ item, isVisible, setHideModal })
             {isAddEventView ? (
               <div className={styles.addEventContainer}>
                 <Tabs defaultActiveKey="1" items={items} />
-                <div className={styles.addButtonContainer}>
-                  <Button type="primary" className={styles.addButton} onClick={addEvent}>
-                    Thêm sự kiện
-                  </Button>
-                </div>
               </div>
             ) : (
               <div className={styles.detailAllEvent}>
                 {dataFilterByID?.map((element: any) => {
-                  return <Items item={element} handleEdit={handleEdit} />;
+                  return <Items key={element._id} item={element} handleEdit={handleClickEdit} />;
                 })}
               </div>
             )}
           </div>
         </Col>
       </Row>
-      <ModalEdit
-        choosedEvent={choosedEvent}
-        functionEdit={functionEdit}
-        isOpen={isOpenModalEditEvent}
-        setIsOpen={setIsOpenModalEditEvent}
-      />
+      {isOpenModalEditEvent ? (
+        <ModalEdit
+          choosedEvent={choosedEvent}
+          functionEdit={handleUpdateEvent}
+          isOpen={isOpenModalEditEvent}
+          setIsOpen={setIsOpenModalEditEvent}
+        />
+      ) : null}
     </Modal>
   );
+
+  function openNotification(placement: any, type: any) {
+    if (type === "invalid") {
+      message.error({
+        content: "Sự kiện không tồn tại.",
+      });
+    }
+    if (type === "exited") {
+      message.error({
+        content: "Sự kiện đã được thêm vào danh sách.",
+      });
+    }
+  }
+
   function addNews() {}
 
-  function handleEdit(value: any) {
+  function handleClickEdit(value: any) {
     setChoosedEvent(value);
     setIsOpenModalEditEvent(true);
   }
-
-  function functionEdit(value: any) {}
 
   function handleChangeTypeBody() {
     setIsAddEventView(!isAddEventView);
   }
 
   function handleDeleteItemList(value: any) {
-    const result = listEvent.filter((e: any) => e.id !== value.id);
+    const result = listEvent.filter((e: any) => e._id !== value._id);
     setListEvent(result);
   }
 
-  function handleSearch(value: any) {
-    console.log("this is type: ", typeof value);
+  function handleSearchEvent(value: any) {
     setSearchParams({
-      text: value,
+      text_search_event: value,
     });
   }
-  function handleChange(newValue: object) {
-    setValueSelect(newValue);
+  function handleSearchNews(value: any) {
+    setSearchParams({
+      text_search_news: value,
+    });
+  }
+  function handleChangeNewsSelect(newValue: object) {
+    setValueNewsSelect(newValue);
   }
 
-  function openNotification(placement: any, type: any) {
-    if (type === "invalid") {
-      api.info({
-        message: `Thông báo`,
-        description: "Nguồn tin không tồn tại.",
-        placement,
-      });
+  function handleChangeEvent(newValue: object) {
+    setValueEventSelect(newValue);
+  }
+
+  function addEventToTable() {
+    const itemEvent = dataAllEventNews.data.find((e: any) => e._id === valueEventSelect);
+    if (itemEvent === undefined) {
+      openNotification("top", "invalid");
+      return;
     }
-    if (type === "exited") {
-      api.info({
-        message: `Thông báo`,
-        description: "Nguồn tin đã được thêm.",
-        placement,
-      });
+    const check = listEvent.findIndex((e: any) => e._id === itemEvent._id);
+    if (check === -1) {
+      setListEvent([
+        ...listEvent,
+        {
+          _id: itemEvent._id,
+          event_name: itemEvent.event_name,
+          date_created: itemEvent.date_created,
+        },
+      ]);
+      setValueEventSelect(null);
+    } else {
+      openNotification("top", "exited");
     }
   }
 
-  function addSource() {
-    // const item = data.data.find((e: any) => e._id === valueSelect);
-    // if (item === undefined) {
-    //   openNotification("top", "invalid");
-    //   return;
-    // }
-    // const check = listEvent.findIndex((e: any) => e.id === item._id);
-    // if (check === -1) {
-    //   setListEvent([
-    //     ...listEvent,
-    //     { id: item._id, event_name: item.event_name, start_date: item.start_date },
-    //   ]);
-    //   setValueSelect(null);
-    // } else {
-    //   openNotification("top", "exited");
-    // }
-  }
-
-  function addEvent() {
+  function addOneEvent() {
     form
       .validateFields()
       .then((values) => {
-        if (values.datetime === undefined) {
-          values.datetime = "";
+        if (values.date_created === undefined || values.date_created === null) {
+          values.date_created = "";
         } else {
-          values.datetime = new Date(values.datetime).toISOString();
+          values.date_created = values.date_created.format("DD/MM/YYYY");
         }
-        values["news_list"] = [item._id];
+        values["system_created"] = false;
+        values["event_name"] = eventName;
+        values["event_content"] = eventContent;
+        values["new_list"] = listNewsAdd.map((e) => e._id);
+        mutateOneEvent({ ...values, action: "add" });
         setIsAddEventView(false);
       })
       .catch();
+  }
+
+  function handleUpdateEvent(value: any) {
+    console.log(value);
+    mutateOneEvent({ data: value, _id: choosedEvent._id, action: "update" });
+  }
+
+  function addManyEvent() {
+    const allEventAdd = listEvent.map((e) => e._id);
+    mutateManyEvent({ action: "add", id: item._id, data: allEventAdd });
   }
 };
 
@@ -420,6 +503,22 @@ interface ItemsProps {
 }
 
 const Items: React.FC<ItemsProps> = ({ item, handleEdit }) => {
+  const [editor] = useLexicalComposerContext();
+  const { eventEditorConfig } = useEventContext();
+  const eventEditor = useMemo(() => {
+    if (eventEditorConfig === null) return null;
+
+    const _eventEditor = createEditor({
+      namespace: eventEditorConfig?.namespace,
+      nodes: eventEditorConfig?.nodes,
+      onError: (error) => eventEditorConfig?.onError(error, editor),
+      theme: eventEditorConfig?.theme,
+    });
+    return _eventEditor;
+  }, [eventEditorConfig]);
+
+  if (eventEditor === null) return null;
+
   return (
     <div className={styles.itemContainer} key={item._id}>
       <div className={styles.collapseContainer}>
@@ -428,12 +527,27 @@ const Items: React.FC<ItemsProps> = ({ item, handleEdit }) => {
           defaultActiveKey={["0"]}
           ghost
         >
-          <Collapse.Panel header={item.event_name} key="1">
+          <Collapse.Panel
+            header={
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: generateHTMLFromJSON(item.event_name, eventEditor),
+                }}
+              />
+            }
+            key="1"
+          >
             <div className={styles.itemContentContainer}>
               <Row gutter={[0, 5]}>
                 <Col span={6}>Nội dung</Col>
                 <Col span={1}>:</Col>
-                <Col span={17}>{item.event_content}</Col>
+                <Col span={17}>
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: generateHTMLFromJSON(item.event_content, eventEditor),
+                    }}
+                  />
+                </Col>
                 <Col span={6}>Khách thể</Col>
                 <Col span={1}>:</Col>
                 <Col span={17}>{item.khach_the}</Col>
@@ -442,7 +556,7 @@ const Items: React.FC<ItemsProps> = ({ item, handleEdit }) => {
                 <Col span={17}>{item.chu_the}</Col>
                 <Col span={6}>Ngày sự kiện</Col>
                 <Col span={1}>:</Col>
-                <Col span={17}>{item.start_date}</Col>
+                <Col span={17}>{item.date_created}</Col>
               </Row>
             </div>
           </Collapse.Panel>
@@ -479,7 +593,13 @@ const ModalEdit: React.FC<ModalEditProps> = ({
   choosedEvent,
   functionEdit,
 }) => {
-  const initialValues = { ...choosedEvent, start_date: dayjs(choosedEvent.start_date, dateFormat) };
+  const [dataTableNews, setDataTableNews] = useState();
+  const [eventName, setEventName] = useState(choosedEvent.event_name);
+  const [eventContent, setEventContent] = useState(choosedEvent.event_content);
+  const initialValues = {
+    ...choosedEvent,
+    date_created: moment(choosedEvent.date_created, dateFormat),
+  };
 
   const [form] = Form.useForm<Record<string, any>>();
 
@@ -487,25 +607,31 @@ const ModalEdit: React.FC<ModalEditProps> = ({
     setIsOpen(false);
   }
 
-  async function handleEdit() {
+  async function handleClickEdit() {
     form
       .validateFields()
       .then((values) => {
-        if (values.note === undefined) {
-          values.note = "";
-        }
-        functionEdit({ ...initialValues, ...values });
+        values.date_created = values.date_created.format("DD/MM/YYYY");
+        functionEdit({
+          ...initialValues,
+          ...values,
+          event_name: eventName,
+          event_content: eventContent,
+        });
         setIsOpen(false);
       })
       .catch();
   }
+
+  if (!choosedEvent.event_name && !choosedEvent.event_content) return null;
+
   return (
     <Modal
       title={"Sửa sự kiện"}
       open={isOpen}
       destroyOnClose
       confirmLoading={confirmLoading}
-      onOk={handleEdit}
+      onOk={handleClickEdit}
       onCancel={handleCancel}
       width={800}
       getContainer="#modal-mount"
@@ -522,22 +648,16 @@ const ModalEdit: React.FC<ModalEditProps> = ({
           label={"Tên sự kiện"}
           name={"event_name"}
           validateTrigger={["onChange", "onBlur"]}
-          rules={[
-            {
-              required: true,
-              message: "Hãy nhập vào tên sự kiện!",
-              whitespace: true,
-            },
-          ]}
         >
-          <Input />
+          <EventEditorParagraph data={choosedEvent.event_name} setData={setEventName} />
         </Form.Item>
         <Form.Item
           validateTrigger={["onChange", "onBlur"]}
           label="Nội dung sự kiện"
           name={"event_content"}
         >
-          <Input.TextArea autoSize={{ minRows: 1, maxRows: 3 }} />
+          {/* <Input.TextArea autoSize={{ minRows: 1, maxRows: 3 }} /> */}
+          <EventEditorParagraph data={choosedEvent.event_content} setData={setEventContent} />
         </Form.Item>
         <Form.Item validateTrigger={["onChange", "onBlur"]} label="Khách thể" name={"khach_the"}>
           <Input />
@@ -548,11 +668,57 @@ const ModalEdit: React.FC<ModalEditProps> = ({
         <Form.Item
           validateTrigger={["onChange", "onBlur"]}
           label="Ngày sự kiện"
-          name={"start_date"}
+          name={"date_created"}
+          rules={[{ type: "object" as const, required: true, message: "Hãy nhập vào thời gian!" }]}
         >
           <DatePicker format={"DD/MM/YYYY"} />
         </Form.Item>
+        {/* <Form.Item validateTrigger={["onChange", "onBlur"]} label="Danh sách tin" name={"news"}>
+          <div className={styles.addExistEventHeader}>
+            <div className={styles.leftAddExistNewsContainer}>
+              <Select
+                showSearch
+                className={styles.newsEventSelect}
+                value={valueNewsSelect}
+                placeholder={"Nhập tiêu đề tin"}
+                defaultActiveFirstOption={false}
+                showArrow={false}
+                filterOption={false}
+                onSearch={handleSearchNews}
+                onChange={handleChangeNewsSelect}
+                notFoundContent={null}
+                // options={(dataNews?.data || []).map((d: any) => ({
+                //   value: d._id,
+                //   label: d.event_name,
+                // }))}
+              />
+            </div>
+            <div className={styles.rightAddExistNewsContainer}>
+              <Button type="primary" className={styles.addButton} onClick={addNews}>
+                Thêm
+              </Button>
+            </div>
+          </div>
+          <Table
+            columns={columnsNewsTable}
+            dataSource={listNewsAdd}
+            rowKey="_id"
+            pagination={false}
+          />
+        </Form.Item> */}
       </Form>
     </Modal>
   );
 };
+
+export const eventHTMLCache: Map<string, string> = new Map();
+
+function generateHTMLFromJSON(editorStateJSON: string, eventEditor: LexicalEditor): string {
+  const editorState = eventEditor.parseEditorState(editorStateJSON);
+  let html = eventHTMLCache.get(editorStateJSON);
+  if (html === undefined) {
+    html = editorState.read(() => $generateHtmlFromNodes(eventEditor, null));
+    eventHTMLCache.set(editorStateJSON, html);
+  }
+  return html;
+}

@@ -50,6 +50,14 @@
   border: 1px solid rgb(200, 200, 200);
   overflow: auto;
   padding-left: 10px;
+
+  :global {
+    .content_editable__root {
+      padding-block: 3px;
+      padding-inline: 5px;
+      border: 1px solid rgb(220, 220, 220);
+    }
+  }
   .scroll-class;
   .add-event-container {
     padding: 10px;
@@ -147,4 +155,11 @@
 .title-child-item {
   width: calc(100% - 10px);
   background-color: green;
+}
+:global {
+  .content_editable__root {
+    padding-block: 3px;
+    padding-inline: 5px;
+    border: 1px solid rgb(220, 220, 220);
+  }
 }
