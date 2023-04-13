@@ -27,8 +27,8 @@ export const PipelineForm: React.FC<Props> = ({ isLoading, onSave }) => {
           <Cron value={cronExpr} setValue={setCronExpr} locale={VI_LOCALE} />
         </Form.Item>
         <Form.Item>
-          <Button loading={isLoading} type="primary" icon={<SaveOutlined />} htmlType="submit">
-            Lưu
+          <Button loading={isLoading} type="primary" htmlType="submit">
+            Ok
           </Button>
         </Form.Item>
       </Form>

@@ -27,15 +27,18 @@ const formItemLayoutWithOutLabel2 = {
     sm: { span: 24, offset: 7 },
   },
 };
+interface Props {
+  title: string;
+}
 
-export function NewsletterFormLinhVuc(): JSX.Element {
+export function NewsletterFormLinhVuc({ title }: Props): JSX.Element {
   const form = Form.useFormInstance();
   const isSample = Form.useWatch("isSample", form);
 
   return (
     <>
-      <Form.Item label="Tên danh mục" name="title" rules={rulesTitle}>
-        <Input placeholder="Nhập tên danh muc" />
+      <Form.Item label={`Tên ${title}`} name="title" rules={rulesTitle}>
+        <Input placeholder={`Nhập tên ${title}`} />
       </Form.Item>
       <Form.Item name="isSample" label="Định nghĩa tin mẫu" valuePropName="checked">
         <Switch />

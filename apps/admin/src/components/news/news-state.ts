@@ -79,3 +79,18 @@ export enum ETreeAction {
   DELETE = "delete",
   SELECT = "select",
 }
+
+export const MTreeAction: Record<ETreeAction, string> = {
+  [ETreeAction.CREATE]: "Thêm",
+  [ETreeAction.UPDATE]: "Sửa",
+  [ETreeAction.DELETE]: "Xóa",
+  [ETreeAction.SELECT]: "Chọn",
+};
+
+export const MTreeTag: Record<ETreeTag, string> = {
+  [ETreeTag.CHU_DE]: "chủ đề",
+  [ETreeTag.LINH_VUC]: "lĩnh vực",
+  [ETreeTag.GIO_TIN]: "giỏ tin",
+  [ETreeTag.QUAN_TRONG]: "quan trọng",
+  [ETreeTag.DANH_DAU]: "đánh dấu",
+};

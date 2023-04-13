@@ -63,6 +63,14 @@ export const UserManagerForm: React.FC<Props> = ({ form, onFinish, isUpdate }) =
             required: !isUpdate,
             message: "Hãy nhập mật khẩu!",
           },
+          {
+            max: 20,
+            message: "Mật khẩu không được quá 20 ký tự!",
+          },
+          {
+            min: 8,
+            message: "Mật khẩu phải có ít nhất 8 ký tự!",
+          },
         ]}
       >
         <Input.Password />
@@ -76,6 +84,14 @@ export const UserManagerForm: React.FC<Props> = ({ form, onFinish, isUpdate }) =
           {
             required: !isUpdate,
             message: "Hãy nhập lại mật khẩu!",
+          },
+          {
+            max: 20,
+            message: "Mật khẩu không được quá 20 ký tự!",
+          },
+          {
+            min: 8,
+            message: "Mật khẩu phải có ít nhất 8 ký tự!",
           },
           ({ getFieldValue }) => ({
             validator(_, value) {

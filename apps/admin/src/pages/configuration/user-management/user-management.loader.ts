@@ -6,6 +6,7 @@ import {
   updateUser,
   uploadAvatar,
 } from "@/services/user.service";
+import { AxiosError } from "axios";
 import { UseMutationOptions, useMutation, useQuery, useQueryClient } from "react-query";
 
 export const CACHE_KEYS = {
@@ -16,15 +17,10 @@ export const useUserManager = (filter: Record<string, string>) => {
   return useQuery([CACHE_KEYS.LIST, filter], () => getUsers(filter));
 };
 
-export const useCreateUser = ({ onSuccess }: any) => {
-  const queryClient = useQueryClient();
-
-  return useMutation((values) => createUser(values), {
-    onSuccess() {
-      queryClient.invalidateQueries([CACHE_KEYS.LIST]);
-      onSuccess();
-    },
-  });
+export const useCreateUser = (
+  options?: UseMutationOptions<any, AxiosError<{ detail: string }>, any, { previousData: any }>,
+) => {
+  return useMutation((values) => createUser(values), options);
 };
 
 export const useUpdateUser = (

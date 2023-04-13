@@ -3,6 +3,7 @@ import { NewsletterDto } from "@/services/news.type";
 import { Form, Modal } from "antd";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { useLocation } from "react-router-dom";
 
 import { NewsletterFormGioTin } from "./form/form-ban-tin";
 import { NewsletterFormDelete } from "./form/form-delete";
@@ -25,8 +26,10 @@ interface Props {
 export function NewsletterModal({ onFinish, confirmLoading }: Props): JSX.Element {
   const { t } = useTranslation("translation", { keyPrefix: "news" });
   const { action, tag, data } = useNewsState((state) => state.news);
+  const reset = useNewsState((state) => state.reset);
   const newsSelectId = useNewsState((state) => state.newsSelectId);
   const { data: initialData } = useNewsletterDetail(newsSelectId as string, {});
+  const location = useLocation();
 
   const setNews = useNewsState((state) => state.setNews);
   const newsSamples = useNewsSamplesState((state) => state.newsSamples);
@@ -43,6 +46,10 @@ export function NewsletterModal({ onFinish, confirmLoading }: Props): JSX.Elemen
     }
   }, [initialData, action]);
 
+  useEffect(() => {
+    reset();
+  }, [location.pathname]);
+
   return (
     <Modal
       title={t(action!) + t(tag!)}
@@ -58,8 +65,8 @@ export function NewsletterModal({ onFinish, confirmLoading }: Props): JSX.Elemen
       {action !== ETreeAction.SELECT && action !== ETreeAction.DELETE && (
         <Form form={form} {...formItemLayoutWithOutLabel}>
           {tag === ETreeTag.GIO_TIN && <NewsletterFormGioTin />}
-          {tag === ETreeTag.CHU_DE && <NewsletterFormLinhVuc />}
-          {tag === ETreeTag.LINH_VUC && <NewsletterFormLinhVuc />}
+          {tag === ETreeTag.CHU_DE && <NewsletterFormLinhVuc title="Chủ đề" />}
+          {tag === ETreeTag.LINH_VUC && <NewsletterFormLinhVuc title="Lĩnh vực" />}
         </Form>
       )}
     </Modal>

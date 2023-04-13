@@ -112,7 +112,14 @@ export const PipelineTable: React.FC<Props> = ({
       title: t("collect_history"),
       align: "center",
       render: (_, record) => {
-        return <Button onClick={handleSetId} icon={<PipelineHistoryIcon />} type="primary" />;
+        return (
+          <Button
+            onClick={handleSetId}
+            icon={<PipelineHistoryIcon />}
+            type="primary"
+            title="Lịch sử thu thập"
+          />
+        );
         function handleSetId() {
           onHistory && onHistory(record._id);
         }

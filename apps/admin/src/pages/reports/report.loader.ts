@@ -8,7 +8,13 @@ import {
   removeNewsInEvent,
   updateEvent,
 } from "@/services/report.service";
-import { UseMutationOptions, UseQueryOptions, useMutation, useQuery } from "react-query";
+import {
+  UseMutationOptions,
+  UseQueryOptions,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "react-query";
 
 export const CACHE_KEYS = {
   EVENTS: "EVENTS",
@@ -38,7 +44,29 @@ export const useUpdateEvent = (
     { previousData?: IEventDto; newData?: IEventDto }
   >,
 ) => {
-  return useMutation((data: IEventDto) => updateEvent(id, data), options);
+  const queryClient = useQueryClient();
+
+  return useMutation<string, unknown, IEventDto, { previousData?: IEventDto; newData?: IEventDto }>(
+    (data: IEventDto) => updateEvent(id, data),
+    {
+      onMutate: async (newData) => {
+        await queryClient.cancelQueries({ queryKey: [CACHE_KEYS.EVENT, id] });
+        const previousData = queryClient.getQueryData<IEventDto>([CACHE_KEYS.EVENT, id]);
+
+        queryClient.setQueryData([CACHE_KEYS.EVENT, id], newData);
+        return { previousData, newData };
+      },
+      onError: (_, __, context) => {
+        if (!context) return;
+        queryClient.setQueryData([CACHE_KEYS.EVENT, id], context.previousData);
+      },
+      onSettled: () => {
+        queryClient.invalidateQueries({ queryKey: [CACHE_KEYS.EVENT, id] });
+      },
+
+      ...options,
+    },
+  );
 };
 
 export const useRemoveNewsInEvent = (
@@ -50,7 +78,30 @@ export const useRemoveNewsInEvent = (
     { previousData?: IEventDto; newData?: IEventDto }
   >,
 ) => {
-  return useMutation((data) => removeNewsInEvent(id, data), options);
+  const queryClient = useQueryClient();
+  return useMutation((data) => removeNewsInEvent(id, data), {
+    onMutate: async (removedNews) => {
+      await queryClient.cancelQueries({ queryKey: [CACHE_KEYS.EVENT, id] });
+      const previousData = queryClient.getQueryData<IEventDto>([CACHE_KEYS.EVENT, id]);
+      queryClient.setQueriesData<IEventDto | undefined>([CACHE_KEYS.EVENT, id], (oldData) => {
+        if (!oldData) return oldData;
+        if (oldData.new_list) {
+          oldData.new_list = oldData.new_list.filter((item) => !removedNews.includes(item._id));
+        }
+
+        return oldData;
+      });
+      return { previousData, removedNews };
+    },
+    onError: (_, __, context) => {
+      if (!context) return;
+      queryClient.setQueryData([CACHE_KEYS.EVENT, id], context.previousData);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: [CACHE_KEYS.EVENT, id] });
+    },
+    ...options,
+  });
 };
 
 export const useReports = (

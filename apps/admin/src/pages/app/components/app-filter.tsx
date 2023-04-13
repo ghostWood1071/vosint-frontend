@@ -18,23 +18,24 @@ export function AppFilter({ children }: Props): JSX.Element {
   return (
     <Row className={styles.filter} align="middle">
       <Col span={1} xl={4}>
-        <Tooltip title={!pinned ? t("open sidebar") : t("close sidebar")} placement="bottomLeft">
-          <div className={styles.containerIcon}>
-            <MenuOutlined className={classNames(styles.menuIcon, styles.icon)} />
-            {!pinned && (
-              <DoubleRightOutlined
-                className={classNames(styles.doubleIcon, styles.icon)}
-                onClick={handlePin}
-              />
-            )}
-            {pinned && (
-              <DoubleLeftOutlined
-                className={classNames(styles.doubleIcon, styles.icon)}
-                onClick={handlePin}
-              />
-            )}
-          </div>
-        </Tooltip>
+        <div
+          className={styles.containerIcon}
+          title={!pinned ? t("open sidebar") : t("close sidebar")}
+        >
+          <MenuOutlined className={classNames(styles.menuIcon, styles.icon)} />
+          {!pinned && (
+            <DoubleRightOutlined
+              className={classNames(styles.doubleIcon, styles.icon)}
+              onClick={handlePin}
+            />
+          )}
+          {pinned && (
+            <DoubleLeftOutlined
+              className={classNames(styles.doubleIcon, styles.icon)}
+              onClick={handlePin}
+            />
+          )}
+        </div>
       </Col>
       <Col span={23} xl={20}>
         {children}

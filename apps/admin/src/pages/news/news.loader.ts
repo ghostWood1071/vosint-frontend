@@ -1,4 +1,4 @@
-import { ETreeAction, ETreeTag } from "@/components/news/news-state";
+import { ETreeAction, ETreeTag, MTreeAction, MTreeTag } from "@/components/news/news-state";
 import {
   AddManyEventToNews,
   addNewsIdsToBookmarkUser,
@@ -24,7 +24,7 @@ import {
   updateEventNews,
   updateNewsletter,
 } from "@/services/news.service";
-import { INewsSummaryDto, TNewsSummary } from "@/services/news.type";
+import { INewsSummaryDto, NewsletterDto, TNewsSummary } from "@/services/news.type";
 import { message } from "antd";
 import {
   UseMutationOptions,
@@ -76,7 +76,7 @@ export const useAllEventNewsList = (filter: any) => {
 
 export const useMutationNewsSidebar = () => {
   const queryClient = useQueryClient();
-  return useMutation(
+  return useMutation<any, any, NewsletterDto>(
     ({ action, _id, newsletter_ids, ...data }: any) => {
       if (action === ETreeAction.DELETE) {
         return deleteMultipleNewsletter({ newsletter_ids });
@@ -93,7 +93,10 @@ export const useMutationNewsSidebar = () => {
       throw new Error("action invalid");
     },
     {
-      onSuccess: () => {
+      onSuccess: (_, variables) => {
+        if (variables.action && variables.tag) {
+          message.success(`${MTreeAction[variables.action]} ${MTreeTag[variables.tag]} thành công`);
+        }
         queryClient.invalidateQueries([CACHE_KEYS.NewsSidebar]);
         queryClient.invalidateQueries([CACHE_KEYS.NewsletterDetail]);
       },

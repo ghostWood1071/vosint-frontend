@@ -11,7 +11,6 @@ import { Button, Collapse, DatePicker, DatePickerProps, List, Space, Typography 
 import { $getNodeByKey, NodeKey, createEditor } from "lexical";
 import moment from "moment";
 import React, { useEffect, useMemo, useState } from "react";
-import { useQueryClient } from "react-query";
 
 import { EventEditor, useEventContext } from "./event-context";
 import { $isEventNode } from "./event-node";
@@ -33,45 +32,8 @@ export default function EventComponent({ nodeKey, date, id }: Props): JSX.Elemen
       setTempContent(res.event_content);
     },
   });
-  const queryClient = useQueryClient();
-  const { mutate } = useUpdateEvent(id, {
-    onMutate: async (newData) => {
-      await queryClient.cancelQueries({ queryKey: [CACHE_KEYS.EVENT, id] });
-      const previousData = queryClient.getQueryData<IEventDto>([CACHE_KEYS.EVENT, id]);
-
-      queryClient.setQueryData([CACHE_KEYS.EVENT, id], newData);
-      return { previousData, newData };
-    },
-    onError: (_, __, context) => {
-      if (!context) return;
-      queryClient.setQueryData([CACHE_KEYS.EVENT, id], context.previousData);
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: [CACHE_KEYS.EVENT, id] });
-    },
-  });
-  const { mutate: mutateRemove } = useRemoveNewsInEvent(id, {
-    onMutate: async (removedNews) => {
-      await queryClient.cancelQueries({ queryKey: [CACHE_KEYS.EVENT, id] });
-      const previousData = queryClient.getQueryData<IEventDto>([CACHE_KEYS.EVENT, id]);
-      queryClient.setQueriesData<IEventDto | undefined>([CACHE_KEYS.EVENT, id], (oldData) => {
-        if (!oldData) return oldData;
-        if (oldData.new_list) {
-          oldData.new_list = oldData.new_list.filter((item) => !removedNews.includes(item._id));
-        }
-
-        return oldData;
-      });
-      return { previousData, removedNews };
-    },
-    onError: (_, __, context) => {
-      if (!context) return;
-      queryClient.setQueryData([CACHE_KEYS.EVENT, id], context.previousData);
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: [CACHE_KEYS.EVENT, id] });
-    },
-  });
+  const { mutate } = useUpdateEvent(id);
+  const { mutate: mutateRemove } = useRemoveNewsInEvent(id);
   const [open, setOpen] = useState(false);
 
   useEffect(() => {

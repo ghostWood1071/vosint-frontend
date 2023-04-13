@@ -1,3 +1,5 @@
+import { ETreeAction, ETreeTag } from "@/components/news/news-state";
+
 export type TNews = {
   _id: string;
   "data:title": string;
@@ -26,7 +28,7 @@ export interface NewsletterDto {
   news_samples?: string[] | TNews[];
   parent_id?: string;
   _id?: string;
-  action?: any;
-  tag?: any;
+  action?: ETreeAction | null;
+  tag?: ETreeTag | null;
   newsletter_ids?: string[];
 }
