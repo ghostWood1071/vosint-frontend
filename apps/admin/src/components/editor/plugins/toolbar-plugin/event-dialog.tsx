@@ -55,7 +55,7 @@ export function EventDialog(): JSX.Element | null {
         id: data,
         hidden: false,
         open: true,
-        date: variables.date,
+        date: variables.date_created,
       });
     },
   });
@@ -104,7 +104,7 @@ export function EventDialog(): JSX.Element | null {
       mutate({
         event_content: content,
         event_name: name,
-        date,
+        date_created: date,
       });
     }
     setOpen(false);

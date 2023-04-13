@@ -80,7 +80,7 @@ export default function EventComponent({ nodeKey, date, id }: Props): JSX.Elemen
         mutate({
           event_name: tempName,
           event_content: tempContent,
-          date: date.format("YYYY-MM-DD"),
+          date_created: date.format("YYYY-MM-DD"),
           new_list: data.new_list.map((item) => item._id),
         });
       }, 1000);
