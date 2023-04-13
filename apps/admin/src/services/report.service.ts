@@ -2,8 +2,8 @@ import { apiClient } from "@/utils/api";
 
 import { IEventDto, IReportDto, TEvents } from "./report-type";
 
-const apiEventBaseV2Url = "";
-const apiReportBaseV2Url = "";
+const apiEventBaseV2Url = "/v2";
+const apiReportBaseV2Url = "/v2";
 
 export const createEvent = async (data: IEventDto) => {
   const result = await apiClient.post(`${apiEventBaseV2Url}/event`, data);
