@@ -1,14 +1,17 @@
 import { ETreeAction, ETreeTag } from "@/components/news/news-state";
 import {
+  AddManyEventToNews,
   addNewsIdsToBookmarkUser,
   addNewsIdsToNewsletter,
   addNewsIdsToVitalUser,
   addNewsletter,
+  createEventNews,
   deleteMultipleNewsletter,
   deleteNewsIdInNewsletter,
   deleteNewsInBookmarkUser,
   deleteNewsInVitalUser,
   deleteNewsletter,
+  getAllEventNews,
   getEventByIdNews,
   getNewsBookmarks,
   getNewsByNewsletter,
@@ -18,6 +21,7 @@ import {
   getNewsSummary,
   getNewsVitals,
   getNewsletterDetail,
+  updateEventNews,
   updateNewsletter,
 } from "@/services/news.service";
 import { INewsSummaryDto, TNewsSummary } from "@/services/news.type";
@@ -64,6 +68,10 @@ export const useNewsletterDetail = (id: string | null, { onSuccess }: any) => {
 
 export const useEventByIdNewsList = (newsId: string) => {
   return useQuery<any>([CACHE_KEYS.NewsEvent, newsId], () => getEventByIdNews(newsId));
+};
+
+export const useAllEventNewsList = (filter: any) => {
+  return useQuery<any>([CACHE_KEYS.NewsEvent, filter], () => getAllEventNews(filter));
 };
 
 export const useMutationNewsSidebar = () => {
@@ -205,4 +213,64 @@ export const useInfiniteNewsByNewsletter = (id: string, filter: any) => {
       { ...data.pageParam, ...filter } ?? { skip: "1", limit: 30, ...filter },
     );
   });
+};
+
+export const useMutationEventNews = () => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    ({ action, _id, data }: any) => {
+      if (action === "update") {
+        return updateEventNews(_id, data);
+      }
+
+      if (action === "add") {
+        return createEventNews(data);
+      }
+
+      throw new Error("action invalid");
+    },
+    {
+      onSuccess: (data: any, variables) => {
+        queryClient.invalidateQueries([CACHE_KEYS.NewsEvent]);
+        message.success({
+          content: (variables.action === "add" ? "Thêm" : "Sửa") + " sự kiện thành công",
+          key: CACHE_KEYS.NewsEvent,
+        });
+      },
+      onError: () => {
+        message.error({
+          content: "Tên sự kiện đã tồn tại. Hãy nhập lại!",
+          key: CACHE_KEYS.NewsEvent,
+        });
+      },
+    },
+  );
+};
+
+export const useMutationAddManyEvent = () => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    ({ action, id, data }: any) => {
+      if (action === "add") {
+        return AddManyEventToNews(data, id);
+      }
+
+      throw new Error("action invalid");
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries([CACHE_KEYS.NewsEvent]);
+        message.success({
+          content: "Thêm các sự kiện thành công",
+          key: CACHE_KEYS.NewsEvent,
+        });
+      },
+      onError: () => {
+        message.error({
+          content: "Thêm các sự kiện lỗi. Hãy nhập lại!",
+          key: CACHE_KEYS.NewsEvent,
+        });
+      },
+    },
+  );
 };

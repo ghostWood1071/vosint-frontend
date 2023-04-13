@@ -13,7 +13,7 @@ export const getNewsSidebar = async (title?: string) => {
 };
 
 export const getNewsList = async (filter: any) => {
-  const result = await apiClient.get<any>(`/Job/api/get_result_job/News`, {
+  const result = await apiClient.get<any>(`${apiNewsBaseV2Url}/Job/api/get_result_job/News`, {
     params: filterEmptyString({
       page_number: filter.skip,
       page_size: filter.limit,
@@ -30,7 +30,7 @@ export const getNewsDetail = async (id: string) => {
 };
 
 export const getNewsByNewsletter = async (newsletterId: string, filter: Record<string, string>) => {
-  const result = await apiClient.get(`/Job/api/get_result_job/News`, {
+  const result = await apiClient.get(`${apiNewsBaseV2Url}/Job/api/get_result_job/News`, {
     params: filterEmptyString({
       ...filter,
       page_number: filter.skip,
@@ -87,7 +87,7 @@ export const deleteNewsIdInNewsletter = async (newsletterId: string, newsIds: st
 };
 
 export const getNewsBookmarks = async (filter: Record<string, string>) => {
-  const result = await apiClient.get(`/Job/api/get_result_job/News`, {
+  const result = await apiClient.get(`${apiNewsBaseV2Url}/Job/api/get_result_job/News`, {
     params: filterEmptyString({
       ...filter,
       page_number: filter.skip,
@@ -109,7 +109,7 @@ export const deleteNewsInBookmarkUser = async (newsIds: string[]) => {
 };
 
 export const getNewsVitals = async (filter: Record<string, string>) => {
-  const result = await apiClient.get(`/Job/api/get_result_job/News`, {
+  const result = await apiClient.get(`${apiNewsBaseV2Url}/Job/api/get_result_job/News`, {
     params: filterEmptyString({
       ...filter,
       page_number: filter.skip,
@@ -145,5 +145,27 @@ export const getNewsSummary = async ({ k, ...data }: INewsSummaryDto) => {
 
 export const getEventByIdNews = async (newsId: string) => {
   const result = await apiClient.get<any>(`${apiNewsBaseV2Url}/event/news/${newsId}`);
+  return result.data;
+};
+
+export const getAllEventNews = async (filter: any) => {
+  const result = await apiClient.get<any>(`${apiNewsBaseV2Url}/event/search`, {
+    params: filterEmptyString(filter),
+  });
+  return result.data;
+};
+
+export const createEventNews = async (data: any) => {
+  const result = await apiClient.post<any>(`${apiNewsBaseV2Url}/event`, data);
+  return result.data;
+};
+
+export const updateEventNews = async (event_id: string, data: any) => {
+  const result = await apiClient.put(`${apiNewsBaseV2Url}/event/${event_id}`, data);
+  return result.data;
+};
+
+export const AddManyEventToNews = async (data: any, news_id: string) => {
+  const result = await apiClient.put<any>(`${apiNewsBaseV2Url}/event/add-event/${news_id}`, data);
   return result.data;
 };
