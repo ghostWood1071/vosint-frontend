@@ -95,7 +95,7 @@ export function NewsletterFormLinhVuc(): JSX.Element {
   );
 }
 
-function ListNewsSampleLinhVuc(): JSX.Element {
+export function ListNewsSampleLinhVuc(): JSX.Element {
   const newsSelectId = useNewsState((state) => state.newsSelectId);
   const queryClient = useQueryClient();
   const data = queryClient.getQueryData<NewsType["data"]>([
@@ -104,10 +104,6 @@ function ListNewsSampleLinhVuc(): JSX.Element {
   ]);
 
   const newsSamples = useNewsSamplesState((state) => state.newsSamples);
-  console.log(
-    "🚀 ~ file: form-linh-vuc.tsx:106 ~ ListNewsSampleLinhVuc ~ newsSamples:",
-    newsSamples,
-  );
   const setNewsSamples = useNewsSamplesState((state) => state.setNewsSamples);
   const [open, setOpen] = useState(false);
 

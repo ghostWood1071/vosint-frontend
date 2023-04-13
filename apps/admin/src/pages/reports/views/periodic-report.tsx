@@ -1,5 +1,5 @@
-import React from "react";
+import { PageHeader } from "antd";
 
 export const PeriodicReport = () => {
-  return <div>PeriodicReport</div>;
+  return <PageHeader title="Báo cáo định kỳ"></PageHeader>;
 };

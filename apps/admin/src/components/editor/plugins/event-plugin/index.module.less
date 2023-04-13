@@ -1,0 +1,72 @@
+.container {
+  &[open] {
+    .icon span svg {
+      transform: rotate(90deg);
+    }
+  }
+
+  .header {
+    cursor: pointer;
+    position: relative;
+    list-style: none;
+    outline: none;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: flex-start;
+    padding-right: 16px;
+    line-height: 1.5175;
+
+    &::marker,
+    &::-webkit-details-marker {
+      display: none;
+    }
+
+    .icon span {
+      display: inline-block;
+      margin-right: 12px;
+      font-size: 12px;
+      vertical-align: -1px;
+
+      & svg {
+        transition: transform 0.24s;
+      }
+    }
+
+    .title {
+      flex: auto;
+    }
+  }
+
+  .content {
+    padding-left: 24px;
+
+    :global {
+      .ant-collapse > .ant-collapse-item > .ant-collapse-header {
+        padding-left: 0;
+      }
+    }
+  }
+
+  :global {
+    .content_editable__root {
+      padding: 0;
+    }
+
+    .ant-collapse-ghost > .ant-collapse-item > .ant-collapse-content > .ant-collapse-content-box {
+      padding-top: 0;
+    }
+
+    .ant-collapse > .ant-collapse-item > .ant-collapse-header {
+      align-items: center;
+    }
+  }
+}
+
+.modal-dialog {
+  :global {
+    .content_editable__root {
+      padding: 0;
+      padding-left: 12px;
+    }
+  }
+}

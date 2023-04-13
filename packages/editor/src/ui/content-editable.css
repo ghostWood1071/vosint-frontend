@@ -1,0 +1,17 @@
+.content_editable__root {
+  border: 0;
+  font-size: 15px;
+  display: block;
+  position: relative;
+  tab-size: 1;
+  outline: 0;
+  padding: 8px 28px;
+  padding-bottom: 40px;
+}
+
+@media (max-width: 1025px) {
+  .content_editable__root {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+}

@@ -1,0 +1,58 @@
+.editor-shell {
+  margin: 20px auto;
+  color: #000;
+  position: relative;
+  line-height: 1.7;
+  font-weight: 400;
+}
+
+.editor-shell .editor-container {
+  background: #fff;
+  position: relative;
+  display: block;
+}
+
+.editor-scroller {
+  min-height: 150px;
+  border: 0;
+  display: flex;
+  position: relative;
+  outline: 0;
+  z-index: 0;
+  overflow: auto;
+  resize: vertical;
+}
+
+.editor {
+  flex: auto;
+  position: relative;
+  resize: vertical;
+  z-index: -1;
+}
+
+.event__content-editable {
+  min-height: 20px;
+  border: 0px;
+  resize: none;
+  cursor: text;
+  display: block;
+  position: relative;
+  tab-size: 1;
+  outline: 0px;
+  padding: 0;
+  user-select: text;
+  font-size: 15px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  z-index: 3;
+}
+
+.ant-collapse > .ant-collapse-item > .ant-collapse-header {
+  padding-left: 0;
+}
+
+.ant-collapse-ghost > .ant-collapse-item > .ant-collapse-content > .ant-collapse-content-box {
+  /* padding-left: 40px; */
+  padding-top: 0;
+  padding-right: 8px;
+}
