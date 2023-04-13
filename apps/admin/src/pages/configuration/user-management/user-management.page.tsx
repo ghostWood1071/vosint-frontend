@@ -1,5 +1,5 @@
 import { PlusSquareOutlined } from "@ant-design/icons";
-import { Button, Form, Input, Modal, PageHeader, Select, message } from "antd";
+import { Alert, Button, Form, Input, Modal, PageHeader, Select, message } from "antd";
 import { trim } from "lodash";
 import React, { useState } from "react";
 import { useQueryClient } from "react-query";
@@ -26,16 +26,27 @@ export const UserManagerList: React.FC = () => {
   const [isOpen, setIsOpen] = useState<"create" | "update" | null>(null);
   const [form] = Form.useForm();
 
-  const { mutate: mutateCreate, isLoading: isCreating } = useCreateUser({
+  const {
+    mutate: mutateCreate,
+    isLoading: isCreating,
+    error,
+    isError,
+  } = useCreateUser({
     onSuccess: () => {
       message.success("Thêm người dùng thành công");
       setIsOpen(null);
+      queryClient.invalidateQueries([CACHE_KEYS.LIST]);
+    },
+    onError: (err) => {
+      if (err.response?.data.detail === "User already exist") {
+        message.error("Người dùng đã tồn tại");
+      }
     },
   });
 
   const { mutate: mutateUpdate, isLoading: isUpdating } = useUpdateUser({
     onSuccess: () => {
-      message.success("Cập nhật người dùng thành công");
+      message.success("Sửa người dùng thành công");
       setIsOpen(null);
       queryClient.invalidateQueries([CACHE_KEYS.LIST]);
     },
@@ -96,14 +107,18 @@ export const UserManagerList: React.FC = () => {
         />
       </PageHeader>
       <Modal
-        title={isOpen === "create" ? "Thêm người dùng" : "Cập nhật người dùng"}
+        title={isOpen === "create" ? "Thêm người dùng" : "Sửa người dùng"}
         open={!!isOpen}
         onCancel={handleCancel}
         onOk={handleOk}
         confirmLoading={isCreating || isUpdating}
         destroyOnClose
         maskClosable={false}
+        getContainer="#modal-mount"
       >
+        {isError && (
+          <Alert message={error?.response?.data.detail} style={{ marginBottom: 10 }} type="error" />
+        )}
         <UserManagerForm form={form} onFinish={handleFinish} isUpdate={isOpen === "update"} />
       </Modal>
     </>

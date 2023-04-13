@@ -10,6 +10,7 @@ import { NewsletterDto } from "@/services/news.type";
 import { PlusOutlined } from "@ant-design/icons";
 import { Button, Card, Col, Descriptions, Input, List, PageHeader, Row, Typography } from "antd";
 import { useSearchParams } from "react-router-dom";
+import { shallow } from "zustand/shallow";
 
 import { TableItem } from "./components/table-item";
 import styles from "./news-category-config.module.less";
@@ -22,7 +23,10 @@ export const CategoryNewsConfig = () => {
   const { data } = useNewsSidebar(titleNewsletter);
   const linhVucTree = data?.linh_vuc && buildTree(data.linh_vuc);
   const { mutateAsync, isLoading: isMutateLoading } = useMutationNewsSidebar();
-  const newsSelectId = useNewsState((state) => state.newsSelectId);
+  const [newsSelectId, setNewsSelectId] = useNewsState(
+    (state) => [state.newsSelectId, state.setNewsSelectId],
+    shallow,
+  );
   const { data: dataDetail } = useNewsletterDetail(newsSelectId as string, {});
 
   return (
@@ -36,6 +40,7 @@ export const CategoryNewsConfig = () => {
             onSearch={(value) => {
               searchParams.set("title_newsletter", value);
               setSearchParams(searchParams);
+              setNewsSelectId(null);
             }}
             key="search"
           />,
@@ -52,9 +57,11 @@ export const CategoryNewsConfig = () => {
           <Col span={11} className={styles.col}>
             <div className={styles.nameCategory}>Mô tả</div>
             <Descriptions bordered>
-              <Descriptions.Item label="Tên lĩnh vực" span={3}>
-                {dataDetail?.title}
-              </Descriptions.Item>
+              {dataDetail?.title && (
+                <Descriptions.Item label="Tên lĩnh vực" span={3}>
+                  {dataDetail?.title}
+                </Descriptions.Item>
+              )}
               {dataDetail?.required_keyword && (
                 <Descriptions.Item label="Từ khoá bắt buộc" span={3}>
                   {dataDetail?.required_keyword?.map((i: any) => i + ", ")}

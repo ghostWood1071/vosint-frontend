@@ -4,7 +4,7 @@ import classNames from "classnames";
 import { useRef, useState } from "react";
 import { useClickAway } from "react-use";
 
-import { ETreeAction, ETreeTag, useNewsState } from "../news-state";
+import { ETreeAction, ETreeTag, MTreeTag, useNewsState } from "../news-state";
 import styles from "./tree-title-gio-tin.module.less";
 
 interface Props extends TreeDataNode {
@@ -43,15 +43,21 @@ export function TreeTitleGioTin({ onClick, children, isEditable, ...node }: Prop
         <Col span={8} className={styles.menu} ref={ref}>
           {isOpen ? (
             <Space>
-              <Tooltip title={""}>
-                <PlusOutlined onClick={handleCreate} className={styles.add} />
-              </Tooltip>
-              <Tooltip title={""}>
-                <EditOutlined onClick={handleUpdate} className={styles.edit} />
-              </Tooltip>
-              <Tooltip title={""}>
-                <DeleteOutlined onClick={handleDelete} className={styles.delete} />
-              </Tooltip>
+              <PlusOutlined
+                onClick={handleCreate}
+                className={styles.add}
+                title={`Thêm ${MTreeTag[node.tag]}`}
+              />
+              <EditOutlined
+                onClick={handleUpdate}
+                className={styles.edit}
+                title={`Sửa ${MTreeTag[node.tag]}`}
+              />
+              <DeleteOutlined
+                onClick={handleDelete}
+                className={styles.delete}
+                title={`Xoá ${MTreeTag[node.tag]}`}
+              />
             </Space>
           ) : (
             <EllipsisOutlined className={styles.ellips} onClick={handleOpen} />

@@ -9,6 +9,7 @@ import {
 import { generateImage } from "@/utils/image";
 import { EditOutlined, UserOutlined } from "@ant-design/icons";
 import {
+  Alert,
   Avatar,
   Button,
   Card,
@@ -57,7 +58,12 @@ export const UserProfile: React.FC<Props> = ({ open, setOpen }) => {
   const [selectedFile, setSelectedFile] = useState<File>();
   const [preview, setPreview] = useState<any>(null);
 
-  const { mutate: mutateChangePassword, isLoading: isLoadingChangePassword } = useChangePassword({
+  const {
+    mutate: mutateChangePassword,
+    isLoading: isLoadingChangePassword,
+    isError: isErrorChangePassword,
+    error: errorChangePassword,
+  } = useChangePassword({
     onSuccess: () => {
       localStorage.clear();
       // eslint-disable-next-line no-restricted-globals
@@ -241,6 +247,15 @@ export const UserProfile: React.FC<Props> = ({ open, setOpen }) => {
           bodyStyle={{ padding: 0 }}
           style={{ paddingRight: 24, paddingBottom: 24 }}
         >
+          {isErrorChangePassword && (
+            <Alert
+              message="Có lỗi xảy ra"
+              description={errorChangePassword.response?.data.detail}
+              type="error"
+              showIcon
+              style={{ marginBottom: 24 }}
+            />
+          )}
           <Collapse
             accordion
             expandIconPosition="end"
@@ -259,16 +274,45 @@ export const UserProfile: React.FC<Props> = ({ open, setOpen }) => {
                 requiredMark={false}
                 onFinish={handleFinishPassword}
               >
-                <Form.Item name="password" label="Mật khẩu hiện tại">
+                <Form.Item
+                  name="password"
+                  label="Mật khẩu hiện tại"
+                  rules={[
+                    {
+                      min: 8,
+                      message: "Mật khẩu phải có ít nhất 8 ký tự!",
+                    },
+                  ]}
+                >
                   <Input.Password />
                 </Form.Item>
                 <Form.Item
                   name="new_password"
                   label="Mật khẩu mới"
+                  dependencies={["password"]}
+                  hasFeedback
                   rules={[
                     {
-                      message: "Please input your password!",
+                      message: "Hãy nhập mật khẩu mới",
                     },
+                    {
+                      max: 20,
+                      message: "Mật khẩu không được quá 20 ký tự!",
+                    },
+                    {
+                      min: 8,
+                      message: "Mật khẩu phải có ít nhất 8 ký tự!",
+                    },
+                    ({ getFieldValue }) => ({
+                      validator(_, value) {
+                        if (!value || getFieldValue("password") !== value) {
+                          return Promise.resolve();
+                        }
+                        return Promise.reject(
+                          new Error("Mật khẩu mới không được trùng với mật khẩu cũ!"),
+                        );
+                      },
+                    }),
                   ]}
                 >
                   <Input.Password />
@@ -281,6 +325,14 @@ export const UserProfile: React.FC<Props> = ({ open, setOpen }) => {
                   rules={[
                     {
                       message: t("auth.enter_confirm_password"),
+                    },
+                    {
+                      max: 20,
+                      message: "Mật khẩu không được quá 20 ký tự!",
+                    },
+                    {
+                      min: 8,
+                      message: "Mật khẩu phải có ít nhất 8 ký tự!",
                     },
                     ({ getFieldValue }) => ({
                       validator(_, value) {
@@ -362,6 +414,7 @@ export const UserProfile: React.FC<Props> = ({ open, setOpen }) => {
 
   function handleFinishPassword(values: Record<string, string>) {
     mutateChangePassword({
+      username: userProfile!.username,
       password: values.password,
       new_password: values.new_password,
     });

@@ -46,6 +46,14 @@ export const ForgotPasswordPage = () => {
             required: true,
             message: t("auth.new_password"),
           },
+          {
+            max: 20,
+            message: "Mật khẩu không được quá 20 ký tự!",
+          },
+          {
+            min: 8,
+            message: "Mật khẩu phải có ít nhất 8 ký tự!",
+          },
         ]}
         hasFeedback
       >
@@ -61,6 +69,14 @@ export const ForgotPasswordPage = () => {
           {
             required: true,
             message: t("auth.enter_confirm_password"),
+          },
+          {
+            max: 20,
+            message: "Mật khẩu không được quá 20 ký tự!",
+          },
+          {
+            min: 8,
+            message: "Mật khẩu phải có ít nhất 8 ký tự!",
           },
           ({ getFieldValue }) => ({
             validator(_, value) {

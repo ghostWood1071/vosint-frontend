@@ -1,5 +1,5 @@
 import { DeleteOutlined, EditOutlined, FolderOutlined, PlusOutlined } from "@ant-design/icons";
-import { Col, Row, Space, Tooltip, TreeDataNode, Typography } from "antd";
+import { Col, Row, Space, TreeDataNode, Typography } from "antd";
 
 import { ETreeAction, ETreeTag, useNewsState } from "../news-state";
 import styles from "./tree-title-linh-vuc.module.less";
@@ -28,15 +28,13 @@ export function TreeTitleLinhVuc(node: Props): JSX.Element {
 
       <Col span={8} className={styles.menu}>
         <Space>
-          <Tooltip title={"Thêm danh mục"}>
-            <PlusOutlined onClick={handleCreate} className={styles.add} />
-          </Tooltip>
-          <Tooltip title={"Cập nhật danh mục"}>
-            <EditOutlined onClick={handleUpdate} className={styles.edit} />
-          </Tooltip>
-          <Tooltip title={"Xoá danh mục"}>
-            <DeleteOutlined onClick={handleDelete} className={styles.delete} />
-          </Tooltip>
+          <PlusOutlined onClick={handleCreate} className={styles.add} title={"Thêm lĩnh vực"} />
+          <EditOutlined
+            onClick={handleUpdate}
+            className={styles.edit}
+            title={"Cập nhật lĩnh vực"}
+          />
+          <DeleteOutlined onClick={handleDelete} className={styles.delete} title={"Xoá lĩnh vực"} />
         </Space>
       </Col>
     </Row>

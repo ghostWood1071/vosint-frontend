@@ -16,7 +16,7 @@ import styles from "./synthetic-report.module.less";
 export function SyntheticReportCreate(): JSX.Element {
   const navigate = useNavigate();
   const [title, setTitle] = useState("Tên báo cáo");
-  const [content, setContent] = useState("Nội dung báo cáo");
+  const [content, setContent] = useState(defaultContent);
 
   const { mutate } = useCreateReport({
     onSuccess: (data) => {
@@ -71,3 +71,5 @@ export function SyntheticReportCreate(): JSX.Element {
     mutate({ title, content });
   }
 }
+
+const defaultContent = `{"root":{"children":[{"children":[],"direction":null,"format":"","indent":0,"type":"paragraph","version":1}],"direction":null,"format":"","indent":0,"type":"root","version":1}}`;

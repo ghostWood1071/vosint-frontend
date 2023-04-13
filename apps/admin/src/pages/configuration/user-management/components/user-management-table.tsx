@@ -67,7 +67,7 @@ export const UserManagerTable: React.FC<Props> = ({
               <Button
                 icon={<FormOutlined />}
                 onClick={handleClickUpdate}
-                title="Cập nhật người dùng"
+                title="Sửa người dùng"
                 type="text"
               />
             )}

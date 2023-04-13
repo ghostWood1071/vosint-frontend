@@ -67,22 +67,30 @@ export const PipelineList: React.FC = () => {
       <PageHeader
         title={t("title_information_gathering")}
         extra={[
-          <Search placeholder={t("search_here")} onSearch={handleSearch} />,
+          <Search placeholder={t("search_here")} onSearch={handleSearch} key="search" />,
           <Button
             title="Dừng tất cả"
             loading={isLoadingJobAll}
             icon={<ActionStopIcon onClick={handleStopJobAll} />}
+            key="stop_all"
           />,
           <Button
             title="Chạy tất cả"
             loading={isLoadingJobAll}
             icon={<ActionRunIcon onClick={handleStartJobAll} />}
+            key="start_all"
           />,
-          <Button title="Làm mới trang" icon={<ActionReloadIcon />} onClick={handleRefresh} />,
+          <Button
+            title="Làm mới trang"
+            icon={<ActionReloadIcon />}
+            onClick={handleRefresh}
+            key="refresh"
+          />,
           <Button
             title="Tạo mới pipeline"
             icon={<PlusOutlined />}
             onClick={navigateCreatePipeline}
+            key="create"
           />,
         ]}
       >

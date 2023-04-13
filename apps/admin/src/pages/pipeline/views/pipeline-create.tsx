@@ -11,7 +11,7 @@ export const PipelineCreate: React.FC = () => {
   const { t } = useTranslation("translation", { keyPrefix: "pipeline" });
   const { mutate, isLoading } = usePutPipeline({
     onSuccess: () => {
-      message.success("Created pipeline");
+      message.success("Tạo thành công pipeline mới");
       navigate(pipelineListPath);
     },
   });
