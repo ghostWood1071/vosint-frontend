@@ -1,0 +1,16 @@
+.editor-theme__paragraph {
+  margin: 0;
+  position: relative;
+}
+
+.editor-theme__text-bold {
+  font-weight: bold;
+}
+
+.editor-theme__text-italic {
+  font-style: italic;
+}
+
+.editor-theme__text-underline {
+  text-decoration: underline;
+}

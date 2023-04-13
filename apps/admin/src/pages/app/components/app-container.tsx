@@ -25,7 +25,9 @@ export const AppContainer: React.FC<AppContainerProps> = ({ children, sidebar, f
           </Col>
         )}
         <Col flex="1 1 auto" id="modal-mount">
-          <div className={classNames(styles.container, "scrollbar")}>{children}</div>
+          <div className={classNames(styles.container, "scrollbar")} id="container">
+            {children}
+          </div>
         </Col>
       </Row>
     </>

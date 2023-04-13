@@ -1,30 +1,30 @@
 .root {
   min-height: calc(100vh - 90px - 61px);
+}
 
-  .sidebar {
-    box-shadow: 2px 0px 2px rgba(0, 0, 0, 0.25);
-    backdrop-filter: blur(3px);
-    z-index: 1;
-    background-color: #ffffff;
-    height: calc(100vh - 90px - 61px);
-    overflow-y: auto;
-  }
+.sidebar {
+  box-shadow: 2px 0px 2px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(3px);
+  z-index: 1;
+  background-color: #ffffff;
+  height: calc(100vh - 90px - 61px);
+  overflow-y: auto;
+}
 
-  .container {
-    height: calc(100vh - 90px - 61px);
-    overflow-y: auto;
-    padding-right: 10px;
-    background-color: #ffffff;
-  }
+.container {
+  height: calc(100vh - 90px - 61px);
+  overflow-y: auto;
+  padding-right: 10px;
+  background-color: #ffffff;
 }
 
 @media screen and (min-width: 1201px) {
   .root {
     min-height: calc(100vh - 50px - 61px);
+  }
 
-    .container,
-    .sidebar {
-      height: calc(100vh - 50px - 61px);
-    }
+  .container,
+  .sidebar {
+    height: calc(100vh - 50px - 61px);
   }
 }

@@ -38,8 +38,11 @@ export const getReportPeriodicUrl = (reportId: string | number) => `/report/peri
 export const reportQuickPath = "/report/quick/:id";
 export const getReportQuickUrl = (reportId: string | number) => `/report/quick/${reportId}`;
 
-export const reportSyntheticPath = "/report/synthetic/:id";
-export const getReportSyntheticUrl = (reportId: string | number) => `/report/synthetic/${reportId}`;
+export const reportSyntheticPath = "/report/synthetic";
+export const reportSyntheticCreatePath = "/report/synthetic/create";
+export const reportSyntheticDetailPath = "/report/synthetic/:id";
+export const getSyntheticReportDetailUrl = (reportId: string | number) =>
+  `/report/synthetic/${reportId}`;
 
 export const pipelineDashboardPath = "/pipeline/dashboard";
 export const pipelineDataProcessingPath = "/pipeline/data-processing";

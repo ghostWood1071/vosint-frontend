@@ -1,0 +1,15 @@
+.toolbar {
+  background: #fff;
+  padding: 0 8px;
+  vertical-align: middle;
+  overflow: auto;
+  position: sticky;
+  z-index: 1;
+  top: 0;
+}
+
+.event-create {
+  .content_editable__root {
+    padding: 8px 12px;
+  }
+}

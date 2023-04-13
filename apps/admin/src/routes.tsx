@@ -37,7 +37,14 @@ import {
   PipelineLayout,
   PipelineList,
 } from "./pages/pipeline";
-import { PeriodicReport, QuickReport, ReportLayout, SyntheticReport } from "./pages/reports";
+import {
+  PeriodicReport,
+  QuickReport,
+  ReportLayout,
+  SyntheticReport,
+  SyntheticReportCreate,
+  SyntheticReportDetail,
+} from "./pages/reports";
 import {
   accountForMonitoringFacebookPath,
   accountForMonitoringTiktokPath,
@@ -71,6 +78,8 @@ import {
   reportPath,
   reportPeriodicPath,
   reportQuickPath,
+  reportSyntheticCreatePath,
+  reportSyntheticDetailPath,
   reportSyntheticPath,
   searchPath,
   socialDashboardPath,
@@ -188,6 +197,14 @@ export const routers = createBrowserRouter([
           {
             path: reportSyntheticPath,
             element: <SyntheticReport />,
+          },
+          {
+            path: reportSyntheticDetailPath,
+            element: <SyntheticReportDetail />,
+          },
+          {
+            path: reportSyntheticCreatePath,
+            element: <SyntheticReportCreate />,
           },
         ],
       },

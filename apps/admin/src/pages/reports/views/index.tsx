@@ -24,3 +24,19 @@ export const SyntheticReport = lazyLoad(
     fallback: <SplashScreen />,
   },
 );
+
+export const SyntheticReportCreate = lazyLoad(
+  () => import("./synthetic-report-create"),
+  (module) => module.SyntheticReportCreate,
+  {
+    fallback: <SplashScreen />,
+  },
+);
+
+export const SyntheticReportDetail = lazyLoad(
+  () => import("./synthetic-report-detail"),
+  (module) => module.SyntheticReportDetail,
+  {
+    fallback: <SplashScreen />,
+  },
+);
