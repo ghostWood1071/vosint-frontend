@@ -13,6 +13,14 @@ export const getNewsSidebar = async (title?: string) => {
 };
 
 export const getNewsList = async (filter: any) => {
+  const result = await apiClient.get<any>(`${apiNewsBaseV2Url}/news`, {
+    params: filterEmptyString(filter),
+  });
+
+  return result.data;
+};
+
+export const getNewsListWithApiJob = async (filter: any) => {
   const result = await apiClient.get<any>(`${apiNewsBaseV2Url}/Job/api/get_result_job/News`, {
     params: filterEmptyString({
       page_number: filter.skip,
@@ -30,6 +38,17 @@ export const getNewsDetail = async (id: string) => {
 };
 
 export const getNewsByNewsletter = async (newsletterId: string, filter: Record<string, string>) => {
+  const result = await apiClient.get(`${apiNewsBaseV2Url}/newsletters/${newsletterId}/news`, {
+    params: filterEmptyString(filter),
+  });
+
+  return result.data;
+};
+
+export const getNewsByNewsletterWithApiJob = async (
+  newsletterId: string,
+  filter: Record<string, string>,
+) => {
   const result = await apiClient.get(`${apiNewsBaseV2Url}/Job/api/get_result_job/News`, {
     params: filterEmptyString({
       ...filter,
@@ -87,6 +106,13 @@ export const deleteNewsIdInNewsletter = async (newsletterId: string, newsIds: st
 };
 
 export const getNewsBookmarks = async (filter: Record<string, string>) => {
+  const result = await apiClient.get(`${apiNewsBaseV2Url}/user/bookmarks`, {
+    params: filterEmptyString(filter),
+  });
+  return result.data;
+};
+
+export const getNewsBookmarksWithApiJob = async (filter: Record<string, string>) => {
   const result = await apiClient.get(`${apiNewsBaseV2Url}/Job/api/get_result_job/News`, {
     params: filterEmptyString({
       ...filter,
@@ -109,6 +135,13 @@ export const deleteNewsInBookmarkUser = async (newsIds: string[]) => {
 };
 
 export const getNewsVitals = async (filter: Record<string, string>) => {
+  const result = await apiClient.get(`${apiNewsBaseV2Url}/user/vital`, {
+    params: filterEmptyString(filter),
+  });
+  return result.data;
+};
+
+export const getNewsVitalsWithApiJob = async (filter: Record<string, string>) => {
   const result = await apiClient.get(`${apiNewsBaseV2Url}/Job/api/get_result_job/News`, {
     params: filterEmptyString({
       ...filter,
@@ -149,7 +182,7 @@ export const getEventByIdNews = async (newsId: string) => {
 };
 
 export const getAllEventNews = async (filter: any) => {
-  const result = await apiClient.get<any>(`${apiNewsBaseV2Url}/event/search`, {
+  const result = await apiClient.get<any>(`${apiNewsBaseV2Url}/event/search/`, {
     params: filterEmptyString(filter),
   });
   return result.data;
