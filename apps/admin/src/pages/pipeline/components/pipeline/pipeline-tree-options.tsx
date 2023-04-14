@@ -1,8 +1,7 @@
-import { IActionParamInfo } from "@/services/pipeline.type";
+import type { IActionParamInfo } from "@/services/pipeline.type";
 import { CloseCircleOutlined, MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { Button, Card, Form, Input, Select, Space, Typography } from "antd";
 import classNames from "classnames";
-import { FormInstance } from "rc-field-form";
 import { useEffect } from "react";
 
 import { usePipelineSource } from "../../pipeline.loader";
@@ -21,32 +20,53 @@ interface Props {
 export function PipelineTreeOptions({ option, onClose, onValuesChange }: Props) {
   const [form] = Form.useForm();
 
+  // Set default value
   var defaultParams = option?.param_infos?.reduce(
     (acc, curr) => ({ ...acc, [curr.name]: curr.default_val }),
     {},
   );
 
   useEffect(() => {
+    // Reset form
     form.setFieldsValue({ ...defaultParams, ...option?.params });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [option?.id]);
 
   return (
     <Card title="Options" className={styles.root} extra={<CloseCircleOutlined onClick={onClose} />}>
-      <Form form={form} layout="vertical" onValuesChange={onValuesChange}>
-        {option?.param_infos?.map((param) =>
-          renderFormItemStrategies?.[param?.val_type]?.(param, form),
-        )}
+      <Form form={form} layout="vertical" onValuesChange={onValuesChange} preserve>
+        {option?.param_infos?.map((param) => {
+          if (param.val_type === "select") {
+            return <FormSelect key={param.name} {...param} />;
+          }
+
+          if (param.val_type === "str") {
+            return <FormStr key={param.name} {...param} />;
+          }
+
+          if (param.val_type === "source") {
+            return <FormSource key={param.name} {...param} />;
+          }
+
+          if (param.val_type === "pubdate") {
+            return <FormPubDate key={param.name} {...param} />;
+          }
+
+          return null;
+        })}
+
+        {/* hold actions value when change */}
+        <Form.Item name="actions" hidden>
+          <Input hidden />
+        </Form.Item>
       </Form>
     </Card>
   );
 }
 
-const renderFormItemStrategies: Record<
-  string,
-  (props: IActionParamInfo, form: FormInstance<any>) => JSX.Element
-> = {
-  select: ({ options, name, display_name }) => (
-    <Form.Item key={name} label={display_name} name={[name]}>
+function FormSelect({ options, name, display_name }: IActionParamInfo): JSX.Element {
+  return (
+    <Form.Item label={display_name} name={[name]}>
       <Select>
         {options?.map((val) => (
           <Option key={val} value={val}>
@@ -55,20 +75,36 @@ const renderFormItemStrategies: Record<
         ))}
       </Select>
     </Form.Item>
-  ),
-  str: ({ name, display_name }) => (
-    <Form.Item key={name} label={display_name} name={[name]}>
+  );
+}
+
+function FormStr({ display_name, name }: IActionParamInfo): JSX.Element {
+  return (
+    <Form.Item label={display_name} name={[name]}>
       <TextArea />
     </Form.Item>
-  ),
-  source: SourceItem,
-  pubdate: PubDateItem,
-};
+  );
+}
 
-function PubDateItem(
-  { name, display_name, options }: IActionParamInfo,
-  form: FormInstance<any>,
-): JSX.Element {
+function FormSource({ display_name, name }: IActionParamInfo): JSX.Element {
+  const { data, isLoading } = usePipelineSource();
+  return (
+    <Form.Item label={display_name} name={[name]}>
+      <Select
+        loading={isLoading}
+        options={data}
+        showSearch
+        optionFilterProp="children"
+        filterOption={(input, option) =>
+          (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
+        }
+      />
+    </Form.Item>
+  );
+}
+
+function FormPubDate({ display_name, name, options }: IActionParamInfo): JSX.Element {
+  const form = Form.useFormInstance();
   const display = Form.useWatch(name, form);
 
   return (
@@ -104,23 +140,6 @@ function PubDateItem(
           </Space>
         )}
       </Form.List>
-    </Form.Item>
-  );
-}
-
-function SourceItem({ name, display_name }: IActionParamInfo): JSX.Element {
-  const { data, isLoading } = usePipelineSource();
-  return (
-    <Form.Item key={name} label={display_name} name={[name]}>
-      <Select
-        loading={isLoading}
-        options={data}
-        showSearch
-        optionFilterProp="children"
-        filterOption={(input, option) =>
-          (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
-        }
-      />
     </Form.Item>
   );
 }
