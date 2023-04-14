@@ -10,6 +10,7 @@ import {
   getFacebookSetting,
   getObjectCateConfig,
   getProxyConfig,
+  getProxyPipelineOptions,
   getSettingFilter,
   getSocialObjectList,
   getTiktokSetting,
@@ -21,8 +22,16 @@ import {
   updateProxyConfig,
   updateSocialConfig,
 } from "@/services/cate-config.service";
+import { IProxyPipelineOptions } from "@/services/cate-config.type";
 import { message } from "antd";
-import { UseMutationOptions, useMutation, useQuery, useQueryClient } from "react-query";
+import { AxiosError } from "axios";
+import {
+  UseMutationOptions,
+  UseQueryOptions,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "react-query";
 
 export const CACHE_KEYS = {
   ObjectCate: "OBJECT_CATEGORY",
@@ -36,6 +45,7 @@ export const CACHE_KEYS = {
   InfoAccountMonitorFB: "INFO_ACCOUNT_MONITOR_FB",
   InfoAccountMonitorTW: "INFO_ACCOUNT_MONITOR_TW",
   InfoAccountMonitorTT: "INFO_ACCOUNT_MONITOR_TT",
+  ProxyPipelineOptions: "PROXY_PIPELINE_OPTIONS",
 };
 
 export const useObjectCate = (filter: any) => {
@@ -44,6 +54,16 @@ export const useObjectCate = (filter: any) => {
 
 export const useProxyConfig = (filter: any) => {
   return useQuery([CACHE_KEYS.ProxyConfig, filter], () => getProxyConfig(filter));
+};
+
+export const useProxyPipelineOptions = (
+  options?: UseQueryOptions<IProxyPipelineOptions, AxiosError>,
+) => {
+  return useQuery<IProxyPipelineOptions, AxiosError>(
+    CACHE_KEYS.ProxyPipelineOptions,
+    () => getProxyPipelineOptions(),
+    options,
+  );
 };
 
 export const useSocialObjectList = (filter: any) => {

@@ -1,3 +1,4 @@
+import { useProxyPipelineOptions } from "@/pages/configuration/config.loader";
 import type { IActionParamInfo } from "@/services/pipeline.type";
 import { CloseCircleOutlined, MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { Button, Card, Form, Input, Select, Space, Typography } from "antd";
@@ -52,6 +53,10 @@ export function PipelineTreeOptions({ option, onClose, onValuesChange }: Props) 
             return <FormPubDate key={param.name} {...param} />;
           }
 
+          if (param.val_type === "proxy") {
+            return <FormProxy key={param.name} {...param} />;
+          }
+
           return null;
         })}
 
@@ -88,6 +93,25 @@ function FormStr({ display_name, name }: IActionParamInfo): JSX.Element {
 
 function FormSource({ display_name, name }: IActionParamInfo): JSX.Element {
   const { data, isLoading } = usePipelineSource();
+
+  return (
+    <Form.Item label={display_name} name={[name]}>
+      <Select
+        loading={isLoading}
+        options={data}
+        showSearch
+        optionFilterProp="children"
+        filterOption={(input, option) =>
+          (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
+        }
+      />
+    </Form.Item>
+  );
+}
+
+function FormProxy({ display_name, name }: IActionParamInfo): JSX.Element {
+  const { data, isLoading } = useProxyPipelineOptions();
+
   return (
     <Form.Item label={display_name} name={[name]}>
       <Select
