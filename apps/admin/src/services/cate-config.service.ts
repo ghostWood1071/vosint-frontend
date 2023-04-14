@@ -1,5 +1,7 @@
 import { apiClient, filterEmptyString } from "@/utils/api";
 
+import { IProxyPipelineOptions } from "./cate-config.type";
+
 const apiCateConfigBaseV2Url = "/v2";
 
 //get
@@ -156,5 +158,12 @@ export const getSocialObjectList = async (filter: any) => {
   const result = await apiClient.get<any>(`${apiCateConfigBaseV2Url}/Social-media/${filter.type}`, {
     params: filterEmptyString(filter),
   });
+  return result.data;
+};
+
+export const getProxyPipelineOptions = async () => {
+  const result = await apiClient.get<IProxyPipelineOptions>(
+    `${apiCateConfigBaseV2Url}/Proxy/pipeline-options`,
+  );
   return result.data;
 };
