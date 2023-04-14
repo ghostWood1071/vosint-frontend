@@ -54,7 +54,7 @@ const formItemLayoutWithOutLabel = {
 };
 
 const defaultName = `{"root":{"children":[{"children":[],"direction":null,"format":"","indent":0,"type":"paragraph","version":1}],"direction":null,"format":"","indent":0,"type":"root","version":1}}`;
-const defaultContent = `{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"Nội dung sự kiện","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1}],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}`;
+const defaultContent = `{"root":{"children":[{"children":[],"direction":null,"format":"","indent":0,"type":"paragraph","version":1}],"direction":null,"format":"","indent":0,"type":"root","version":1}}`;
 
 export const MindmapModal: React.FC<props> = ({ item, isVisible, setHideModal }) => {
   const [isAddEventView, setIsAddEventView] = useState(false);
@@ -71,9 +71,10 @@ export const MindmapModal: React.FC<props> = ({ item, isVisible, setHideModal })
   ]);
   const { data: dataFilterByID } = useEventByIdNewsList(item._id);
   const { data: dataAllEventNews } = useAllEventNewsList({
-    name: searchParams.get("text_search_event") ?? "",
+    event_name: searchParams.get("text_search_event") ?? "",
     skip: "1",
     limit: "20",
+    id_new: item._id,
   });
   const { mutate: mutateOneEvent } = useMutationEventNews();
   const { mutate: mutateManyEvent } = useMutationAddManyEvent();
@@ -236,7 +237,7 @@ export const MindmapModal: React.FC<props> = ({ item, isVisible, setHideModal })
                 </div>
                 <div className={styles.rightAddExistNewsContainer}>
                   <Button type="primary" className={styles.addButton} onClick={addNews}>
-                    Thêm
+                    <PlusOutlined className={styles.plus} />
                   </Button>
                 </div>
               </div>
@@ -290,7 +291,7 @@ export const MindmapModal: React.FC<props> = ({ item, isVisible, setHideModal })
             </div>
             <div className={styles.rightAddExistNewsContainer}>
               <Button type="primary" className={styles.addButton} onClick={addEventToTable}>
-                Thêm
+                <PlusOutlined className={styles.plus} />
               </Button>
             </div>
           </div>
@@ -480,8 +481,17 @@ export const MindmapModal: React.FC<props> = ({ item, isVisible, setHideModal })
         values["event_name"] = eventName;
         values["event_content"] = eventContent;
         values["new_list"] = listNewsAdd.map((e) => e._id);
-        mutateOneEvent({ ...values, action: "add" });
-        setIsAddEventView(false);
+        mutateOneEvent(
+          {
+            data: values,
+            action: "add",
+          },
+          {
+            onSuccess: () => {
+              setIsAddEventView(false);
+            },
+          },
+        );
       })
       .catch();
   }
@@ -493,7 +503,19 @@ export const MindmapModal: React.FC<props> = ({ item, isVisible, setHideModal })
 
   function addManyEvent() {
     const allEventAdd = listEvent.map((e) => e._id);
-    mutateManyEvent({ action: "add", id: item._id, data: allEventAdd });
+    mutateManyEvent(
+      {
+        action: "add",
+        id: item._id,
+        data: allEventAdd,
+      },
+      {
+        onSuccess: () => {
+          setListEvent([]);
+          setIsAddEventView(false);
+        },
+      },
+    );
   }
 };
 
@@ -695,7 +717,7 @@ const ModalEdit: React.FC<ModalEditProps> = ({
             </div>
             <div className={styles.rightAddExistNewsContainer}>
               <Button type="primary" className={styles.addButton} onClick={addNews}>
-                Thêm
+                <PlusOutlined className={styles.plus} />
               </Button>
             </div>
           </div>

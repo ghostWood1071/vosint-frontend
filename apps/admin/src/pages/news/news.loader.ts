@@ -14,12 +14,16 @@ import {
   getAllEventNews,
   getEventByIdNews,
   getNewsBookmarks,
+  getNewsBookmarksWithApiJob,
   getNewsByNewsletter,
+  getNewsByNewsletterWithApiJob,
   getNewsDetail,
   getNewsList,
+  getNewsListWithApiJob,
   getNewsSidebar,
   getNewsSummary,
   getNewsVitals,
+  getNewsVitalsWithApiJob,
   getNewsletterDetail,
   updateEventNews,
   updateNewsletter,
@@ -192,23 +196,25 @@ export const useGetNewsSummaryLazy = (
 
 export const useInfiniteNewsList = (filter: any) => {
   return useInfiniteQuery<any>([CACHE_KEYS.NewsList], (data) =>
-    getNewsList({ ...data.pageParam, ...filter } ?? { skip: "1", limit: 30, ...filter }),
+    getNewsListWithApiJob({ ...data.pageParam, ...filter } ?? { skip: "1", limit: 30, ...filter }),
   );
 };
 
 export const useInfiniteNewsByNewsletter = (id: string, filter: any) => {
   return useInfiniteQuery([CACHE_KEYS.NewsList, id], (data) => {
     if (id === ETreeTag.QUAN_TRONG) {
-      return getNewsVitals({ ...data.pageParam, ...filter } ?? { skip: "1", limit: 30, ...filter });
-    }
-
-    if (id === ETreeTag.DANH_DAU) {
-      return getNewsBookmarks(
+      return getNewsVitalsWithApiJob(
         { ...data.pageParam, ...filter } ?? { skip: "1", limit: 30, ...filter },
       );
     }
 
-    return getNewsByNewsletter(
+    if (id === ETreeTag.DANH_DAU) {
+      return getNewsBookmarksWithApiJob(
+        { ...data.pageParam, ...filter } ?? { skip: "1", limit: 30, ...filter },
+      );
+    }
+
+    return getNewsByNewsletterWithApiJob(
       id,
       { ...data.pageParam, ...filter } ?? { skip: "1", limit: 30, ...filter },
     );
