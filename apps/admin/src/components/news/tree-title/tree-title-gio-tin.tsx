@@ -1,5 +1,5 @@
 import { DeleteOutlined, EditOutlined, EllipsisOutlined, PlusOutlined } from "@ant-design/icons";
-import { Col, Row, Space, Tooltip, TreeDataNode, Typography } from "antd";
+import { Col, Row, Space, TreeDataNode, Typography } from "antd";
 import classNames from "classnames";
 import { useRef, useState } from "react";
 import { useClickAway } from "react-use";
@@ -46,7 +46,7 @@ export function TreeTitleGioTin({ onClick, children, isEditable, ...node }: Prop
               <PlusOutlined
                 onClick={handleCreate}
                 className={styles.add}
-                title={`Thêm ${MTreeTag[node.tag]}`}
+                title={`Thêm ${MTreeTag[node.tag]} con`}
               />
               <EditOutlined
                 onClick={handleUpdate}

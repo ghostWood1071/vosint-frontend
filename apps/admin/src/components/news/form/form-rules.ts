@@ -1,14 +1,16 @@
 import type { FormItemProps } from "antd";
 import type { ValidatorRule } from "rc-field-form/lib/interface";
 
-export const rulesTitle: FormItemProps["rules"] = [
-  {
-    required: true,
-    whitespace: true,
-    message: "Hãy nhập vào tên danh mục!",
-    pattern: new RegExp("[A-Za-z]{1}"),
-  },
-];
+export const rulesTitle = (title: string) => {
+  return [
+    {
+      required: true,
+      whitespace: true,
+      message: `Vui lòng nhập tên ${title}.`,
+      pattern: new RegExp("[A-Za-z]{1}"),
+    },
+  ];
+};
 
 export const rulesRequiredListKeyword: ValidatorRule[] = [
   {

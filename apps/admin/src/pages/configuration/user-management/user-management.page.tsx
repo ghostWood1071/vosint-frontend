@@ -40,6 +40,8 @@ export const UserManagerList: React.FC = () => {
     onError: (err) => {
       if (err.response?.data.detail === "User already exist") {
         message.error("Người dùng đã tồn tại");
+      } else {
+        message.error("Thêm người dùng thất bại");
       }
     },
   });
@@ -50,9 +52,20 @@ export const UserManagerList: React.FC = () => {
       setIsOpen(null);
       queryClient.invalidateQueries([CACHE_KEYS.LIST]);
     },
+    onError: () => {
+      message.error("Sửa người dùng thất bại");
+    },
   });
 
-  const { mutate: mutateDelete } = useDeleteUser({});
+  const { mutate: mutateDelete } = useDeleteUser({
+    onSuccess: () => {
+      message.success("Xóa người dùng thành công");
+      queryClient.invalidateQueries([CACHE_KEYS.LIST]);
+    },
+    onError: () => {
+      message.error("Xóa người dùng thất bại");
+    },
+  });
 
   return (
     <>

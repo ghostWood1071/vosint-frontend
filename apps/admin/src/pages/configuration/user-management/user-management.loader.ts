@@ -7,7 +7,7 @@ import {
   uploadAvatar,
 } from "@/services/user.service";
 import { AxiosError } from "axios";
-import { UseMutationOptions, useMutation, useQuery, useQueryClient } from "react-query";
+import { UseMutationOptions, useMutation, useQuery } from "react-query";
 
 export const CACHE_KEYS = {
   LIST: "LIST",
@@ -35,15 +35,8 @@ export const useUpdateProfile = (
   return useMutation((body) => updateProfile(body), options);
 };
 
-export const useDeleteUser = ({ onSuccess }: any) => {
-  const queryClient = useQueryClient();
-
-  return useMutation((id: string) => deleteUser(id), {
-    onSuccess() {
-      queryClient.invalidateQueries([CACHE_KEYS.LIST]);
-      onSuccess?.();
-    },
-  });
+export const useDeleteUser = (options?: UseMutationOptions<any, unknown, string>) => {
+  return useMutation((id: string) => deleteUser(id), options);
 };
 
 export const useUploadAvatar = (options?: UseMutationOptions<string, unknown, FormData>) => {
