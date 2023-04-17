@@ -37,7 +37,7 @@ export function NewsletterFormLinhVuc({ title }: Props): JSX.Element {
 
   return (
     <>
-      <Form.Item label={`Tên ${title}`} name="title" rules={rulesTitle}>
+      <Form.Item label={`Tên ${title}`} name="title" rules={rulesTitle(title)}>
         <Input placeholder={`Nhập tên ${title}`} />
       </Form.Item>
       <Form.Item name="isSample" label="Định nghĩa tin mẫu" valuePropName="checked">

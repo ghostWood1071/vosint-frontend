@@ -28,7 +28,7 @@ export function TreeTitleLinhVuc(node: Props): JSX.Element {
 
       <Col span={8} className={styles.menu}>
         <Space>
-          <PlusOutlined onClick={handleCreate} className={styles.add} title={"Thêm lĩnh vực"} />
+          <PlusOutlined onClick={handleCreate} className={styles.add} title={"Thêm lĩnh vực con"} />
           <EditOutlined
             onClick={handleUpdate}
             className={styles.edit}

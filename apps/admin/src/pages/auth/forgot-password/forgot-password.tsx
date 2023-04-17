@@ -54,6 +54,10 @@ export const ForgotPasswordPage = () => {
             min: 8,
             message: "Mật khẩu phải có ít nhất 8 ký tự!",
           },
+          {
+            pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/,
+            message: "Mật khẩu phải có ít nhất 1 chữ hoa, 1 chữ thường và 1 số!",
+          },
         ]}
         hasFeedback
       >
