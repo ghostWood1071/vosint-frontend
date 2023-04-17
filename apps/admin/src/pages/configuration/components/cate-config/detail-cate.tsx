@@ -39,12 +39,17 @@ export const DetailCate: React.FC<Props> = ({
         </div>
         <div className={styles.rightHeader}>
           <Space className={styles.spaceStyle}>
-            <Tooltip title={"Sửa " + nameTitle}>
-              <EditOutlined onClick={handleOpenEditModal} className={styles.edit} />
-            </Tooltip>
-            <Tooltip title={"Xoá " + nameTitle}>
-              <DeleteOutlined onClick={handleOpenDeleteModal} className={styles.delete} />
-            </Tooltip>
+            <EditOutlined
+              title={"Sửa " + nameTitle}
+              onClick={handleOpenEditModal}
+              className={styles.edit}
+            />
+
+            <DeleteOutlined
+              title={"Xoá " + nameTitle}
+              onClick={handleOpenDeleteModal}
+              className={styles.delete}
+            />
           </Space>
         </div>
       </div>

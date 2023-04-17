@@ -34,16 +34,10 @@ export const useMutationGroupSource = () => {
     {
       onSuccess: (data, variables) => {
         queryClient.invalidateQueries(GROUP_SOURCE);
-        message.success({
-          content:
-            (variables.action === "add" ? "Thêm" : variables.action === "update" ? "Sửa" : "Xoá") +
-            " nhóm nguồn tin thành công",
-          key: GROUP_SOURCE,
-        });
       },
       onError: () => {
         message.error({
-          content: "Tên nguồn tin đã tồn tại. Hãy nhập lại!",
+          content: "Tên nhóm nguồn tin đã tồn tại. Hãy nhập lại!",
           key: GROUP_SOURCE,
         });
       },

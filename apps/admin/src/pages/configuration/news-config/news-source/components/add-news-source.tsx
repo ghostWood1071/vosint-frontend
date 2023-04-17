@@ -48,7 +48,6 @@ export const AddNewsSourceComponent: React.FC<Props> = ({
       .validateFields()
       .then((values) => {
         functionAdd(values);
-        setIsOpen(false);
       })
       .catch();
   }
@@ -58,7 +57,6 @@ export const AddNewsSourceComponent: React.FC<Props> = ({
       .validateFields()
       .then((values) => {
         functionEdit({ ...initialValues, ...values });
-        setIsOpen(false);
       })
       .catch();
   }

@@ -68,11 +68,11 @@ export const getAccountMonitorSocialMedia = async (filter: any) => {
 };
 
 //add
-export const addNewObjectCateConfig = async (data: any, typeObject: any, statusData: any) => {
+export const addNewObjectCateConfig = async (data: any) => {
   const result = await apiClient.post<any>(`${apiCateConfigBaseV2Url}/object/`, data, {
     params: {
-      type: typeObject,
-      Status: statusData,
+      type: data.object_type,
+      Status: data.status,
     },
   });
   return result.data;

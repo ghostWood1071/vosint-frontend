@@ -82,7 +82,6 @@ export const AddCateComponent: React.FC<Props> = ({
     type === "edit"
       ? choosedCate
       : { facebook_link: "", twitter_link: "", profile: "", profile_link: "" };
-  console.log(choosedCate);
   const [key, setKey] = useState<Record<string, string>>({
     vi: type === "edit" ? choosedCate.keywords.vi : "",
     en: type === "edit" ? choosedCate.keywords.en : "",
@@ -118,10 +117,9 @@ export const AddCateComponent: React.FC<Props> = ({
           keywords: key,
           avatar_url: url,
           status: "enable",
-          type: typeObject,
+          object_type: typeObject,
         };
         functionAdd(result);
-        setIsOpen(false);
       })
       .catch();
   }
@@ -146,7 +144,6 @@ export const AddCateComponent: React.FC<Props> = ({
         functionEdit(result);
 
         setChoosedCate(result);
-        setIsOpen(false);
       })
       .catch();
   }

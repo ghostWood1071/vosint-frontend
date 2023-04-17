@@ -2,6 +2,7 @@ import { useSourceNewsConfigList } from "@/pages/configuration/news-config/news-
 import { DeleteOutlined } from "@ant-design/icons";
 import {
   Button,
+  Col,
   Form,
   Input,
   Modal,
@@ -89,7 +90,6 @@ export const AddGroupModal: React.FC<Props> = ({
       .validateFields()
       .then((values) => {
         functionAdd({ ...values, user_id: "", news: listSource, is_hide: false });
-        setIsOpen(false);
       })
       .catch();
   }
@@ -99,14 +99,13 @@ export const AddGroupModal: React.FC<Props> = ({
       .validateFields()
       .then((values) => {
         functionEdit({ ...choosedGroupSource, ...values, news: listSource });
-        setIsOpen(false);
       })
       .catch();
   }
 
   function handleSearch(value: any) {
     setSearchParams({
-      text: value,
+      text: value.trim(),
     });
   }
 
@@ -172,12 +171,13 @@ export const AddGroupModal: React.FC<Props> = ({
       render: (item) => {
         return (
           <Space>
-            <Tooltip title={"Xoá nhóm nguồn tin"}>
+            <Col>
               <DeleteOutlined
+                title="Xoá nguồn tin"
                 onClick={() => handleDeleteItemList(item)}
                 className={styles.delete}
               />
-            </Tooltip>
+            </Col>
           </Space>
         );
       },
@@ -223,25 +223,6 @@ export const AddGroupModal: React.FC<Props> = ({
           <Form.Item label={"Danh sách nguồn tin"}>
             <div className={styles.mainContainer}>
               {listSource.length > 0 ? (
-                // <div className={styles.listSourceContainer}>
-                //   {listSource.map((e) => {
-                //     return (
-                //       <div key={e?._id} className={styles.itemListContainer}>
-                //         <div className={styles.leftItemList}>{e?.name}</div>
-                //         <div className={styles.rightItemList}>
-                //           <Space>
-                //             <Tooltip title={"Xoá nguồn tin"}>
-                //               <DeleteOutlined
-                //                 onClick={() => handleDeleteItemList(e)}
-                //                 className={styles.delete}
-                //               />
-                //             </Tooltip>
-                //           </Space>
-                //         </div>
-                //       </div>
-                //     );
-                //   })}
-                // </div>
                 <Table columns={columns} dataSource={listSource} rowKey="id" pagination={false} />
               ) : null}
               <div className={styles.addSourceContainer}>

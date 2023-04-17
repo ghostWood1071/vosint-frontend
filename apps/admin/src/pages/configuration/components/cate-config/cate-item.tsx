@@ -1,4 +1,5 @@
 import { UserIcon } from "@/assets/svg";
+import { Button } from "antd";
 import React from "react";
 
 import styles from "./cate-item.module.less";
@@ -42,7 +43,7 @@ export const CateItem: React.FC<CateItemProps> = ({
         <div className={styles.cateName}>{item.name}</div>
       </div>
       <div className={styles.statusContainer}>
-        <div
+        <Button
           className={
             item.status.toLowerCase() === "enable" ? styles.enableStatus : styles.disableStatus
           }
@@ -52,9 +53,9 @@ export const CateItem: React.FC<CateItemProps> = ({
           }}
         >
           <div className={styles.nameStatus}>
-            {item.status === "enable" ? "Kích hoạt" : "Vô hiệu"}
+            {item.status === "enable" ? "Được kích hoạt" : "Bị vô hiệu"}
           </div>
-        </div>
+        </Button>
       </div>
     </div>
   );

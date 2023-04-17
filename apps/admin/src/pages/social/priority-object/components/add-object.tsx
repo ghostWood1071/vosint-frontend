@@ -69,7 +69,7 @@ export const AddObjectModal: React.FC<Props> = ({
 
   function handleSearch(value: any) {
     setSearchParams({
-      text_search: value,
+      text_search: value.trim(),
     });
   }
 
