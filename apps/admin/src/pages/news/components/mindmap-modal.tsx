@@ -291,7 +291,7 @@ export const MindmapModal: React.FC<props> = ({ item, isVisible, setHideModal })
             </div>
             <div className={styles.rightAddExistNewsContainer}>
               <Button type="primary" className={styles.addButton} onClick={addEventToTable}>
-                <PlusOutlined className={styles.plus} />
+                Thêm
               </Button>
             </div>
           </div>
@@ -430,12 +430,12 @@ export const MindmapModal: React.FC<props> = ({ item, isVisible, setHideModal })
 
   function handleSearchEvent(value: any) {
     setSearchParams({
-      text_search_event: value,
+      text_search_event: value.trim(),
     });
   }
   function handleSearchNews(value: any) {
     setSearchParams({
-      text_search_news: value,
+      text_search_news: value.trim(),
     });
   }
   function handleChangeNewsSelect(newValue: object) {
@@ -717,7 +717,7 @@ const ModalEdit: React.FC<ModalEditProps> = ({
             </div>
             <div className={styles.rightAddExistNewsContainer}>
               <Button type="primary" className={styles.addButton} onClick={addNews}>
-                <PlusOutlined className={styles.plus} />
+                Thêm
               </Button>
             </div>
           </div>

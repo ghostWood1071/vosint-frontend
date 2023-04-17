@@ -64,12 +64,17 @@ export const SourceNewsTable: React.FC<Props> = ({
       render: (item) => {
         return (
           <Space>
-            <Tooltip title={"Sửa nguồn tin"}>
-              <EditOutlined onClick={() => handleClickEdit(item)} className={styles.edit} />
-            </Tooltip>
-            <Tooltip title={"Xoá nguồn tin"}>
-              <DeleteOutlined onClick={() => handleClickDelete(item)} className={styles.delete} />
-            </Tooltip>
+            <EditOutlined
+              title={"Sửa nguồn tin"}
+              onClick={() => handleClickEdit(item)}
+              className={styles.edit}
+            />
+
+            <DeleteOutlined
+              title={"Xoá nguồn tin"}
+              onClick={() => handleClickDelete(item)}
+              className={styles.delete}
+            />
           </Space>
         );
       },

@@ -32,8 +32,8 @@ export const AddProxyComponent: React.FC<Props> = ({
   functionDelete,
   functionEdit,
 }) => {
-  const initialValues = type === "edit" ? choosedProxy : null;
-
+  const initialValues =
+    type === "edit" ? { ...choosedProxy, port: Number(choosedProxy.port) } : null;
   const [form] = Form.useForm<Record<string, any>>();
 
   function handleDelete() {
@@ -51,7 +51,6 @@ export const AddProxyComponent: React.FC<Props> = ({
           values.note = "";
         }
         functionAdd(values);
-        setIsOpen(false);
       })
       .catch();
   }
@@ -64,7 +63,6 @@ export const AddProxyComponent: React.FC<Props> = ({
           values.note = "";
         }
         functionEdit({ ...initialValues, ...values });
-        setIsOpen(false);
       })
       .catch();
   }
@@ -132,7 +130,7 @@ export const AddProxyComponent: React.FC<Props> = ({
                 message: "Hãy nhập vào địa chỉ IP(VD: 192.168.0.1)!",
                 whitespace: true,
                 pattern: new RegExp(
-                  "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]).){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$",
+                  "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])[.]){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$",
                 ),
               },
             ]}

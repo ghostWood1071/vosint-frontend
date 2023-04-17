@@ -1,6 +1,11 @@
-import { AddIcon, DelIcon, ViewHideIcon, ViewIcon } from "@/assets/svg";
-import { PlusOutlined } from "@ant-design/icons";
-import { Button, Col, Input, PageHeader, Space, Table, TableColumnsType } from "antd";
+import {
+  DeleteOutlined,
+  EditOutlined,
+  EyeInvisibleOutlined,
+  EyeOutlined,
+  PlusOutlined,
+} from "@ant-design/icons";
+import { Button, Col, Input, PageHeader, Space, Table, TableColumnsType, message } from "antd";
 import React, { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
@@ -18,6 +23,7 @@ export const ViewList = () => {
     limit: searchParams.get("page_size") ?? 10,
     text_search: searchParams.get("text_search") ?? "",
   });
+  console.log(data);
   const page = searchParams.get("page_number");
   const pageSize = searchParams.get("page_size");
   const { mutate, isLoading: isGroupSourceLoading } = useMutationGroupSource();
@@ -33,14 +39,18 @@ export const ViewList = () => {
           return (
             <Space>
               <Col push={0}>
-                <DelIcon onClick={() => handleClickRemoveItem({ data: item, idGroup: idGroup })} />
+                <DeleteOutlined
+                  className={styles.delete}
+                  title={"Xoá nguồn tin"}
+                  onClick={() => handleClickRemoveItem({ data: item, idGroup: idGroup })}
+                />
               </Col>
             </Space>
           );
         },
       },
     ];
-    return <Table columns={columns} dataSource={data ?? []} pagination={false} size={"small"} />;
+    return <Table columns={columns} dataSource={data ?? []} pagination={false} size={"middle"} />;
   };
 
   const columns: TableColumnsType<any> = [
@@ -50,16 +60,55 @@ export const ViewList = () => {
       render: (item: any) => (
         <Space>
           <Col push={0}>
-            <AddIcon onClick={() => handleClickEditGroup(item)} />
-            <DelIcon onClick={() => handleClickDeleteGroup(item)} />
+            <EditOutlined
+              className={styles.edit}
+              title={"Thêm nguồn tin"}
+              onClick={() => handleClickEditGroup(item)}
+            />
+          </Col>
+          <Col push={0}>
+            <DeleteOutlined
+              className={styles.delete}
+              title={"Xoá nhóm nguồn tin"}
+              onClick={() => handleClickDeleteGroup(item)}
+            />
+          </Col>
+          <Col push={0}>
             {item.is_hide ? (
-              <ViewHideIcon
+              <EyeInvisibleOutlined
+                className={styles.hide}
+                title="Ẩn"
                 onClick={() => handleClickHideGroup(item)}
-                className={styles.hideIcon}
               />
             ) : (
-              <ViewIcon onClick={() => handleClickHideGroup(item)} />
+              <EyeOutlined
+                className={styles.hide}
+                title="Hiện"
+                onClick={() => handleClickHideGroup(item)}
+              />
             )}
+            {/* <Tooltip title={"Thêm nguồn tin"}>
+              <AddIcon style={{ cursor: "pointer" }} onClick={() => handleClickEditGroup(item)} />
+            </Tooltip>
+            <Tooltip title={"Xoá nhóm nguồn tin"}>
+              <DelIcon style={{ cursor: "pointer" }} onClick={() => handleClickDeleteGroup(item)} />
+            </Tooltip>
+
+            {item.is_hide ? (
+              <Tooltip placement="top" title="Ẩn">
+                <ViewHideIcon
+                  onClick={() => handleClickHideGroup(item)}
+                  className={styles.hideIcon}
+                />
+              </Tooltip>
+            ) : (
+              <Tooltip placement="top" title="Hiện">
+                <ViewIcon
+                  style={{ cursor: "pointer" }}
+                  onClick={() => handleClickHideGroup(item)}
+                />
+              </Tooltip>
+            )} */}
           </Col>
         </Space>
       ),
@@ -102,7 +151,7 @@ export const ViewList = () => {
           rowKey="_id"
           dataSource={data?.data}
           showHeader={false}
-          size={"small"}
+          size={"middle"}
         />
         {isOpenGroupModal ? (
           <AddGroupModal
@@ -122,7 +171,7 @@ export const ViewList = () => {
 
   function handleSearch(value: string) {
     setSearchParams({
-      text_search: value,
+      text_search: value.trim(),
     });
   }
 
@@ -138,13 +187,23 @@ export const ViewList = () => {
   }
 
   function handleClickHideGroup(value: any) {
-    functionEdit({ ...value, is_hide: !value.is_hide });
+    mutate(
+      { ...value, is_hide: !value.is_hide, action: "update" },
+      {
+        onSuccess: () => {
+          message.success({
+            content: (value.is_hide ? "Hiện" : "Ẩn") + " nhóm nguồn tin thành công",
+          });
+          setIsOpenGroupModal(false);
+        },
+      },
+    );
   }
 
   function handleClickRemoveItem(value: any) {
     const dataItem = data.data.find((e: any) => e._id === value.idGroup);
     const dataNewsResult = dataItem.news.filter((e: any) => e.id !== value.data.id);
-    functionEdit({ ...dataItem, news: dataNewsResult });
+    handeDeleteItemSource({ ...dataItem, news: dataNewsResult });
   }
   function handleClickEditGroup(value: any) {
     setIsOpenGroupModal(true);
@@ -153,15 +212,59 @@ export const ViewList = () => {
   }
 
   function functionAdd(value: any) {
-    mutate({ ...value, action: "add" });
+    mutate(
+      { ...value, action: "add" },
+      {
+        onSuccess: () => {
+          message.success({
+            content: "Thêm nhóm nguồn tin thành công",
+          });
+          setIsOpenGroupModal(false);
+        },
+      },
+    );
   }
 
   function functionEdit(value: any) {
-    mutate({ ...value, action: "update" });
+    mutate(
+      { ...value, action: "update" },
+      {
+        onSuccess: () => {
+          message.success({
+            content: "Sửa nhóm nguồn tin thành công",
+          });
+          setIsOpenGroupModal(false);
+        },
+      },
+    );
+  }
+
+  function handeDeleteItemSource(value: any) {
+    mutate(
+      { ...value, action: "update" },
+      {
+        onSuccess: () => {
+          message.success({
+            content: "Xoá nguồn tin thành công",
+          });
+          setIsOpenGroupModal(false);
+        },
+      },
+    );
   }
 
   function functionDelete(value: any) {
-    mutate({ ...value, action: "delete" });
+    mutate(
+      { ...value, action: "delete" },
+      {
+        onSuccess: () => {
+          message.success({
+            content: "Xoá nhóm nguồn tin thành công",
+          });
+          setIsOpenGroupModal(false);
+        },
+      },
+    );
   }
 
   function handlePaginationChange(page: number, pageSize: number) {

@@ -73,7 +73,7 @@ export const useSocialObjectList = (filter: any) => {
 export const useMutationObjectCate = () => {
   const queryClient = useQueryClient();
   return useMutation(
-    ({ action, _id, typeObject, ...data }: any) => {
+    ({ action, _id, ...data }: any) => {
       if (action === "delete") {
         return deleteObjectCateConfig(_id);
       }
@@ -82,8 +82,12 @@ export const useMutationObjectCate = () => {
         return updateObjectCateConfig(_id, data);
       }
 
+      if (action === "change-status") {
+        return updateObjectCateConfig(_id, data);
+      }
+
       if (action === "add") {
-        return addNewObjectCateConfig(data, typeObject, data.status);
+        return addNewObjectCateConfig(data);
       }
 
       throw new Error("action invalid");
@@ -91,23 +95,19 @@ export const useMutationObjectCate = () => {
     {
       onSuccess: (data, variables) => {
         queryClient.invalidateQueries(CACHE_KEYS.ObjectCate);
-        message.success({
+      },
+      onError: (data, variables) => {
+        message.error({
           content:
-            (variables.action === "add" ? "Thêm" : variables.action === "update" ? "Sửa" : "Xoá") +
-            (variables.type !== undefined
-              ? variables.type === "Đối tượng"
+            "Tên" +
+            (variables.object_type !== undefined
+              ? variables.object_type === "Đối tượng"
                 ? " đối tượng"
-                : variables.type === "Tổ chức"
+                : variables.object_type === "Tổ chức"
                 ? " tổ chức"
                 : " quốc gia"
               : "") +
-            " thành công",
-          key: CACHE_KEYS.ObjectCate,
-        });
-      },
-      onError: () => {
-        message.error({
-          content: "Tên đã tồn tại. Nhập lại!",
+            " đã tồn tại. Nhập lại!",
           key: CACHE_KEYS.ObjectCate,
         });
       },
@@ -134,10 +134,12 @@ export const useMutationProxy = () => {
       throw new Error("action invalid");
     },
     {
-      onSuccess: (data: any) => {
+      onSuccess: (data: any, variables) => {
         queryClient.invalidateQueries(CACHE_KEYS.ProxyConfig);
         message.success({
-          content: data.type + " proxy thành công!",
+          content:
+            (variables.action === "add" ? "Thêm" : variables.action === "update" ? "Sửa" : "Xoá") +
+            " proxy thành công!",
           key: CACHE_KEYS.ProxyConfig,
         });
       },

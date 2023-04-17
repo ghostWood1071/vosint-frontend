@@ -79,7 +79,7 @@ export const Layout: React.FC<LayoutProps> = ({
 
   function handleSearch(value: string) {
     setSearchParams({
-      text: value,
+      text: value.trim(),
     });
   }
 

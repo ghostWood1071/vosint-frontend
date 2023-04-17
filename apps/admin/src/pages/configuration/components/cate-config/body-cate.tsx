@@ -1,5 +1,5 @@
 import { PlusOutlined } from "@ant-design/icons";
-import { Button, Input, List, PageHeader } from "antd";
+import { Button, Input, List, PageHeader, message } from "antd";
 import React, { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
@@ -70,7 +70,7 @@ export const BodyCate: React.FC<Props> = ({ title }) => {
                 return (
                   <CateItem
                     choosedCateID={choosedCate?._id}
-                    functionEdit={handleUpdate}
+                    functionEdit={handleChangeStatus}
                     item={item}
                     onclick={setChoosedCate}
                   />
@@ -110,7 +110,7 @@ export const BodyCate: React.FC<Props> = ({ title }) => {
 
   function handleSearch(value: string) {
     setSearchParams({
-      text_search: value,
+      text_search: value.trim(),
     });
   }
   function handleClickCreate() {
@@ -128,15 +128,63 @@ export const BodyCate: React.FC<Props> = ({ title }) => {
     setTypeModal("delete");
   }
   function handleAdd(value: any) {
-    mutate({ ...value, action: "add", typeObject: typeObject, status: "enable" });
+    mutate(
+      { ...value, action: "add" },
+      {
+        onSuccess: () => {
+          message.success({
+            content: "Thêm " + title + " thành công",
+            key: title,
+          });
+          setIsOpenModal(false);
+        },
+      },
+    );
   }
 
   function handleUpdate(value: any) {
-    mutate({ ...value, action: "update" });
+    mutate(
+      { ...value, action: "update" },
+      {
+        onSuccess: () => {
+          message.success({
+            content: "Sửa " + title + " thành công",
+            key: title,
+          });
+          setIsOpenModal(false);
+        },
+      },
+    );
+  }
+
+  function handleChangeStatus(value: any) {
+    mutate(
+      { ...value, action: "update" },
+      {
+        onSuccess: () => {
+          message.success({
+            content:
+              (value.status === "enable" ? "Kích hoạt " : "Vô hiệu ") + title + " thành công",
+            key: title,
+          });
+        },
+      },
+    );
   }
 
   function handleDelete(value: any) {
-    mutate({ ...value, action: "delete" });
+    mutate(
+      { ...value, action: "delete" },
+      {
+        onSuccess: () => {
+          message.success({
+            content: "Xoá " + title + " thành công",
+            key: title,
+          });
+          setIsOpenModal(false);
+        },
+      },
+    );
   }
 
   function handlePaginationChange(page: number, pageSize: number) {

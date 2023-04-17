@@ -67,7 +67,7 @@ export const SourceNewsConfigList: React.FC = () => {
   );
   function handleSearch(value: string) {
     setSearchParams({
-      text_search: value,
+      text_search: value.trim(),
     });
   }
 
@@ -89,11 +89,25 @@ export const SourceNewsConfigList: React.FC = () => {
   }
 
   function handleAdd(value: any) {
-    mutate({ ...value, action: "add" });
+    mutate(
+      { ...value, action: "add" },
+      {
+        onSuccess: () => {
+          setIsOpenModal(false);
+        },
+      },
+    );
   }
 
   function handleUpdate(value: any) {
-    mutate({ ...value, action: "update" });
+    mutate(
+      { ...value, action: "update" },
+      {
+        onSuccess: () => {
+          setIsOpenModal(false);
+        },
+      },
+    );
   }
 
   function handleDelete(value: any) {
