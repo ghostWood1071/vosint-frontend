@@ -29,8 +29,8 @@ export const UserManagerList: React.FC = () => {
   const {
     mutate: mutateCreate,
     isLoading: isCreating,
-    error,
-    isError,
+    error: errorCreate,
+    isError: isErrorCreate,
   } = useCreateUser({
     onSuccess: () => {
       message.success("Thêm người dùng thành công");
@@ -46,7 +46,12 @@ export const UserManagerList: React.FC = () => {
     },
   });
 
-  const { mutate: mutateUpdate, isLoading: isUpdating } = useUpdateUser({
+  const {
+    mutate: mutateUpdate,
+    isLoading: isUpdating,
+    isError: isErrorUpdate,
+    error: errorUpdate,
+  } = useUpdateUser({
     onSuccess: () => {
       message.success("Sửa người dùng thành công");
       setIsOpen(null);
@@ -129,8 +134,12 @@ export const UserManagerList: React.FC = () => {
         maskClosable={false}
         getContainer="#modal-mount"
       >
-        {isError && (
-          <Alert message={error?.response?.data.detail} style={{ marginBottom: 10 }} type="error" />
+        {(isErrorCreate || isErrorUpdate) && (
+          <Alert
+            message={errorCreate?.response?.data.detail || errorUpdate?.response?.data.detail}
+            style={{ marginBottom: 10 }}
+            type="error"
+          />
         )}
         <UserManagerForm form={form} onFinish={handleFinish} isUpdate={isOpen === "update"} />
       </Modal>

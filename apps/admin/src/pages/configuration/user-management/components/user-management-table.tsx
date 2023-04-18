@@ -48,7 +48,7 @@ export const UserManagerTable: React.FC<Props> = ({
       },
     },
     {
-      title: "Username",
+      title: "Tên tài khoản",
       dataIndex: "username",
     },
     {

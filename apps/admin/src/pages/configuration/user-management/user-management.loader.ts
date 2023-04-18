@@ -24,7 +24,7 @@ export const useCreateUser = (
 };
 
 export const useUpdateUser = (
-  options?: UseMutationOptions<any, unknown, { _id: string; values: any }>,
+  options?: UseMutationOptions<any, AxiosError<{ detail: string }>, { _id: string; values: any }>,
 ) => {
   return useMutation(({ _id, values }) => updateUser(_id, values), options);
 };
