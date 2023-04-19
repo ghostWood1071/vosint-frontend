@@ -25,7 +25,7 @@ import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { LexicalEditor, createEditor } from "lexical";
 import moment from "moment";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 import {
@@ -64,6 +64,7 @@ export const MindmapModal: React.FC<props> = ({ item, isVisible, setHideModal })
   const [choosedEvent, setChoosedEvent] = useState<any>({ start_date: "10/10/2022" });
   const [isOpenModalEditEvent, setIsOpenModalEditEvent] = useState<boolean>(false);
   const [searchParams, setSearchParams] = useSearchParams();
+  const [typeModal, setTypeModal] = useState("edit");
   const [eventName, setEventName] = useState(defaultName);
   const [eventContent, setEventContent] = useState(defaultContent);
   const [listNewsAdd, setListNewsAdd] = useState<any[]>([
@@ -381,7 +382,14 @@ export const MindmapModal: React.FC<props> = ({ item, isVisible, setHideModal })
             ) : (
               <div className={styles.detailAllEvent}>
                 {dataFilterByID?.map((element: any) => {
-                  return <Items key={element._id} item={element} handleEdit={handleClickEdit} />;
+                  return (
+                    <Items
+                      key={element._id}
+                      item={element}
+                      handleEdit={handleClickEdit}
+                      handleDelete={handleClickDelete}
+                    />
+                  );
                 })}
               </div>
             )}
@@ -394,6 +402,8 @@ export const MindmapModal: React.FC<props> = ({ item, isVisible, setHideModal })
           functionEdit={handleUpdateEvent}
           isOpen={isOpenModalEditEvent}
           setIsOpen={setIsOpenModalEditEvent}
+          functionDelete={handleDeleteEvent}
+          typeModal={typeModal}
         />
       ) : null}
     </Modal>
@@ -417,6 +427,12 @@ export const MindmapModal: React.FC<props> = ({ item, isVisible, setHideModal })
   function handleClickEdit(value: any) {
     setChoosedEvent(value);
     setIsOpenModalEditEvent(true);
+    setTypeModal("edit");
+  }
+  function handleClickDelete(value: any) {
+    setChoosedEvent(value);
+    setIsOpenModalEditEvent(true);
+    setTypeModal("delete");
   }
 
   function handleChangeTypeBody() {
@@ -497,8 +513,11 @@ export const MindmapModal: React.FC<props> = ({ item, isVisible, setHideModal })
   }
 
   function handleUpdateEvent(value: any) {
-    console.log(value);
     mutateOneEvent({ data: value, _id: choosedEvent._id, action: "update" });
+  }
+
+  function handleDeleteEvent(value: any) {
+    mutateOneEvent({ _id: item._id, data: [value._id], action: "delete" });
   }
 
   function addManyEvent() {
@@ -522,9 +541,10 @@ export const MindmapModal: React.FC<props> = ({ item, isVisible, setHideModal })
 interface ItemsProps {
   item: any;
   handleEdit: (value: any) => void;
+  handleDelete: (value: any) => void;
 }
 
-const Items: React.FC<ItemsProps> = ({ item, handleEdit }) => {
+const Items: React.FC<ItemsProps> = ({ item, handleEdit, handleDelete }) => {
   const [editor] = useLexicalComposerContext();
   const { eventEditorConfig } = useEventContext();
   const eventEditor = useMemo(() => {
@@ -585,16 +605,20 @@ const Items: React.FC<ItemsProps> = ({ item, handleEdit }) => {
         </Collapse>
       </div>
       <div className={styles.editContainer}>
-        <Space>
-          <Tooltip title={"Chỉnh sửa"}>
-            <EditOutlined
-              onClick={() => {
-                handleEdit(item);
-              }}
-              className={styles.delete}
-            />
-          </Tooltip>
-        </Space>
+        <EditOutlined
+          onClick={() => {
+            handleEdit(item);
+          }}
+          title={"Sửa sự kiện"}
+          className={styles.edit}
+        />
+        <DeleteOutlined
+          onClick={() => {
+            handleDelete(item);
+          }}
+          title={"Xoá sự kiện"}
+          className={styles.delete}
+        />
       </div>
     </div>
   );
@@ -606,6 +630,8 @@ interface ModalEditProps {
   setIsOpen: (value: any) => void;
   choosedEvent: any;
   functionEdit: (value: any) => void;
+  typeModal: string;
+  functionDelete: (value: any) => void;
 }
 
 const ModalEdit: React.FC<ModalEditProps> = ({
@@ -614,6 +640,8 @@ const ModalEdit: React.FC<ModalEditProps> = ({
   setIsOpen,
   choosedEvent,
   functionEdit,
+  typeModal,
+  functionDelete,
 }) => {
   const [dataTableNews, setDataTableNews] = useState();
   const [eventName, setEventName] = useState(choosedEvent.event_name);
@@ -624,8 +652,27 @@ const ModalEdit: React.FC<ModalEditProps> = ({
   };
 
   const [form] = Form.useForm<Record<string, any>>();
+  const [editor] = useLexicalComposerContext();
+  const { eventEditorConfig } = useEventContext();
+  const eventEditor = useMemo(() => {
+    if (eventEditorConfig === null) return null;
 
+    const _eventEditor = createEditor({
+      namespace: eventEditorConfig?.namespace,
+      nodes: eventEditorConfig?.nodes,
+      onError: (error) => eventEditorConfig?.onError(error, editor),
+      theme: eventEditorConfig?.theme,
+    });
+    return _eventEditor;
+  }, [eventEditorConfig]);
+
+  if (eventEditor === null) return null;
   function handleCancel() {
+    setIsOpen(false);
+  }
+
+  function handleDelete() {
+    functionDelete({ _id: choosedEvent._id });
     setIsOpen(false);
   }
 
@@ -646,6 +693,33 @@ const ModalEdit: React.FC<ModalEditProps> = ({
   }
 
   if (!choosedEvent.event_name && !choosedEvent.event_content) return null;
+
+  if (typeModal === "delete") {
+    return (
+      <Modal
+        title={"Xoá sự kiện"}
+        open={isOpen}
+        destroyOnClose
+        confirmLoading={confirmLoading}
+        onOk={handleDelete}
+        onCancel={handleCancel}
+        okText={"Xoá"}
+        closable={false}
+        maskClosable={false}
+      >
+        <div className={styles.deleteBodyContainer}>
+          <div className={styles.leftDeleteBody}>Tên sự kiện:</div>
+          <div className={styles.rightDeleteBody}>
+            <div
+              dangerouslySetInnerHTML={{
+                __html: generateHTMLFromJSON(choosedEvent.event_name, eventEditor),
+              }}
+            />
+          </div>
+        </div>
+      </Modal>
+    );
+  }
 
   return (
     <Modal

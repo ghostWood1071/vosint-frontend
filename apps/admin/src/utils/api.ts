@@ -40,7 +40,11 @@ export const filterEmptyString = (params: Record<string, any>) => {
 
   Object.entries(params).forEach(([key, value]) => {
     if (value !== "") {
-      result[key] = value;
+      if (typeof value === "string") {
+        result[key] = value.trim();
+      } else {
+        result[key] = value;
+      }
     }
   });
 

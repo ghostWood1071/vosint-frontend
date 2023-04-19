@@ -6,6 +6,7 @@ import {
   addNewsIdsToVitalUser,
   addNewsletter,
   createEventNews,
+  deleteEventNews,
   deleteMultipleNewsletter,
   deleteNewsIdInNewsletter,
   deleteNewsInBookmarkUser,
@@ -199,7 +200,11 @@ export const useGetNewsSummaryLazy = (
 
 export const useInfiniteNewsList = (filter: any) => {
   return useInfiniteQuery<any>([CACHE_KEYS.NewsList], (data) =>
-    getNewsListWithApiJob({ ...data.pageParam, ...filter } ?? { skip: "1", limit: 30, ...filter }),
+    getNewsListWithApiJob(
+      data.pageParam !== undefined
+        ? { ...data.pageParam, ...filter }
+        : { page_number: 1, page_size: 30, ...filter },
+    ),
   );
 };
 
@@ -207,19 +212,25 @@ export const useInfiniteNewsByNewsletter = (id: string, filter: any) => {
   return useInfiniteQuery([CACHE_KEYS.NewsList, id], (data) => {
     if (id === ETreeTag.QUAN_TRONG) {
       return getNewsVitalsWithApiJob(
-        { ...data.pageParam, ...filter } ?? { skip: "1", limit: 30, ...filter },
+        data.pageParam !== undefined
+          ? { ...data.pageParam, ...filter }
+          : { page_number: 1, page_size: 30, ...filter },
       );
     }
 
     if (id === ETreeTag.DANH_DAU) {
       return getNewsBookmarksWithApiJob(
-        { ...data.pageParam, ...filter } ?? { skip: "1", limit: 30, ...filter },
+        data.pageParam !== undefined
+          ? { ...data.pageParam, ...filter }
+          : { page_number: 1, page_size: 30, ...filter },
       );
     }
 
     return getNewsByNewsletterWithApiJob(
       id,
-      { ...data.pageParam, ...filter } ?? { skip: "1", limit: 30, ...filter },
+      data.pageParam !== undefined
+        ? { ...data.pageParam, ...filter }
+        : { page_number: 1, page_size: 30, ...filter },
     );
   });
 };
@@ -236,13 +247,19 @@ export const useMutationEventNews = () => {
         return createEventNews(data);
       }
 
+      if (action === "delete") {
+        return deleteEventNews(_id, data);
+      }
+
       throw new Error("action invalid");
     },
     {
       onSuccess: (data: any, variables) => {
         queryClient.invalidateQueries([CACHE_KEYS.NewsEvent]);
         message.success({
-          content: (variables.action === "add" ? "Thêm" : "Sửa") + " sự kiện thành công",
+          content:
+            (variables.action === "add" ? "Thêm" : variables.action === "update" ? "Sửa" : "Xoá") +
+            " sự kiện thành công",
           key: CACHE_KEYS.NewsEvent,
         });
       },

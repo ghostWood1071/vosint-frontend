@@ -33,7 +33,16 @@ export const AddProxyComponent: React.FC<Props> = ({
   functionEdit,
 }) => {
   const initialValues =
-    type === "edit" ? { ...choosedProxy, port: Number(choosedProxy.port) } : null;
+    type === "edit"
+      ? { ...choosedProxy, port: Number(choosedProxy.port) }
+      : {
+          name: "",
+          ip_address: "",
+          port: "",
+          note: "",
+          username: "",
+          password: "",
+        };
   const [form] = Form.useForm<Record<string, any>>();
 
   function handleDelete() {
@@ -47,8 +56,14 @@ export const AddProxyComponent: React.FC<Props> = ({
     form
       .validateFields()
       .then((values) => {
-        if (values.note === undefined) {
-          values.note = "";
+        if (typeof values["username"] === "string") {
+          values["username"] = values["username"].trim();
+        }
+        if (typeof values["name"] === "string") {
+          values["name"] = values["name"].trim();
+        }
+        if (typeof values["password"] === "string") {
+          values["password"] = values["password"].trim();
         }
         functionAdd(values);
       })
@@ -59,8 +74,14 @@ export const AddProxyComponent: React.FC<Props> = ({
     form
       .validateFields()
       .then((values) => {
-        if (values.note === undefined) {
-          values.note = "";
+        if (typeof values["username"] === "string") {
+          values["username"] = values["username"].trim();
+        }
+        if (typeof values["name"] === "string") {
+          values["name"] = values["name"].trim();
+        }
+        if (typeof values["password"] === "string") {
+          values["password"] = values["password"].trim();
         }
         functionEdit({ ...initialValues, ...values });
       })
@@ -127,8 +148,7 @@ export const AddProxyComponent: React.FC<Props> = ({
             rules={[
               {
                 required: true,
-                message: "Hãy nhập vào địa chỉ IP(VD: 192.168.0.1)!",
-                whitespace: true,
+                message: "Hãy nhập vào địa chỉ IP!(VD: 192.168.1.1)",
                 pattern: new RegExp(
                   "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])[.]){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$",
                 ),
@@ -141,6 +161,7 @@ export const AddProxyComponent: React.FC<Props> = ({
             validateTrigger={["onChange", "onBlur"]}
             label="Cổng (port)"
             name={"port"}
+            validateFirst={true}
             rules={[
               {
                 required: true,
@@ -153,6 +174,12 @@ export const AddProxyComponent: React.FC<Props> = ({
             ]}
           >
             <InputNumber style={{ width: "100%" }} />
+          </Form.Item>
+          <Form.Item validateTrigger={["onChange", "onBlur"]} label="Username" name={"username"}>
+            <Input />
+          </Form.Item>
+          <Form.Item validateTrigger={["onChange", "onBlur"]} label="Password" name={"password"}>
+            <Input />
           </Form.Item>
           <Form.Item validateTrigger={["onChange", "onBlur"]} label="Ghi chú" name={"note"}>
             <Input />

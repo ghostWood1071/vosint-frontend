@@ -77,7 +77,7 @@ export const NewsDetailPage = () => {
   }, [inView]);
 
   useEffect(() => {
-    fetchNextPage({ pageParam: { skip: skip, limit: 30 } });
+    fetchNextPage({ pageParam: { page_number: skip, page_size: 30 } });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [skip]);
 
