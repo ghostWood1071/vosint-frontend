@@ -8,6 +8,8 @@ export type TNews = {
   "data:content": string;
   "data:url": string;
   "data:class": any[];
+  "data:html": string;
+  pub_date: string;
   created_at: string;
   modified_at: string;
 };

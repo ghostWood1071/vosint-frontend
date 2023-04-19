@@ -3,6 +3,7 @@ import {
   deletePipeline,
   getActionInfos,
   getHistory,
+  getLogHistoryLast,
   getPipelineDetail,
   getPipelines,
   putPipeline,
@@ -12,7 +13,12 @@ import {
   stopJobById,
   verifyPipeline,
 } from "@/services/pipeline.service";
-import { IPipelineRunAllJob, IPipelineRunJob } from "@/services/pipeline.type";
+import {
+  ILogHistory,
+  IPipelineRunAllJob,
+  IPipelineRunJob,
+  IPipelineVerify,
+} from "@/services/pipeline.type";
 import { getPipelineSource } from "@/services/source-config.service";
 import type { IPipelineSource } from "@/services/source-config.type";
 import { message } from "antd";
@@ -27,6 +33,7 @@ export const CACHE_KEYS = {
   PipelineVerify: "PIPELINE_VERIFY",
   PipelineHistory: "PipelineHistory",
   PipelineSource: "PIPELINE_SOURCE",
+  PipelineLogHistoryLast: "PIPELINE_LOG_HISTORY_LAST",
 };
 
 export const usePipelineActionInfos = () => {
@@ -51,7 +58,9 @@ export const usePutPipeline = (options?: UseMutationOptions<unknown, unknown, an
   return useMutation((data) => putPipeline(data), options);
 };
 
-export const useVerifyPipeline = (options?: UseMutationOptions<unknown, unknown, string>) => {
+export const useVerifyPipeline = (
+  options?: UseMutationOptions<IPipelineVerify, unknown, string>,
+) => {
   return useMutation((id) => verifyPipeline(id), options);
 };
 
@@ -107,4 +116,10 @@ export const useMutateRunOrStopAllJob = (
 
     throw new Error("not found status");
   }, options);
+};
+
+export const usePipelineLogHistoryLastLazy = (
+  options?: UseMutationOptions<ILogHistory, unknown, string>,
+) => {
+  return useMutation((id) => getLogHistoryLast(id), options);
 };

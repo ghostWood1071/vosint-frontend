@@ -2,7 +2,9 @@ import { UniqueIdentifier } from "@dnd-kit/core";
 import { AnimateLayoutChanges, useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { CSSProperties } from "react";
+import { shallow } from "zustand/shallow";
 
+import { usePipelineState } from "../../pipeline-state";
 import { PipelineTreeItem, Props as TreeItemProps } from "./pipeline-tree-item";
 import { iOS } from "./pipeline.utilities";
 
@@ -24,6 +26,7 @@ export function PipelineSortableItem({ id, depth, ...props }: Props) {
     id,
     animateLayoutChanges,
   });
+  const [error] = usePipelineState((state) => [state.error], shallow);
 
   const style: CSSProperties = {
     transform: CSS.Translate.toString(transform),
@@ -39,6 +42,7 @@ export function PipelineSortableItem({ id, depth, ...props }: Props) {
       ghost={isDragging}
       disableSelection={iOS}
       disableInteraction={isSorting}
+      isError={error?.id_schema === id}
       handleProps={{
         ...attributes,
         ...listeners,

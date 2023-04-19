@@ -119,6 +119,7 @@ function FormProxy({ display_name, name }: IActionParamInfo): JSX.Element {
         options={data}
         showSearch
         optionFilterProp="children"
+        mode="multiple"
         filterOption={(input, option) =>
           (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
         }

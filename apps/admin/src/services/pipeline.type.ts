@@ -1,5 +1,7 @@
 import { UniqueIdentifier } from "@dnd-kit/core";
 
+import { TNews } from "./news.type";
+
 export type IPipelines = {
   _id: string;
   actived: boolean;
@@ -59,4 +61,19 @@ export interface IPipelineRunJob {
 
 export interface IPipelineRunAllJob {
   status: "start" | "stop";
+}
+
+export interface ILogHistory {
+  actione: string;
+  log: string;
+  link: string;
+  id_schema: string;
+  message_error: string;
+  created_at: string;
+  modified_at: string;
+}
+
+export interface IPipelineVerify {
+  success: boolean;
+  result: TNews | string;
 }

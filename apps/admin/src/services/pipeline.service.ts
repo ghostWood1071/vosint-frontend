@@ -1,6 +1,6 @@
 import { apiClient, filterEmptyString } from "@/utils/api";
 
-import { IActionInfos, IPipeline, IPipelines } from "./pipeline.type";
+import { IActionInfos, ILogHistory, IPipeline, IPipelines } from "./pipeline.type";
 import { APIResponse } from "./service.types";
 
 const apiPipelineBaseUrl = "/pipeline/Pipeline/api";
@@ -49,10 +49,10 @@ export const deletePipeline = async (id: string) => {
 
 export const verifyPipeline = async (id: string) => {
   const url = `${apiJobBaseUrl}/run_only_job/${id}`;
-  const result = await apiClient.post<APIResponse<any>>(url, null, {
+  const result = await apiClient.post(url, null, {
     timeout: 1_000 * 60 * 5,
   });
-  return result.data.payload;
+  return result.data;
 };
 
 export const getHistory = async (id: string, filter: Record<string, any>) => {
@@ -60,6 +60,12 @@ export const getHistory = async (id: string, filter: Record<string, any>) => {
   const result = await apiClient.get<APIResponse<IPipeline>>(url, {
     params: filterEmptyString(filter),
   });
+  return result.data;
+};
+
+export const getLogHistoryLast = async (id: string) => {
+  const url = `${apiJobBaseUrl}/get_log_history_last/${id}`;
+  const result = await apiClient.get<ILogHistory>(url);
   return result.data;
 };
 
