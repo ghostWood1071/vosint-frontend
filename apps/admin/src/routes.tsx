@@ -3,6 +3,7 @@ import { Navigate, createBrowserRouter } from "react-router-dom";
 import { SplashScreen } from "./components";
 import { AppLayout } from "./pages/app";
 import { AuthLayout } from "./pages/auth/";
+import { SectionRoute } from "./pages/auth/components/section-route";
 import { ForgotPasswordPage } from "./pages/auth/forgot-password/forgot-password";
 import { LoginPage } from "./pages/auth/login/login";
 import {
@@ -174,12 +175,6 @@ export const routers = createBrowserRouter([
         ],
       },
       {
-        path: analysisPath,
-      },
-      {
-        path: databasePath,
-      },
-      {
         element: <ReportLayout />,
         children: [
           {
@@ -209,7 +204,11 @@ export const routers = createBrowserRouter([
         ],
       },
       {
-        element: <PipelineLayout />,
+        element: (
+          <SectionRoute role="admin">
+            <PipelineLayout />
+          </SectionRoute>
+        ),
         children: [
           {
             path: pipelineDashboardPath,
@@ -222,7 +221,11 @@ export const routers = createBrowserRouter([
         ],
       },
       {
-        element: <ConfigurationLayout />,
+        element: (
+          <SectionRoute role="admin">
+            <ConfigurationLayout />
+          </SectionRoute>
+        ),
         children: [
           {
             path: configPath,

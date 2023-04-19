@@ -9,7 +9,7 @@ import { useTranslation } from "react-i18next";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useLocalStorage } from "react-use";
 
-import { NAVBAR_HEADER } from "../app.constants";
+import { NAVBAR_HEADER, NAVBAR_HEADER_ADMIN } from "../app.constants";
 import styles from "./app-header.module.less";
 import { UserProfile } from "./user-profile";
 
@@ -57,7 +57,7 @@ export const AppHeader: React.FC = () => {
       </Col>
       <Col span={16} className={styles.navbar}>
         <Row justify="space-between" align="middle">
-          {NAVBAR_HEADER.map(({ title, to, icon }) => (
+          {(role === "admin" ? NAVBAR_HEADER_ADMIN : NAVBAR_HEADER).map(({ title, to, icon }) => (
             <Col key={to}>
               <NavLink to={to} title={t(title)} className={handleActive}>
                 {icon}
