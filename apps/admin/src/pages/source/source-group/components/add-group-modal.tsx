@@ -53,7 +53,7 @@ export const AddGroupModal: React.FC<Props> = ({
   );
   const [form] = Form.useForm<Record<string, any>>();
   const [api, contextHolder] = notification.useNotification();
-  const [value, setValue] = useState<any>({});
+  const [value, setValue] = useState<any>(null);
   const [searchParams, setSearchParams] = useSearchParams();
   const { data } = useSourceNewsConfigList({
     skip: 1,
@@ -62,13 +62,6 @@ export const AddGroupModal: React.FC<Props> = ({
   });
 
   const openNotification = (placement: any, type: any) => {
-    if (type === "invalid") {
-      api.info({
-        message: `Thông báo`,
-        description: "Nguồn tin không tồn tại.",
-        placement,
-      });
-    }
     if (type === "exited") {
       api.info({
         message: `Thông báo`,
@@ -116,10 +109,6 @@ export const AddGroupModal: React.FC<Props> = ({
 
   function addSource() {
     const item = data.data.find((e: any) => e._id === value);
-    if (item === undefined) {
-      openNotification("top", "invalid");
-      return;
-    }
     const check = listSource.findIndex((e) => e.id === item._id);
     if (check === -1) {
       setListSource([...listSource, { id: item._id, name: item.name, host_name: item.host_name }]);
@@ -244,7 +233,12 @@ export const AddGroupModal: React.FC<Props> = ({
                   />
                 </div>
                 <div className={styles.rightContainer}>
-                  <Button type="primary" className={styles.addButton} onClick={addSource}>
+                  <Button
+                    disabled={value ? false : true}
+                    type="primary"
+                    className={styles.addButton}
+                    onClick={addSource}
+                  >
                     Thêm
                   </Button>
                 </div>

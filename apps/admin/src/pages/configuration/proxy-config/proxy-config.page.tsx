@@ -38,6 +38,16 @@ export const ProxyConfig = () => {
       dataIndex: "port",
     },
     {
+      title: "Username",
+      align: "left",
+      dataIndex: "username",
+    },
+    {
+      title: "Password",
+      align: "left",
+      dataIndex: "password",
+    },
+    {
       title: "Ghi chú",
       align: "left",
       dataIndex: "note",
@@ -83,6 +93,7 @@ export const ProxyConfig = () => {
       <div className={styles.mainContainer}>
         <div className={styles.body}>
           <Table
+            size={"middle"}
             columns={columns}
             dataSource={data?.data}
             rowKey="id"

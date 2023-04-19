@@ -22,11 +22,7 @@ export const getNewsList = async (filter: any) => {
 
 export const getNewsListWithApiJob = async (filter: any) => {
   const result = await apiClient.get<any>(`${apiNewsBaseV2Url}/Job/api/get_result_job/News`, {
-    params: filterEmptyString({
-      page_number: filter.skip,
-      page_size: filter.limit,
-      ...filter,
-    }),
+    params: filterEmptyString(filter),
   });
 
   return result.data;
@@ -52,8 +48,6 @@ export const getNewsByNewsletterWithApiJob = async (
   const result = await apiClient.get(`${apiNewsBaseV2Url}/Job/api/get_result_job/News`, {
     params: filterEmptyString({
       ...filter,
-      page_number: filter.skip,
-      page_size: filter.limit,
       news_letter_id: newsletterId,
     }),
   });
@@ -116,8 +110,6 @@ export const getNewsBookmarksWithApiJob = async (filter: Record<string, string>)
   const result = await apiClient.get(`${apiNewsBaseV2Url}/Job/api/get_result_job/News`, {
     params: filterEmptyString({
       ...filter,
-      page_number: filter.skip,
-      page_size: filter.limit,
       bookmarks: "1",
     }),
   });
@@ -145,8 +137,6 @@ export const getNewsVitalsWithApiJob = async (filter: Record<string, string>) =>
   const result = await apiClient.get(`${apiNewsBaseV2Url}/Job/api/get_result_job/News`, {
     params: filterEmptyString({
       ...filter,
-      page_number: filter.skip,
-      page_size: filter.limit,
       vital: "1",
     }),
   });
@@ -190,6 +180,14 @@ export const getAllEventNews = async (filter: any) => {
 
 export const createEventNews = async (data: any) => {
   const result = await apiClient.post<any>(`${apiNewsBaseV2Url}/event`, data);
+  return result.data;
+};
+
+export const deleteEventNews = async (news_id: string, data: any) => {
+  const result = await apiClient.put<any>(
+    `${apiNewsBaseV2Url}/event/remove-event/${news_id}`,
+    data,
+  );
   return result.data;
 };
 

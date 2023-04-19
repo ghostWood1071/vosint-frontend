@@ -30,13 +30,6 @@ export const SourceNewsTable: React.FC<Props> = ({
       title: "Tên nguồn tin",
       align: "left",
       dataIndex: "name",
-      // render: (link: string) => {
-      //   return (
-      //     <a href={link} target="_blank" rel="noreferrer">
-      //       {link}
-      //     </a>
-      //   );
-      // },
     },
     {
       title: "Tên miền",
@@ -94,6 +87,7 @@ export const SourceNewsTable: React.FC<Props> = ({
         pageSize: pageSize ? +pageSize : 10,
         size: "default",
       }}
+      size={"middle"}
       loading={loading}
     />
   );

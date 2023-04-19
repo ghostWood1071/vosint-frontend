@@ -23,7 +23,6 @@ export const ViewList = () => {
     limit: searchParams.get("page_size") ?? 10,
     text_search: searchParams.get("text_search") ?? "",
   });
-  console.log(data);
   const page = searchParams.get("page_number");
   const pageSize = searchParams.get("page_size");
   const { mutate, isLoading: isGroupSourceLoading } = useMutationGroupSource();
@@ -50,7 +49,15 @@ export const ViewList = () => {
         },
       },
     ];
-    return <Table columns={columns} dataSource={data ?? []} pagination={false} size={"middle"} />;
+    return (
+      <Table
+        rowKey="id"
+        columns={columns}
+        dataSource={data ?? []}
+        pagination={false}
+        size={"middle"}
+      />
+    );
   };
 
   const columns: TableColumnsType<any> = [
@@ -62,7 +69,7 @@ export const ViewList = () => {
           <Col push={0}>
             <EditOutlined
               className={styles.edit}
-              title={"Thêm nguồn tin"}
+              title={"Sửa nhóm nguồn tin"}
               onClick={() => handleClickEditGroup(item)}
             />
           </Col>
@@ -87,28 +94,6 @@ export const ViewList = () => {
                 onClick={() => handleClickHideGroup(item)}
               />
             )}
-            {/* <Tooltip title={"Thêm nguồn tin"}>
-              <AddIcon style={{ cursor: "pointer" }} onClick={() => handleClickEditGroup(item)} />
-            </Tooltip>
-            <Tooltip title={"Xoá nhóm nguồn tin"}>
-              <DelIcon style={{ cursor: "pointer" }} onClick={() => handleClickDeleteGroup(item)} />
-            </Tooltip>
-
-            {item.is_hide ? (
-              <Tooltip placement="top" title="Ẩn">
-                <ViewHideIcon
-                  onClick={() => handleClickHideGroup(item)}
-                  className={styles.hideIcon}
-                />
-              </Tooltip>
-            ) : (
-              <Tooltip placement="top" title="Hiện">
-                <ViewIcon
-                  style={{ cursor: "pointer" }}
-                  onClick={() => handleClickHideGroup(item)}
-                />
-              </Tooltip>
-            )} */}
           </Col>
         </Space>
       ),
