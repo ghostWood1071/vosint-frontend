@@ -23,6 +23,7 @@ export interface Props extends Omit<HTMLAttributes<HTMLLIElement>, "id"> {
   display_name?: string;
   is_ctrl_flow?: boolean;
   isOpenOptions?: boolean;
+  isError?: boolean;
   wrapperRef?(node: HTMLLIElement): void;
   onCollapse?(): void;
   onOpenOptions?(): void;
@@ -47,6 +48,7 @@ export const PipelineTreeItem = forwardRef<HTMLDivElement, Props>(
       name,
       isOpenOptions,
       is_ctrl_flow,
+      isError,
       onCollapse,
       onRemove,
       onOpenOptions,
@@ -56,15 +58,17 @@ export const PipelineTreeItem = forwardRef<HTMLDivElement, Props>(
   ) => {
     return (
       <li
-        className={classNames(
-          styles.wrapper,
-          styles.indicator,
-          clone && styles.clone,
-          ghost && styles.ghost,
-          disableSelection && styles.disableSelection,
-          disableInteraction && styles.disableInteraction,
-          isOpenOptions && styles.isOpenedOptions,
-        )}
+        className={classNames({
+          [styles.wrapper]: true,
+          [styles.indicator]: true,
+          [styles.clone]: clone,
+          [styles.ghost]: ghost,
+          [styles.collapsed]: collapsed,
+          [styles.disableSelection]: disableSelection,
+          [styles.disableInteraction]: disableInteraction,
+          [styles.isOpenedOptions]: isOpenOptions,
+          [styles.isError]: isError,
+        })}
         ref={wrapperRef}
         style={
           {

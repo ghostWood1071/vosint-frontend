@@ -17,7 +17,7 @@ import {
 } from "@dnd-kit/core";
 import { SortableContext, arrayMove, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { Button, Card, Col, Row, Space, Typography } from "antd";
+import { Alert, Button, Card, Col, Row, Space, Typography } from "antd";
 import produce from "immer";
 import { nanoid } from "nanoid";
 import { useMemo, useState } from "react";
@@ -25,7 +25,9 @@ import { createPortal } from "react-dom";
 import { useTranslation } from "react-i18next";
 import { Cron } from "react-js-cron";
 import "react-js-cron/dist/styles.css";
+import { shallow } from "zustand/shallow";
 
+import { usePipelineState } from "../../pipeline-state";
 import { PipelineAction } from "./pipeline-action";
 import { PipelineSortableItem } from "./pipeline-sortable-item";
 import { PipelineTreeOptions } from "./pipeline-tree-options";
@@ -74,6 +76,7 @@ export function Pipeline({
     initialNamePipeline ?? t("name_pipeline"),
   );
   const [cron, setCron] = useState(initialCron);
+  const [error] = usePipelineState((state) => [state.error], shallow);
 
   const flattenedItems = useMemo(() => {
     const flattenedTree = flattenTree(items, actions);
@@ -193,6 +196,14 @@ export function Pipeline({
               </Col>
               {optionId && optionItem && (
                 <Col span={8} offset={2}>
+                  {error && (
+                    <Alert
+                      type="error"
+                      message={error.actione}
+                      description={error.message_error}
+                      className="pipeline-alert"
+                    />
+                  )}
                   <PipelineTreeOptions
                     onClose={() => setOptionId(null)}
                     option={optionItem}
