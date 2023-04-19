@@ -17,7 +17,7 @@ export const NotFoundPage: React.FC = () => {
       subTitle="Sorry, something went wrong."
       extra={
         <Button type="primary" onClick={handleResetError}>
-          Go home
+          Về trang chủ
         </Button>
       }
     />
