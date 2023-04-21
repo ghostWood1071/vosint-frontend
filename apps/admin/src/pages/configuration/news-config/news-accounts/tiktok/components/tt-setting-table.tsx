@@ -2,26 +2,12 @@ import {
   CACHE_KEYS,
   useMutationDeleteAccountMonitor,
   useMutationUpdateAccountMonitor,
-  useProxyConfig,
-  useTTSetting,
 } from "@/pages/configuration/config.loader";
 import styles from "@/pages/configuration/news-config/news-accounts/facebook/components/fb-setting.module.less";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import {
-  Button,
-  Form,
-  Modal,
-  Popover,
-  Space,
-  Table,
-  TableColumnsType,
-  Tag,
-  Tooltip,
-  message,
-} from "antd";
+import { Form, Modal, Popover, Space, Table, TableColumnsType, Tag, Tooltip, message } from "antd";
 import React, { useState } from "react";
 import { useQueryClient } from "react-query";
-import { useSearchParams } from "react-router-dom";
 
 import { SettingCreateForm } from "./tt-setting-form";
 
@@ -39,8 +25,6 @@ export const SettingTable: React.FC<Props> = ({ data, listProxy, accountMonitor,
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [isIdTarget, setIsIdTarget] = useState("");
   const [isValueTarget, setIsValueTarget] = useState<any>();
-  const [proxysSelect, setProxysSelect] = useState([]);
-  const [usersSelect, setUsersSelect] = useState([]);
   const queryClient = useQueryClient();
   const [form] = Form.useForm();
   const { mutate: mutateUpdate } = useMutationUpdateAccountMonitor();
@@ -98,13 +82,19 @@ export const SettingTable: React.FC<Props> = ({ data, listProxy, accountMonitor,
         return (
           <Space className={styles.spaceStyle}>
             <Tooltip title={"Sửa "}>
-              <EditOutlined onClick={() => handleShowEdit(_id, values)} className={styles.edit} />
+              <EditOutlined onClick={handleEdit} className={styles.edit} />
             </Tooltip>
             <Tooltip title={"Xoá "}>
-              <DeleteOutlined onClick={() => handleShowDelete(_id)} className={styles.delete} />
+              <DeleteOutlined onClick={handleDelete} className={styles.delete} />
             </Tooltip>
           </Space>
         );
+        function handleEdit() {
+          handleShowEdit(_id, values);
+        }
+        function handleDelete() {
+          handleShowDelete(_id);
+        }
       },
     },
   ];
@@ -126,8 +116,6 @@ export const SettingTable: React.FC<Props> = ({ data, listProxy, accountMonitor,
         destroyOnClose
       >
         <SettingCreateForm
-          setProxysSelect={setProxysSelect}
-          setUsersSelect={setUsersSelect}
           listProxy={listProxy}
           accountMonitor={accountMonitor}
           valueTarget={isValueTarget}

@@ -1,4 +1,4 @@
-import { PlusOutlined, PlusSquareOutlined } from "@ant-design/icons";
+import { PlusOutlined } from "@ant-design/icons";
 import { Button, Form, Input, Modal, PageHeader, Segmented } from "antd";
 import React, { useState } from "react";
 import { useSearchParams } from "react-router-dom";
@@ -50,8 +50,7 @@ export const FacebookConfig: React.FC = () => {
             value={valueSearch}
             onSearch={onSearch}
             className={styles.search}
-            onChange={(e) => setValueSearch(e.target.value)}
-            style={{ width: 300 }}
+            onChange={handleSearch}
           />,
           <Button key="button" icon={<PlusOutlined />} type="primary" onClick={handleShowCreate}>
             Thêm
@@ -86,6 +85,9 @@ export const FacebookConfig: React.FC = () => {
       </Modal>
     </>
   );
+  function handleSearch(e: any) {
+    setValueSearch(e.target.value);
+  }
   function handleShowCreate() {
     setIsCreateOpen(true);
   }

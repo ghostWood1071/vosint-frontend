@@ -5,7 +5,7 @@ import {
   useProxyConfig,
   useTTSetting,
 } from "@/pages/configuration/config.loader";
-import { PlusOutlined, PlusSquareOutlined } from "@ant-design/icons";
+import { PlusOutlined } from "@ant-design/icons";
 import { Button, Form, Input, Modal, PageHeader, message } from "antd";
 import React, { useState } from "react";
 import { useQueryClient } from "react-query";
@@ -24,8 +24,6 @@ export const AccountForMonitoringTiktok: React.FC = () => {
     type_data: "Tiktok",
     username: titleFilter,
   });
-  const [proxysSelect, setProxysSelect] = useState([]);
-  const [usersSelect, setUsersSelect] = useState([]);
   const { data: accountMonitor } = useTTSetting({
     social_name: "",
     type_data: "Object",
@@ -35,7 +33,6 @@ export const AccountForMonitoringTiktok: React.FC = () => {
     setSearchParams(searchParams);
   };
   const { Search } = Input;
-  const [valueSearch, setValueSearch] = useState("");
   const { data: listProxy } = useProxyConfig({
     text_search: searchParams.get("text_search") ?? "",
   });
@@ -45,12 +42,7 @@ export const AccountForMonitoringTiktok: React.FC = () => {
       <PageHeader
         title="Danh sách cấu hình Tiktok "
         extra={[
-          <Search
-            placeholder="Tìm kiếm"
-            value={valueSearch}
-            onSearch={onSearch}
-            onChange={(e) => setValueSearch(e.target.value)}
-          />,
+          <Search placeholder="Tìm kiếm" onSearch={onSearch} />,
           <Button key="button" icon={<PlusOutlined />} type="primary" onClick={handleShowCreate}>
             Thêm
           </Button>,
@@ -73,8 +65,6 @@ export const AccountForMonitoringTiktok: React.FC = () => {
         destroyOnClose
       >
         <SettingCreateForm
-          setUsersSelect={setUsersSelect}
-          setProxysSelect={setProxysSelect}
           listProxy={listProxy}
           accountMonitor={accountMonitor}
           valueTarget
