@@ -1,5 +1,5 @@
 import styles from "@/pages/configuration/social-config/facebook/components/fb-setting.module.less";
-import { PlusOutlined, PlusSquareOutlined } from "@ant-design/icons";
+import { PlusOutlined } from "@ant-design/icons";
 import { Button, Form, Input, Modal, PageHeader } from "antd";
 import React, { useState } from "react";
 import { useSearchParams } from "react-router-dom";
@@ -20,7 +20,6 @@ export const TwitterConfig: React.FC = () => {
   });
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [form] = Form.useForm();
-  const [valueSearch, setValueSearch] = useState("");
 
   const { mutate, isLoading } = usePostTWSetting();
   const { Search } = Input;
@@ -38,14 +37,7 @@ export const TwitterConfig: React.FC = () => {
       <PageHeader
         title="Danh sách cấu hình Twitter "
         extra={[
-          <Search
-            placeholder="Tìm kiếm"
-            value={valueSearch}
-            onSearch={onSearch}
-            className={styles.search}
-            onChange={(e) => setValueSearch(e.target.value)}
-            style={{ width: 300 }}
-          />,
+          <Search placeholder="Tìm kiếm" onSearch={onSearch} className={styles.search} />,
           <Button key="button" icon={<PlusOutlined />} type="primary" onClick={handleShowCreate}>
             Thêm
           </Button>,

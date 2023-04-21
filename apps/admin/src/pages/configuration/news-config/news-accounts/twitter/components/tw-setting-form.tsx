@@ -1,9 +1,7 @@
-import { Form, FormInstance, Input, Select, SelectProps } from "antd";
+import { Form, FormInstance, Input, Select } from "antd";
 import React, { useEffect } from "react";
 
 interface Props {
-  setProxysSelect: any;
-  setUsersSelect: any;
   listProxy: any;
   accountMonitor: any;
   valueTarget: any;
@@ -13,8 +11,6 @@ interface Props {
 }
 
 export const SettingCreateForm: React.FC<Props> = ({
-  setProxysSelect,
-  setUsersSelect,
   listProxy,
   accountMonitor,
   valueTarget,
@@ -38,8 +34,6 @@ export const SettingCreateForm: React.FC<Props> = ({
   }, []);
   const initialaccountMonitor = accountMonitor?.result;
   const initialListProxy = listProxy?.data;
-  const handleUsersChange = (value: string | string[], data: any) => {};
-  const handleProxysChange = (value: string | string[], data: any) => {};
   return (
     <>
       <Form
@@ -99,7 +93,6 @@ export const SettingCreateForm: React.FC<Props> = ({
           <Select
             mode="multiple"
             placeholder="Chọn tài khoản"
-            onChange={handleUsersChange}
             options={
               initialaccountMonitor?.map((item: any) => ({
                 label: item.social_name,
@@ -123,7 +116,6 @@ export const SettingCreateForm: React.FC<Props> = ({
           <Select
             mode="multiple"
             placeholder="Chọn proxy"
-            onChange={handleProxysChange}
             options={
               initialListProxy?.map((item: any) => ({
                 label: item.name,

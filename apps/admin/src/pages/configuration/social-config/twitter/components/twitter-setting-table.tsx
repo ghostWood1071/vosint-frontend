@@ -5,18 +5,7 @@ import {
 } from "@/pages/configuration/config.loader";
 import styles from "@/pages/configuration/social-config/facebook/components/fb-setting.module.less";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import {
-  Avatar,
-  Button,
-  Form,
-  Modal,
-  Space,
-  Table,
-  TableColumnsType,
-  Tag,
-  Tooltip,
-  message,
-} from "antd";
+import { Avatar, Form, Modal, Space, Table, TableColumnsType, Tag, Tooltip, message } from "antd";
 import React, { useState } from "react";
 import { useQueryClient } from "react-query";
 
@@ -39,14 +28,12 @@ export const TwSettingTable: React.FC<Props> = ({
 }) => {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-  const [choosedAccount, setChoosedAccount] = useState(Object);
   const [isIdTarget, setIsIdTarget] = useState("");
   const queryClient = useQueryClient();
   const { mutate: mutateUpdate } = useMutationUpdateTWSocial();
   const { mutate: mutateDelete } = useMutationDeleteSocial();
   const [form] = Form.useForm();
   const [isValueTarget, setIsValueTarget] = useState<any>();
-  const [adminSelect, setAdminSelect] = useState([]);
   const page = searchParams.get("page");
   const pageSize = searchParams.get("limit");
   const columns: TableColumnsType<any> = [
@@ -56,14 +43,13 @@ export const TwSettingTable: React.FC<Props> = ({
       render: (name: string, data: any) => {
         return (
           <div className={styles.namerow}>
-            <Avatar
-              src={data.avatar_url}
-              onClick={() => routerAccount(data)}
-              className={styles.avatar}
-            />
+            <Avatar src={data.avatar_url} onClick={handleRouter} className={styles.avatar} />
             <p>{name}</p>
           </div>
         );
+        function handleRouter() {
+          routerAccount(data);
+        }
       },
     },
     {
@@ -92,13 +78,19 @@ export const TwSettingTable: React.FC<Props> = ({
         return (
           <Space className={styles.spaceStyle}>
             <Tooltip title={"Sửa "}>
-              <EditOutlined onClick={() => handleShowEdit(_id, values)} className={styles.edit} />
+              <EditOutlined onClick={handleEdit} className={styles.edit} />
             </Tooltip>
             <Tooltip title={"Xoá "}>
-              <DeleteOutlined onClick={() => handleShowDelete(_id)} className={styles.delete} />
+              <DeleteOutlined onClick={handleDelete} className={styles.delete} />
             </Tooltip>
           </Space>
         );
+        function handleEdit() {
+          handleShowEdit(_id, values);
+        }
+        function handleDelete() {
+          handleShowDelete(_id);
+        }
       },
     },
   ];
@@ -127,7 +119,7 @@ export const TwSettingTable: React.FC<Props> = ({
         destroyOnClose
       >
         <SettingCreateForm
-          setAdminSelect={setAdminSelect}
+          setAdminSelect
           adminData={adminData}
           valueTarget={isValueTarget}
           value={"edit"}

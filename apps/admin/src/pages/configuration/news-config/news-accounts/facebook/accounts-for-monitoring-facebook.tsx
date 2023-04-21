@@ -5,7 +5,7 @@ import {
   usePostAccountMonitor,
   useProxyConfig,
 } from "@/pages/configuration/config.loader";
-import { PlusOutlined, PlusSquareOutlined } from "@ant-design/icons";
+import { PlusOutlined } from "@ant-design/icons";
 import { Button, Form, Input, Modal, PageHeader, message } from "antd";
 import React, { useState } from "react";
 import { useQueryClient } from "react-query";
@@ -24,8 +24,6 @@ export const AccountForMonitoringFacebook: React.FC = () => {
     type_data: "Facebook",
     username: titleFilter,
   });
-  const [usersSelect, setUsersSelect] = useState([]);
-  const [proxysSelect, setProxysSelect] = useState([]);
 
   const { data: accountMonitor } = useFBSetting({
     social_name: "",
@@ -38,7 +36,6 @@ export const AccountForMonitoringFacebook: React.FC = () => {
     searchParams.set("username", valueFilter);
     setSearchParams(searchParams);
   };
-  const [valueSearch, setValueSearch] = useState("");
 
   const { Search } = Input;
 
@@ -48,12 +45,7 @@ export const AccountForMonitoringFacebook: React.FC = () => {
       <PageHeader
         title="Danh sách cấu hình Facebook "
         extra={[
-          <Search
-            placeholder="Tìm kiếm"
-            value={valueSearch}
-            onSearch={onSearch}
-            onChange={(e) => setValueSearch(e.target.value)}
-          />,
+          <Search placeholder="Tìm kiếm" onSearch={onSearch} />,
           <Button key="button" icon={<PlusOutlined />} type="primary" onClick={handleShowCreate}>
             Thêm
           </Button>,
@@ -76,8 +68,6 @@ export const AccountForMonitoringFacebook: React.FC = () => {
         destroyOnClose
       >
         <SettingCreateForm
-          setUsersSelect={setUsersSelect}
-          setProxysSelect={setProxysSelect}
           listProxy={listProxy}
           accountMonitor={accountMonitor}
           valueTarget

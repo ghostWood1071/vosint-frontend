@@ -5,7 +5,7 @@ import {
   useProxyConfig,
   useTWSetting,
 } from "@/pages/configuration/config.loader";
-import { PlusOutlined, PlusSquareOutlined } from "@ant-design/icons";
+import { PlusOutlined } from "@ant-design/icons";
 import { Button, Form, Input, Modal, PageHeader, message } from "antd";
 import React, { useState } from "react";
 import { useQueryClient } from "react-query";
@@ -33,12 +33,9 @@ export const AccountForMonitoringTwitter: React.FC = () => {
     setSearchParams(searchParams);
   };
   const { Search } = Input;
-  const [valueSearch, setValueSearch] = useState("");
   const { data: listProxy } = useProxyConfig({
     text_search: searchParams.get("text_search") ?? "",
   });
-  const [usersSelect, setUsersSelect] = useState([]);
-  const [proxysSelect, setProxysSelect] = useState([]);
 
   const queryClient = useQueryClient();
   return (
@@ -46,12 +43,7 @@ export const AccountForMonitoringTwitter: React.FC = () => {
       <PageHeader
         title="Danh sách cấu hình Twitter"
         extra={[
-          <Search
-            placeholder="Tìm kiếm"
-            value={valueSearch}
-            onSearch={onSearch}
-            onChange={(e) => setValueSearch(e.target.value)}
-          />,
+          <Search placeholder="Tìm kiếm" onSearch={onSearch} />,
           <Button key="button" icon={<PlusOutlined />} type="primary" onClick={handleShowCreate}>
             Thêm
           </Button>,
@@ -74,8 +66,6 @@ export const AccountForMonitoringTwitter: React.FC = () => {
         destroyOnClose
       >
         <SettingCreateForm
-          setUsersSelect={setUsersSelect}
-          setProxysSelect={setProxysSelect}
           listProxy={listProxy}
           accountMonitor={accountMonitor}
           valueTarget
