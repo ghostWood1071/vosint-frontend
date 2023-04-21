@@ -1,13 +1,4 @@
-// import { DownNewsIcon, UpNewsIcon } from "@/assets/svg";
-import { EventNodes, EventPlugin } from "@/components/editor/plugins/event-plugin";
-import {
-  EventEditorConfig,
-  EventProvider,
-} from "@/components/editor/plugins/event-plugin/event-context";
-import { EventFilterNode } from "@/components/editor/plugins/event-plugin/event-filter-node";
-import { EventNode } from "@/components/editor/plugins/event-plugin/event-node";
 import { ETreeTag, useNewsSelection } from "@/components/news/news-state";
-import { ContentEditable, EditorNodes, editorTheme } from "@aiacademy/editor";
 import {
   AreaChartOutlined,
   BellTwoTone,
@@ -23,11 +14,6 @@ import {
   ShoppingCartOutlined,
   StarTwoTone,
 } from "@ant-design/icons";
-import { InitialConfigType, LexicalComposer } from "@lexical/react/LexicalComposer";
-import LexicalErrorBoundary from "@lexical/react/LexicalErrorBoundary";
-import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
-import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
-import { TabIndentationPlugin } from "@lexical/react/LexicalTabIndentationPlugin";
 import { Checkbox, Modal, Space, Tag, Tooltip, Typography } from "antd";
 import React, { useEffect, useRef, useState } from "react";
 import { shallow } from "zustand/shallow";
@@ -65,25 +51,6 @@ export const NewsItem: React.FC<Props> = ({
   const [typeDetail, setTypeDetail] = useState<any>("content");
   const [isVisibleModalMindmap, setIsVisibleModalMindmap] = useState<boolean>(false);
   const Ref = useRef<any>();
-  const initialConfig: InitialConfigType = {
-    namespace: "synthetic-report",
-    onError: (error) => {
-      console.error(error);
-      throw new Error("synthetic-report?");
-    },
-    theme: editorTheme,
-    nodes: [...EditorNodes, EventNode, EventFilterNode],
-  };
-
-  const eventConfig: EventEditorConfig = {
-    namespace: "synthetic-report",
-    onError: (error) => {
-      console.error(error);
-      throw new Error("synthetic-event?");
-    },
-    theme: editorTheme,
-    nodes: [...EventNodes],
-  };
   useEffect(() => {
     const a = newsSelection.findIndex((e) => e._id === item._id);
     if (a !== -1) {
@@ -361,24 +328,11 @@ export const NewsItem: React.FC<Props> = ({
                 </div>
               )}
               {isVisibleModalMindmap ? (
-                <LexicalComposer initialConfig={initialConfig}>
-                  <EventProvider>
-                    <EventPlugin eventEditorConfig={eventConfig}>
-                      <HistoryPlugin />
-                      <RichTextPlugin
-                        contentEditable={<ContentEditable />}
-                        placeholder={null}
-                        ErrorBoundary={LexicalErrorBoundary}
-                      />
-                      <TabIndentationPlugin />
-                    </EventPlugin>
-                    <MindmapModal
-                      isVisible={isVisibleModalMindmap}
-                      item={item}
-                      setHideModal={setIsVisibleModalMindmap}
-                    />
-                  </EventProvider>
-                </LexicalComposer>
+                <MindmapModal
+                  isVisible={isVisibleModalMindmap}
+                  item={item}
+                  setHideModal={setIsVisibleModalMindmap}
+                />
               ) : null}
             </div>
           </div>
