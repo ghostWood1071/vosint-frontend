@@ -8,6 +8,10 @@
   top: 0;
 }
 
+.toolbar-datetime {
+  margin-top: 8px;
+}
+
 .event-create {
   .content_editable__root {
     padding: 8px 12px;

@@ -1,10 +1,5 @@
-import { EventNodes, EventPlugin } from "@/components/editor/plugins/event-plugin";
-import {
-  EventEditorConfig,
-  EventProvider,
-} from "@/components/editor/plugins/event-plugin/event-context";
-import { EventFilterNode } from "@/components/editor/plugins/event-plugin/event-filter-node";
-import { EventNode } from "@/components/editor/plugins/event-plugin/event-node";
+import { EventProvider } from "@/components/editor/plugins/event-plugin/event-context";
+import { EventsNode } from "@/components/editor/plugins/events-plugin/events-node";
 import { AppContainer } from "@/pages/app/";
 import {
   getReportQuickUrl,
@@ -12,12 +7,8 @@ import {
   reportQuickPath,
   reportSyntheticPath,
 } from "@/pages/router";
-import { ContentEditable, EditorNodes, editorTheme } from "@aiacademy/editor";
+import { EditorNodes, editorTheme } from "@aiacademy/editor";
 import { InitialConfigType, LexicalComposer } from "@lexical/react/LexicalComposer";
-import LexicalErrorBoundary from "@lexical/react/LexicalErrorBoundary";
-import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
-import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
-import { TabIndentationPlugin } from "@lexical/react/LexicalTabIndentationPlugin";
 import { Menu, MenuProps } from "antd";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 
@@ -29,17 +20,7 @@ export const ReportLayout = () => {
       throw new Error("synthetic-report?");
     },
     theme: editorTheme,
-    nodes: [...EditorNodes, EventNode, EventFilterNode],
-  };
-
-  const eventConfig: EventEditorConfig = {
-    namespace: "synthetic-report",
-    onError: (error) => {
-      console.error(error);
-      throw new Error("synthetic-event?");
-    },
-    theme: editorTheme,
-    nodes: [...EventNodes],
+    nodes: [...EditorNodes, EventsNode],
   };
 
   return (
@@ -47,15 +28,6 @@ export const ReportLayout = () => {
       <LexicalComposer initialConfig={initialConfig}>
         <EventProvider>
           <Outlet />
-          <EventPlugin eventEditorConfig={eventConfig}>
-            <HistoryPlugin />
-            <RichTextPlugin
-              contentEditable={<ContentEditable />}
-              placeholder={null}
-              ErrorBoundary={LexicalErrorBoundary}
-            />
-            <TabIndentationPlugin />
-          </EventPlugin>
         </EventProvider>
       </LexicalComposer>
     </AppContainer>

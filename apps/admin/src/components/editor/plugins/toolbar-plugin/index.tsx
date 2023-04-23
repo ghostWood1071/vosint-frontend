@@ -11,7 +11,17 @@ import { useLexicalComposerContext } from "@aiacademy/editor";
 import { $createHeadingNode, $isHeadingNode, HeadingTagType } from "@lexical/rich-text";
 import { $setBlocksType } from "@lexical/selection";
 import { mergeRegister } from "@lexical/utils";
-import { Button, Col, Dropdown, MenuProps, Row, Space } from "antd";
+import {
+  Button,
+  Col,
+  DatePicker,
+  Divider,
+  Dropdown,
+  MenuProps,
+  Row,
+  Space,
+  Typography,
+} from "antd";
 import { Packer } from "docx";
 import {
   $createParagraphNode,
@@ -27,11 +37,11 @@ import {
 import type { LexicalEditor } from "lexical";
 import moment from "moment";
 import { useCallback, useEffect, useState } from "react";
+import { shallow } from "zustand/shallow";
 
 import { $findMatchingParent, downloadFile } from "../../utils";
 import { useConvertLexicalToDocx } from "../../utils/docx";
-import { INSERT_EVENT_FILTER_COMMAND } from "../event-plugin";
-import { useEventDialogStore } from "../event-plugin/event-dialog";
+import { useEventsState } from "../events-plugin/events-state";
 import "./index.css";
 
 const blockTypeToBlockName = {
@@ -113,8 +123,10 @@ export function ToolbarPlugin(): JSX.Element {
   const [isExporting, setExporting] = useState(false);
   const [isEditable, setIsEditable] = useState(() => editor.isEditable());
   const convertLexicalToDocx = useConvertLexicalToDocx();
-
-  const [setOpen] = useEventDialogStore((state) => [state.setOpen]);
+  const [dateTime, setDateTime] = useEventsState(
+    (state) => [state.dateTimeFilter, state.setDateTimeFilter],
+    shallow,
+  );
 
   const updateToolbar = useCallback(() => {
     const selection = $getSelection();
@@ -173,10 +185,11 @@ export function ToolbarPlugin(): JSX.Element {
     );
   }, [activeEditor, editor, updateToolbar]);
 
-  function handleExportDocx() {
+  async function handleExportDocx() {
     setExporting(true);
     const editorState = activeEditor.getEditorState();
-    Packer.toBlob(convertLexicalToDocx(editorState.toJSON()))
+    const blobData = await convertLexicalToDocx(editorState.toJSON(), dateTime);
+    Packer.toBlob(blobData)
       .then((blob) => {
         downloadFile(blob, "bao-cao-nhanh.docx");
       })
@@ -187,92 +200,76 @@ export function ToolbarPlugin(): JSX.Element {
 
   return (
     <div className="toolbar">
-      <Row justify="space-between">
-        <Col span={6}>
-          <Space>
-            <Space.Compact>
-              <Button
-                title={`Đậm (Ctrl+B)`}
-                aria-label="Bôi đậm văn bản của bạn"
-                icon={<FormatBoldIcon />}
-                onClick={() => {
-                  activeEditor.dispatchCommand(FORMAT_TEXT_COMMAND, "bold");
-                }}
-                type={isBold ? "primary" : "default"}
-              />
+      <Row justify="space-between" align="middle">
+        <Col span={22}>
+          <Button
+            title={`Đậm (Ctrl+B)`}
+            aria-label="Bôi đậm văn bản của bạn"
+            icon={<FormatBoldIcon />}
+            onClick={() => {
+              activeEditor.dispatchCommand(FORMAT_TEXT_COMMAND, "bold");
+            }}
+            type={isBold ? "primary" : "default"}
+          />
 
-              <Button
-                title={`Nghiêng (Ctrl+I)`}
-                aria-label="Làm nghiêng văn bản của bạn"
-                icon={<FormatItalicIcon />}
-                onClick={() => {
-                  activeEditor.dispatchCommand(FORMAT_TEXT_COMMAND, "italic");
-                }}
-                type={isItalic ? "primary" : "default"}
-              />
+          <Button
+            title={`Nghiêng (Ctrl+I)`}
+            aria-label="Làm nghiêng văn bản của bạn"
+            icon={<FormatItalicIcon />}
+            onClick={() => {
+              activeEditor.dispatchCommand(FORMAT_TEXT_COMMAND, "italic");
+            }}
+            type={isItalic ? "primary" : "default"}
+          />
 
-              <Button
-                title={`Gạch dưới (Ctrl+U)`}
-                aria-label="Gạch dưới văn bản của bạn"
-                icon={<FormatUnderlinedIcon />}
-                onClick={() => {
-                  activeEditor.dispatchCommand(FORMAT_TEXT_COMMAND, "underline");
-                }}
-                type={isUnderline ? "primary" : "default"}
-              />
-            </Space.Compact>
-            <Space.Compact>
-              <Button
-                title={`Căn trái`}
-                aria-label={`Căn chỉnh nội dung của bạn với lề trái. Căn trái thường được dùng cho nội dung phần thân và giúp dễ đọc tài liệu hơn`}
-                icon={<FormatAlignLeftIcon />}
-                onClick={() => {
-                  activeEditor.dispatchCommand(FORMAT_ELEMENT_COMMAND, "left");
-                }}
-              />
-              <Button
-                icon={<FormatAlignCenterIcon />}
-                onClick={() => {
-                  activeEditor.dispatchCommand(FORMAT_ELEMENT_COMMAND, "center");
-                }}
-              />
-              <Button
-                icon={<FormatAlignRightIcon />}
-                onClick={() => {
-                  activeEditor.dispatchCommand(FORMAT_ELEMENT_COMMAND, "right");
-                }}
-              />
-            </Space.Compact>
-            {blockType in blockTypeToBlockName && activeEditor === editor && (
-              <>
-                <BlockFormatDropDown disabled={!isEditable} blockType={blockType} editor={editor} />
-              </>
-            )}
-            <Space>
-              <Button
-                onClick={() => {
-                  setOpen(true);
-                }}
-              >
-                Sự kiện
-              </Button>
-              <Button
-                onClick={() => {
-                  const startDate = moment().subtract("7", "days").format("YYYY-MM-DD");
-                  const endDate = moment().format("YYYY-MM-DD");
+          <Button
+            title={`Gạch dưới (Ctrl+U)`}
+            aria-label="Gạch dưới văn bản của bạn"
+            icon={<FormatUnderlinedIcon />}
+            onClick={() => {
+              activeEditor.dispatchCommand(FORMAT_TEXT_COMMAND, "underline");
+            }}
+            type={isUnderline ? "primary" : "default"}
+          />
+          <Divider type="vertical" />
+          <Button
+            title={`Căn trái`}
+            aria-label={`Căn chỉnh nội dung của bạn với lề trái. Căn trái thường được dùng cho nội dung phần thân và giúp dễ đọc tài liệu hơn`}
+            icon={<FormatAlignLeftIcon />}
+            onClick={() => {
+              activeEditor.dispatchCommand(FORMAT_ELEMENT_COMMAND, "left");
+            }}
+          />
+          <Button
+            icon={<FormatAlignCenterIcon />}
+            onClick={() => {
+              activeEditor.dispatchCommand(FORMAT_ELEMENT_COMMAND, "center");
+            }}
+          />
+          <Button
+            icon={<FormatAlignRightIcon />}
+            onClick={() => {
+              activeEditor.dispatchCommand(FORMAT_ELEMENT_COMMAND, "right");
+            }}
+          />
 
-                  activeEditor.dispatchCommand(INSERT_EVENT_FILTER_COMMAND, {
-                    startDate: startDate,
-                    endDate: endDate,
-                  });
-                }}
-              >
-                Lọc sự kiện theo ngày
-              </Button>
-            </Space>
-          </Space>
+          <Divider type="vertical" />
+          {blockType in blockTypeToBlockName && activeEditor === editor && (
+            <>
+              <BlockFormatDropDown disabled={!isEditable} blockType={blockType} editor={editor} />
+            </>
+          )}
+          <Divider type="vertical" />
+
+          <Typography.Text strong>Lọc sự kiện theo ngày: </Typography.Text>
+          <DatePicker.RangePicker
+            defaultValue={[moment().subtract(7, "days"), moment()]}
+            format={"DD/MM/YYYY"}
+            bordered={false}
+            onChange={(_, formatString) => setDateTime(formatString)}
+          />
         </Col>
-        <Col span={6} style={{ textAlign: "right" }}>
+        <Col span={2}>
           <Space>
             <Button
               title="Xuất file ra docx"
@@ -282,6 +279,10 @@ export function ToolbarPlugin(): JSX.Element {
             />
           </Space>
         </Col>
+      </Row>
+      <Row className="toolbar-datetime" align="middle">
+        <Col span={4}></Col>
+        <Col span={20}></Col>
       </Row>
     </div>
   );

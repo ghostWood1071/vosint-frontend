@@ -1,5 +1,21 @@
-import { IEventDto, IReportDto, TEvent, TEvents, TReport, TReports } from "@/services/report-type";
-import { createReport, getReport, updateReport } from "@/services/report.service";
+import {
+  IEventDto,
+  IReportDto,
+  TEvent,
+  TEvents,
+  TReport,
+  TReportEventsDto,
+  TReports,
+} from "@/services/report-type";
+import {
+  addEventIdsToReport,
+  createReport,
+  createReportEvents,
+  getReport,
+  getReportEvents,
+  removeEventIdsToReport,
+  updateReport,
+} from "@/services/report.service";
 import {
   createEvent,
   getEvent,
@@ -21,6 +37,7 @@ export const CACHE_KEYS = {
   EVENT: "EVENT",
   REPORTS: "REPORTS",
   REPORT: "REPORT",
+  REPORT_EVENT: "REPORT_EVENT",
 };
 
 export const useEvent = (id: string, options?: UseQueryOptions<TEvent, unknown>) => {
@@ -129,4 +146,33 @@ export const useUpdateReport = (
   >,
 ) => {
   return useMutation((data: IReportDto) => updateReport(id, data), options);
+};
+
+export const useGetReportEvents = (
+  id: string,
+  options?: UseQueryOptions<TReportEventsDto, unknown>,
+) => {
+  return useQuery<TReportEventsDto>(
+    [CACHE_KEYS.REPORT_EVENT, id],
+    () => getReportEvents(id),
+    options,
+  );
+};
+
+export const useCreateReportEvents = (
+  options?: UseMutationOptions<string, unknown, TReportEventsDto>,
+) => {
+  return useMutation((data: TReportEventsDto) => createReportEvents(data), options);
+};
+
+export const useAddEventIdsToReport = (
+  options?: UseMutationOptions<string, unknown, { id: string; data: string[] }>,
+) => {
+  return useMutation(({ id, data }) => addEventIdsToReport(id, data), options);
+};
+
+export const useRemoveEventIdsToReport = (
+  options?: UseMutationOptions<string, unknown, { id: string; data: string[] }>,
+) => {
+  return useMutation(({ id, data }) => removeEventIdsToReport(id, data), options);
 };

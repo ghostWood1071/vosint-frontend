@@ -2,9 +2,7 @@ import { ReactComponent as CollapsedIcon } from "@/assets/svg/collapsed-icon.svg
 import { ModalAddNewsSamples } from "@/components/news/form/form-linh-vuc";
 import { useEvent, useRemoveNewsInEvent } from "@/pages/reports/report.loader";
 import { useUpdateEvent } from "@/pages/reports/report.loader";
-import { CACHE_KEYS } from "@/pages/reports/report.loader";
 import { TNews } from "@/services/news.type";
-import { IEventDto } from "@/services/report-type";
 import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { Button, Collapse, DatePicker, DatePickerProps, List, Space, Typography } from "antd";
@@ -42,7 +40,7 @@ export default function EventComponent({ nodeKey, date, id }: Props): JSX.Elemen
         mutate({
           event_name: tempName,
           event_content: tempContent,
-          date_created: date.format("YYYY-MM-DD"),
+          date_created: date.format("DD/MM/YYYY"),
           new_list: data.new_list.map((item) => item._id),
         });
       }, 1000);
@@ -168,7 +166,7 @@ export default function EventComponent({ nodeKey, date, id }: Props): JSX.Elemen
       if (!$isEventNode(node)) return;
       if (!value) return;
 
-      node.setDate(value.format("YYYY-MM-DD"));
+      node.setDate(value.format("DD/MM/YYYY"));
     });
   }
 }

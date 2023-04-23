@@ -1,4 +1,5 @@
 import { EventDialog } from "@/components/editor/plugins/event-plugin/event-dialog";
+import EventsPlugin from "@/components/editor/plugins/events-plugin";
 import { TableOfContentsPlugin } from "@/components/editor/plugins/table-of-contents-plugin";
 import { ToolbarPlugin } from "@/components/editor/plugins/toolbar-plugin";
 import { Editor, useLexicalComposerContext } from "@aiacademy/editor";
@@ -47,6 +48,7 @@ export const SyntheticReportDetail: React.FC = () => {
           <ToolbarPlugin />
           <Spin spinning={isLoading}>
             <Editor>
+              <EventsPlugin />
               <OnChangePlugin onChange={handleChangeContent} />
             </Editor>
           </Spin>

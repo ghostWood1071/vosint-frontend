@@ -8,7 +8,7 @@ import { useEffect, useRef, useState } from "react";
 
 import styles from "./index.module.less";
 
-const navigationItemLevel: Record<HeadingTagType, string> = {
+export const navigationItemLevel: Record<HeadingTagType, string> = {
   h1: styles.navigationItemLevel1,
   h2: styles.navigationItemLevel2,
   h3: styles.navigationItemLevel3,
