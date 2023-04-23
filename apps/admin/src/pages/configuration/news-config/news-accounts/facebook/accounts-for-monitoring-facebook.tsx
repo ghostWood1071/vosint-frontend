@@ -66,6 +66,7 @@ export const AccountForMonitoringFacebook: React.FC = () => {
         onCancel={handleCancelCreate}
         onOk={handleOkCreate}
         destroyOnClose
+        maskClosable={false}
       >
         <SettingCreateForm
           listProxy={listProxy}

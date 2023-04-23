@@ -57,6 +57,7 @@ export const TiktokConfig: React.FC = () => {
         onCancel={handleCancelCreate}
         onOk={handleOkCreate}
         destroyOnClose
+        maskClosable={false}
       >
         <SettingCreateForm
           setAdminSelect={setAdminSelect}

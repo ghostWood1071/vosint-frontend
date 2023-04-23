@@ -4,7 +4,18 @@ import {
   useMutationUpdateAccountMonitor,
 } from "@/pages/configuration/config.loader";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { Form, Modal, Popover, Space, Table, TableColumnsType, Tag, Tooltip, message } from "antd";
+import {
+  Alert,
+  Form,
+  Modal,
+  Popover,
+  Space,
+  Table,
+  TableColumnsType,
+  Tag,
+  Tooltip,
+  message,
+} from "antd";
 import React, { useState } from "react";
 import { useQueryClient } from "react-query";
 
@@ -95,7 +106,7 @@ export const SettingTable: React.FC<Props> = ({ data, listProxy, accountMonitor,
           handleShowEdit(_id, values);
         }
         function handleDelete() {
-          handleShowDelete(_id);
+          handleShowDelete(_id, values);
         }
       },
     },
@@ -116,6 +127,7 @@ export const SettingTable: React.FC<Props> = ({ data, listProxy, accountMonitor,
         onCancel={handleCancelEdit}
         onOk={handleOkEdit}
         destroyOnClose
+        maskClosable={false}
       >
         <SettingCreateForm
           listProxy={listProxy}
@@ -132,7 +144,21 @@ export const SettingTable: React.FC<Props> = ({ data, listProxy, accountMonitor,
         onCancel={handleCancelDelete}
         onOk={handleOkDelete}
         destroyOnClose
-      ></Modal>
+        maskClosable={false}
+      >
+        {isDeleteOpen ? (
+          <Alert
+            description={
+              <div>
+                Bạn có chắc muốn xoá{" "}
+                <span className={styles.fontNormal}>" {isValueTarget.username} "</span> không?
+              </div>
+            }
+            type="warning"
+            showIcon
+          />
+        ) : null}
+      </Modal>
     </>
   );
   function handleShowEdit(value: any, values: any) {
@@ -190,8 +216,9 @@ export const SettingTable: React.FC<Props> = ({ data, listProxy, accountMonitor,
     form.resetFields();
   }
 
-  function handleShowDelete(value: any) {
+  function handleShowDelete(value: any, values: any) {
     setIsIdTarget(value);
+    setIsValueTarget(values);
     setIsDeleteOpen(true);
   }
 

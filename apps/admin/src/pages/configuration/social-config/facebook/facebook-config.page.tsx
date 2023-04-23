@@ -72,6 +72,7 @@ export const FacebookConfig: React.FC = () => {
         onCancel={handleCancelCreate}
         onOk={handleOkCreate}
         destroyOnClose
+        maskClosable={false}
       >
         <SettingCreateForm
           setAdminSelect={setAdminSelect}
