@@ -57,6 +57,7 @@ export const TwitterConfig: React.FC = () => {
         onCancel={handleCancelCreate}
         onOk={handleOkCreate}
         destroyOnClose
+        maskClosable={false}
       >
         <SettingCreateForm
           setAdminSelect={setAdminSelect}
