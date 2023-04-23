@@ -1,7 +1,11 @@
-import { Document, HeadingLevel, Paragraph, TextRun, UnderlineType } from "docx";
+import { CACHE_KEYS } from "@/pages/reports/report.loader";
+import { IEventDto, TReportEventsDto } from "@/services/report-type";
+import { getEvent, getReportEvents } from "@/services/report.service";
+import { Document, ExternalHyperlink, HeadingLevel, Paragraph, TextRun, UnderlineType } from "docx";
 import { QueryClient, useQueryClient } from "react-query";
 
 import { IS_BOLD, IS_ITALIC, IS_UNDERLINE } from "../constants/lexical-constant";
+import { filterIsBetween } from "../plugins/events-plugin/events-components";
 
 const headingLevel: Record<string, HeadingLevel> = {
   h1: HeadingLevel.HEADING_1,
@@ -12,7 +16,11 @@ const headingLevel: Record<string, HeadingLevel> = {
   h6: HeadingLevel.HEADING_6,
 };
 
-export function convertLexicalToDocx(lexicalJSON: any, queryClient: QueryClient) {
+export async function convertLexicalToDocx(
+  lexicalJSON: any,
+  queryClient: QueryClient,
+  dateTime: [string, string],
+) {
   const section: any = {
     properties: {},
     children: [],
@@ -59,6 +67,76 @@ export function convertLexicalToDocx(lexicalJSON: any, queryClient: QueryClient)
         const textRun = new TextRun({});
         paragraph.addChildElement(textRun);
       }
+    } else if (block.type === "events") {
+      var events = queryClient.getQueryData<TReportEventsDto>([CACHE_KEYS.REPORT_EVENT, block.id]);
+
+      if (!events) {
+        events = await queryClient.fetchQuery<TReportEventsDto>({
+          queryKey: [CACHE_KEYS.REPORT_EVENT, block.id],
+          queryFn: () => getReportEvents(block.id),
+        });
+      }
+
+      events?.event_ids?.forEach(async (event_id) => {
+        var event = queryClient.getQueryData<IEventDto>(["event", event_id]);
+        if (!event) {
+          event = await queryClient.fetchQuery<IEventDto>({
+            queryKey: ["event", event_id],
+            queryFn: () => getEvent(event_id),
+          });
+        }
+
+        if (
+          dateTime[0] &&
+          dateTime[1] &&
+          !filterIsBetween(event?.date_created ?? null, dateTime[0], dateTime[1])
+        ) {
+          return;
+        }
+
+        const name = new TextRun({
+          text: event.event_name,
+          bold: true,
+        });
+
+        const time = new TextRun({
+          text: `Thời gian: ${event.date_created}`,
+          break: 1,
+        });
+
+        const content = new TextRun({
+          text: event.event_content,
+          italics: true,
+          break: 1,
+        });
+
+        paragraph.addChildElement(name);
+        paragraph.addChildElement(time);
+        paragraph.addChildElement(content);
+
+        if (Array.isArray(event.new_list) && event.new_list.length > 0) {
+          const title = new TextRun({
+            text: "Danh sách tin nói về sự kiện:",
+            break: 1,
+          });
+          paragraph.addChildElement(title);
+
+          event.new_list.forEach((newItem) => {
+            const newTitle = new ExternalHyperlink({
+              children: [
+                new TextRun({
+                  text: newItem["data:title"],
+                  break: 1,
+                  style: "Hyperlink",
+                }),
+              ],
+              link: newItem["data:url"],
+            });
+            paragraph.addChildElement(newTitle);
+          });
+        }
+        paragraph.addChildElement(new TextRun({ break: 1 }));
+      });
     }
     section.children.push(paragraph);
   }
@@ -72,7 +150,7 @@ export function convertLexicalToDocx(lexicalJSON: any, queryClient: QueryClient)
 
 export function useConvertLexicalToDocx() {
   const queryClient = useQueryClient();
-  return (lexicalJSON: any) => {
-    return convertLexicalToDocx(lexicalJSON, queryClient);
+  return (lexicalJSON: any, dateTime: [string, string]) => {
+    return convertLexicalToDocx(lexicalJSON, queryClient, dateTime);
   };
 }

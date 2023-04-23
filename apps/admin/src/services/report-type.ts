@@ -14,6 +14,7 @@ export type TEvents = {
 };
 
 export interface IEventDto {
+  _id?: string;
   event_name?: string;
   event_content?: string;
   date_created?: string;
@@ -38,3 +39,35 @@ export interface IReportDto {
   title?: string;
   content?: string;
 }
+
+export type TReportContent = {
+  root: {
+    children: {
+      children?: {
+        detail: number;
+        format: number;
+        mode: string;
+        style: string;
+        text: string;
+        type: string;
+        version: number;
+      }[];
+      direction?: string;
+      format?: string;
+      indent?: number;
+      type: string;
+      version: number;
+      tag?: string;
+      events_id?: string;
+    }[];
+    direction: string;
+    format: string;
+    indent: number;
+    type: string;
+    version: number;
+  };
+};
+
+export type TReportEventsDto = {
+  event_ids?: string[];
+};

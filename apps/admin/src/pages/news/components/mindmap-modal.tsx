@@ -1,3 +1,4 @@
+import { ReportIcon } from "@/assets/svg";
 import { CaretRightOutlined, DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
 import { Button, Col, Collapse, Input, Modal, Row } from "antd";
 import React, { useEffect, useState } from "react";
@@ -9,6 +10,8 @@ import {
 } from "../news.loader";
 import { AddMindmap } from "./add-mindmap";
 import styles from "./mindmap-modal.module.less";
+import { ReportModal } from "./report-modal";
+import { useReportModalState } from "./report-modal/index.state";
 
 interface props {
   item: any;
@@ -25,7 +28,6 @@ export const MindmapModal: React.FC<props> = ({ item, isVisible, setHideModal })
   const [dataEventFromSystem, setDataEventFromSystem] = useState<any[]>();
   const { mutate: mutateOneEvent } = useMutationEventNews();
   const { mutate: mutateManyEvent } = useMutationAddManyEvent();
-
   useEffect(() => {
     let dataBridgeEventFromUser: any[] = [];
     let dataBridgeEventFromSystem: any[] = [];
@@ -77,8 +79,6 @@ export const MindmapModal: React.FC<props> = ({ item, isVisible, setHideModal })
             </div>
           </div>
         </Col>
-      </Row>
-      <Row>
         <Col span={12}>
           <div className={styles.leftBody}>
             <div
@@ -152,6 +152,7 @@ export const MindmapModal: React.FC<props> = ({ item, isVisible, setHideModal })
           functionAddOneEvent={handleAddOneEvent}
         />
       ) : null}
+      <ReportModal />
     </Modal>
   );
 
@@ -217,6 +218,8 @@ interface ItemsProps {
 }
 
 const Items: React.FC<ItemsProps> = ({ item, handleEdit, handleDelete }) => {
+  const setEvent = useReportModalState((state) => state.setEvent);
+
   return (
     <div className={styles.itemContainer} key={item._id}>
       <div className={styles.collapseContainer}>
@@ -254,6 +257,7 @@ const Items: React.FC<ItemsProps> = ({ item, handleEdit, handleDelete }) => {
         </Collapse>
       </div>
       <div className={styles.editContainer}>
+        <ReportIcon onClick={handleOpenReport} title="Thêm sự kiện vào báo cáo" />
         <EditOutlined
           onClick={() => {
             handleEdit(item);
@@ -271,4 +275,8 @@ const Items: React.FC<ItemsProps> = ({ item, handleEdit, handleDelete }) => {
       </div>
     </div>
   );
+
+  function handleOpenReport() {
+    setEvent(item);
+  }
 };

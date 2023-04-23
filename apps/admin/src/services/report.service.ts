@@ -1,6 +1,6 @@
 import { apiClient } from "@/utils/api";
 
-import { IEventDto, IReportDto, TEvents } from "./report-type";
+import { IEventDto, IReportDto, TEvents, TReportEventsDto } from "./report-type";
 
 const apiEventBaseV2Url = "/v2";
 const apiReportBaseV2Url = "/v2";
@@ -57,5 +57,41 @@ export const updateReport = async (id: string, data: any) => {
 
 export const removeReport = async (id: string) => {
   const result = await apiClient.delete(`${apiReportBaseV2Url}/report/${id}`);
+  return result.data;
+};
+
+export const getReportEvents = async (id: string) => {
+  const result = await apiClient.get(`${apiReportBaseV2Url}/report/events/${id}`);
+  return result.data;
+};
+
+export const createReportEvents = async (data: TReportEventsDto) => {
+  const result = await apiClient.post(`${apiReportBaseV2Url}/report/events`, data);
+  return result.data;
+};
+
+export const removeReportEvents = async (id: string) => {
+  const result = await apiClient.delete(`${apiReportBaseV2Url}/report/events/${id}`);
+  return result.data;
+};
+
+export const addEventIdsToReport = async (id: string, data: string[]) => {
+  const result = await apiClient.post(
+    `${apiReportBaseV2Url}/report/events/${id}/add_event_ids`,
+    data,
+  );
+  return result.data;
+};
+
+export const removeEventIdsToReport = async (id: string, data: string[]) => {
+  const result = await apiClient.post(
+    `${apiReportBaseV2Url}/report/events/${id}/remove_event_ids`,
+    data,
+  );
+  return result.data;
+};
+
+export const getEventsDetail = async (id: string) => {
+  const result = await apiClient.get<IEventDto[]>(`${apiEventBaseV2Url}/report/events/${id}/event`);
   return result.data;
 };

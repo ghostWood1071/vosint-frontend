@@ -149,8 +149,8 @@ function EventFilterComponent({
   endDate: string;
 }) {
   const [editor] = useLexicalComposerContext();
-  const defaultStartDate = moment(startDate, "YYYY-MM-DD");
-  const defaultEndDate = moment(endDate, "YYYY-MM-DD");
+  const defaultStartDate = moment(startDate, "DD/MM/YYYY");
+  const defaultEndDate = moment(endDate, "DD/MM/YYYY");
 
   useEffect(() => {
     editor.dispatchCommand(FILTER_EVENT, {

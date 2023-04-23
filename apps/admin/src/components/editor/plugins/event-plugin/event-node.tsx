@@ -59,7 +59,7 @@ export class EventNode extends DecoratorNode<JSX.Element> {
     this.__id = id;
     this.__open = open;
     this.__hide = hide || false;
-    this.__date = date || moment().format("YYYY-MM-DD");
+    this.__date = date || moment().format("DD/MM/YYYY");
   }
 
   static getType(): string {
