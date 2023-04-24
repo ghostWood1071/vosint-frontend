@@ -70,7 +70,7 @@
       }
     }
     .content-header-container {
-      width: calc(100% - 350px);
+      width: calc(100% - 380px);
       display: flex;
       flex-direction: row;
       color: black;
@@ -93,7 +93,7 @@
       }
     }
     .seen-content-header-container {
-      width: calc(100% - 350px);
+      width: calc(100% - 380px);
       display: flex;
       flex-direction: row;
       color: #c0c0c0;
@@ -116,17 +116,37 @@
     .all-number-header {
       display: inline-flex;
       justify-content: flex-end;
-      width: 270px;
+      width: 300px;
       .like-header-container {
         display: inline;
 
         .tag {
-          padding-inline: 1px;
+          width: 60px;
+          padding-inline: 3px;
+          height: 22px;
+          margin: 3px;
+          .number-like {
+            margin-right: 2px;
+          }
+        }
+        .seen-tag {
+          width: 60px;
+          padding-inline: 3px;
+          height: 22px;
+          color: #c0c0c0;
+          margin: 3px;
+          .number-like {
+            margin-right: 2px;
+          }
+        }
+
+        .tag-time {
+          padding-inline: 3px;
           height: 22px;
           margin: 3px;
         }
-        .seen-tag {
-          padding-inline: 1px;
+        .seen-tag-time {
+          padding-inline: 3px;
           height: 22px;
           color: #c0c0c0;
           margin: 3px;
@@ -137,9 +157,26 @@
   .content {
     width: 100%;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
     position: relative;
-    padding-block: 10px;
+
+    .scroll-container {
+      width: 100%;
+      display: flex;
+      justify-content: flex-end;
+      padding-top: 10px;
+      padding-right: 10px;
+      .hide-detail-button {
+        padding: 0px;
+        border: 0px;
+
+        .close-icon {
+          width: 20px;
+          height: 20px;
+        }
+      }
+    }
     .detail-container {
       width: 700px;
 
@@ -155,6 +192,7 @@
           .avatar {
             width: 100px;
             height: 100px;
+            border-radius: 50px;
           }
         }
         .right-detail-header {
@@ -170,7 +208,7 @@
             font-size: 14px;
 
             .tag {
-              padding-inline: 1px;
+              padding-inline: 5px;
               height: 22px;
               font-size: 14px;
             }
@@ -186,7 +224,7 @@
               padding-top: 5px;
 
               .tag {
-                padding-inline: 1px;
+                padding-inline: 5px;
                 height: 22px;
                 font-size: 14px;
               }
@@ -213,22 +251,9 @@
         }
       }
     }
-    .hide-detail-button {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      padding: 0px;
-      border: 0px;
-
-      .close-icon {
-        width: 20px;
-        height: 20px;
-      }
-    }
   }
 }
 
 .like-icon {
-  width: 20px;
-  height: 20px;
+  font-size: 12px;
 }

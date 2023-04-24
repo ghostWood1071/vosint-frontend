@@ -1,15 +1,19 @@
 import {
   addPriorityObject,
   deletePriorityObject,
-  gePriorityObject, //   updatePriorityObject,
+  gePriorityObject,
+  getSocialPage, //   updatePriorityObject,
 } from "@/services/social.service";
 import { message } from "antd";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "react-query";
 
-export const PRIORITY_OBJECT = "@PRIORITY_OBJECT";
+export const CACHE_KEYS_SOCIAL = {
+  PrioritySocial: "@PRIORITY_OBJECT",
+  SocialPage: "@SOCIAL_PAGE",
+};
 
 export const usePriorityObjectList = (filter: any) => {
-  return useQuery([PRIORITY_OBJECT, filter], () => gePriorityObject(filter));
+  return useQuery([CACHE_KEYS_SOCIAL.PrioritySocial, filter], () => gePriorityObject(filter));
 };
 
 export const useMutationPriorityObject = () => {
@@ -32,20 +36,32 @@ export const useMutationPriorityObject = () => {
     },
     {
       onSuccess: (data, variables) => {
-        queryClient.invalidateQueries(PRIORITY_OBJECT);
+        queryClient.invalidateQueries(CACHE_KEYS_SOCIAL.PrioritySocial);
         message.success({
           content:
             (variables.action === "add" ? "Thêm" : variables.action === "update" ? "Sửa" : "Xoá") +
             " đối tượng ưu tiên hành công!",
-          key: PRIORITY_OBJECT,
         });
       },
       onError: () => {
         message.error({
           content: "Tài khoản đã tồn tại. Hãy nhập lại!",
-          key: PRIORITY_OBJECT,
         });
       },
     },
+  );
+};
+
+export interface DataFilterSocialPage {
+  name: string;
+}
+
+export const useInfiniteSocialPageList = (filter: DataFilterSocialPage) => {
+  return useInfiniteQuery<any>([CACHE_KEYS_SOCIAL.SocialPage], (data) =>
+    getSocialPage(
+      data.pageParam !== undefined
+        ? { ...data.pageParam, ...filter }
+        : { page_number: 1, page_size: 30, ...filter },
+    ),
   );
 };

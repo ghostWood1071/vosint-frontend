@@ -1,11 +1,6 @@
-import {
-  CloseOutlined,
-  CommentOutlined,
-  FieldTimeOutlined,
-  LikeOutlined,
-  ShareAltOutlined,
-} from "@ant-design/icons";
-import { Avatar, Tag } from "antd";
+import { UserIcon } from "@/assets/svg";
+import { CloseOutlined, CommentOutlined, LikeOutlined, ShareAltOutlined } from "@ant-design/icons";
+import { Tag } from "antd";
 import React, { useRef, useState } from "react";
 
 import styles from "./post-item.module.less";
@@ -17,23 +12,14 @@ interface PostItemProps {
 export const PostItem: React.FC<PostItemProps> = ({ item }) => {
   const [typeShow, setTypeShow] = useState<boolean>(true);
   const [seen, setSeen] = useState<boolean>(false);
-  // const element = document.getElementById(item.id);
   const Ref = useRef<any>();
   return (
-    <div
-      ref={Ref}
-      onClick={() => {
-        Ref?.current?.scrollIntoView();
-      }}
-      className={styles.mainContainer}
-      id={item.id}
-    >
+    <div ref={Ref} className={styles.mainContainer} id={item.id}>
       {typeShow ? (
         <div
           className={styles.header}
           onClick={(event) => {
-            setTypeShow(!typeShow);
-            setSeen(true);
+            event.stopPropagation();
           }}
         >
           <div className={styles.statusContainer}>
@@ -54,83 +40,101 @@ export const PostItem: React.FC<PostItemProps> = ({ item }) => {
               <img className={styles.typePostIcon} src="/bad-post-icon.png" alt="bad" />
             )}
           </div>
-          <div className={seen ? styles.seenContentHeaderContainer : styles.contentHeaderContainer}>
-            <div className={styles.nameHeader}>{item.name_user}</div>
+          <div
+            onClick={() => {
+              setTypeShow(!typeShow);
+              Ref?.current?.scrollIntoView();
+              setSeen(true);
+            }}
+            className={seen ? styles.seenContentHeaderContainer : styles.contentHeaderContainer}
+          >
+            <div className={styles.nameHeader}>{item.header}</div>
             <span style={{ width: 5 }}></span>
-            <div className={styles.contentHeader}>{item.content}</div>
+            <div className={styles.contentHeader}>{item.content ?? ""}</div>
           </div>
           <div className={styles.allNumberHeader}>
             <div className={styles.likeHeaderContainer}>
               <Tag className={seen ? styles.seenTag : styles.tag}>
-                {item.numberOfLike}
+                <span className={styles.numberLike}>{item.like ?? 0}</span>
                 <LikeOutlined className={styles.likeIcon} />
               </Tag>
             </div>
             <div className={styles.likeHeaderContainer}>
               <Tag className={seen ? styles.seenTag : styles.tag}>
-                {item.numberOfLike}
+                <span className={styles.numberLike}>{item.comments ?? 0}</span>
                 <CommentOutlined className={styles.likeIcon} />
               </Tag>
             </div>
             <div className={styles.likeHeaderContainer}>
               <Tag className={seen ? styles.seenTag : styles.tag}>
-                {item.numberOfLike}
+                <span className={styles.numberLike}>{item.share ?? 0}</span>
                 <ShareAltOutlined className={styles.likeIcon} />
               </Tag>
             </div>
             <div className={styles.likeHeaderContainer}>
-              <Tag className={seen ? styles.seenTag : styles.tag}>
-                {(new Date(item.postDate).getDate() < 10
-                  ? "0" + new Date(item.postDate).getDate()
-                  : new Date(item.postDate).getDate()) +
+              <Tag className={seen ? styles.seenTagTime : styles.tagTime}>
+                {(new Date(item.created_at).getDate() < 10
+                  ? "0" + new Date(item.created_at).getDate()
+                  : new Date(item.created_at).getDate()) +
                   "-" +
-                  (new Date(item.postDate).getMonth() < 10
-                    ? "0" + (new Date(item.postDate).getMonth() + 1)
-                    : new Date(item.postDate).getMonth() + 1) +
+                  (new Date(item.created_at).getMonth() < 10
+                    ? "0" + (new Date(item.created_at).getMonth() + 1)
+                    : new Date(item.created_at).getMonth() + 1) +
                   "-" +
-                  new Date(item.postDate).getFullYear()}
+                  new Date(item.created_at).getFullYear()}
               </Tag>
             </div>
           </div>
         </div>
       ) : (
         <div className={styles.content}>
+          <div
+            onClick={(event) => {
+              event.stopPropagation();
+              Ref?.current?.scrollIntoView();
+            }}
+            className={styles.scrollContainer}
+          >
+            <button className={styles.hideDetailButton} onClick={() => setTypeShow(!typeShow)}>
+              <CloseOutlined className={styles.closeIcon} />
+            </button>
+          </div>
           <div className={styles.detailContainer}>
             <div className={styles.detailHeader}>
               <div className={styles.leftDetailHeader}>
-                <Avatar className={styles.avatar} src={item.avatar} />
+                <UserIcon className={styles.avatar} />
               </div>
               <div className={styles.rightDetailHeader}>
-                <div className={styles.name}>{item.name_user}</div>
+                <div className={styles.name}>{item.header}</div>
                 <div className={styles.time}>
                   <Tag className={styles.tag}>
-                    {(new Date(item.postDate).getDate() < 10
-                      ? "0" + new Date(item.postDate).getDate()
-                      : new Date(item.postDate).getDate()) +
+                    {(new Date(item.created_at).getDate() < 10
+                      ? "0" + new Date(item.created_at).getDate()
+                      : new Date(item.created_at).getDate()) +
                       "-" +
-                      (new Date(item.postDate).getMonth() < 10
-                        ? "0" + (new Date(item.postDate).getMonth() + 1)
-                        : new Date(item.postDate).getMonth() + 1) +
+                      (new Date(item.created_at).getMonth() < 10
+                        ? "0" + (new Date(item.created_at).getMonth() + 1)
+                        : new Date(item.created_at).getMonth() + 1) +
                       "-" +
-                      new Date(item.postDate).getFullYear()}
+                      new Date(item.created_at).getFullYear()}
                   </Tag>
                 </div>
                 <div className={styles.allNumberContainer}>
                   <div className={styles.likeHeaderContainer}>
                     <Tag className={styles.tag}>
-                      {item.numberOfLike}
+                      {item.like ?? 0}
                       <LikeOutlined className={styles.likeIcon} />
                     </Tag>
                   </div>
                   <div className={styles.likeHeaderContainer}>
                     <Tag className={styles.tag}>
-                      {item.numberOfLike}
+                      {item.comments ?? 0}
                       <CommentOutlined className={styles.likeIcon} />
                     </Tag>
                   </div>
                   <div className={styles.likeHeaderContainer}>
                     <Tag className={styles.tag}>
-                      {item.numberOfLike}
+                      {item.share ?? 0}
                       <ShareAltOutlined className={styles.likeIcon} />
                     </Tag>
                   </div>
@@ -141,12 +145,9 @@ export const PostItem: React.FC<PostItemProps> = ({ item }) => {
               {item.image_url ? (
                 <img src={item?.image_url} className={styles.image} alt={item?.image_url} />
               ) : null}
-              <label className={styles.textContent}>{item.content}</label>
+              <label className={styles.textContent}>{item.content ?? ""}</label>
             </div>
           </div>
-          <button className={styles.hideDetailButton} onClick={() => setTypeShow(!typeShow)}>
-            <CloseOutlined className={styles.closeIcon} />
-          </button>
         </div>
       )}
     </div>
