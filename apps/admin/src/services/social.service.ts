@@ -1,5 +1,6 @@
 import { apiClient, filterEmptyString } from "@/utils/api";
 
+const apiJobBaseUrl = "/pipeline/Job/api";
 const apiPriorityObjectBaseV2Url = "/v2";
 
 export const gePriorityObject = async (filter: any) => {
@@ -31,3 +32,16 @@ export const deletePriorityObject = async (priorityObjectId: string) => {
 //   );
 //   return result.data;
 // };
+
+export interface DataFilterSocialPage {
+  name: string;
+  page_number: Number;
+  page_size: Number;
+}
+
+export const getSocialPage = async (filter: DataFilterSocialPage) => {
+  const result = await apiClient.get(`${apiJobBaseUrl}/get_table`, {
+    params: filterEmptyString(filter),
+  });
+  return result.data;
+};

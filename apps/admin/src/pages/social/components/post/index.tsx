@@ -15,14 +15,6 @@ export const Post: React.FC<PostProps> = ({ data, pageSize }) => {
       <List
         itemLayout="vertical"
         size="large"
-        pagination={{
-          onChange: (page) => {
-            console.log(page);
-          },
-          pageSize: pageSize,
-          size: "default",
-          position: "bottom",
-        }}
         dataSource={data}
         renderItem={(item) => {
           return <PostItem item={item} />;
