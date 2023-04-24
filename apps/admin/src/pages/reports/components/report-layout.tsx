@@ -1,16 +1,23 @@
+import { ReportIcon } from "@/assets/svg";
 import { EventProvider } from "@/components/editor/plugins/event-plugin/event-context";
 import { EventsNode } from "@/components/editor/plugins/events-plugin/events-node";
 import { AppContainer } from "@/pages/app/";
 import {
   getReportQuickUrl,
+  getSyntheticReportDetailUrl,
   reportPeriodicPath,
   reportQuickPath,
+  reportSyntheticCreatePath,
   reportSyntheticPath,
 } from "@/pages/router";
 import { EditorNodes, editorTheme } from "@aiacademy/editor";
 import { InitialConfigType, LexicalComposer } from "@lexical/react/LexicalComposer";
-import { Menu, MenuProps } from "antd";
+import { Input, Menu, MenuProps, Pagination, Spin } from "antd";
+import { useState } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
+
+import { useReports } from "../report.loader";
+import styles from "./report-layout.module.less";
 
 export const ReportLayout = () => {
   const initialConfig: InitialConfigType = {
@@ -37,10 +44,18 @@ export const ReportLayout = () => {
 const Sidebar = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
+  const [filter, setFilter] = useState({
+    page: 1,
+    limit: 10,
+    title: "",
+  });
+  const { data: dataReport, isLoading } = useReports(filter, {
+    keepPreviousData: true,
+  });
 
   const items: MenuProps["items"] = [
     {
-      label: "BÁO CÁO NHANH",
+      label: "Báo cáo nhanh",
       key: reportQuickPath,
       children: [
         { label: "Báo cáo 8:30, 22-11-2021", key: getReportQuickUrl(1) },
@@ -48,18 +63,78 @@ const Sidebar = () => {
       ],
     },
     {
-      label: "BÁO CÁO ĐỊNH KỲ",
+      label: "Báo cáo định kỳ",
       key: reportPeriodicPath,
     },
     {
-      label: "PHÂN TÍCH TỔNG HỢP",
+      label: "Phân tích tổng hợp",
       key: reportSyntheticPath,
+      icon: <ReportIcon />,
+      className: styles.reportMenu,
+      children: [
+        {
+          label: (
+            <Input.Search
+              placeholder="Tìm kiếm báo cáo"
+              className={styles.input}
+              onSearch={handleSearch}
+            />
+          ),
+          key: "search",
+          disabled: true,
+          className: styles.search,
+        },
+        {
+          label: "Tạo báo cáo tổng hợp",
+          key: reportSyntheticCreatePath,
+        },
+        isLoading
+          ? {
+              label: <Spin />,
+              key: "loading...",
+              className: styles.loading,
+            }
+          : null,
+        ...(dataReport?.data?.map((report) => ({
+          label: report.title,
+          key: getSyntheticReportDetailUrl(report._id),
+          className: styles.reportItem,
+        })) || []),
+        {
+          label: (
+            <Pagination
+              defaultCurrent={1}
+              showSizeChanger={false}
+              total={dataReport?.total || 0}
+              current={filter.page}
+              pageSize={filter.limit}
+              onChange={handleChangePaginate}
+              size="small"
+            />
+          ),
+          key: "paginate",
+          disabled: true,
+          className: styles.pagination,
+        },
+      ],
     },
   ];
 
   return <Menu mode="inline" items={items} selectedKeys={[pathname]} onClick={handleClickMenu} />;
 
   function handleClickMenu({ key }: { key: string }) {
+    if (key.includes("search") || key.includes("paginate") || key.includes("loading")) {
+      return;
+    }
+
     navigate(key);
+  }
+
+  function handleSearch(value: string) {
+    setFilter((prev) => ({ ...prev, title: value }));
+  }
+
+  function handleChangePaginate(page: number) {
+    setFilter((prev) => ({ ...prev, page }));
   }
 };

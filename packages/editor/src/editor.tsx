@@ -39,7 +39,6 @@ export function Editor({ children }: Props): JSX.Element {
         <TabIndentationPlugin />
         {floatingAnchorElem && (
           <>
-            <DraggableBlockPlugin anchorElem={floatingAnchorElem} />
             <FloatingTextFormatToolbar anchorElem={floatingAnchorElem} />
           </>
         )}

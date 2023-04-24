@@ -1,7 +1,15 @@
 import { CACHE_KEYS } from "@/pages/reports/report.loader";
 import { IEventDto, TReportEventsDto } from "@/services/report-type";
 import { getEvent, getReportEvents } from "@/services/report.service";
-import { Document, ExternalHyperlink, HeadingLevel, Paragraph, TextRun, UnderlineType } from "docx";
+import {
+  AlignmentType,
+  Document,
+  ExternalHyperlink,
+  HeadingLevel,
+  Paragraph,
+  TextRun,
+  UnderlineType,
+} from "docx";
 import { QueryClient, useQueryClient } from "react-query";
 
 import { IS_BOLD, IS_ITALIC, IS_UNDERLINE } from "../constants/lexical-constant";
@@ -20,11 +28,27 @@ export async function convertLexicalToDocx(
   lexicalJSON: any,
   queryClient: QueryClient,
   dateTime: [string, string],
+  title: string,
 ) {
   const section: any = {
     properties: {},
     children: [],
   };
+
+  // for title and datetime
+  const titleDocx = new Paragraph({
+    text: title,
+    heading: HeadingLevel.HEADING_1,
+    alignment: AlignmentType.CENTER,
+  });
+
+  const dateTimeDocx = new Paragraph({
+    text: `Từ ngày: ${dateTime[0]} đến ngày ${dateTime[1]}`,
+    alignment: AlignmentType.CENTER,
+  });
+
+  section.children.push(titleDocx);
+  section.children.push(dateTimeDocx);
 
   // iterate over blocks in lexicalJSON
   for (const block of lexicalJSON.root.children) {
@@ -150,7 +174,7 @@ export async function convertLexicalToDocx(
 
 export function useConvertLexicalToDocx() {
   const queryClient = useQueryClient();
-  return (lexicalJSON: any, dateTime: [string, string]) => {
-    return convertLexicalToDocx(lexicalJSON, queryClient, dateTime);
+  return (lexicalJSON: any, dateTime: [string, string], title: string) => {
+    return convertLexicalToDocx(lexicalJSON, queryClient, dateTime, title);
   };
 }

@@ -257,7 +257,11 @@ const Items: React.FC<ItemsProps> = ({ item, handleEdit, handleDelete }) => {
         </Collapse>
       </div>
       <div className={styles.editContainer}>
-        <ReportIcon onClick={handleOpenReport} title="Thêm sự kiện vào báo cáo" />
+        <ReportIcon
+          onClick={handleOpenReport}
+          title="Thêm sự kiện vào báo cáo"
+          className={styles.reportIcon}
+        />
         <EditOutlined
           onClick={() => {
             handleEdit(item);
