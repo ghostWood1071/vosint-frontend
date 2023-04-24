@@ -175,10 +175,32 @@ export const AddProxyComponent: React.FC<Props> = ({
           >
             <InputNumber style={{ width: "100%" }} />
           </Form.Item>
-          <Form.Item validateTrigger={["onChange", "onBlur"]} label="Username" name={"username"}>
+          <Form.Item
+            validateTrigger={["onChange", "onBlur"]}
+            rules={[
+              {
+                required: true,
+                message: "Hãy nhập vào username!",
+                whitespace: true,
+              },
+            ]}
+            label="Username"
+            name={"username"}
+          >
             <Input />
           </Form.Item>
-          <Form.Item validateTrigger={["onChange", "onBlur"]} label="Password" name={"password"}>
+          <Form.Item
+            validateTrigger={["onChange", "onBlur"]}
+            rules={[
+              {
+                required: true,
+                message: "Hãy nhập vào mật khẩu!",
+                whitespace: true,
+              },
+            ]}
+            label="Password"
+            name={"password"}
+          >
             <Input />
           </Form.Item>
           <Form.Item validateTrigger={["onChange", "onBlur"]} label="Ghi chú" name={"note"}>

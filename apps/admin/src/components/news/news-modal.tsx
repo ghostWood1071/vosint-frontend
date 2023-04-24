@@ -60,6 +60,7 @@ export function NewsletterModal({ onFinish, confirmLoading }: Props): JSX.Elemen
       destroyOnClose
       onOk={handleFormFinish}
       onCancel={handleCancel}
+      closable={false}
     >
       {action === ETreeAction.DELETE && <NewsletterFormDelete />}
       {action !== ETreeAction.SELECT && action !== ETreeAction.DELETE && (
