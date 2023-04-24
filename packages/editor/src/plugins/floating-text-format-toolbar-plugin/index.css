@@ -7,3 +7,11 @@
   transition: opacity 0.5s;
   will-change: transform;
 }
+
+.floating-text-heading-dropdown {
+  padding: 3px 0;
+  font-size: 17px;
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.015);
+  border-color: #d9d9d9;
+  border-radius: 2px;
+}

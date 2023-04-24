@@ -50,12 +50,7 @@
   border: 1px solid rgb(200, 200, 200);
   overflow: auto;
   padding: 10px;
-  :global {
-    .content_editable__root {
-      padding-block: 3px;
-      border: 1px solid rgb(220, 220, 220);
-    }
-  }
+
   .scroll-class;
   .add-event-container {
     padding: 10px;
@@ -156,13 +151,6 @@
   width: calc(100% - 10px);
   background-color: green;
 }
-:global {
-  .content_editable__root {
-    padding-block: 3px;
-    padding-inline: 5px;
-    border: 1px solid rgb(220, 220, 220);
-  }
-}
 
 .delete-body-container {
   width: 100%;
@@ -180,4 +168,9 @@
     color: black;
     width: calc(100% - 120px);
   }
+}
+
+.report-icon {
+  width: 100%;
+  height: 100%;
 }

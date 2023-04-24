@@ -69,7 +69,7 @@ function TableOfContentsList({
   }, [tableOfContents, editor]);
 
   return (
-    <div className={cn(styles.tableOfContents, "scrollbar")}>
+    <div className={cn(styles.tableOfContents, "scrollbar table-of-contents")}>
       <div className={styles.header}>Outline</div>
       <div className={styles.navigationItemList} tabIndex={0}>
         {tableOfContents.map(([key, text, tag], index) => {

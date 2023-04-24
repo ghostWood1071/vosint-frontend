@@ -1,13 +1,23 @@
 import { FormatBoldIcon, FormatItalicIcon, FormatUnderlinedIcon } from "@/icons";
-import { getDOMRangeRect, getSelectedNode, setFloatingElemPosition } from "@/utils";
-import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
-import { mergeRegister } from "@lexical/utils";
-import { Button, Space } from "antd";
 import {
+  $findMatchingParent,
+  getDOMRangeRect,
+  getSelectedNode,
+  setFloatingElemPosition,
+} from "@/utils";
+import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
+import { $createHeadingNode, $isHeadingNode, HeadingTagType } from "@lexical/rich-text";
+import { $setBlocksType } from "@lexical/selection";
+import { mergeRegister } from "@lexical/utils";
+import { Button, Divider, Dropdown, MenuProps, Space } from "antd";
+import {
+  $createParagraphNode,
   $getSelection,
   $isRangeSelection,
+  $isRootOrShadowRoot,
   $isTextNode,
   COMMAND_PRIORITY_LOW,
+  DEPRECATED_$isGridSelection,
   FORMAT_TEXT_COMMAND,
   LexicalEditor,
   SELECTION_CHANGE_COMMAND,
@@ -28,6 +38,16 @@ export function FloatingTextFormatToolbar({
   return useFloatingTextFormatToolbar(editor, anchorElem);
 }
 
+const blockTypeToBlockName = {
+  h1: "Heading 1",
+  h2: "Heading 2",
+  h3: "Heading 3",
+  h4: "Heading 4",
+  h5: "Heading 5",
+  h6: "Heading 6",
+  paragraph: "Normal",
+};
+
 function useFloatingTextFormatToolbar(
   editor: LexicalEditor,
   anchorElem: HTMLElement,
@@ -36,6 +56,7 @@ function useFloatingTextFormatToolbar(
   const [isBold, setIsBold] = useState(false);
   const [isItalic, setIsItalic] = useState(false);
   const [isUnderline, setIsUnderline] = useState(false);
+  const [blockType, setBlockType] = useState<keyof typeof blockTypeToBlockName>("paragraph");
 
   const updatePopup = useCallback(() => {
     editor.getEditorState().read(() => {
@@ -67,6 +88,28 @@ function useFloatingTextFormatToolbar(
       setIsBold(selection.hasFormat("bold"));
       setIsItalic(selection.hasFormat("italic"));
       setIsUnderline(selection.hasFormat("underline"));
+
+      // Heading
+      const anchorNode = selection.anchor.getNode();
+      let element =
+        anchorNode.getKey() === "root"
+          ? anchorNode
+          : $findMatchingParent(anchorNode, (e) => {
+              const parent = e.getParent();
+              return parent !== null && $isRootOrShadowRoot(parent);
+            });
+      if (element === null) {
+        element = anchorNode.getTopLevelElementOrThrow();
+      }
+      const elementKey = element.getKey();
+      const elementDOM = editor.getElementByKey(elementKey);
+
+      if (elementDOM !== null) {
+        const type = $isHeadingNode(element) ? element.getTag() : element.getType();
+        if (type in blockTypeToBlockName) {
+          setBlockType(type as keyof typeof blockTypeToBlockName);
+        }
+      }
 
       if (selection.getTextContent() !== "") {
         setIsText($isTextNode(node));
@@ -113,6 +156,7 @@ function useFloatingTextFormatToolbar(
       isBold={isBold}
       isItalic={isItalic}
       isUnderline={isUnderline}
+      blockType={blockType}
     />,
     anchorElem,
   );
@@ -124,12 +168,14 @@ function TextFormatFloatingToolbar({
   isBold,
   isItalic,
   isUnderline,
+  blockType,
 }: {
   editor: LexicalEditor;
   anchorElem: HTMLElement;
   isBold: boolean;
   isItalic: boolean;
   isUnderline: boolean;
+  blockType: keyof typeof blockTypeToBlockName;
 }): JSX.Element {
   const popupCharStylesEditorRef = useRef<HTMLDivElement | null>(null);
 
@@ -227,38 +273,113 @@ function TextFormatFloatingToolbar({
   return (
     <div ref={popupCharStylesEditorRef} className="floating-text-format-popup">
       {editor.isEditable() && (
-        <Space.Compact>
-          <Button
-            title={`Đậm (Ctrl+B)`}
-            aria-label="Bôi đậm văn bản của bạn"
-            icon={<FormatBoldIcon />}
-            onClick={() => {
-              editor.dispatchCommand(FORMAT_TEXT_COMMAND, "bold");
-            }}
-            type={isBold ? "primary" : "default"}
-          />
+        <>
+          <Space.Compact>
+            <Button
+              title={`Đậm (Ctrl+B)`}
+              aria-label="Bôi đậm văn bản của bạn"
+              icon={<FormatBoldIcon />}
+              onClick={() => {
+                editor.dispatchCommand(FORMAT_TEXT_COMMAND, "bold");
+              }}
+              type={isBold ? "primary" : "default"}
+            />
 
-          <Button
-            title={`Nghiêng (Ctrl+I)`}
-            aria-label="Làm nghiêng văn bản của bạn"
-            icon={<FormatItalicIcon />}
-            onClick={() => {
-              editor.dispatchCommand(FORMAT_TEXT_COMMAND, "italic");
-            }}
-            type={isItalic ? "primary" : "default"}
-          />
+            <Button
+              title={`Nghiêng (Ctrl+I)`}
+              aria-label="Làm nghiêng văn bản của bạn"
+              icon={<FormatItalicIcon />}
+              onClick={() => {
+                editor.dispatchCommand(FORMAT_TEXT_COMMAND, "italic");
+              }}
+              type={isItalic ? "primary" : "default"}
+            />
 
-          <Button
-            title={`Gạch dưới (Ctrl+U)`}
-            aria-label="Gạch dưới văn bản của bạn"
-            icon={<FormatUnderlinedIcon />}
-            onClick={() => {
-              editor.dispatchCommand(FORMAT_TEXT_COMMAND, "underline");
-            }}
-            type={isUnderline ? "primary" : "default"}
-          />
-        </Space.Compact>
+            <Button
+              title={`Gạch dưới (Ctrl+U)`}
+              aria-label="Gạch dưới văn bản của bạn"
+              icon={<FormatUnderlinedIcon />}
+              onClick={() => {
+                editor.dispatchCommand(FORMAT_TEXT_COMMAND, "underline");
+              }}
+              type={isUnderline ? "primary" : "default"}
+            />
+          </Space.Compact>
+          <Divider type="vertical" />
+          <BlockFormatDropDown disabled={false} blockType={blockType} editor={editor} />
+        </>
       )}
     </div>
+  );
+}
+
+function BlockFormatDropDown({
+  editor,
+  blockType,
+  disabled = false,
+}: {
+  blockType: keyof typeof blockTypeToBlockName;
+  editor: LexicalEditor;
+  disabled?: boolean;
+}): JSX.Element {
+  const formatParagraph = () => {
+    editor.update(() => {
+      const selection = $getSelection();
+      if ($isRangeSelection(selection) || DEPRECATED_$isGridSelection(selection)) {
+        $setBlocksType(selection, () => $createParagraphNode());
+      }
+    });
+  };
+
+  const formatHeading = (headingSize: HeadingTagType) => {
+    if (blockType !== headingSize) {
+      editor.update(() => {
+        const selection = $getSelection();
+        if ($isRangeSelection(selection) || DEPRECATED_$isGridSelection(selection)) {
+          $setBlocksType(selection, () => $createHeadingNode(headingSize));
+        }
+      });
+    }
+  };
+
+  const items = [
+    {
+      label: "Normal",
+      key: "paragraph",
+    },
+    {
+      label: "Heading 1",
+      key: "h1",
+    },
+    {
+      label: "Heading 2",
+      key: "h2",
+    },
+    {
+      label: "Heading 3",
+      key: "h3",
+    },
+  ];
+
+  return (
+    <select
+      value={blockType}
+      onChange={(e) => {
+        const value = e.target.value;
+        console.log("value", value);
+        if (value === "paragraph") {
+          formatParagraph();
+        } else {
+          formatHeading(value as HeadingTagType);
+        }
+      }}
+      className="floating-text-heading-dropdown"
+    >
+      {items.map((item) => (
+        <option key={item.key} value={item.key}>
+          {item.label}
+        </option>
+      ))}
+    </select>
   );
 }
