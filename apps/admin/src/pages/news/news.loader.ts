@@ -134,9 +134,17 @@ export const useNewsIdToNewsletter = () => {
       return addNewsIdsToNewsletter(newsletterId, newsIds);
     },
     {
-      onSuccess: () => {
+      onSuccess: (_, variables) => {
         queryClient.invalidateQueries(["ME"]);
-        message.success("Thêm tin thành công");
+        message.success(
+          `Thêm vào ${
+            variables.newsletterId === "quan_trong"
+              ? "tin " + MTreeTag["quan_trong"]
+              : variables.newsletterId === "danh_dau"
+              ? "tin được " + MTreeTag["danh_dau"]
+              : "giỏ tin"
+          } thành công`,
+        );
       },
     },
   );
@@ -158,29 +166,17 @@ export const useDeleteNewsInNewsletter = () => {
       return deleteNewsIdInNewsletter(newsletterId, newsId);
     },
     {
-      onSuccess: () => {
+      onSuccess: (_, variables) => {
         queryClient.invalidateQueries(["ME"]);
-        message.success("Xoá tin thành công");
-      },
-      onMutate: async (newTodo) => {
-        await queryClient.cancelQueries([CACHE_KEYS.NewsList, newTodo.newsletterId]);
-        const previousTask = await queryClient.getQueryData([
-          CACHE_KEYS.NewsList,
-          newTodo.newsletterId,
-        ]);
-
-        queryClient.setQueryData([CACHE_KEYS.NewsList, newTodo.newsletterId], (old: any) => {
-          const a = old.pages.map((i: any) => {
-            let data = i.result;
-            newTodo.newsId.map((element) => {
-              data = data.filter((o: any) => o._id !== element);
-              return null;
-            });
-            return { result: data, total_record: i.total_record };
-          });
-          return { pages: a, pageParams: old.pageParams };
-        });
-        return { previousTask };
+        message.success(
+          `Xoá khỏi ${
+            variables.newsletterId === "quan_trong"
+              ? "tin " + MTreeTag["quan_trong"]
+              : variables.newsletterId === "danh_dau"
+              ? "tin được " + MTreeTag["danh_dau"]
+              : "giỏ tin"
+          } thành công`,
+        );
       },
       onError: (err, newTodo, context) => {},
       onSettled: (newTodo) => {},
