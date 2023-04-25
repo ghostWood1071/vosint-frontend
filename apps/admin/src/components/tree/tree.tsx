@@ -3,7 +3,7 @@ import { Col, Row, Tree as TreeAntd } from "antd";
 import type { DataNode } from "antd/lib/tree";
 import React from "react";
 
-import { ETreeAction, ETreeTag, useNewsState } from "../news/news-state";
+import { ETreeAction, ETreeTag, MTreeTag, useNewsState } from "../news/news-state";
 import { TreeTitleGioTin } from "../news/tree-title/tree-title-gio-tin";
 import styles from "./tree.module.less";
 
@@ -39,7 +39,7 @@ export const Tree: React.FC<Props> = ({
         </Col>
         {isEditable && (
           <Col span={8} className={styles.icon}>
-            <PlusCircleFilled onClick={handleAdd} />
+            <PlusCircleFilled onClick={handleAdd} title={`Thêm ${MTreeTag[tag]} con`} />
           </Col>
         )}
       </Row>

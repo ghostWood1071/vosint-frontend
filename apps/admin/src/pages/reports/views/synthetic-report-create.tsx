@@ -1,4 +1,5 @@
 import { EventDialog } from "@/components/editor/plugins/event-plugin/event-dialog";
+import { useEventsState } from "@/components/editor/plugins/events-plugin/events-state";
 import { TableOfContentsPlugin } from "@/components/editor/plugins/table-of-contents-plugin";
 import { getSyntheticReportDetailUrl } from "@/pages/router";
 import { Editor, useLexicalComposerContext } from "@aiacademy/editor";
@@ -11,6 +12,7 @@ import {
 import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
 import { Button, Card, Col, Row, Typography, message } from "antd";
 import { $getRoot, EditorState } from "lexical";
+import moment from "moment";
 import { useEffect, useState } from "react";
 import { useQueryClient } from "react-query";
 import { useNavigate } from "react-router-dom";
@@ -25,6 +27,7 @@ export function SyntheticReportCreate(): JSX.Element {
   const [content, setContent] = useState(defaultContent);
   const [editor] = useLexicalComposerContext();
   const [isOpen, setIsOpen] = useState(true);
+  const setDateTime = useEventsState((state) => state.setDateTimeFilter);
 
   const { mutate } = useCreateReport({
     onSuccess: (data) => {
@@ -39,6 +42,7 @@ export function SyntheticReportCreate(): JSX.Element {
       const root = $getRoot();
       root.clear();
     });
+    setDateTime([moment().subtract(7, "days").format("DD/MM/YYYY"), moment().format("DD/MM/YYYY")]);
   }, []);
 
   return (

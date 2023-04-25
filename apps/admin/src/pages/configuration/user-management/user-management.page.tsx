@@ -1,4 +1,4 @@
-import { PlusSquareOutlined } from "@ant-design/icons";
+import { PlusOutlined, PlusSquareOutlined } from "@ant-design/icons";
 import { Alert, Button, Form, Input, Modal, PageHeader, Select, message } from "antd";
 import { trim } from "lodash";
 import React, { useState } from "react";
@@ -106,13 +106,8 @@ export const UserManagerList: React.FC = () => {
             onChange={handleSearchRole}
             style={{ width: 200 }}
           />,
-          <Button
-            key="button"
-            icon={<PlusSquareOutlined />}
-            type="primary"
-            onClick={handleShowCreate}
-          >
-            Thêm người dùng
+          <Button key="button" icon={<PlusOutlined />} type="primary" onClick={handleShowCreate}>
+            Thêm
           </Button>,
         ]}
       >

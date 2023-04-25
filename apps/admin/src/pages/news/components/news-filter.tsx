@@ -15,7 +15,6 @@ import {
 } from "@ant-design/icons";
 import { Button, DatePicker, Form, Input, List, Modal, Select, Space, Typography } from "antd";
 import produce from "immer";
-import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { shallow } from "zustand/shallow";
 
@@ -85,9 +84,10 @@ export function NewsFilter(): JSX.Element {
               danger
               disabled={newsSelectionIds.length === 0}
               onClick={handleRemoveNewsIds}
+              title="Xoá tin"
             />
           )}
-          <Button type="primary" icon={<ExportOutlined />} title="Xuất file dữ liệu" />
+          <Button type="primary" icon={<ExportOutlined />} title="Xuất file dữ liệu" disabled />
         </Space>
       </Form>
 
