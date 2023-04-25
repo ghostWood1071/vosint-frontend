@@ -18,12 +18,14 @@ import {
   $isTextNode,
   COMMAND_PRIORITY_LOW,
   DEPRECATED_$isGridSelection,
+  FORMAT_ELEMENT_COMMAND,
   FORMAT_TEXT_COMMAND,
   LexicalEditor,
   SELECTION_CHANGE_COMMAND,
 } from "lexical";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { MdFormatAlignCenter, MdFormatAlignLeft, MdFormatAlignRight } from "react-icons/md";
 
 import "./index.css";
 
@@ -303,6 +305,41 @@ function TextFormatFloatingToolbar({
                 editor.dispatchCommand(FORMAT_TEXT_COMMAND, "underline");
               }}
               type={isUnderline ? "primary" : "default"}
+            />
+          </Space.Compact>
+          <Divider type="vertical" />
+          <Space.Compact>
+            <Button
+              title={`Căn trái`}
+              aria-label={`Căn chỉnh nội dung của bạn với lề trái. Căn trái thường được dùng cho nội dung phần thân và giúp dễ đọc tài liệu hơn`}
+              icon={
+                <span className="anticon">
+                  <MdFormatAlignLeft />
+                </span>
+              }
+              onClick={() => {
+                editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, "left");
+              }}
+            />
+            <Button
+              icon={
+                <span className="anticon">
+                  <MdFormatAlignCenter />
+                </span>
+              }
+              onClick={() => {
+                editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, "center");
+              }}
+            />
+            <Button
+              icon={
+                <span className="anticon">
+                  <MdFormatAlignRight />
+                </span>
+              }
+              onClick={() => {
+                editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, "right");
+              }}
             />
           </Space.Compact>
           <Divider type="vertical" />
