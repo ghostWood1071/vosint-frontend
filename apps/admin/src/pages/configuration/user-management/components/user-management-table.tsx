@@ -71,7 +71,6 @@ export const UserManagerTable: React.FC<Props> = ({
                 type="text"
               />
             )}
-            <Button icon={<KeyOutlined />} type="text" />
             <Button
               icon={<DeleteOutlined />}
               danger

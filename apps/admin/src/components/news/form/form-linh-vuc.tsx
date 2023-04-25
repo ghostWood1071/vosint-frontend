@@ -52,10 +52,10 @@ export function NewsletterFormLinhVuc({ title }: Props): JSX.Element {
               <>
                 {fields.map((field, index) => (
                   <Form.Item
-                    required={false}
+                    required
                     key={field.key}
                     {...(index === 0 ? "" : formItemLayoutWithOutLabel2)}
-                    label={index === 0 ? "Từ khoá bắt buộc" : ""}
+                    label={index === 0 ? "Từ khoá bắt buộc:" : ""}
                   >
                     <Form.Item {...field} rules={rulesRequiredItemKeyword} noStyle>
                       <Input
@@ -74,7 +74,8 @@ export function NewsletterFormLinhVuc({ title }: Props): JSX.Element {
                 ))}
                 <Form.Item
                   {...(fields.length < 1 ? "" : formItemLayoutWithOutLabel2)}
-                  label={fields.length < 1 ? "Từ khoá bắt buộc" : ""}
+                  label={fields.length < 1 ? "Từ khoá bắt buộc:" : ""}
+                  required
                 >
                   <Button
                     type="dashed"
@@ -125,7 +126,18 @@ export function ListNewsSampleLinhVuc(): JSX.Element {
           dataSource={newsSamples}
           renderItem={(item) => {
             return (
-              <List.Item actions={[<DeleteOutlined onClick={handleDelete} />]}>
+              <List.Item
+                actions={[
+                  <Button
+                    icon={<DeleteOutlined />}
+                    onClick={handleDelete}
+                    danger
+                    type="text"
+                    key="delete"
+                    title="Xoá tin mẫu"
+                  />,
+                ]}
+              >
                 <Typography.Link target="_blank" href={item?.["data:url"]} rel="noreferrer">
                   {item?.["data:title"]}
                 </Typography.Link>
@@ -187,7 +199,7 @@ export function ModalAddNewsSamples({
 
   const rowSelection = {
     onChange: (_: any, selectedRows: TNews[]) => {
-      setNewsSamples(compact(unionBy([...newsSamples, ...selectedRows], "_id")));
+      setNewsSamples(compact(selectedRows));
     },
     getCheckboxProps: (record: any) => ({
       disabled: false,
@@ -225,6 +237,7 @@ export function ModalAddNewsSamples({
       zIndex={1001}
       destroyOnClose
       closable={false}
+      maskClosable={false}
     >
       <Input.Search placeholder="Từ khoá" style={{ marginBottom: 8 }} onSearch={handleSearch} />
 

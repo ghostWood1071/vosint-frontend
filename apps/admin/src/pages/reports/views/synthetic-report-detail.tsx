@@ -6,9 +6,14 @@ import { TableOfContentsPlugin } from "@/components/editor/plugins/table-of-cont
 import { downloadFile } from "@/components/editor/utils";
 import { useConvertLexicalToDocx } from "@/components/editor/utils/docx";
 import { Editor, useLexicalComposerContext } from "@aiacademy/editor";
-import { ArrowLeftOutlined, EditOutlined, UnorderedListOutlined } from "@ant-design/icons";
+import {
+  ArrowLeftOutlined,
+  EditOutlined,
+  SaveOutlined,
+  UnorderedListOutlined,
+} from "@ant-design/icons";
 import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
-import { Button, Card, Col, DatePicker, Row, Space, Spin, Typography } from "antd";
+import { Button, Card, Col, DatePicker, Row, Space, Spin, Typography, message } from "antd";
 import { Packer } from "docx";
 import { EditorState } from "lexical";
 import moment from "moment";
@@ -35,7 +40,7 @@ export const SyntheticReportDetail: React.FC = () => {
   });
 
   const [content, setContent] = useState("");
-  const { mutate } = useUpdateReport(id!);
+  const { mutate, isLoading: isUpdating, status } = useUpdateReport(id!);
   const convertLexicalToDocx = useConvertLexicalToDocx();
 
   useEffect(() => {
@@ -44,15 +49,6 @@ export const SyntheticReportDetail: React.FC = () => {
       editor.setEditorState(editorState);
     }
   }, [editor, data]);
-
-  useEffect(() => {
-    if (content) {
-      const timeout = setTimeout(() => {
-        mutate({ content });
-      }, 1000);
-      return () => clearTimeout(timeout);
-    }
-  }, [content, mutate]);
 
   useEffect(() => {
     if (title) {
@@ -78,7 +74,7 @@ export const SyntheticReportDetail: React.FC = () => {
   return (
     <Card bordered={false}>
       <Row>
-        <Col span={4} className={styles.outline}>
+        <Col span={isOpen ? 4 : 1} className={styles.outline}>
           <div className={styles.affix}>
             {isOpen ? (
               <Button
@@ -99,12 +95,12 @@ export const SyntheticReportDetail: React.FC = () => {
 
           {isOpen && <TableOfContentsPlugin />}
         </Col>
-        <Col span={16} className={styles.container}>
+        <Col span={isOpen ? 16 : 22} className={styles.container}>
           <Row align="middle" justify="center">
-            <Col span={3}></Col>
-            <Col span={18} className={styles.center}>
+            <Col span={4}></Col>
+            <Col span={16} className={styles.center}>
               <Typography.Title
-                level={3}
+                level={4}
                 editable={{
                   icon: <EditOutlined />,
                   tooltip: "Chỉnh sửa tên báo cáo",
@@ -120,11 +116,20 @@ export const SyntheticReportDetail: React.FC = () => {
               </Typography.Title>
             </Col>
             <Col span={3}>
-              <Button
-                title="Xuất file ra docx"
-                icon={<OutlineFileWordIcon />}
-                onClick={handleExportDocx}
-              />
+              <Space>
+                <Button
+                  title="Xuất file ra docx"
+                  icon={<OutlineFileWordIcon />}
+                  onClick={handleExportDocx}
+                />
+                <Button
+                  icon={<SaveOutlined />}
+                  type="primary"
+                  title="Lưu báo cáo"
+                  onClick={handleClickSave}
+                  loading={isUpdating}
+                />
+              </Space>
             </Col>
 
             <Col span={18} className={styles.center}>
@@ -157,5 +162,18 @@ export const SyntheticReportDetail: React.FC = () => {
 
   function toggleOutline() {
     setIsOpen(!isOpen);
+  }
+
+  function handleClickSave() {
+    mutate(
+      { content },
+      {
+        onSuccess: () => {
+          message.success({
+            content: "Lưu báo cáo thành công",
+          });
+        },
+      },
+    );
   }
 };
