@@ -153,7 +153,7 @@ export const SettingTable: React.FC<Props> = ({ data, listProxy, accountMonitor,
                 <span className={styles.fontNormal}>" {isValueTarget.username} "</span> không?
               </div>
             }
-            type="warning"
+            type="error"
             showIcon
           />
         ) : null}

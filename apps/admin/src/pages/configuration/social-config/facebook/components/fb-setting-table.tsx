@@ -159,7 +159,7 @@ export const SettingTable: React.FC<Props> = ({
                 <span className={styles.fontNormal}>" {isValueTarget.social_name} "</span> không?
               </div>
             }
-            type="warning"
+            type="error"
             showIcon
           />
         ) : null}
