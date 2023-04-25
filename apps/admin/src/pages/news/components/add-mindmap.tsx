@@ -1,4 +1,3 @@
-import { filterEmptyString } from "@/utils/api";
 import { DeleteOutlined } from "@ant-design/icons";
 import {
   Button,
@@ -35,6 +34,11 @@ const formItemLayoutWithOutLabel = {
   },
 };
 
+interface SelectCustomProps {
+  value: string;
+  label: string;
+}
+
 interface ModalEditProps {
   confirmLoading?: boolean;
   isOpen: boolean;
@@ -61,8 +65,14 @@ export const AddMindmap: React.FC<ModalEditProps> = ({
   functionAddManyEvent,
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [valueEventSelect, setValueEventSelect] = useState<any>({});
-  const [valueNewsSelect, setValueNewsSelect] = useState<any>({});
+  const [valueEventSelect, setValueEventSelect] = useState<SelectCustomProps>({
+    value: "",
+    label: "",
+  });
+  const [valueNewsSelect, setValueNewsSelect] = useState<SelectCustomProps>({
+    value: "",
+    label: "",
+  });
   const [listEvent, setListEvent] = useState<any[]>([]);
   const [keyTabs, setKeyTabs] = useState<string>("1");
   const [listNewsAdd, setListNewsAdd] = useState<any[]>([
@@ -70,8 +80,8 @@ export const AddMindmap: React.FC<ModalEditProps> = ({
   ]);
   const { data: dataAllEventNews } = useAllEventNewsList({
     event_name: searchParams.get("text_search_event") ?? "",
-    skip: "1",
-    limit: "20",
+    skip: 1,
+    limit: 50,
     id_new: newsItem._id,
   });
 
@@ -229,7 +239,12 @@ export const AddMindmap: React.FC<ModalEditProps> = ({
                   />
                 </div>
                 <div className={styles.rightAddExistNewsContainer}>
-                  <Button type="primary" className={styles.addButton} onClick={addNews}>
+                  <Button
+                    disabled={valueNewsSelect?.value !== "" ? false : true}
+                    type="primary"
+                    className={styles.addButton}
+                    onClick={addNews}
+                  >
                     Thêm
                   </Button>
                 </div>
@@ -270,7 +285,12 @@ export const AddMindmap: React.FC<ModalEditProps> = ({
               </Select>
             </div>
             <div className={styles.rightAddExistNewsContainer}>
-              <Button type="primary" className={styles.addButton} onClick={addEventToTable}>
+              <Button
+                disabled={valueEventSelect?.value !== "" ? false : true}
+                type="primary"
+                className={styles.addButton}
+                onClick={addEventToTable}
+              >
                 Thêm
               </Button>
             </div>
@@ -432,7 +452,6 @@ export const AddMindmap: React.FC<ModalEditProps> = ({
           ...initialValues,
           ...values,
         });
-        setIsOpen(false);
       })
       .catch();
   }
@@ -459,7 +478,7 @@ export const AddMindmap: React.FC<ModalEditProps> = ({
       text_search_news: value.trim(),
     });
   }
-  function handleChangeNewsSelect(newValue: object) {
+  function handleChangeNewsSelect(newValue: SelectCustomProps) {
     setValueNewsSelect(newValue);
   }
 
@@ -479,7 +498,7 @@ export const AddMindmap: React.FC<ModalEditProps> = ({
           date_created: itemEvent.date_created,
         },
       ]);
-      setValueEventSelect(null);
+      setValueEventSelect({ value: "", label: "" });
     } else {
       openNotification("top", "exited");
     }
@@ -512,7 +531,7 @@ export const AddMindmap: React.FC<ModalEditProps> = ({
     });
   }
 
-  function handleChangeEvent(newValue: object) {
+  function handleChangeEvent(newValue: SelectCustomProps) {
     setValueEventSelect(newValue);
   }
 

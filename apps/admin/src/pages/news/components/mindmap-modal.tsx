@@ -174,7 +174,14 @@ export const MindmapModal: React.FC<props> = ({ item, isVisible, setHideModal })
   }
 
   function handleUpdateEvent(value: any) {
-    mutateOneEvent({ data: value, _id: choosedEvent._id, action: "update" });
+    mutateOneEvent(
+      { data: value, _id: choosedEvent._id, action: "update" },
+      {
+        onSuccess: () => {
+          setIsOpenModalEditEvent(false);
+        },
+      },
+    );
   }
 
   function handleDeleteEvent(value: any) {

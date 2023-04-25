@@ -304,7 +304,7 @@ export const NewsItem: React.FC<Props> = ({
                         }}
                       />
                     </Tooltip>
-                    <Tooltip title={"Mind map "}>
+                    <Tooltip title={"Mind map "} placement="topRight">
                       <AreaChartOutlined
                         className={styles.iconFilterContent}
                         onClick={(event) => {

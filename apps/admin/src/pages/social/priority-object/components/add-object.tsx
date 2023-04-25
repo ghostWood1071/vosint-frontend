@@ -36,7 +36,7 @@ export const AddObjectModal: React.FC<Props> = ({
   const [accountLink, setAccountLink] = useState<any>();
   const { data } = useSocialObjectList({
     skip: 1,
-    limit: 10,
+    limit: 50,
     type: nameType === "đối tượng" ? "Object" : nameType === "nhóm" ? "Group" : "Fanpage",
     social_name: searchParams.get("text_search") ?? "",
   });

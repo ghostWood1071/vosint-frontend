@@ -51,7 +51,13 @@ export function NewsFilter(): JSX.Element {
           </Select>
           {/* </Form.Item> */}
           <Form.Item noStyle name="language_source">
-            <Select placeholder="Ngôn ngữ" mode="multiple" allowClear style={{ minWidth: 100 }}>
+            <Select
+              placeholder="Ngôn ngữ"
+              mode="multiple"
+              showArrow
+              allowClear
+              style={{ minWidth: 100 }}
+            >
               <Select.Option key="en">Anh</Select.Option>
               <Select.Option key="vi">Việt</Select.Option>{" "}
               <Select.Option key="cn">Trung</Select.Option>
