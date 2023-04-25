@@ -10,7 +10,6 @@ import {
   Space,
   Table,
   TableColumnsType,
-  Tooltip,
   notification,
 } from "antd";
 import React, { useState } from "react";
@@ -57,7 +56,7 @@ export const AddGroupModal: React.FC<Props> = ({
   const [searchParams, setSearchParams] = useSearchParams();
   const { data } = useSourceNewsConfigList({
     skip: 1,
-    limit: 10,
+    limit: 100,
     text_search: searchParams.get("text") ?? "",
   });
 
