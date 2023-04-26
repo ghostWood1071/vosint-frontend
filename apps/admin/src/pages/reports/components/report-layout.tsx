@@ -11,8 +11,9 @@ import {
   reportSyntheticPath,
 } from "@/pages/router";
 import { EditorNodes, editorTheme } from "@aiacademy/editor";
+import { PlusOutlined } from "@ant-design/icons";
 import { InitialConfigType, LexicalComposer } from "@lexical/react/LexicalComposer";
-import { Input, Menu, MenuProps, Pagination, Spin } from "antd";
+import { Button, Input, Menu, MenuProps, Pagination, Space, Spin } from "antd";
 import { useState } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 
@@ -74,19 +75,23 @@ const Sidebar = () => {
       children: [
         {
           label: (
-            <Input.Search
-              placeholder="Tìm kiếm báo cáo"
-              className={styles.input}
-              onSearch={handleSearch}
-            />
+            <Space align="center">
+              <Input.Search
+                placeholder="Tìm kiếm báo cáo"
+                onSearch={handleSearch}
+                className={styles.input}
+              />
+              <Button
+                icon={<PlusOutlined />}
+                title="Thêm báo cáo"
+                type="primary"
+                onClick={navigateCreateReport}
+              />
+            </Space>
           ),
           key: "search",
           disabled: true,
           className: styles.search,
-        },
-        {
-          label: "Tạo báo cáo tổng hợp",
-          key: reportSyntheticCreatePath,
         },
         isLoading
           ? {
@@ -136,5 +141,9 @@ const Sidebar = () => {
 
   function handleChangePaginate(page: number) {
     setFilter((prev) => ({ ...prev, page }));
+  }
+
+  function navigateCreateReport() {
+    navigate(reportSyntheticCreatePath);
   }
 };

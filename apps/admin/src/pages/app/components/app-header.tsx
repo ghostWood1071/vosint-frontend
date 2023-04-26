@@ -1,5 +1,5 @@
 import { LOCAL_ROLE, LOCAL_USER_PROFILE } from "@/constants/config";
-import { authLoginPath, dashboardPathWithRole, searchPath } from "@/pages/router";
+import { authLoginPath, dashboardPathWithRole } from "@/pages/router";
 import { generateImage } from "@/utils/image";
 import { LogoutOutlined, UserOutlined } from "@ant-design/icons";
 import { Avatar, Col, Dropdown, MenuProps, Row, Space, Typography } from "antd";
@@ -68,13 +68,13 @@ export const AppHeader: React.FC = () => {
       </Col>
       <Col span={4}>
         <Row justify="end" className={styles.userSetting}>
-          {/* <SearchOutlined onClick={handlerNavigateSearch} className={styles.icon} /> */}
           <Dropdown menu={{ items }}>
             <Avatar
               src={
                 userProfile?.avatar_url ? generateImage(userProfile.avatar_url) : <UserOutlined />
               }
               style={{ backgroundColor: "#cccccc" }}
+              size="large"
             />
           </Dropdown>
         </Row>
