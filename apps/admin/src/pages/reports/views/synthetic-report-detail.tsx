@@ -5,24 +5,26 @@ import { useEventsState } from "@/components/editor/plugins/events-plugin/events
 import { TableOfContentsPlugin } from "@/components/editor/plugins/table-of-contents-plugin";
 import { downloadFile } from "@/components/editor/utils";
 import { useConvertLexicalToDocx } from "@/components/editor/utils/docx";
+import { reportPath } from "@/pages/router";
 import { Editor, useLexicalComposerContext } from "@aiacademy/editor";
 import {
   ArrowLeftOutlined,
+  DeleteOutlined,
   EditOutlined,
   SaveOutlined,
   UnorderedListOutlined,
 } from "@ant-design/icons";
 import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
-import { Button, Card, Col, DatePicker, Row, Space, Spin, Typography, message } from "antd";
+import { Button, Card, Col, DatePicker, Modal, Row, Space, Spin, Typography, message } from "antd";
 import { Packer } from "docx";
 import { EditorState } from "lexical";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { useQueryClient } from "react-query";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { shallow } from "zustand/shallow";
 
-import { CACHE_KEYS, useReport, useUpdateReport } from "../report.loader";
+import { CACHE_KEYS, useDeleteReport, useReport, useUpdateReport } from "../report.loader";
 import styles from "./synthetic-report.module.less";
 
 export const SyntheticReportDetail: React.FC = () => {
@@ -40,8 +42,10 @@ export const SyntheticReportDetail: React.FC = () => {
   });
 
   const [content, setContent] = useState("");
-  const { mutate, isLoading: isUpdating, status } = useUpdateReport(id!);
+  const { mutate, isLoading: isUpdating } = useUpdateReport(id!);
+  const { mutate: deleteReport, isLoading: isDeleting } = useDeleteReport();
   const convertLexicalToDocx = useConvertLexicalToDocx();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (data && editor) {
@@ -97,7 +101,7 @@ export const SyntheticReportDetail: React.FC = () => {
         </Col>
         <Col span={isOpen ? 16 : 22} className={styles.container}>
           <Row align="middle" justify="center">
-            <Col span={4}></Col>
+            <Col span={3}></Col>
             <Col span={16} className={styles.center}>
               <Typography.Title
                 level={4}
@@ -117,6 +121,13 @@ export const SyntheticReportDetail: React.FC = () => {
             </Col>
             <Col span={3}>
               <Space>
+                <Button
+                  icon={<DeleteOutlined />}
+                  danger
+                  title="Xoá báo cáo"
+                  onClick={handleDelete}
+                  loading={isDeleting}
+                />
                 <Button
                   title="Xuất file ra docx"
                   icon={<OutlineFileWordIcon />}
@@ -175,5 +186,25 @@ export const SyntheticReportDetail: React.FC = () => {
         },
       },
     );
+  }
+
+  function handleDelete() {
+    Modal.confirm({
+      title: "Xác nhận xoá báo cáo",
+      content: "Bạn có chắc chắn muốn xoá báo cáo này?",
+      okText: "Xoá",
+      cancelText: "Huỷ",
+      getContainer: "#modal-mount",
+      onOk: () => {
+        deleteReport(id!, {
+          onSuccess: () => {
+            message.success({
+              content: "Xoá báo cáo thành công",
+            });
+            navigate(reportPath);
+          },
+        });
+      },
+    });
   }
 };

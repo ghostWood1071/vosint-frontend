@@ -8,7 +8,7 @@ import {
 import { buildTree, getAllChildIds } from "@/pages/news/news.utils";
 import { NewsletterDto } from "@/services/news.type";
 import { PlusOutlined } from "@ant-design/icons";
-import { Button, Card, Col, Descriptions, Input, List, PageHeader, Row, Typography } from "antd";
+import { Button, Card, Col, Input, List, PageHeader, Row, Typography } from "antd";
 import { useSearchParams } from "react-router-dom";
 import { shallow } from "zustand/shallow";
 
@@ -56,28 +56,43 @@ export const CategoryNewsConfig = () => {
           </Col>
           <Col span={11} className={styles.col}>
             <div className={styles.nameCategory}>Mô tả</div>
-            <Descriptions bordered>
+            <Row className={styles.row} align="stretch">
               {dataDetail?.title && (
-                <Descriptions.Item label="Tên lĩnh vực" span={3}>
-                  {dataDetail?.title}
-                </Descriptions.Item>
+                <>
+                  <Col span={6} className={styles.itemLabel}>
+                    Tên lĩnh vực
+                  </Col>
+                  <Col span={18} className={styles.itemContent}>
+                    {dataDetail?.title}
+                  </Col>
+                </>
               )}
-              {dataDetail?.required_keyword && (
-                <Descriptions.Item label="Từ khoá bắt buộc" span={3}>
-                  {dataDetail?.required_keyword?.map((i: any) => i + ", ")}
-                </Descriptions.Item>
+              {(dataDetail?.required_keyword?.length ?? 0) > 0 && (
+                <>
+                  <Col span={6} className={styles.itemLabel}>
+                    Từ khoá bắt buộc
+                  </Col>
+                  <Col span={18} className={styles.itemContent}>
+                    {dataDetail?.required_keyword?.map((i: any) => i + ", ")}
+                  </Col>
+                </>
               )}
-              {dataDetail?.required_keyword && (
-                <Descriptions.Item label="Từ khoá loại trừ" span={3}>
-                  {dataDetail?.exclusion_keyword}
-                </Descriptions.Item>
+              {dataDetail?.exclusion_keyword && (
+                <>
+                  <Col span={6} className={styles.itemLabel}>
+                    Từ khoá loại trừ
+                  </Col>
+                  <Col span={18} className={styles.itemContent}>
+                    {dataDetail.exclusion_keyword}
+                  </Col>
+                </>
               )}
-            </Descriptions>
+            </Row>
             {(dataDetail?.news_samples ?? []).length > 0 && (
               <Card>
                 <Typography.Text>Tin mẫu</Typography.Text>
                 <List
-                  dataSource={dataDetail?.news_samples}
+                  dataSource={dataDetail?.news_samples as any}
                   renderItem={(item: any) => {
                     return (
                       <List.Item>

@@ -306,44 +306,8 @@ function TextFormatFloatingToolbar({
               }}
               type={isUnderline ? "primary" : "default"}
             />
+            <BlockFormatDropDown disabled={false} blockType={blockType} editor={editor} />
           </Space.Compact>
-          <Divider type="vertical" />
-          <Space.Compact>
-            <Button
-              title={`Căn trái`}
-              aria-label={`Căn chỉnh nội dung của bạn với lề trái. Căn trái thường được dùng cho nội dung phần thân và giúp dễ đọc tài liệu hơn`}
-              icon={
-                <span className="anticon">
-                  <MdFormatAlignLeft />
-                </span>
-              }
-              onClick={() => {
-                editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, "left");
-              }}
-            />
-            <Button
-              icon={
-                <span className="anticon">
-                  <MdFormatAlignCenter />
-                </span>
-              }
-              onClick={() => {
-                editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, "center");
-              }}
-            />
-            <Button
-              icon={
-                <span className="anticon">
-                  <MdFormatAlignRight />
-                </span>
-              }
-              onClick={() => {
-                editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, "right");
-              }}
-            />
-          </Space.Compact>
-          <Divider type="vertical" />
-          <BlockFormatDropDown disabled={false} blockType={blockType} editor={editor} />
         </>
       )}
     </div>
@@ -395,6 +359,18 @@ function BlockFormatDropDown({
     {
       label: "Heading 3",
       key: "h3",
+    },
+    {
+      label: "Heading 4",
+      key: "h4",
+    },
+    {
+      label: "Heading 5",
+      key: "h5",
+    },
+    {
+      label: "Heading 6",
+      key: "h6",
     },
   ];
 

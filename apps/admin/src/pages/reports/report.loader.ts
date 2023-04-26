@@ -14,6 +14,7 @@ import {
   getReport,
   getReportEvents,
   removeEventIdsToReport,
+  removeReport,
   updateReport,
 } from "@/services/report.service";
 import {
@@ -175,4 +176,10 @@ export const useRemoveEventIdsToReport = (
   options?: UseMutationOptions<string, unknown, { id: string; data: string[] }>,
 ) => {
   return useMutation(({ id, data }) => removeEventIdsToReport(id, data), options);
+};
+
+export const useDeleteReport = (
+  options?: UseMutationOptions<string, unknown, string, { previousData?: any; newData?: any }>,
+) => {
+  return useMutation((id) => removeReport(id), options);
 };
