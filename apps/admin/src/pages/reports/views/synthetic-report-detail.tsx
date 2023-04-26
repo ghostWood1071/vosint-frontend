@@ -198,6 +198,7 @@ export const SyntheticReportDetail: React.FC = () => {
       onOk: () => {
         deleteReport(id!, {
           onSuccess: () => {
+            queryClient.invalidateQueries([CACHE_KEYS.REPORTS]);
             message.success({
               content: "Xoá báo cáo thành công",
             });
