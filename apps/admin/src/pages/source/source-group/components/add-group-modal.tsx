@@ -1,4 +1,5 @@
 import { useSourceNewsConfigList } from "@/pages/configuration/news-config/news-source/news-source.loader";
+import { removeWhitespaceInStartAndEndOfString } from "@/utils/tool-validate-string";
 import { DeleteOutlined } from "@ant-design/icons";
 import {
   Button,
@@ -81,7 +82,9 @@ export const AddGroupModal: React.FC<Props> = ({
     form
       .validateFields()
       .then((values) => {
-        functionAdd({ ...values, user_id: "", news: listSource, is_hide: false });
+        const data = removeWhitespaceInStartAndEndOfString(values);
+
+        functionAdd({ ...data, user_id: "", news: listSource, is_hide: false });
       })
       .catch();
   }
@@ -90,7 +93,8 @@ export const AddGroupModal: React.FC<Props> = ({
     form
       .validateFields()
       .then((values) => {
-        functionEdit({ ...choosedGroupSource, ...values, news: listSource });
+        const data = removeWhitespaceInStartAndEndOfString(values);
+        functionEdit({ ...choosedGroupSource, ...data, news: listSource });
       })
       .catch();
   }

@@ -1,3 +1,4 @@
+import { removeWhitespaceInStartAndEndOfString } from "@/utils/tool-validate-string";
 import { Form, Input, Modal, Select } from "antd";
 import React from "react";
 
@@ -47,7 +48,9 @@ export const AddNewsSourceComponent: React.FC<Props> = ({
     form
       .validateFields()
       .then((values) => {
-        functionAdd(values);
+        const data = removeWhitespaceInStartAndEndOfString(values);
+
+        functionAdd(data);
       })
       .catch();
   }
@@ -56,7 +59,8 @@ export const AddNewsSourceComponent: React.FC<Props> = ({
     form
       .validateFields()
       .then((values) => {
-        functionEdit({ ...initialValues, ...values });
+        const data = removeWhitespaceInStartAndEndOfString(values);
+        functionEdit({ ...initialValues, ...data });
       })
       .catch();
   }

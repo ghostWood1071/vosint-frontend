@@ -20,7 +20,7 @@ interface props {
 }
 
 export const MindmapModal: React.FC<props> = ({ item, isVisible, setHideModal }) => {
-  const [choosedEvent, setChoosedEvent] = useState<any>({ start_date: "10/10/2022" });
+  const [choosedEvent, setChoosedEvent] = useState<any>();
   const [isOpenModalEditEvent, setIsOpenModalEditEvent] = useState<boolean>(false);
   const [typeModal, setTypeModal] = useState("edit");
   const { data: dataFilterByID } = useEventByIdNewsList(item._id);

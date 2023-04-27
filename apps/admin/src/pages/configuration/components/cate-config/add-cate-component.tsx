@@ -1,5 +1,6 @@
 import { BASE_URL } from "@/constants/config";
 import { uploadFile } from "@/services/cate-config.service";
+import { removeWhitespaceInStartAndEndOfString } from "@/utils/tool-validate-string";
 import { Form, Input, Modal, Upload } from "antd";
 import type { RcFile, UploadFile, UploadProps } from "antd/es/upload/interface";
 import React, { useState } from "react";
@@ -119,7 +120,9 @@ export const AddCateComponent: React.FC<Props> = ({
           status: "enable",
           object_type: typeObject,
         };
-        functionAdd(result);
+        const data = removeWhitespaceInStartAndEndOfString(result);
+
+        functionAdd(data);
       })
       .catch();
   }
@@ -141,9 +144,10 @@ export const AddCateComponent: React.FC<Props> = ({
           url = choosedCate.avatar_url;
         }
         const result = { ...initialValues, ...values, keywords: key, avatar_url: url };
-        functionEdit(result);
+        const data = removeWhitespaceInStartAndEndOfString(result);
 
-        setChoosedCate(result);
+        functionEdit(data);
+        setChoosedCate(data);
       })
       .catch();
   }

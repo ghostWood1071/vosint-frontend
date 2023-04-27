@@ -38,7 +38,7 @@ export const Layout: React.FC<LayoutProps> = ({
         <div className={styles.search}>
           <Input.Search
             className={styles.searchStyle}
-            placeholder="Từ khóa"
+            placeholder="Tìm kiếm"
             onSearch={handleSearch}
           />
         </div>

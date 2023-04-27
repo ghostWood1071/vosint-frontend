@@ -1,3 +1,4 @@
+import { removeWhitespaceInStartAndEndOfString } from "@/utils/tool-validate-string";
 import { Form, Input, InputNumber, Modal } from "antd";
 import React from "react";
 
@@ -56,16 +57,9 @@ export const AddProxyComponent: React.FC<Props> = ({
     form
       .validateFields()
       .then((values) => {
-        if (typeof values["username"] === "string") {
-          values["username"] = values["username"].trim();
-        }
-        if (typeof values["name"] === "string") {
-          values["name"] = values["name"].trim();
-        }
-        if (typeof values["password"] === "string") {
-          values["password"] = values["password"].trim();
-        }
-        functionAdd(values);
+        const data = removeWhitespaceInStartAndEndOfString(values);
+
+        functionAdd(data);
       })
       .catch();
   }
@@ -74,16 +68,8 @@ export const AddProxyComponent: React.FC<Props> = ({
     form
       .validateFields()
       .then((values) => {
-        if (typeof values["username"] === "string") {
-          values["username"] = values["username"].trim();
-        }
-        if (typeof values["name"] === "string") {
-          values["name"] = values["name"].trim();
-        }
-        if (typeof values["password"] === "string") {
-          values["password"] = values["password"].trim();
-        }
-        functionEdit({ ...initialValues, ...values });
+        const data = removeWhitespaceInStartAndEndOfString(values);
+        functionEdit({ ...initialValues, ...data });
       })
       .catch();
   }
@@ -184,7 +170,7 @@ export const AddProxyComponent: React.FC<Props> = ({
                 whitespace: true,
               },
             ]}
-            label="Username"
+            label="Tên đăng nhập"
             name={"username"}
           >
             <Input />
@@ -198,7 +184,7 @@ export const AddProxyComponent: React.FC<Props> = ({
                 whitespace: true,
               },
             ]}
-            label="Password"
+            label="Mật khẩu"
             name={"password"}
           >
             <Input />
