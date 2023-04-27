@@ -1,45 +1,48 @@
 .main-container {
   width: 100%;
   padding-block: 5px;
+  padding-inline: 10px;
   display: flex;
   flex-direction: row;
-  border: 1px solid rgb(240, 240, 240);
+  border: 1px solid rgb(230, 230, 230);
+  border-top: white;
   cursor: pointer;
 }
 
 .choosed-item {
   width: 100%;
+  padding-inline: 10px;
   padding-block: 5px;
   display: flex;
   flex-direction: row;
-  border: 1px solid rgb(240, 240, 240);
+  border: 1px solid rgb(230, 230, 230);
+  border-top: white;
   cursor: pointer;
   background-color: #f2f2f2;
 }
 
 .icon-user-container {
-  width: 60px;
-  height: 60px;
+  width: 40px;
+  height: 40px;
   display: flex;
   justify-content: center;
   align-items: center;
   .icon-user {
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
     border-radius: 30px;
   }
 }
 
 .name-cate-container {
-  width: calc(100% - 190px);
+  width: calc(100% - 155px);
   display: flex;
   align-items: center;
   padding-left: 10px;
 
   .cate-name {
     font-size: 14px;
-    font-weight: bold;
-    color: #224170;
+    color: black;
   }
 }
 .status-container {
@@ -55,8 +58,7 @@
     align-items: center;
     justify-content: center;
     background-color: #00a94e;
-    border-radius: 10px;
-    border-width: 0px;
+    border-radius: 5px;
 
     .name-status {
       font-size: 14px;
@@ -72,7 +74,7 @@
     justify-content: center;
     color: white;
     background-color: #e4e4e4;
-    border-radius: 10px;
+    border-radius: 5px;
     .name-status {
       font-size: 14px;
       color: black;

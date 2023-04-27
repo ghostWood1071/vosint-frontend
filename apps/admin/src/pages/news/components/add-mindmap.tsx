@@ -1,3 +1,4 @@
+import { removeWhitespaceInStartAndEndOfString } from "@/utils/tool-validate-string";
 import { DeleteOutlined } from "@ant-design/icons";
 import {
   Button,
@@ -100,13 +101,6 @@ export const AddMindmap: React.FC<ModalEditProps> = ({
       title: "Tên sự kiện",
       align: "left",
       dataIndex: "event_name",
-      //   render: (value) => (
-      //     <div
-      //       dangerouslySetInnerHTML={{
-      //         __html: generateHTMLFromJSON(value, eventEditor),
-      //       }}
-      //     />
-      //   ),
     },
     {
       title: "Ngày sự kiện",
@@ -162,7 +156,7 @@ export const AddMindmap: React.FC<ModalEditProps> = ({
   const items: TabsProps["items"] = [
     {
       key: "1",
-      label: `Tạo sự kiện mới`,
+      label: `Thêm sự kiện mới`,
       children: (
         <div className={styles.addNewEventContainer}>
           <Form
@@ -171,7 +165,6 @@ export const AddMindmap: React.FC<ModalEditProps> = ({
               event_content: "",
               khach_the: "",
               chu_the: "",
-              date_created: moment("10/02/2023", dateFormat),
             }}
             form={form}
             {...formItemLayoutWithOutLabel}
@@ -448,9 +441,10 @@ export const AddMindmap: React.FC<ModalEditProps> = ({
       .validateFields()
       .then((values) => {
         values.date_created = values.date_created.format("DD/MM/YYYY");
+        const data = removeWhitespaceInStartAndEndOfString(values);
         functionEdit({
           ...initialValues,
-          ...values,
+          ...data,
         });
       })
       .catch();
@@ -507,15 +501,11 @@ export const AddMindmap: React.FC<ModalEditProps> = ({
     form
       .validateFields()
       .then((values) => {
-        if (values.date_created === undefined || values.date_created === null) {
-          values.date_created = "";
-        } else {
-          values.date_created = values.date_created.format("DD/MM/YYYY");
-        }
+        values.date_created = values.date_created.format("DD/MM/YYYY");
         values["system_created"] = false;
         values["new_list"] = listNewsAdd.map((e) => e._id);
-        console.log(values["event_content"]);
-        functionAddOneEvent(values);
+        const data = removeWhitespaceInStartAndEndOfString(values);
+        functionAddOneEvent(data);
       })
       .catch();
   }

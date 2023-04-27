@@ -58,10 +58,10 @@ export function NewsFilter(): JSX.Element {
               allowClear
               style={{ minWidth: 100 }}
             >
-              <Select.Option key="en">Anh</Select.Option>
-              <Select.Option key="vi">Việt</Select.Option>{" "}
-              <Select.Option key="cn">Trung</Select.Option>
-              <Select.Option key="ru">Nga</Select.Option>
+              <Select.Option key="en">Tiếng Anh</Select.Option>
+              <Select.Option key="vi">Tiếng Việt</Select.Option>
+              <Select.Option key="cn">Tiếng Trung</Select.Option>
+              <Select.Option key="ru">Tiếng Nga</Select.Option>
             </Select>
           </Form.Item>
           <Form.Item noStyle name="sac_thai">

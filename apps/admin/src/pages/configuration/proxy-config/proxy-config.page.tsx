@@ -38,12 +38,12 @@ export const ProxyConfig = () => {
       dataIndex: "port",
     },
     {
-      title: "Username",
+      title: "Tên đăng nhập",
       align: "left",
       dataIndex: "username",
     },
     {
-      title: "Password",
+      title: "Mật khẩu",
       align: "left",
       dataIndex: "password",
     },
