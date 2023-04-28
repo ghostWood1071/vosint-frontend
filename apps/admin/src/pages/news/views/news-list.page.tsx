@@ -1,6 +1,6 @@
 import { ETreeTag, useNewsSelection } from "@/components/news/news-state";
 import { useGetMe } from "@/pages/auth/auth.loader";
-import { Checkbox, List } from "antd";
+import { List } from "antd";
 import { flatMap, unionBy } from "lodash";
 import React, { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
@@ -20,8 +20,6 @@ import styles from "./news-list.module.less";
 interface Props {}
 
 export const NewsListPage: React.FC<Props> = () => {
-  const [checkAll, setCheckAll] = useState(false);
-  const [indeterminate, setIndeterminate] = useState(false);
   const [skip, setSkip] = useState(1);
   const queryClient = useQueryClient();
   const { ref, inView } = useInView();
@@ -54,20 +52,6 @@ export const NewsListPage: React.FC<Props> = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    if (newsSelection.length === 0) {
-      setCheckAll(false);
-      setIndeterminate(false);
-    } else if (newsSelection.length === dataSource.length) {
-      setCheckAll(true);
-      setIndeterminate(false);
-    } else {
-      setCheckAll(false);
-      setIndeterminate(true);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [newsSelection, dataSource]);
-
   React.useEffect(() => {
     if (inView && skip * 30 <= data?.pages[0].total_record) {
       setSkip(skip + 1);
@@ -87,16 +71,6 @@ export const NewsListPage: React.FC<Props> = () => {
   }, [skip]);
   return (
     <div className={styles.mainContainer}>
-      <div className={styles.titleListContainer}>
-        <div className={styles.container1}></div>
-        <div className={styles.container2}>
-          <Checkbox indeterminate={indeterminate} checked={checkAll} onClick={handleCheckAllBox} />
-        </div>
-        <div className={styles.container3}>Hành động</div>
-        <div className={styles.container5}>Tiêu đề</div>
-        <div className={styles.container6}>Link</div>
-        <div className={styles.container7}>Thời gian</div>
-      </div>
       <List
         itemLayout="vertical"
         size="small"
@@ -108,7 +82,6 @@ export const NewsListPage: React.FC<Props> = () => {
               onDelete={handleDelete}
               onAdd={handleAdd}
               lengthDataSource={dataSource?.length}
-              setIndeterminate={setIndeterminate}
             />
           );
         }}
@@ -128,16 +101,6 @@ export const NewsListPage: React.FC<Props> = () => {
       <div>{isFetching && !isFetchingNextPage ? "Giao diện đang cập nhật..." : null}</div>
     </div>
   );
-
-  function handleCheckAllBox() {
-    if (checkAll) {
-      setNewsSelection([]);
-    } else {
-      setNewsSelection(dataSource);
-    }
-    setIndeterminate(false);
-    setCheckAll(!checkAll);
-  }
 
   function handleDelete(newsId: string, tag?: ETreeTag) {
     return mutateDelete({
