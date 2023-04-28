@@ -28,17 +28,9 @@ interface Props {
   onDelete?: (id: string, tag?: ETreeTag) => void;
   onAdd?: (id: string, tag: ETreeTag) => void;
   lengthDataSource: number;
-  setIndeterminate: (value: any) => void;
 }
 
-export const NewsItem: React.FC<Props> = ({
-  item,
-  type,
-  onDelete,
-  onAdd,
-  lengthDataSource,
-  setIndeterminate,
-}) => {
+export const NewsItem: React.FC<Props> = ({ item, type, onDelete, onAdd, lengthDataSource }) => {
   const [newsSelection, setNewsSelection] = useNewsSelection(
     (state) => [state.newsSelection, state.setNewsSelection],
     shallow,
@@ -147,6 +139,9 @@ export const NewsItem: React.FC<Props> = ({
                 setSeen(true);
               }}
             >
+              <div className={seen ? styles.seenSourceNameHeader : styles.sourceNameHeader}>
+                {item["source_name"]}
+              </div>
               <div className={seen ? styles.seenContentHeader : styles.contentHeader}>
                 {item["data:title"]}.{" "}
                 <span className={styles.detailContentHeader}>{item["data:content"]}</span>
@@ -343,10 +338,8 @@ export const NewsItem: React.FC<Props> = ({
   function onChangeCheckbox() {
     if (checkbox === false) {
       setNewsSelection([...newsSelection, item]);
-      setIndeterminate(newsSelection.length < lengthDataSource - 1);
     } else {
       setNewsSelection([...newsSelection].filter((e) => e._id !== item._id));
-      setIndeterminate(newsSelection.length !== 1);
     }
     setCheckbox(!checkbox);
   }

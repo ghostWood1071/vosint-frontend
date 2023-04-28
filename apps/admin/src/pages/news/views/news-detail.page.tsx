@@ -1,6 +1,6 @@
 import { useNewsSelection } from "@/components/news/news-state";
 import { useGetMe } from "@/pages/auth/auth.loader";
-import { Checkbox, List } from "antd";
+import { List } from "antd";
 import { flatMap, unionBy } from "lodash";
 import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
@@ -33,8 +33,6 @@ export const NewsDetailPage = () => {
   const { data: dataIAm } = useGetMe();
   const { mutateAsync: mutateDelete } = useDeleteNewsInNewsletter();
   const { mutate: mutateAdd } = useNewsIdToNewsletter();
-  const [checkAll, setCheckAll] = useState(false);
-  const [indeterminate, setIndeterminate] = useState(false);
   const dataSource = unionBy(
     flatMap(
       data?.pages.map((a) =>
@@ -47,20 +45,6 @@ export const NewsDetailPage = () => {
     ),
     "_id",
   );
-
-  useEffect(() => {
-    if (newsSelection.length === 0) {
-      setCheckAll(false);
-      setIndeterminate(false);
-    } else if (newsSelection.length >= dataSource.length) {
-      setCheckAll(true);
-      setIndeterminate(false);
-    } else {
-      setCheckAll(false);
-      setIndeterminate(true);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [newsSelection, dataSource]);
 
   useEffect(() => {
     queryClient.removeQueries([CACHE_KEYS.NewsList, newsletterId]);
@@ -83,17 +67,6 @@ export const NewsDetailPage = () => {
 
   return (
     <div className={styles.mainContainer}>
-      <div className={styles.titleListContainer}>
-        <div className={styles.container1}></div>
-        <div className={styles.container2}>
-          <Checkbox indeterminate={indeterminate} checked={checkAll} onClick={handleCheckAllBox} />
-        </div>
-        <div className={styles.container3}>Hành động</div>
-        <div className={styles.container5}>Tiêu đề</div>
-        <div className={styles.container6}>Link</div>
-        <div className={styles.container7}>Thời gian</div>
-        <div className={styles.container8}></div>
-      </div>
       <List
         itemLayout="vertical"
         size="small"
@@ -106,7 +79,6 @@ export const NewsDetailPage = () => {
               onDelete={handleDelete}
               onAdd={handleAdd}
               lengthDataSource={dataSource?.length}
-              setIndeterminate={setIndeterminate}
             />
           );
         }}
@@ -126,28 +98,11 @@ export const NewsDetailPage = () => {
     </div>
   );
 
-  function handleCheckAllBox() {
-    if (checkAll) {
-      setNewsSelection([]);
-    } else {
-      setNewsSelection(dataSource);
-    }
-    setIndeterminate(false);
-    setCheckAll(!checkAll);
-  }
-
   function handleDelete(newsId: string, tag = newsletterId) {
-    return mutateDelete(
-      {
-        newsId: [newsId],
-        newsletterId: tag!,
-      },
-      {
-        onSuccess: (data, variables) => {
-          setNewsSelection([...newsSelection].filter((e) => e._id !== variables.newsId[0]));
-        },
-      },
-    );
+    return mutateDelete({
+      newsId: [newsId],
+      newsletterId: tag!,
+    });
   }
 
   function handleAdd(newsId: string, tag = newsletterId) {
