@@ -1,12 +1,14 @@
 import { useNewsFilter, useNewsFilterDispatch } from "@/pages/news/news.context";
 import { DatePicker, Form, Input, Select, Space } from "antd";
 
+import styles from "./social-filter.module.less";
+
 export function SocialFilter(): JSX.Element {
   const newsFilter = useNewsFilter();
   const setNewsFilter = useNewsFilterDispatch();
 
   return (
-    <>
+    <div className={styles.filter}>
       <Form onValuesChange={handleFinish}>
         <Space wrap>
           <Form.Item noStyle name="datetime">
@@ -39,7 +41,7 @@ export function SocialFilter(): JSX.Element {
           </Form.Item>
         </Space>
       </Form>
-    </>
+    </div>
   );
 
   function handleFinish(values: Record<string, any>) {

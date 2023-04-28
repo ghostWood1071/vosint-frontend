@@ -16,7 +16,8 @@ import styles from "./news-layout.module.less";
 export const NewsLayout: React.FC = () => {
   return (
     <NewsFilterProvider>
-      <AppContainer sidebar={<Sidebar />} filter={<NewsFilter />}>
+      <AppContainer sidebar={<Sidebar />}>
+        <NewsFilter />
         <Outlet />
       </AppContainer>
     </NewsFilterProvider>

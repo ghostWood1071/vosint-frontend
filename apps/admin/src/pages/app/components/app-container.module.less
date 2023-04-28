@@ -1,5 +1,38 @@
 .root {
-  min-height: calc(100vh - 90px - 61px);
+  min-height: calc(100vh - 49px);
+
+  :global {
+    .ant-modal-root .ant-modal {
+      top: 5px !important;
+      padding-bottom: 0;
+
+      .ant-modal-body {
+        overflow-y: auto;
+        max-height: calc(100vh - 167px);
+
+        &:hover::-webkit-scrollbar-thumb {
+          background-color: #9da5b1;
+        }
+
+        &::-webkit-scrollbar {
+          width: 6px;
+          height: 6px;
+        }
+
+        &::-webkit-scrollbar-corner {
+          background-color: transparent;
+        }
+
+        &::-webkit-scrollbar-thumb {
+          background-color: transparent;
+          border: 2px solid transparent;
+          background-clip: padding-box;
+          border-radius: 6px;
+          transition: cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+      }
+    }
+  }
 }
 
 .sidebar {
@@ -7,23 +40,23 @@
   backdrop-filter: blur(3px);
   z-index: 1;
   background-color: #ffffff;
-  height: calc(100vh - 90px - 61px);
+  height: calc(100vh - 49px);
   overflow-y: auto;
 }
 
 .container {
-  height: calc(100vh - 90px - 61px);
+  height: calc(100vh - 49px);
   overflow-y: auto;
   background-color: #ffffff;
 }
 
 @media screen and (min-width: 1201px) {
   .root {
-    min-height: calc(100vh - 50px - 61px);
+    min-height: calc(100vh - 49px);
   }
 
   .container,
   .sidebar {
-    height: calc(100vh - 50px - 61px);
+    height: calc(100vh - 49px);
   }
 }

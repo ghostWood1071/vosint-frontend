@@ -15,7 +15,8 @@ import styles from "./organizations-layout.module.less";
 export const OrganizationsLayout: React.FC = () => {
   return (
     <NewsFilterProvider>
-      <AppContainer sidebar={<Sidebar />} filter={<NewsFilter />}>
+      <AppContainer sidebar={<Sidebar />}>
+        <NewsFilter />
         <Outlet />
       </AppContainer>
     </NewsFilterProvider>

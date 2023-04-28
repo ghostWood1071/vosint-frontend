@@ -16,7 +16,8 @@ import { SocialFilter } from "./social-filter";
 export const SocialLayout: React.FC = () => {
   return (
     <NewsFilterProvider>
-      <AppContainer sidebar={<Sidebar />} filter={<SocialFilter />}>
+      <AppContainer sidebar={<Sidebar />}>
+        <SocialFilter />
         <Outlet />
       </AppContainer>
     </NewsFilterProvider>
