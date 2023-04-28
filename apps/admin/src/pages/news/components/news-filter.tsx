@@ -19,6 +19,7 @@ import { useParams } from "react-router-dom";
 import { shallow } from "zustand/shallow";
 
 import { useNewsFilter, useNewsFilterDispatch } from "../news.context";
+import styles from "./news-filter.module.less";
 
 export function NewsFilter(): JSX.Element {
   const [newsSelection, setNewsSelection] = useNewsSelection(
@@ -38,8 +39,13 @@ export function NewsFilter(): JSX.Element {
   const setNewsFilter = useNewsFilterDispatch();
 
   return (
-    <>
-      <Form onValuesChange={handleFinish}>
+    <div className={styles.filter}>
+      <Form
+        onValuesChange={handleFinish}
+        initialValues={{
+          sac_thai: "all",
+        }}
+      >
         <Space wrap>
           <Form.Item noStyle name="datetime">
             <DatePicker.RangePicker format={"DD/MM/YYYY"} />
@@ -65,7 +71,7 @@ export function NewsFilter(): JSX.Element {
             </Select>
           </Form.Item>
           <Form.Item noStyle name="sac_thai">
-            <Select placeholder="Điểm tin" defaultValue="all">
+            <Select placeholder="Điểm tin">
               <Select.Option key="all">Sắc thái tin</Select.Option>
               <Select.Option key="1">Tích cực</Select.Option>
               <Select.Option key="-1">Tiêu cực</Select.Option>
@@ -98,7 +104,7 @@ export function NewsFilter(): JSX.Element {
       </Form>
 
       {openSelection && <NewsFilterModal />}
-    </>
+    </div>
   );
 
   function handleFinish(values: Record<string, any>) {

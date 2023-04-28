@@ -4,7 +4,6 @@ import React from "react";
 
 import { useSidebar } from "../app.store";
 import styles from "./app-container.module.less";
-import { AppFilter } from "./app-filter";
 
 interface AppContainerProps {
   sidebar?: React.ReactNode;
@@ -17,7 +16,6 @@ export const AppContainer: React.FC<AppContainerProps> = ({ children, sidebar, f
 
   return (
     <>
-      <AppFilter>{filter}</AppFilter>
       <Row className={styles.root} wrap={false}>
         {pinned && (
           <Col flex="0 0 270px" className={classNames(styles.sidebar, "scrollbar")}>
