@@ -288,6 +288,6 @@ const Items: React.FC<ItemsProps> = ({ item, handleEdit, handleDelete }) => {
   );
 
   function handleOpenReport() {
-    setEvent(item);
+    setEvent([item]);
   }
 };

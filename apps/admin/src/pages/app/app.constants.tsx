@@ -1,5 +1,6 @@
 import {
   AppIcon,
+  EventIcon,
   NewsIcon,
   OrganizationIcon,
   ReportIcon,
@@ -8,6 +9,7 @@ import {
 } from "@/assets/svg";
 import {
   configPath,
+  eventPath,
   newsPath,
   organizationPath,
   reportPath,
@@ -45,6 +47,11 @@ export const NAVBAR_HEADER_ADMIN = [
   //   to: databasePath,
   //   icon: <DatabaseIcon />,
   // },
+  {
+    title: "Event",
+    to: eventPath,
+    icon: <EventIcon />,
+  },
   {
     title: "Report",
     to: reportPath,

@@ -167,7 +167,7 @@ export const useCreateReportEvents = (
 };
 
 export const useAddEventIdsToReport = (
-  options?: UseMutationOptions<string, unknown, { id: string; data: string[] }>,
+  options?: UseMutationOptions<string, unknown, { id: string; data: Array<string> }>,
 ) => {
   return useMutation(({ id, data }) => addEventIdsToReport(id, data), options);
 };

@@ -4,6 +4,7 @@ export { ReactComponent as DatabaseIcon } from "./database-icon.svg";
 export { ReactComponent as DatabaseSettingIcon } from "./database-setting-icon.svg";
 export { ReactComponent as NewsIcon } from "./news-icon.svg";
 export { ReactComponent as OrganizationIcon } from "./organization-icon.svg";
+export { ReactComponent as EventIcon } from "./event-icon.svg";
 export { ReactComponent as ReportIcon } from "./report-icon.svg";
 export { ReactComponent as SettingIcon } from "./setting-icon.svg";
 export { ReactComponent as SocialIcon } from "./social-icon.svg";

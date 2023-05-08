@@ -83,3 +83,4 @@ export const dashboardPathWithRole = (role: string) => {
 
 export const sourceGroupPath = "/source/group";
 export const appPath = "/source/app";
+export const eventPath = "/event";
