@@ -28,6 +28,7 @@ import { AdminPage } from "./pages/dashboard/admin/admin.page";
 import { ExpertPage } from "./pages/dashboard/expert/expert.page";
 import { LeaderLayout } from "./pages/dashboard/leader/leader.page";
 import { ErrorBoundary } from "./pages/errors/error-boundary";
+import { EventLayout, EventPage } from "./pages/events";
 import { NewsDetailPage, NewsLayout, NewsListPage } from "./pages/news";
 import { OrganizationsDetailPage, OrganizationsLayout } from "./pages/organization";
 import { InternationalRelationshipGraph } from "./pages/organization/international-relationship-graph/component/international-relationship-graph";
@@ -60,6 +61,7 @@ import {
   dashboardExpertPath,
   dashboardLeaderPath,
   databasePath,
+  eventPath,
   facebookConfigPath,
   homePath,
   newsCategoryConfigPath,
@@ -171,6 +173,15 @@ export const routers = createBrowserRouter([
           {
             path: socialTiktokPath,
             element: <Tiktok />,
+          },
+        ],
+      },
+      {
+        element: <EventLayout />,
+        children: [
+          {
+            path: eventPath,
+            element: <EventPage />,
           },
         ],
       },

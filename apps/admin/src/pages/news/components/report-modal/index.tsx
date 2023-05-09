@@ -6,9 +6,22 @@ import {
   useReports,
   useUpdateReport,
 } from "@/pages/reports/report.loader";
-import { TReport } from "@/services/report-type";
+import { IEventDto, TReport } from "@/services/report-type";
 import type { HeadingTagType } from "@lexical/rich-text";
-import { Col, Input, Modal, Pagination, Radio, Row, Space, Spin, Typography, message } from "antd";
+import {
+  Col,
+  Input,
+  Modal,
+  Pagination,
+  Radio,
+  Row,
+  Space,
+  Spin,
+  Table,
+  TableColumnsType,
+  Typography,
+  message,
+} from "antd";
 import classNames from "classnames";
 import { useState } from "react";
 import { useQueryClient } from "react-query";
@@ -19,8 +32,8 @@ import { useReportModalState } from "./index.state";
 
 export function ReportModal(): JSX.Element {
   const queryClient = useQueryClient();
-  const [event, setEvent, selectedHeading] = useReportModalState(
-    (state) => [state.event, state.setEvent, state.selectedHeading],
+  const [events, setEvent, selectedHeading] = useReportModalState(
+    (state) => [state.events, state.setEvent, state.selectedHeading],
     shallow,
   );
   const [filter, setFilter] = useState({
@@ -30,7 +43,7 @@ export function ReportModal(): JSX.Element {
   });
   const [selectedReport, setSelectedReport] = useState<TReport | null>(null);
   const { data, isLoading } = useReports(filter, {
-    enabled: event !== null,
+    enabled: events !== null,
     keepPreviousData: true,
   });
 
@@ -65,11 +78,24 @@ export function ReportModal(): JSX.Element {
       },
     },
   );
+  const columnsEventTable: TableColumnsType<IEventDto> = [
+    {
+      title: "Tên sự kiện",
+      align: "left",
+      dataIndex: "event_name",
+    },
+    {
+      title: "Ngày sự kiện",
+      width: 130,
+      align: "left",
+      dataIndex: "date_created",
+    },
+  ];
 
   return (
     <Modal
-      open={event !== null}
-      title="Chon report"
+      open={events !== null}
+      title="Chọn báo cáo"
       onCancel={handleCancel}
       onOk={handleOk}
       width="70%"
@@ -121,6 +147,15 @@ export function ReportModal(): JSX.Element {
             </>
           )}
         </Col>
+        <Col span={24}>
+          <Table
+            columns={columnsEventTable}
+            dataSource={events ?? []}
+            rowKey="_id"
+            pagination={false}
+            size="middle"
+          />
+        </Col>
       </Row>
     </Modal>
   );
@@ -135,7 +170,7 @@ export function ReportModal(): JSX.Element {
   }
 
   async function handleOk() {
-    if (!selectedReport || selectedHeading === null || event === null) return;
+    if (!selectedReport || selectedHeading === null || events === null) return;
     const contentParsed = JSON.parse(selectedReport?.content);
     const current = contentParsed.root.children[selectedHeading];
     const next = contentParsed.root.children[selectedHeading + 1];
@@ -143,11 +178,16 @@ export function ReportModal(): JSX.Element {
     if (current?.type === "heading" && next?.type === "events") {
       addEventIds({
         id: next.id!,
-        data: [event._id!],
+        data:
+          events?.map((e: IEventDto) => {
+            return e._id + "";
+          }) ?? [],
       });
     } else {
       const createdEventsId = await createReportEvents({
-        event_ids: [event._id!],
+        event_ids: events?.map((e: IEventDto) => {
+          return e._id + "";
+        }),
       });
       contentParsed.root.children.splice(selectedHeading + 1, 0, {
         type: "events",

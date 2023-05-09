@@ -42,6 +42,7 @@
       .hide-detail-button {
         padding: 0px;
         border: 0px;
+        cursor: pointer;
 
         .close-icon {
           width: 20px;
@@ -62,20 +63,6 @@
           font-weight: bold;
           padding-block-end: 10px;
           line-height: 35px;
-          font-family: Roboto, sans-serif;
-
-          .good-icon {
-            font-size: 20px;
-            color: green;
-          }
-          .bad-icon {
-            font-size: 20px;
-            color: red;
-          }
-          .normal-icon {
-            font-size: 20px;
-            color: gray;
-          }
         }
         .container1 {
           display: flex;
@@ -98,10 +85,11 @@
         }
         .container2 {
           display: flex;
-          flex-direction: row;
-          flex-wrap: wrap;
-          .tag {
-            margin-bottom: 3px;
+          flex-direction: column;
+
+          .khachthe_container {
+            padding-block: 5px;
+            font-size: 14px;
           }
         }
         .comtainer3 {
@@ -120,9 +108,7 @@
         }
       }
       .detail-content {
-        font-family: serif;
         font-size: 14px;
-        line-height: 1.7;
         margin-block: 20px;
         color: #1a2433;
       }
@@ -142,105 +128,22 @@
   align-items: center;
   font-family: Roboto, sans-serif;
 
-  .status-container {
-    width: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    .seen-button {
-      width: 14px;
-      height: 14px;
-      border-radius: 10px;
-      background-color: #c0c0c0;
-      display: flex;
-      align-items: center;
-      justify-items: center;
-      border: 0px;
-      padding: 1px;
-      cursor: pointer;
-
-      .seen {
-        border: 3px solid white;
-        border-radius: 10px;
-        width: 12px;
-        height: 12px;
-        background-color: #c0c0c0;
-        &:hover {
-          width: 14px;
-          height: 14px;
-          border: 0px;
-        }
-      }
-
-      .not-seen {
-        border: 3px solid white;
-        border-radius: 10px;
-        width: 12px;
-        height: 12px;
-        background-color: green;
-        &:hover {
-          width: 14px;
-          height: 14px;
-          border: 0px;
-        }
-      }
-    }
-  }
   .checkbox-container {
     width: 40px;
+    display: flex;
+    justify-content: center;
   }
 
   .option-container {
-    width: 80px;
+    width: 60px;
     display: flex;
     justify-content: center;
   }
 
-  .type-post-container {
-    width: 40px;
-    display: flex;
-    // align-items: center;
-    justify-content: start;
-
-    .good-icon {
-      font-size: 16px;
-      color: green;
-    }
-    .bad-icon {
-      font-size: 16px;
-      color: red;
-    }
-    .normal-icon {
-      font-size: 16px;
-      color: gray;
-    }
-  }
   .content-header-container {
-    width: calc(100% - 330px);
+    width: calc(100% - 180px);
     padding-right: 20px;
-    display: flex;
-    flex-direction: row;
     cursor: pointer;
-    .source_name_header {
-      min-width: 100px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: 100px;
-      padding-right: 10px;
-      color: black;
-    }
-
-    .seen_source_name_header {
-      min-width: 100px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: 100px;
-      padding-right: 10px;
-      color: #c0c0c0;
-    }
 
     .content-header {
       font-weight: bold;
@@ -248,37 +151,19 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      max-width: calc(100% - 100px);
+      max-width: calc(100%);
       color: black;
       .detail-content-header {
-        font-weight: 400;
+        font-weight: 300;
       }
     }
-
-    .seen-content-header {
-      font-size: 14px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: calc(100%);
-      color: #c0c0c0;
-    }
   }
-  .all-number-header {
-    display: inline-flex;
-    width: 130px;
-    .link {
-      width: 50px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .time {
-      max-width: 80px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
+
+  .time {
+    max-width: 80px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
 
@@ -294,5 +179,21 @@
 }
 .icon-filter-content {
   font-size: 20px;
+  margin-left: 5px;
+}
+
+.report-icon {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+.edit {
+  color: #1890ff;
+  margin-left: 5px;
+  font-size: 14px;
+}
+.delete {
+  color: #ff4d4f;
+  font-size: 14px;
   margin-left: 5px;
 }

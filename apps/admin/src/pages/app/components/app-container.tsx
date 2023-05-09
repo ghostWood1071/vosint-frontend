@@ -13,15 +13,16 @@ interface AppContainerProps {
 
 export const AppContainer: React.FC<AppContainerProps> = ({ children, sidebar, filter }) => {
   const pinned = useSidebar((state) => state.pinned);
-
   return (
     <>
       <Row className={styles.root} wrap={false}>
-        {pinned && (
-          <Col flex="0 0 270px" className={classNames(styles.sidebar, "scrollbar")}>
-            {sidebar}
-          </Col>
-        )}
+        {sidebar
+          ? pinned && (
+              <Col flex="0 0 270px" className={classNames(styles.sidebar, "scrollbar")}>
+                {sidebar}
+              </Col>
+            )
+          : null}
         <Col flex="1 1 auto" id="modal-mount">
           <div className={classNames(styles.container, "scrollbar")} id="container">
             {children}
