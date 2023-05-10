@@ -25,17 +25,17 @@ export const SyntheticReport = lazyLoad(
   },
 );
 
-export const SyntheticReportCreate = lazyLoad(
-  () => import("./synthetic-report-create"),
-  (module) => module.SyntheticReportCreate,
+export const SynthesisReportDetail = lazyLoad(
+  () => import("./synthesis-report-detail"),
+  (module) => module.SynthesisReportDetail,
   {
     fallback: <SplashScreen />,
   },
 );
 
-export const SyntheticReportDetail = lazyLoad(
-  () => import("./synthetic-report-detail"),
-  (module) => module.SyntheticReportDetail,
+export const SynthesisReportCreate = lazyLoad(
+  () => import("./synthesis-report-create"),
+  (module) => module.SynthesisReportCreate,
   {
     fallback: <SplashScreen />,
   },

@@ -1,3 +1,4 @@
+import { HeadingsData } from "@/pages/reports/components/headings";
 import { CACHE_KEYS } from "@/pages/reports/report.loader";
 import { IEventDto, TReportEventsDto } from "@/services/report-type";
 import { getEvent, getReportEvents } from "@/services/report.service";
@@ -15,13 +16,13 @@ import { QueryClient, useQueryClient } from "react-query";
 import { IS_BOLD, IS_ITALIC, IS_UNDERLINE } from "../constants/lexical-constant";
 import { filterIsBetween } from "../plugins/events-plugin/events-components";
 
-const headingLevel: Record<string, HeadingLevel> = {
-  h1: HeadingLevel.HEADING_1,
-  h2: HeadingLevel.HEADING_2,
-  h3: HeadingLevel.HEADING_3,
-  h4: HeadingLevel.HEADING_4,
-  h5: HeadingLevel.HEADING_5,
-  h6: HeadingLevel.HEADING_6,
+const headingLevel: Record<number, HeadingLevel> = {
+  1: HeadingLevel.HEADING_1,
+  2: HeadingLevel.HEADING_2,
+  3: HeadingLevel.HEADING_3,
+  4: HeadingLevel.HEADING_4,
+  5: HeadingLevel.HEADING_5,
+  6: HeadingLevel.HEADING_6,
 };
 
 export async function convertLexicalToDocx(
@@ -176,5 +177,134 @@ export function useConvertLexicalToDocx() {
   const queryClient = useQueryClient();
   return (lexicalJSON: any, dateTime: [string, string], title: string) => {
     return convertLexicalToDocx(lexicalJSON, queryClient, dateTime, title);
+  };
+}
+
+export async function convertHeadingsToDocx({
+  headings,
+  queryClient,
+  dateTime,
+  title,
+}: {
+  headings: HeadingsData[];
+  queryClient: QueryClient;
+  dateTime: [string, string];
+  title: string;
+}) {
+  const section: any = {
+    properties: {},
+    children: [],
+  };
+
+  // for title and datetime
+  const titleDocx = new Paragraph({
+    text: title,
+    heading: HeadingLevel.HEADING_1,
+    alignment: AlignmentType.CENTER,
+  });
+
+  const dateTimeDocx = new Paragraph({
+    text: `Từ ngày: ${dateTime[0]} đến ngày ${dateTime[1]}`,
+    alignment: AlignmentType.CENTER,
+  });
+
+  section.children.push(titleDocx);
+  section.children.push(dateTimeDocx);
+
+  for (const heading of headings) {
+    const headingDocx = new Paragraph({
+      text: heading.title,
+      heading: headingLevel[heading.level],
+    });
+    section.children.push(headingDocx);
+
+    const paragraph = new Paragraph({
+      children: [],
+    });
+
+    heading?.eventIds?.forEach(async (event_id) => {
+      var event = queryClient.getQueryData<IEventDto>(["event", event_id]);
+      if (!event) {
+        event = await queryClient.fetchQuery<IEventDto>({
+          queryKey: ["event", event_id],
+          queryFn: () => getEvent(event_id),
+        });
+      }
+
+      if (
+        dateTime[0] &&
+        dateTime[1] &&
+        !filterIsBetween(event?.date_created ?? null, dateTime[0], dateTime[1])
+      ) {
+        return;
+      }
+
+      const name = new TextRun({
+        text: event.event_name,
+        bold: true,
+      });
+
+      const time = new TextRun({
+        text: `Thời gian: ${event.date_created}`,
+        break: 1,
+      });
+
+      const content = new TextRun({
+        text: event.event_content,
+        italics: true,
+        break: 1,
+      });
+
+      paragraph.addChildElement(name);
+      paragraph.addChildElement(time);
+      paragraph.addChildElement(content);
+
+      if (Array.isArray(event.new_list) && event.new_list.length > 0) {
+        const title = new TextRun({
+          text: "Danh sách tin nói về sự kiện:",
+          break: 1,
+        });
+
+        paragraph.addChildElement(title);
+
+        event.new_list.forEach((newItem) => {
+          const newTitle = new ExternalHyperlink({
+            children: [
+              new TextRun({
+                text: newItem["data:title"],
+                break: 1,
+                style: "Hyperlink",
+              }),
+            ],
+            link: newItem["data:url"],
+          });
+          paragraph.addChildElement(newTitle);
+        });
+      }
+      paragraph.addChildElement(new TextRun({ break: 1 }));
+    });
+
+    section.children.push(paragraph);
+  }
+
+  return new Document({
+    creator: "VOSINT",
+    description: "",
+    sections: [section],
+  });
+}
+
+export function useConvertHeadingsToDocx() {
+  const queryClient = useQueryClient();
+  return ({
+    headings,
+    dateTime,
+    title,
+  }: {
+    headings: HeadingsData[];
+    dateTime: [string, string];
+    title: string;
+  }) => {
+    return convertHeadingsToDocx({ headings, queryClient, dateTime, title });
   };
 }

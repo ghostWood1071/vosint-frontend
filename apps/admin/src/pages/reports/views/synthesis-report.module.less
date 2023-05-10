@@ -1,0 +1,45 @@
+.root {
+  padding: 20px;
+
+  .outline {
+    :global {
+      .table-of-contents {
+        height: calc(100vh - 193px);
+      }
+    }
+
+    .affix {
+      position: sticky;
+      top: 24px;
+    }
+  }
+
+  .container {
+    outline: 1px solid #c7c7c7;
+    padding: 20px;
+
+    .title {
+      text-align: center;
+
+      :global {
+        .ant-typography {
+          margin-bottom: 0;
+        }
+      }
+    }
+
+    .save {
+      margin: 10px 0;
+      :global {
+        .anticon svg {
+          width: 1em;
+          height: 1em;
+        }
+      }
+    }
+  }
+
+  .center {
+    text-align: center;
+  }
+}
