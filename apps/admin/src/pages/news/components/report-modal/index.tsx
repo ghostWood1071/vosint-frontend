@@ -1,13 +1,7 @@
-import { navigationItemLevel } from "@/components/editor/plugins/table-of-contents-plugin";
-import {
-  CACHE_KEYS,
-  useAddEventIdsToReport,
-  useCreateReportEvents,
-  useReports,
-  useUpdateReport,
-} from "@/pages/reports/report.loader";
+import { navigationItemLevel } from "@/pages/reports/components/heading-toc";
+import { HeadingsData } from "@/pages/reports/components/headings";
+import { CACHE_KEYS, useReports, useUpdateReport } from "@/pages/reports/report.loader";
 import { IEventDto, TReport } from "@/services/report-type";
-import type { HeadingTagType } from "@lexical/rich-text";
 import {
   Col,
   Input,
@@ -23,6 +17,8 @@ import {
   message,
 } from "antd";
 import classNames from "classnames";
+import produce from "immer";
+import _ from "lodash";
 import { useState } from "react";
 import { useQueryClient } from "react-query";
 import { shallow } from "zustand/shallow";
@@ -47,21 +43,6 @@ export function ReportModal(): JSX.Element {
     keepPreviousData: true,
   });
 
-  const { mutateAsync: createReportEvents } = useCreateReportEvents();
-  const { mutate: addEventIds, isLoading: isLoadingAddEvent } = useAddEventIdsToReport({
-    onSuccess: () => {
-      queryClient.invalidateQueries(CACHE_KEYS.REPORTS);
-
-      setEvent(null);
-      setFilter({
-        skip: 1,
-        limit: 10,
-        title: "",
-      });
-      setSelectedReport(null);
-      message.success("Thêm sự kiện vào báo cáo thành công");
-    },
-  });
   const { mutate: updateReport, isLoading: isLoadingUpdate } = useUpdateReport(
     selectedReport?._id ?? "",
     {
@@ -99,7 +80,7 @@ export function ReportModal(): JSX.Element {
       onCancel={handleCancel}
       onOk={handleOk}
       width="70%"
-      confirmLoading={isLoadingAddEvent || isLoadingUpdate}
+      confirmLoading={isLoadingUpdate}
       getContainer="#modal-mount"
     >
       <Row gutter={[16, 16]}>
@@ -141,9 +122,7 @@ export function ReportModal(): JSX.Element {
               <Typography.Title level={3} italic={true}>
                 {selectedReport.title}
               </Typography.Title>
-              <TableOfContents
-                tableOfContent={JSON.parse(selectedReport?.content)?.root?.children}
-              />
+              <TableOfContents headingsData={selectedReport?.headings ?? []} />
             </>
           )}
         </Col>
@@ -171,41 +150,27 @@ export function ReportModal(): JSX.Element {
 
   async function handleOk() {
     if (!selectedReport || selectedHeading === null || events === null) return;
-    const contentParsed = JSON.parse(selectedReport?.content);
-    const current = contentParsed.root.children[selectedHeading];
-    const next = contentParsed.root.children[selectedHeading + 1];
+    const headingsUpdated = produce(selectedReport, (draft) => {
+      const selected = draft.headings.find((h) => h.id === selectedHeading);
+      if (!selected) return;
 
-    if (current?.type === "heading" && next?.type === "events") {
-      addEventIds({
-        id: next.id!,
-        data:
-          events?.map((e: IEventDto) => {
-            return e._id + "";
-          }) ?? [],
-      });
-    } else {
-      const createdEventsId = await createReportEvents({
-        event_ids: events?.map((e: IEventDto) => {
-          return e._id + "";
-        }),
-      });
-      contentParsed.root.children.splice(selectedHeading + 1, 0, {
-        type: "events",
-        id: createdEventsId,
-        version: 1,
-      });
-      updateReport({
-        content: JSON.stringify(contentParsed),
-      });
-    }
+      selected.eventIds = _.union(
+        selected.eventIds,
+        events.map((e) => e._id),
+      ) as string[];
+    });
+
+    updateReport({
+      headings: headingsUpdated.headings,
+    });
   }
 }
 
 interface TableOfContentsProps {
-  tableOfContent: Array<any>;
+  headingsData: HeadingsData[];
 }
 
-function TableOfContents({ tableOfContent }: TableOfContentsProps): JSX.Element {
+function TableOfContents({ headingsData }: TableOfContentsProps): JSX.Element {
   const [selectedHeading, setSelectedHeading] = useReportModalState(
     (state) => [state.selectedHeading, state.setSelectedHeading],
     shallow,
@@ -214,26 +179,19 @@ function TableOfContents({ tableOfContent }: TableOfContentsProps): JSX.Element 
   return (
     <div className={styles.tableOfContents}>
       <div className={styles.navigationItemList} tabIndex={0}>
-        {tableOfContent.map((children, index) => {
-          if (children.type !== "heading") return null;
-
+        {headingsData.map(({ id, level, title }) => {
           return (
             <div
               className={classNames({
                 [styles.navigationItem]: true,
-                [styles.locationIndicatorHighlight]: selectedHeading === index,
+                [styles.locationIndicatorHighlight]: selectedHeading === id,
               })}
-              onClick={() => setSelectedHeading(index)}
+              onClick={() => setSelectedHeading(id)}
               role="menuitem"
-              key={index}
+              key={id}
             >
-              <div
-                className={classNames(
-                  styles.navigationItemContent,
-                  navigationItemLevel[children?.tag as HeadingTagType],
-                )}
-              >
-                {children?.children[0]?.text}
+              <div className={classNames(styles.navigationItemContent, navigationItemLevel[level])}>
+                {title}
               </div>
             </div>
           );
