@@ -46,14 +46,14 @@ export const SettingTable: React.FC<Props> = ({ data, listProxy, accountMonitor,
       title: "Tài khoản",
       dataIndex: "username",
       render: (name: string) => {
-        return <p>{name}</p>;
+        return <div>{name}</div>;
       },
     },
     {
       title: "Mật khẩu",
       dataIndex: "password",
       render: (date: string) => {
-        return <p>{date}</p>;
+        return <div>{date}</div>;
       },
     },
     {
@@ -117,6 +117,7 @@ export const SettingTable: React.FC<Props> = ({ data, listProxy, accountMonitor,
         columns={columns}
         dataSource={data?.result}
         rowKey="name"
+        size="middle"
         pagination={{ position: ["bottomCenter"] }}
         loading={loading}
       />

@@ -9,6 +9,7 @@ import { buildTree, getAllChildIds } from "@/pages/news/news.utils";
 import { NewsletterDto } from "@/services/news.type";
 import { PlusOutlined } from "@ant-design/icons";
 import { Button, Card, Col, Input, List, PageHeader, Row, Typography } from "antd";
+import { Descriptions } from "antd";
 import { useSearchParams } from "react-router-dom";
 import { shallow } from "zustand/shallow";
 
@@ -58,14 +59,9 @@ export const CategoryNewsConfig = () => {
             <div className={styles.nameCategory}>Mô tả</div>
             <Row className={styles.row} align="stretch">
               {dataDetail?.title && (
-                <>
-                  <Col span={6} className={styles.itemLabel}>
-                    Tên lĩnh vực
-                  </Col>
-                  <Col span={18} className={styles.itemContent}>
-                    {dataDetail?.title}
-                  </Col>
-                </>
+                <Descriptions.Item label="Tên lĩnh vực" span={3} className={styles.description}>
+                  {dataDetail?.title}
+                </Descriptions.Item>
               )}
               {(dataDetail?.required_keyword?.length ?? 0) > 0 && (
                 <>
