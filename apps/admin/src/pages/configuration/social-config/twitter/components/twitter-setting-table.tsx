@@ -49,13 +49,13 @@ export const TwSettingTable: React.FC<Props> = ({
   const pageSize = searchParams.get("limit");
   const columns: TableColumnsType<any> = [
     {
-      title: <p className={styles.namecolumn}>Tên</p>,
+      title: <div className={styles.namecolumn}>Tên</div>,
       dataIndex: "social_name",
       render: (name: string, data: any) => {
         return (
           <div className={styles.namerow}>
             <Avatar src={data.avatar_url} onClick={handleRouter} className={styles.avatar} />
-            <p>{name}</p>
+            <div className={styles.name}>{name}</div>
           </div>
         );
         function handleRouter() {
@@ -67,7 +67,7 @@ export const TwSettingTable: React.FC<Props> = ({
       title: "ID",
       dataIndex: "_id",
       render: (id: string) => {
-        return <p>{id}</p>;
+        return <div>{id}</div>;
       },
     },
     {
@@ -112,6 +112,7 @@ export const TwSettingTable: React.FC<Props> = ({
         columns={columns}
         dataSource={data?.result}
         rowKey="name"
+        size="small"
         pagination={{
           position: ["bottomCenter"],
           total: data?.total_record,

@@ -97,6 +97,7 @@ export const UserManagerTable: React.FC<Props> = ({
       columns={columns}
       dataSource={dataSource}
       rowKey="_id"
+      size="middle"
       loading={isLoading}
       pagination={{
         position: ["bottomCenter"],
