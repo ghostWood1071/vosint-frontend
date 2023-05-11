@@ -1,5 +1,4 @@
 import { OutlineFileWordIcon } from "@/assets/icons";
-import { ReportIcon } from "@/assets/svg";
 import { useEventsState } from "@/components/editor/plugins/events-plugin/events-state";
 import { downloadFile } from "@/components/editor/utils";
 import { useConvertHeadingsToDocx } from "@/components/editor/utils/docx";
@@ -12,6 +11,7 @@ import {
   UnorderedListOutlined,
 } from "@ant-design/icons";
 import {
+  Alert,
   Button,
   Card,
   Col,
@@ -28,12 +28,18 @@ import {
 import { Packer } from "docx";
 import produce from "immer";
 import moment from "moment";
-import { useState } from "react";
+import { nanoid } from "nanoid";
+import { useEffect, useState } from "react";
 import { useQueryClient } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import { shallow } from "zustand/shallow";
 
 import { HeadingToc } from "../components/heading-toc";
+import {
+  HeadingTocProvider,
+  useHeadingTocContext,
+  useHeadingTocDispatchContext,
+} from "../components/heading-toc.context";
 import { Headings, HeadingsData } from "../components/headings";
 import {
   CACHE_KEYS,
@@ -44,7 +50,7 @@ import {
 } from "../report.loader";
 import styles from "./synthesis-report.module.less";
 
-export function SynthesisReportDetail(): JSX.Element {
+export function SynthesisReport(): JSX.Element {
   const { id } = useParams<{ id: string }>();
   const { data, isLoading } = useReport(id!, {
     enabled: !!id,
@@ -58,7 +64,6 @@ export function SynthesisReportDetail(): JSX.Element {
   const queryClient = useQueryClient();
 
   const [headings, setHeadings] = useState<HeadingsData[]>([]);
-  const [isCreateHeading, setIsCreateHeading] = useState(false);
   const [form] = Form.useForm();
   const [title, setTitle] = useState("Tên báo cáo");
   const [isOpen, setIsOpen] = useState(true);
@@ -75,14 +80,13 @@ export function SynthesisReportDetail(): JSX.Element {
     },
   });
   const { mutate: deleteReport, isLoading: isDeleting } = useDeleteReport();
-  const { mutate: updateReport } = useUpdateReport(id!, {
+  const { mutate: updateReport, isLoading: isUpdating } = useUpdateReport(id!, {
     onSuccess: (_, variables) => {
       setHeadings(variables?.headings ?? []);
     },
   });
 
   const convertHeadingsToDocx = useConvertHeadingsToDocx();
-
   const handleDeleteEvent = (headingId: string) => (eventId: string) => {
     const deletedEventsHeadings = produce(headings, (draft) => {
       const headingIndex = draft.findIndex((heading) => heading.id === headingId);
@@ -99,11 +103,30 @@ export function SynthesisReportDetail(): JSX.Element {
     });
   };
 
+  // HeadingTOC
+  const { mode, selectedIndex } = useHeadingTocContext();
+  const { setMode, setSelectedIndex } = useHeadingTocDispatchContext();
+
+  useEffect(() => {
+    if (mode === "delete") {
+      return;
+    }
+
+    if (mode === "update") {
+      const selectedHeading = headings[selectedIndex!];
+      form.setFieldsValue(selectedHeading);
+    }
+
+    if (mode === "create") {
+      form.resetFields();
+    }
+  }, [mode]);
+
   return (
     <div className={styles.root}>
       <Card bordered={false} loading={isLoading}>
         <Row>
-          <Col span={isOpen ? 4 : 1} className={styles.outline}>
+          <Col span={isOpen ? 6 : 1} className={styles.outline}>
             <div className={styles.affix}>
               {isOpen ? (
                 <Button
@@ -144,29 +167,9 @@ export function SynthesisReportDetail(): JSX.Element {
               <Col span={4}>
                 <Space>
                   <Button
-                    className={styles.save}
-                    icon={<ReportIcon />}
-                    title="Tạo tiêu đề mới"
-                    onClick={handleOpenCreateHeading}
-                  />
-                  <Button
                     title="Xuất file ra docx"
                     icon={<OutlineFileWordIcon />}
                     onClick={handleExportDocx}
-                  />
-                  <Button
-                    className={styles.save}
-                    icon={<SaveOutlined />}
-                    type="primary"
-                    title="Lưu báo cáo"
-                    onClick={handleSave}
-                  />
-                  <Button
-                    icon={<DeleteOutlined />}
-                    danger
-                    title="Xoá báo cáo"
-                    onClick={handleDelete}
-                    loading={isDeleting}
                   />
                 </Space>
               </Col>
@@ -186,65 +189,79 @@ export function SynthesisReportDetail(): JSX.Element {
 
             <Headings headingsData={headings} onDeleteEvent={handleDeleteEvent} />
           </Col>
-          <Col span={isOpen ? 4 : 1}></Col>
+          <Col span={isOpen ? 2 : 1} className={styles.action}>
+            <Space>
+              <Button
+                className={styles.save}
+                icon={<SaveOutlined />}
+                type="primary"
+                title="Lưu báo cáo"
+                onClick={handleSave}
+              />
+              <Button
+                icon={<DeleteOutlined />}
+                danger
+                title="Xoá báo cáo"
+                onClick={handleDelete}
+                loading={isDeleting}
+              />
+            </Space>
+          </Col>
         </Row>
       </Card>
 
       <Modal
-        title="Tạo tiêu đề mới"
-        open={isCreateHeading}
-        onCancel={handleCloseCreateHeading}
+        open={mode !== null}
+        title={
+          mode === "create"
+            ? "Thêm tiêu đề bên dưới"
+            : mode === "update"
+            ? "Chỉnh sửa tiêu đề"
+            : "Xóa tiêu đề"
+        }
+        onCancel={() => setMode(null)}
         getContainer={"#modal-mount"}
-        onOk={() => {
-          form.validateFields().then((values) => {
-            form.resetFields();
-            const id = Math.random().toString();
-            setIsCreateHeading(false);
-            setHeadings((prev) => [
-              ...prev,
-              {
-                id,
-                ...values,
-                eventIds: [],
-              },
-            ]);
-          });
-        }}
+        closable={false}
+        onOk={handleOK}
+        confirmLoading={isUpdating}
       >
-        <Form
-          form={form}
-          labelCol={{
-            span: 6,
-          }}
-          initialValues={{
-            level: 1,
-          }}
-        >
-          <Form.Item
-            label="Tên tiêu đề"
-            name="title"
-            rules={[
-              {
-                required: true,
-                whitespace: true,
-                message: "Vui lòng nhập tên tiêu đề",
-              },
-            ]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item label="Level" name="level">
-            <Select
-              options={[
-                { label: "Heading 1", value: 1 },
-                { label: "Heading 2", value: 2 },
-                { label: "Heading 3", value: 3 },
-                { label: "Heading 4", value: 4 },
-                { label: "Heading 5", value: 5 },
+        {mode === "delete" && (
+          <Alert
+            message="Bạn có chắc chắn muốn xóa tiêu đề này?"
+            description="Tất cả các sự kiện bên trong tiêu đề này sẽ bị xóa."
+            type="warning"
+            showIcon
+          />
+        )}
+
+        {mode !== "delete" && (
+          <Form form={form} labelCol={{ span: 6 }} initialValues={{ level: 1 }}>
+            <Form.Item
+              label="Tên tiêu đề"
+              name="title"
+              rules={[
+                {
+                  required: true,
+                  whitespace: true,
+                  message: "Vui lòng nhập tên tiêu đề",
+                },
               ]}
-            />
-          </Form.Item>
-        </Form>
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item label="Level" name="level">
+              <Select
+                options={[
+                  { label: "Heading 1", value: 1 },
+                  { label: "Heading 2", value: 2 },
+                  { label: "Heading 3", value: 3 },
+                  { label: "Heading 4", value: 4 },
+                  { label: "Heading 5", value: 5 },
+                ]}
+              />
+            </Form.Item>
+          </Form>
+        )}
       </Modal>
     </div>
   );
@@ -255,14 +272,6 @@ export function SynthesisReportDetail(): JSX.Element {
 
   function handleSave() {
     mutate({ title, headings });
-  }
-
-  function handleOpenCreateHeading() {
-    setIsCreateHeading(true);
-  }
-
-  function handleCloseCreateHeading() {
-    setIsCreateHeading(false);
   }
 
   function handleDelete() {
@@ -296,4 +305,59 @@ export function SynthesisReportDetail(): JSX.Element {
       downloadFile(blob, "bao-cao-tong-hop.docx");
     });
   }
+
+  // Handle CRUD heading toc
+  function handleOK() {
+    form.validateFields().then((values) => {
+      const updatedHeadings = produce(headings, (draft) => {
+        if (mode === "create") {
+          if (selectedIndex !== null) {
+            draft.splice(selectedIndex + 1, 0, {
+              id: nanoid(),
+              title: values.title,
+              level: values.level,
+              eventIds: [],
+            });
+            return;
+          }
+
+          headings.push({
+            id: nanoid(),
+            title: values.title,
+            level: values.level,
+            eventIds: [],
+          });
+        }
+
+        if (mode === "update") {
+          draft[selectedIndex!].title = values.title;
+          draft[selectedIndex!].level = values.level;
+        }
+
+        if (mode === "delete") {
+          draft.splice(selectedIndex!, 1);
+        }
+      });
+      updateReport(
+        { headings: updatedHeadings },
+        {
+          onSuccess: () => {
+            setHeadings(updatedHeadings);
+            // Reset form
+            message.success(`Đã ${mode === "delete" ? "xoá" : "lưu"} tiêu đề`);
+            setMode(null);
+            setSelectedIndex(null);
+          },
+        },
+      );
+    });
+  }
+}
+
+export function SynthesisReportDetail(): JSX.Element {
+  return (
+    <HeadingTocProvider>
+      <SynthesisReport />
+    </HeadingTocProvider>
+  );
 }
