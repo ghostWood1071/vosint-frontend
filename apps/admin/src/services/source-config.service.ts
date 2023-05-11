@@ -2,7 +2,7 @@ import { apiClient, filterEmptyString } from "@/utils/api";
 
 import { IPipelineSource } from "./source-config.type";
 
-const apiNewsSourceConfigBaseV2Url = "/v2";
+const apiNewsSourceConfigBaseV2Url = "";
 
 export const getPipelineSource = async () => {
   return apiClient

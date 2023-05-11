@@ -1,3 +1,5 @@
+import { HeadingsData } from "@/pages/reports/components/headings";
+
 export type TEvent = {
   event_name: string;
   event_content: string;
@@ -27,7 +29,7 @@ export interface IEventDto {
 export type TReport = {
   _id: string;
   title: string;
-  content: string;
+  headings: HeadingsData[];
 };
 
 export type TReports = {
@@ -37,7 +39,7 @@ export type TReports = {
 
 export interface IReportDto {
   title?: string;
-  content?: string;
+  headings?: HeadingsData[];
 }
 
 export type TReportContent = {

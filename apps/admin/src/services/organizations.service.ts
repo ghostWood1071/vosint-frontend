@@ -1,6 +1,6 @@
 import { apiClient, filterEmptyString } from "@/utils/api";
 
-const apiBaseUrlV2 = "/v2";
+const apiBaseUrlV2 = "";
 
 export const getOrganizationsSidebar = async () => {
   const result = await apiClient.get<any>(`organizations-sidebar`);

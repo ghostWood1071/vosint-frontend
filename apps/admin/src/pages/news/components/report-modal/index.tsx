@@ -18,7 +18,7 @@ import {
 } from "antd";
 import classNames from "classnames";
 import produce from "immer";
-import _ from "lodash";
+import * as _ from "lodash";
 import { useState } from "react";
 import { useQueryClient } from "react-query";
 import { shallow } from "zustand/shallow";

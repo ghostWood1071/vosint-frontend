@@ -1,7 +1,7 @@
 import { apiClient, filterEmptyString } from "@/utils/api";
 
 const apiJobBaseUrl = "/pipeline/Job/api";
-const apiPriorityObjectBaseV2Url = "/v2";
+const apiPriorityObjectBaseV2Url = "";
 
 export const gePriorityObject = async (filter: any) => {
   const result = await apiClient.get<any>(

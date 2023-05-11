@@ -1,6 +1,6 @@
 import { apiClient, filterEmptyString } from "@/utils/api";
 
-const apiNewsBaseV2Url = "/v2";
+const apiNewsBaseV2Url = "";
 
 export const getAllEventCreatedByUser = async (filter: any) => {
   const result = await apiClient.get<any>(`${apiNewsBaseV2Url}/event/search/`, {

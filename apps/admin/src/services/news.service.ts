@@ -2,7 +2,7 @@ import { apiClient, filterEmptyString } from "@/utils/api";
 
 import type { INewsSummaryDto } from "./news.type";
 
-const apiNewsBaseV2Url = "/v2";
+const apiNewsBaseV2Url = "";
 const apiSummBaseUrl = "/summ";
 
 export const getNewsSidebar = async (title?: string) => {

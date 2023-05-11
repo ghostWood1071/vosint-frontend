@@ -2,7 +2,7 @@ import { apiClient, filterEmptyString } from "@/utils/api";
 
 import { IProxyPipelineOptions } from "./cate-config.type";
 
-const apiCateConfigBaseV2Url = "/v2";
+const apiCateConfigBaseV2Url = "";
 
 //get
 export const getObjectCateConfig = async (filter: any) => {

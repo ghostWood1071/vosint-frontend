@@ -2,7 +2,7 @@ import { apiClient } from "@/utils/api";
 
 import { IChangePasswordDto } from "./auth.type";
 
-const apiAuthBaseUrl = "/v2";
+const apiAuthBaseUrl = "";
 
 export const loginAuth = async (data: any) => {
   const url = `${apiAuthBaseUrl}/login`;

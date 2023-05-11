@@ -1,6 +1,6 @@
 import { apiClient, filterEmptyString } from "@/utils/api";
 
-const apiUserBaseUrl = "/v2";
+const apiUserBaseUrl = "";
 
 export const getUsers = async (filter: Record<string, string>) => {
   const result = await apiClient.get<any>(`${apiUserBaseUrl}/user`, {

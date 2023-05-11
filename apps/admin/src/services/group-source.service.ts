@@ -1,6 +1,6 @@
 import { apiClient, filterEmptyString } from "@/utils/api";
 
-const apiGroupSourceConfigBaseV2Url = "/v2";
+const apiGroupSourceConfigBaseV2Url = "";
 
 export const getGroupSource = async (filter: any) => {
   const result = await apiClient.get<any>(
