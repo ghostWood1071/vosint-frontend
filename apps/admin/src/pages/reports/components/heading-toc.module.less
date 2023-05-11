@@ -15,6 +15,10 @@
     // padding-left: 24px;
   }
 
+  .icon {
+    padding-right: 24px;
+  }
+
   .navigation-item-list {
     padding-right: 16px;
     user-select: none;
@@ -24,12 +28,6 @@
       user-select: none;
       padding-right: 8px;
 
-      color: #5f6368;
-      font-size: 14px;
-      font-weight: 400;
-      letter-spacing: 0.2px;
-
-      background: none;
       cursor: pointer;
       height: 32px;
       line-height: 32px;
@@ -45,21 +43,49 @@
         }
       }
 
+      :global {
+        .ant-typography {
+          padding-left: 16px;
+        }
+      }
+
       &.location-indicator-highlight {
-        color: #1967d2;
+        color: #1967d2 !important;
 
-        .navigation-item-content {
-          color: #1967d2;
+        :global {
+          .ant-typography {
+            color: #1967d2 !important;
 
-          &::before {
-            content: "-";
-            left: 8px;
+            &::before {
+              content: "-";
+              left: 8px;
 
-            font-size: 17px;
-            font-weight: 500;
-            position: absolute;
+              font-size: 17px;
+              font-weight: 500;
+              position: absolute;
+            }
           }
         }
+      }
+
+      .ellips {
+        transform: rotate(90deg);
+      }
+
+      .delete {
+        color: #ff4d4f;
+      }
+
+      .edit {
+        color: #1890ff;
+      }
+
+      .plus {
+        color: #096dd9;
+      }
+
+      .right {
+        text-align: right;
       }
     }
   }
