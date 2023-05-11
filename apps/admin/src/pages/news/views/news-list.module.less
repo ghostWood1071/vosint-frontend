@@ -1,3 +1,36 @@
 .main-container {
-  padding: 10px;
+  min-height: calc(100vh - 49px);
+  max-height: calc(100vh - 167px);
+  border-top: 1px solid rgba(240, 240, 240, 1);
+  padding-top: 52px;
+  .bodyNews {
+    padding: 10px;
+    min-height: calc(100vh - 109px);
+    max-height: calc(100vh - 227px);
+    &:hover::-webkit-scrollbar-thumb {
+      background-color: #9da5b1;
+    }
+
+    &::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+
+    &::-webkit-scrollbar-corner {
+      background-color: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: transparent;
+      border: 2px solid transparent;
+      background-clip: padding-box;
+      border-radius: 6px;
+      transition: cubic-bezier(0.165, 0.84, 0.44, 1);
+    }
+    overflow-y: auto;
+  }
+}
+
+#container {
+  overflow-y: inherit;
 }

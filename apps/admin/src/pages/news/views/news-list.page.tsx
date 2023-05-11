@@ -1,18 +1,18 @@
 import { ETreeTag, useNewsSelection } from "@/components/news/news-state";
 import { useGetMe } from "@/pages/auth/auth.loader";
-import { List } from "antd";
 import { flatMap, unionBy } from "lodash";
 import React, { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import { useQueryClient } from "react-query";
 import { shallow } from "zustand/shallow";
 
-import { NewsItem } from "../components/news-item";
+import { NewsTableItem } from "../components/table-news";
 import { useNewsFilter } from "../news.context";
 import {
   CACHE_KEYS,
   useDeleteNewsInNewsletter,
   useInfiniteNewsList,
+  useMutationChangeStatusSeenPost,
   useNewsIdToNewsletter,
 } from "../news.loader";
 import styles from "./news-list.module.less";
@@ -24,15 +24,12 @@ export const NewsListPage: React.FC<Props> = () => {
   const queryClient = useQueryClient();
   const { ref, inView } = useInView();
   const newsFilter = useNewsFilter();
-  const { data, isFetchingNextPage, isFetching, fetchNextPage, hasNextPage } =
-    useInfiniteNewsList(newsFilter);
-  const { data: dataIAm, isLoading: isLoadingIAm } = useGetMe();
+  const { data, isFetchingNextPage, fetchNextPage, hasNextPage } = useInfiniteNewsList(newsFilter);
+  const { data: dataIAm } = useGetMe();
+  const { mutate: mutateChangeStatusSeenPost } = useMutationChangeStatusSeenPost();
   const { mutateAsync: mutateDelete } = useDeleteNewsInNewsletter();
   const { mutate: mutateAdd } = useNewsIdToNewsletter();
-  const [newsSelection, setNewsSelection] = useNewsSelection(
-    (state) => [state.newsSelection, state.setNewsSelection],
-    shallow,
-  );
+  const [setNewsSelection] = useNewsSelection((state) => [state.setNewsSelection], shallow);
   const dataSource = unionBy(
     flatMap(
       data?.pages.map((a) =>
@@ -45,6 +42,7 @@ export const NewsListPage: React.FC<Props> = () => {
     ),
     "_id",
   );
+
   useEffect(() => {
     queryClient.removeQueries([CACHE_KEYS.NewsList]);
     setSkip(1);
@@ -62,6 +60,7 @@ export const NewsListPage: React.FC<Props> = () => {
   useEffect(() => {
     queryClient.removeQueries([CACHE_KEYS.NewsList]);
     setNewsSelection([]);
+    fetchNextPage({ pageParam: { page_number: 1, page_size: 30 } });
     setSkip(1);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [newsFilter]);
@@ -71,36 +70,45 @@ export const NewsListPage: React.FC<Props> = () => {
   }, [skip]);
   return (
     <div className={styles.mainContainer}>
-      <List
-        itemLayout="vertical"
-        size="small"
-        dataSource={dataSource}
-        renderItem={(item) => {
-          return (
-            <NewsItem
-              item={item}
-              onDelete={handleDelete}
-              onAdd={handleAdd}
-              lengthDataSource={dataSource?.length}
-            />
-          );
-        }}
-        loading={isLoadingIAm}
-      />
-      <div>
-        {skip >= 1 ? (
-          <button
-            ref={ref}
-            disabled={!hasNextPage || isFetchingNextPage}
-            style={{ padding: 0, margin: 0, border: 0 }}
-          >
-            {isFetchingNextPage ? "Đang lấy thêm tin..." : ""}
-          </button>
-        ) : null}
+      <div className={styles.bodyNews}>
+        <table style={{ width: "100%" }}>
+          <tbody>
+            {dataSource.map((item) => (
+              <NewsTableItem
+                userId={dataIAm._id}
+                key={item._id}
+                item={item}
+                onDelete={handleDelete}
+                onAdd={handleAdd}
+                typeTranslate={newsFilter.type_translate}
+                lengthDataSource={dataSource?.length}
+                setSeen={handleSetSeen}
+              />
+            ))}
+          </tbody>
+        </table>
+        <div>
+          {skip >= 1 ? (
+            <button
+              ref={ref}
+              disabled={!hasNextPage || isFetchingNextPage}
+              style={{ padding: 0, margin: 0, border: 0 }}
+            >
+              {isFetchingNextPage ? "Đang lấy thêm tin..." : ""}
+            </button>
+          ) : null}
+        </div>
       </div>
-      <div>{isFetching && !isFetchingNextPage ? "Giao diện đang cập nhật..." : null}</div>
     </div>
   );
+
+  function handleSetSeen(checkedSeen: boolean, idNews: string) {
+    if (checkedSeen) {
+      mutateChangeStatusSeenPost({ action: "set-seen", newsId: idNews });
+    } else {
+      mutateChangeStatusSeenPost({ action: "set-unseen", newsId: idNews });
+    }
+  }
 
   function handleDelete(newsId: string, tag?: ETreeTag) {
     return mutateDelete({

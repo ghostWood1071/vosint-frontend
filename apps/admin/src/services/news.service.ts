@@ -200,3 +200,13 @@ export const AddManyEventToNews = async (data: any, news_id: string) => {
   const result = await apiClient.put<any>(`${apiNewsBaseV2Url}/event/add-event/${news_id}`, data);
   return result.data;
 };
+
+export const SetSeenPost = async (newsId: string) => {
+  const result = await apiClient.post<any>(`${apiNewsBaseV2Url}/news/read/${newsId}`);
+  return result.data;
+};
+
+export const SetNotSeenPost = async (newsId: string) => {
+  const result = await apiClient.post<any>(`${apiNewsBaseV2Url}/news/unread/${newsId}`);
+  return result.data;
+};
