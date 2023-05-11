@@ -79,7 +79,7 @@ export function SynthesisReport(): JSX.Element {
     <div className={styles.root}>
       <Card bordered={false}>
         <Row>
-          <Col span={isOpen ? 6 : 1} className={styles.outline}>
+          <Col span={isOpen ? 5 : 1} className={styles.outline}>
             <div className={styles.affix}>
               {isOpen ? (
                 <Button
