@@ -75,24 +75,27 @@ export const EventPage: React.FC<Props> = () => {
           </Button>
         </Space>
       </div>
-      <List
-        itemLayout="vertical"
-        size="small"
-        dataSource={dataSource}
-        renderItem={(item) => {
-          return (
-            <EventItem
-              item={item}
-              onClickDelete={handleClickDelete}
-              onClickEdit={handleClickEdit}
-              eventChoosedList={eventChoosedList}
-              lengthDataSource={dataSource?.length}
-              setEventChoosedList={setEventChoosedList}
-              onClickReport={handleClickReport}
-            />
-          );
-        }}
-      />
+      <div className={styles.body}>
+        <List
+          itemLayout="vertical"
+          size="small"
+          dataSource={dataSource}
+          renderItem={(item) => {
+            return (
+              <EventItem
+                item={item}
+                onClickDelete={handleClickDelete}
+                onClickEdit={handleClickEdit}
+                eventChoosedList={eventChoosedList}
+                lengthDataSource={dataSource?.length}
+                setEventChoosedList={setEventChoosedList}
+                onClickReport={handleClickReport}
+              />
+            );
+          }}
+        />
+      </div>
+
       {isOpenModal ? (
         <EditEventModal
           isOpen={isOpenModal}
@@ -115,7 +118,6 @@ export const EventPage: React.FC<Props> = () => {
           </button>
         ) : null}
       </div>
-      <div>{isFetching && !isFetchingNextPage ? "Giao diện đang cập nhật..." : null}</div>
     </div>
   );
 

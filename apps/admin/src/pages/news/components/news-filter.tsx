@@ -50,12 +50,12 @@ export function NewsFilter(): JSX.Element {
           <Form.Item noStyle name="datetime">
             <DatePicker.RangePicker format={"DD/MM/YYYY"} />
           </Form.Item>
-          {/* <Form.Item noStyle> */}
-          <Select placeholder="Dịch" defaultValue="nuoc-ngoai">
-            <Select.Option key="nuoc-ngoai">Dịch tiếng nước ngoài</Select.Option>
-            <Select.Option key="nguon">Hiển thị ngôn ngữ nguồn</Select.Option>
-          </Select>
-          {/* </Form.Item> */}
+          <Form.Item noStyle name={"type_translate"}>
+            <Select placeholder="Dịch" defaultValue="nuoc-ngoai">
+              <Select.Option key="nuoc-ngoai">Dịch tiếng nước ngoài</Select.Option>
+              <Select.Option key="nguon">Hiển thị ngôn ngữ nguồn</Select.Option>
+            </Select>
+          </Form.Item>
           <Form.Item noStyle name="language_source">
             <Select
               placeholder="Ngôn ngữ"
@@ -79,7 +79,7 @@ export function NewsFilter(): JSX.Element {
             </Select>
           </Form.Item>
           {/* <Form.Item noStyle name="title"> */}
-          <Input placeholder="Từ khoá" />
+          <Input.Search placeholder="Tìm kiếm" onSearch={handleSearch} />
           {/* </Form.Item> */}
           <Button disabled={newsSelectionIds.length === 0}>
             Tóm tắt tin ({newsSelectionIds.length})
@@ -117,6 +117,10 @@ export function NewsFilter(): JSX.Element {
       values.language_source = values?.language_source?.join(",");
     }
     setNewsFilter({ ...newsFilter, ...values });
+  }
+
+  function handleSearch(value: string) {
+    setNewsFilter({ ...newsFilter, text_search: value.trim() });
   }
 
   function handleAddBasket() {

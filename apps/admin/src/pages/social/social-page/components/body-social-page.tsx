@@ -77,7 +77,6 @@ export const BodySocialPage: React.FC<BodySocialPageProps> = ({ type, statisticD
                 </button>
               ) : null}
             </div>
-            <div>{isFetching && !isFetchingNextPage ? "Giao diện đang cập nhật..." : null}</div>
           </>
         ) : (
           <Statistic data={statisticData} />

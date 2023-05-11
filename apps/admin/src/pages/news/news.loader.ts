@@ -1,6 +1,8 @@
 import { ETreeAction, ETreeTag, MTreeAction, MTreeTag } from "@/components/news/news-state";
 import {
   AddManyEventToNews,
+  SetNotSeenPost,
+  SetSeenPost,
   addNewsIdsToBookmarkUser,
   addNewsIdsToNewsletter,
   addNewsIdsToVitalUser,
@@ -14,16 +16,13 @@ import {
   deleteNewsletter,
   getAllEventNews,
   getEventByIdNews,
-  getNewsBookmarks,
   getNewsBookmarksWithApiJob,
-  getNewsByNewsletter,
   getNewsByNewsletterWithApiJob,
   getNewsDetail,
   getNewsList,
   getNewsListWithApiJob,
   getNewsSidebar,
   getNewsSummary,
-  getNewsVitals,
   getNewsVitalsWithApiJob,
   getNewsletterDetail,
   updateEventNews,
@@ -168,6 +167,7 @@ export const useDeleteNewsInNewsletter = () => {
     {
       onSuccess: (_, variables) => {
         queryClient.invalidateQueries(["ME"]);
+        queryClient.invalidateQueries(CACHE_KEYS.NewsList);
         message.success(
           `Xoá khỏi ${
             variables.newsletterId === "quan_trong"
@@ -293,6 +293,28 @@ export const useMutationAddManyEvent = () => {
           key: CACHE_KEYS.NewsEvent,
         });
       },
+    },
+  );
+};
+export const useMutationChangeStatusSeenPost = () => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    ({ action, newsId }: any) => {
+      if (action === "set-seen") {
+        return SetSeenPost(newsId);
+      }
+
+      if (action === "set-unseen") {
+        return SetNotSeenPost(newsId);
+      }
+
+      throw new Error("action invalid");
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries([CACHE_KEYS.NewsList]);
+      },
+      onError: () => {},
     },
   );
 };
