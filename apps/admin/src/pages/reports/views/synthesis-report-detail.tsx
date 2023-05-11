@@ -126,7 +126,7 @@ export function SynthesisReport(): JSX.Element {
     <div className={styles.root}>
       <Card bordered={false} loading={isLoading}>
         <Row>
-          <Col span={isOpen ? 6 : 1} className={styles.outline}>
+          <Col span={isOpen ? 5 : 1} className={styles.outline}>
             <div className={styles.affix}>
               {isOpen ? (
                 <Button
@@ -321,7 +321,7 @@ export function SynthesisReport(): JSX.Element {
             return;
           }
 
-          headings.push({
+          draft.push({
             id: nanoid(),
             title: values.title,
             level: values.level,

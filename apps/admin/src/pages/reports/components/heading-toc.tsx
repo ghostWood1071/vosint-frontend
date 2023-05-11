@@ -67,7 +67,7 @@ export function HeadingToc({ headingsData }: Props): JSX.Element {
   return (
     <div className={cn(styles.tableOfContents, "scrollbar table-of-contents")}>
       <Row align="middle" justify="space-between">
-        <div className={styles.header}>Outline</div>
+        <div className={styles.header}>Mục lục</div>
         <div className={styles.icon}>
           <PlusCircleFilled onClick={handleAdd} />
         </div>
@@ -84,21 +84,21 @@ export function HeadingToc({ headingsData }: Props): JSX.Element {
             <Row
               key={id}
               justify={"space-between"}
-              className={cn({
-                [styles.navigationItem]: true,
-                [styles.locationIndicatorHighlight]: selectedKey === id,
-              })}
+              className={cn(
+                {
+                  [styles.navigationItem]: true,
+                  [styles.locationIndicatorHighlight]: selectedKey === id,
+                },
+                navigationItemLevel[level],
+              )}
               role="navigation"
               onClick={() => scrollToNode(id, index)}
               gutter={[8, 8]}
             >
-              {/* <div className={cn(styles.navigationItemContent, navigationItemLevel[level])}>
-                {title}
-              </div> */}
-              <Col span={19}>
+              <Col span={20} className={navigationItemLevel[level]}>
                 <Typography.Text ellipsis>{title}</Typography.Text>
               </Col>
-              <Col span={5} className={styles.right}>
+              <Col span={4} className={styles.right}>
                 {isOpen === id ? (
                   <Space>
                     <PlusOutlined
