@@ -11,6 +11,7 @@ import {
   Space,
   Table,
   TableColumnsType,
+  message,
   notification,
 } from "antd";
 import React, { useState } from "react";
@@ -26,7 +27,6 @@ interface Props {
   choosedGroupSource: any;
   functionAdd: (value: any) => void;
   functionEdit: (value: any) => void;
-  functionDelete: (value: any) => void;
 }
 
 const formItemLayoutWithOutLabel = {
@@ -44,7 +44,6 @@ export const AddGroupModal: React.FC<Props> = ({
   setIsOpen,
   choosedGroupSource,
   functionAdd,
-  functionDelete,
   functionEdit,
 }) => {
   const initialValues = type === "edit" ? { source_name: choosedGroupSource.source_name } : null;
@@ -61,20 +60,6 @@ export const AddGroupModal: React.FC<Props> = ({
     text_search: searchParams.get("text") ?? "",
   });
 
-  const openNotification = (placement: any, type: any) => {
-    if (type === "exited") {
-      api.info({
-        message: `Thông báo`,
-        description: "Nguồn tin đã được thêm.",
-        placement,
-      });
-    }
-  };
-
-  function handleDelete() {
-    functionDelete({ _id: choosedGroupSource._id });
-    setIsOpen(false);
-  }
   function handleCancel() {
     setIsOpen(false);
   }
@@ -117,33 +102,12 @@ export const AddGroupModal: React.FC<Props> = ({
       setListSource([...listSource, { id: item._id, name: item.name, host_name: item.host_name }]);
       setValue(null);
     } else {
-      openNotification("top", "exited");
+      message.warning({ content: "Nguồn tin đã có trong danh sách nguồn tin" });
     }
   }
   const handleChange = (newValue: object) => {
     setValue(newValue);
   };
-
-  if (type === "delete") {
-    return (
-      <Modal
-        title={"Xoá nhóm nguồn tin"}
-        open={isOpen}
-        destroyOnClose
-        confirmLoading={confirmLoading}
-        onOk={handleDelete}
-        onCancel={handleCancel}
-        okText={"Xoá"}
-        closable={false}
-        maskClosable={false}
-      >
-        <div className={styles.deleteBodyContainer}>
-          <div className={styles.leftDeleteBody}>Tên nhóm nguồn tin:</div>
-          <div className={styles.rightDeleteBody}>{choosedGroupSource.source_name}</div>
-        </div>
-      </Modal>
-    );
-  }
 
   const columns: TableColumnsType<any> = [
     {

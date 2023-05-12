@@ -1,5 +1,5 @@
 import { AddIcon, DelIcon, UserIcon } from "@/assets/svg";
-import { Avatar, Input, List } from "antd";
+import { Avatar, Input, List, Modal } from "antd";
 import React, { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
@@ -30,7 +30,6 @@ export const Layout: React.FC<LayoutProps> = ({
   let [, setSearchParams] = useSearchParams();
   const [typeModal, setTypeModal] = useState<any>("add");
   const [isOpenModal, setIsOpenModal] = useState<any>(false);
-  const [unnecessaryItem, setUnnecessaryItem] = useState<any>();
   const { mutate, isLoading: isPriorityObjectLoading } = useMutationPriorityObject();
   return (
     <div className={styles.mainContainer}>
@@ -66,12 +65,9 @@ export const Layout: React.FC<LayoutProps> = ({
           type={typeModal}
           isOpen={isOpenModal}
           setIsOpen={setIsOpenModal}
-          choosedPriorityObject={choosedPriorityObject}
           functionAdd={functionAdd}
-          functionDelete={functionDelete}
           confirmLoading={isPriorityObjectLoading}
           nameType={typeName}
-          unnecessaryItem={unnecessaryItem}
         />
       ) : null}
     </div>
@@ -89,9 +85,14 @@ export const Layout: React.FC<LayoutProps> = ({
   }
 
   function handleClickDelete(value: any) {
-    setUnnecessaryItem(value);
-    setIsOpenModal(true);
-    setTypeModal("delete");
+    Modal.confirm({
+      title: "Bạn có chắc chắn muốn xoá " + typeName + " này?",
+      okText: "Xoá",
+      cancelText: "Huỷ",
+      onOk: () => {
+        functionDelete({ id: value._id });
+      },
+    });
   }
 
   function handleChooseObject(value: any) {

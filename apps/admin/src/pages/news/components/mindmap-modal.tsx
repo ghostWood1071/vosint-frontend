@@ -58,6 +58,7 @@ export const MindmapModal: React.FC<props> = ({ item, isVisible, setHideModal })
       getContainer="#modal-mount"
       maskClosable={false}
       footer={null}
+      className={styles.modal}
     >
       <Row>
         <Col span={12}>
@@ -162,9 +163,14 @@ export const MindmapModal: React.FC<props> = ({ item, isVisible, setHideModal })
     setTypeModal("edit");
   }
   function handleClickDelete(value: any) {
-    setChoosedEvent(value);
-    setIsOpenModalEditEvent(true);
-    setTypeModal("delete");
+    Modal.confirm({
+      title: "Bạn có chắc chắn muốn xoá sự kiện này?",
+      okText: "Xoá",
+      cancelText: "Huỷ",
+      onOk: () => {
+        handleDeleteEvent({ _id: value._id });
+      },
+    });
   }
 
   function handleOpenModalAddEvent() {

@@ -1,5 +1,5 @@
 import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
-import { Button, Input, PageHeader, Space, Table, TableColumnsType, Tooltip } from "antd";
+import { Button, Input, Modal, PageHeader, Space, Table, TableColumnsType, Tooltip } from "antd";
 import React, { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
@@ -115,7 +115,6 @@ export const ProxyConfig = () => {
             setIsOpen={setIsOpenModal}
             choosedProxy={choosedProxy}
             functionAdd={handleAdd}
-            functionDelete={handleDelete}
             functionEdit={handleUpdate}
             confirmLoading={isProxyLoading}
           />
@@ -141,9 +140,14 @@ export const ProxyConfig = () => {
   }
 
   function handleClickDelete(value: any) {
-    setIsOpenModal(true);
-    setTypeModal("delete");
-    setChoosedProxy(value);
+    Modal.confirm({
+      title: "Bạn có chắc chắn muốn xoá proxy này?",
+      okText: "Xoá",
+      cancelText: "Huỷ",
+      onOk: () => {
+        handleDelete({ _id: value._id });
+      },
+    });
   }
 
   function handleAdd(value: any) {

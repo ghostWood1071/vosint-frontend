@@ -1,5 +1,5 @@
 import { PlusOutlined } from "@ant-design/icons";
-import { Button, Input, PageHeader } from "antd";
+import { Button, Input, Modal, PageHeader } from "antd";
 import React, { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
@@ -74,7 +74,6 @@ export const SourceNewsConfigList: React.FC = () => {
             setIsOpen={setIsOpenModal}
             choosedNewsSource={choosedNewsSource}
             functionAdd={handleAdd}
-            functionDelete={handleDelete}
             functionEdit={handleUpdate}
             confirmLoading={isNewsSourceLoading}
           />
@@ -100,9 +99,14 @@ export const SourceNewsConfigList: React.FC = () => {
   }
 
   function handleClickDelete(value: any) {
-    setIsOpenModal(true);
-    setTypeModal("delete");
-    setChoosedNewsSource(value);
+    Modal.confirm({
+      title: "Bạn có chắc chắn muốn xoá nguồn tin này?",
+      okText: "Xoá",
+      cancelText: "Huỷ",
+      onOk: () => {
+        handleDelete({ _id: value._id });
+      },
+    });
   }
 
   function handleAdd(value: any) {

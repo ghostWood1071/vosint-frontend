@@ -2,8 +2,6 @@ import { removeWhitespaceInStartAndEndOfString } from "@/utils/tool-validate-str
 import { Form, Input, Modal, Select } from "antd";
 import React from "react";
 
-import styles from "./add-news-source.module.less";
-
 interface Props {
   type: string;
   confirmLoading?: boolean;
@@ -12,7 +10,6 @@ interface Props {
   choosedNewsSource: any;
   functionAdd: (value: any) => void;
   functionEdit: (value: any) => void;
-  functionDelete: (value: any) => void;
 }
 
 const formItemLayoutWithOutLabel = {
@@ -30,17 +27,12 @@ export const AddNewsSourceComponent: React.FC<Props> = ({
   setIsOpen,
   choosedNewsSource,
   functionAdd,
-  functionDelete,
   functionEdit,
 }) => {
   const initialValues = type === "edit" ? choosedNewsSource : null;
 
   const [form] = Form.useForm<Record<string, any>>();
 
-  function handleDelete() {
-    functionDelete({ _id: choosedNewsSource._id });
-    setIsOpen(false);
-  }
   function handleCancel() {
     setIsOpen(false);
   }
@@ -63,27 +55,6 @@ export const AddNewsSourceComponent: React.FC<Props> = ({
         functionEdit({ ...initialValues, ...data });
       })
       .catch();
-  }
-
-  if (type === "delete") {
-    return (
-      <Modal
-        title={"Xoá nguồn tin"}
-        open={isOpen}
-        destroyOnClose
-        confirmLoading={confirmLoading}
-        onOk={handleDelete}
-        onCancel={handleCancel}
-        okText={"Xoá"}
-        closable={false}
-        maskClosable={false}
-      >
-        <div className={styles.deleteBodyContainer}>
-          <div className={styles.leftDeleteBody}>Tên nguồn tin:</div>
-          <div className={styles.rightDeleteBody}>{choosedNewsSource.name}</div>
-        </div>
-      </Modal>
-    );
   }
   if (type === "add" || type === "edit") {
     return (

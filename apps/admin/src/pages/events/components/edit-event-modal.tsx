@@ -1,5 +1,6 @@
 import { removeWhitespaceInStartAndEndOfString } from "@/utils/tool-validate-string";
-import { DatePicker, Form, Input, Modal } from "antd";
+import { DeleteOutlined } from "@ant-design/icons";
+import { DatePicker, Form, Input, Modal, Table, TableColumnsType, Tooltip } from "antd";
 import moment from "moment";
 import React, { useState } from "react";
 import { useSearchParams } from "react-router-dom";
@@ -48,54 +49,28 @@ export const EditEventModal: React.FC<ModalEditProps> = ({
 
   const [form] = Form.useForm<Record<string, any>>();
 
-  // const columnsNewsTable: TableColumnsType<any> = [
-  //   {
-  //     title: "Tiêu đề tin",
-  //     align: "left",
-  //     dataIndex: "data:title",
-  //   },
-  //   {
-  //     title: "",
-  //     width: 50,
-  //     align: "center",
-  //     render: (element) => {
-  //       if (element._id !== newsItem._id) {
-  //         return (
-  //           <Space>
-  //             <Tooltip title={"Xoá"}>
-  //               <DeleteOutlined
-  //                 onClick={() => handleDeleteItemList(element)}
-  //                 className={styles.delete}
-  //               />
-  //             </Tooltip>
-  //           </Space>
-  //         );
-  //       }
-  //     },
-  //   },
-  // ];
-
-  if (typeModal === "delete") {
-    return (
-      <Modal
-        title={"Xoá sự kiện"}
-        open={isOpen}
-        destroyOnClose
-        confirmLoading={confirmLoading}
-        onOk={handleDelete}
-        onCancel={handleCancel}
-        getContainer="#modal-mount"
-        okText={"Xoá"}
-        closable={false}
-        maskClosable={false}
-      >
-        <div className={styles.deleteBodyContainer}>
-          <div className={styles.leftDeleteBody}>Tên sự kiện:</div>
-          <div className={styles.rightDeleteBody}>{choosedEvent.event_name}</div>
-        </div>
-      </Modal>
-    );
-  }
+  const columnsNewsTable: TableColumnsType<any> = [
+    {
+      title: "Tiêu đề tin",
+      align: "left",
+      dataIndex: "data:title",
+    },
+    {
+      title: "",
+      width: 50,
+      align: "center",
+      render: (element) => {
+        return (
+          <Tooltip title={"Xoá"}>
+            <DeleteOutlined
+              onClick={() => handleDeleteItemList(element)}
+              className={styles.delete}
+            />
+          </Tooltip>
+        );
+      },
+    },
+  ];
 
   return (
     <Modal
@@ -153,48 +128,18 @@ export const EditEventModal: React.FC<ModalEditProps> = ({
           <DatePicker format={"DD/MM/YYYY"} />
         </Form.Item>
         {/* <Form.Item validateTrigger={["onChange", "onBlur"]} label="Danh sách tin" name={"news"}>
-            <div className={styles.addExistEventHeader}>
-              <div className={styles.leftAddExistNewsContainer}>
-                <Select
-                  showSearch
-                  className={styles.newsEventSelect}
-                  value={valueNewsSelect}
-                  placeholder={"Nhập tiêu đề tin"}
-                  defaultActiveFirstOption={false}
-                  showArrow={false}
-                  filterOption={false}
-                  onSearch={handleSearchNews}
-                  onChange={handleChangeNewsSelect}
-                  notFoundContent={null}
-                  // options={(dataNews?.data || []).map((d: any) => ({
-                  //   value: d._id,
-                  //   label: d.event_name,
-                  // }))}
-                />
-              </div>
-              <div className={styles.rightAddExistNewsContainer}>
-                <Button type="primary" className={styles.addButton} onClick={addNews}>
-                  Thêm
-                </Button>
-              </div>
-            </div>
-            <Table
-              columns={columnsNewsTable}
-              dataSource={listNewsAdd}
-              rowKey="_id"
-              pagination={false}
-            />
-          </Form.Item> */}
+          <Table
+            columns={columnsNewsTable}
+            dataSource={listNewsAdd}
+            rowKey="_id"
+            pagination={false}
+          />
+        </Form.Item> */}
       </Form>
     </Modal>
   );
 
   function handleCancel() {
-    setIsOpen(false);
-  }
-
-  function handleDelete() {
-    functionDelete(choosedEvent._id);
     setIsOpen(false);
   }
 

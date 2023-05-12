@@ -5,7 +5,17 @@ import {
   EyeOutlined,
   PlusOutlined,
 } from "@ant-design/icons";
-import { Button, Col, Input, PageHeader, Space, Table, TableColumnsType, message } from "antd";
+import {
+  Button,
+  Col,
+  Input,
+  Modal,
+  PageHeader,
+  Space,
+  Table,
+  TableColumnsType,
+  message,
+} from "antd";
 import React, { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
@@ -145,7 +155,6 @@ export const ViewList = () => {
             setIsOpen={setIsOpenGroupModal}
             choosedGroupSource={choosedGroupSource}
             functionAdd={functionAdd}
-            functionDelete={functionDelete}
             functionEdit={functionEdit}
             confirmLoading={isGroupSourceLoading}
           />
@@ -166,9 +175,14 @@ export const ViewList = () => {
   }
 
   function handleClickDeleteGroup(value: any) {
-    setIsOpenGroupModal(true);
-    setTypeGroupModal("delete");
-    setChoosedGroupSource(value);
+    Modal.confirm({
+      title: "Bạn có chắc chắn muốn xoá nhóm nguồn tin này?",
+      okText: "Xoá",
+      cancelText: "Huỷ",
+      onOk: () => {
+        handleDelete({ _id: value._id });
+      },
+    });
   }
 
   function handleClickHideGroup(value: any) {
@@ -238,7 +252,7 @@ export const ViewList = () => {
     );
   }
 
-  function functionDelete(value: any) {
+  function handleDelete(value: any) {
     mutate(
       { ...value, action: "delete" },
       {
