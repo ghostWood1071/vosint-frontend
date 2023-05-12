@@ -1,4 +1,3 @@
-import "@aiacademy/editor/style.css";
 import { ConfigProvider } from "antd";
 import "antd/dist/antd.css";
 import viVN from "antd/es/locale/vi_VN";
