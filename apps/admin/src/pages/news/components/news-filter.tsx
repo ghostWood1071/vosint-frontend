@@ -129,8 +129,10 @@ export function NewsFilter(): JSX.Element {
 
   function handleRemoveNewsIds() {
     Modal.confirm({
-      title: "Bạn có muốn xoá những bản tin này?",
+      title: "Bạn có chắc muốn xoá những bản tin này không?",
       icon: <ExclamationCircleOutlined />,
+      okText: "Xoá",
+      cancelText: "Huỷ",
       onOk() {
         setNewsSelection([]);
         return mutateDelete({
@@ -138,7 +140,6 @@ export function NewsFilter(): JSX.Element {
           newsletterId: detailIds!,
         });
       },
-      onCancel() {},
     });
   }
 }

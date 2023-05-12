@@ -3,22 +3,10 @@ import {
   useMutationDeleteSocial,
   useMutationUpdateSocial,
 } from "@/pages/configuration/config.loader";
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import {
-  Alert,
-  Avatar,
-  Form,
-  Modal,
-  Space,
-  Table,
-  TableColumnsType,
-  Tag,
-  Tooltip,
-  message,
-} from "antd";
+import { DeleteOutlined, EditOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
+import { Avatar, Form, Modal, Space, Table, TableColumnsType, Tag, Tooltip, message } from "antd";
 import React, { useState } from "react";
 import { useQueryClient } from "react-query";
-import { useSearchParams } from "react-router-dom";
 
 import { SettingCreateForm } from "./fb-setting-form";
 import styles from "./fb-setting.module.less";
@@ -39,13 +27,12 @@ export const SettingTable: React.FC<Props> = ({
   loading,
 }) => {
   const [isEditOpen, setIsEditOpen] = useState(false);
-  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [isIdTarget, setIsIdTarget] = useState("");
   const [isValueTarget, setIsValueTarget] = useState<any>();
   const queryClient = useQueryClient();
   const [form] = Form.useForm();
   const { mutate: mutateUpdate } = useMutationUpdateSocial();
-  const { mutate: mutateDelete } = useMutationDeleteSocial();
+  const { mutateAsync: mutateDelete } = useMutationDeleteSocial();
   const page = searchParams.get("page_number");
   const pageSize = searchParams.get("page_size");
   const columns: TableColumnsType<any> = [
@@ -144,29 +131,9 @@ export const SettingTable: React.FC<Props> = ({
           onFinish={handleFinishEdit}
         />
       </Modal>
-      <Modal
-        title="Xác nhận xóa tài khoản"
-        open={isDeleteOpen}
-        onCancel={handleCancelDelete}
-        onOk={handleOkDelete}
-        destroyOnClose
-        maskClosable={false}
-      >
-        {isDeleteOpen ? (
-          <Alert
-            description={
-              <div>
-                Bạn có chắc muốn xoá{" "}
-                <span className={styles.fontNormal}>" {isValueTarget.social_name} "</span> không?
-              </div>
-            }
-            type="error"
-            showIcon
-          />
-        ) : null}
-      </Modal>
     </>
   );
+
   function handleShowEdit(value: any, values: any) {
     setIsEditOpen(true);
     setIsValueTarget(values);
@@ -213,31 +180,30 @@ export const SettingTable: React.FC<Props> = ({
   }
 
   function handleShowDelete(value: any, values: any) {
-    setIsIdTarget(value);
     setIsValueTarget(values);
-    setIsDeleteOpen(true);
-  }
-
-  function handleCancelDelete() {
-    setIsDeleteOpen(false);
-  }
-
-  function handleOkDelete() {
-    mutateDelete(isIdTarget, {
-      onSuccess: () => {
-        queryClient.invalidateQueries([CACHE_KEYS.InfoFBSetting]);
-        message.success({
-          content: "Xoá thành công!",
-          key: CACHE_KEYS.InfoFBSetting,
-        });
-      },
-      onError: () => {},
+    Modal.confirm({
+      title: `Bạn có chắc muốn xoá "${values.social_name}" không?`,
+      icon: <ExclamationCircleOutlined />,
+      okText: "Xoá",
+      cancelText: "Huỷ",
+      onOk: () =>
+        mutateDelete(value, {
+          onSuccess: () => {
+            queryClient.invalidateQueries([CACHE_KEYS.InfoFBSetting]);
+            message.success({
+              content: "Xoá thành công!",
+              key: CACHE_KEYS.InfoFBSetting,
+            });
+          },
+          onError: () => {},
+        }),
     });
-    setIsDeleteOpen(false);
   }
+
   function routerAccount(data: any) {
     window.open(data.account_link, "_blank");
   }
+
   function handlePaginationChange(page: number, pageSize: number) {
     searchParams.set("page_number", page + "");
     searchParams.set("page_size", pageSize + "");

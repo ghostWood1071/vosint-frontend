@@ -4,19 +4,8 @@ import {
   useMutationUpdateTWSocial,
 } from "@/pages/configuration/config.loader";
 import styles from "@/pages/configuration/social-config/facebook/components/fb-setting.module.less";
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import {
-  Alert,
-  Avatar,
-  Form,
-  Modal,
-  Space,
-  Table,
-  TableColumnsType,
-  Tag,
-  Tooltip,
-  message,
-} from "antd";
+import { DeleteOutlined, EditOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
+import { Avatar, Form, Modal, Space, Table, TableColumnsType, Tag, Tooltip, message } from "antd";
 import React, { useState } from "react";
 import { useQueryClient } from "react-query";
 
@@ -38,11 +27,10 @@ export const TTSettingTable: React.FC<Props> = ({
   loading,
 }) => {
   const [isEditOpen, setIsEditOpen] = useState(false);
-  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [isIdTarget, setIsIdTarget] = useState("");
   const queryClient = useQueryClient();
   const { mutate: mutateUpdate } = useMutationUpdateTWSocial();
-  const { mutate: mutateDelete } = useMutationDeleteSocial();
+  const { mutateAsync: mutateDelete } = useMutationDeleteSocial();
   const [form] = Form.useForm();
   const [isValueTarget, setIsValueTarget] = useState<any>();
   const page = searchParams.get("page");
@@ -140,27 +128,6 @@ export const TTSettingTable: React.FC<Props> = ({
           onFinish={handleFinishEdit}
         />
       </Modal>
-      <Modal
-        title="Xác nhận xóa tài khoản"
-        open={isDeleteOpen}
-        onCancel={handleCancelDelete}
-        onOk={handleOkDelete}
-        destroyOnClose
-        maskClosable={false}
-      >
-        {isDeleteOpen ? (
-          <Alert
-            description={
-              <div>
-                Bạn có chắc muốn xoá{" "}
-                <span className={styles.fontNormal}>" {isValueTarget.social_name} "</span> không?
-              </div>
-            }
-            type="error"
-            showIcon
-          />
-        ) : null}
-      </Modal>
     </>
   );
 
@@ -209,28 +176,26 @@ export const TTSettingTable: React.FC<Props> = ({
   }
 
   function handleShowDelete(value: any, values: any) {
-    setIsIdTarget(value);
     setIsValueTarget(values);
-    setIsDeleteOpen(true);
-  }
-
-  function handleCancelDelete() {
-    setIsDeleteOpen(false);
-  }
-
-  function handleOkDelete() {
-    mutateDelete(isIdTarget, {
-      onSuccess: () => {
-        queryClient.invalidateQueries([CACHE_KEYS.InfoTTSetting]);
-        message.success({
-          content: "Xoá thành công!",
-          key: CACHE_KEYS.InfoTTSetting,
-        });
-      },
-      onError: () => {},
+    Modal.confirm({
+      title: `Bạn có chắc muốn xoá "${values.social_name}" không?`,
+      icon: <ExclamationCircleOutlined />,
+      okText: "Xoá",
+      cancelText: "Huỷ",
+      onOk: () =>
+        mutateDelete(value, {
+          onSuccess: () => {
+            queryClient.invalidateQueries([CACHE_KEYS.InfoTTSetting]);
+            message.success({
+              content: "Xoá thành công!",
+              key: CACHE_KEYS.InfoFBSetting,
+            });
+          },
+          onError: () => {},
+        }),
     });
-    setIsDeleteOpen(false);
   }
+
   function routerAccount(data: any) {
     window.open(data.account_link, "_blank");
   }

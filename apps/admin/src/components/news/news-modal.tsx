@@ -1,12 +1,12 @@
 import { useNewsletterDetail } from "@/pages/news/news.loader";
 import { NewsletterDto } from "@/services/news.type";
+import { ExclamationCircleOutlined } from "@ant-design/icons";
 import { Form, Modal } from "antd";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
 
 import { NewsletterFormGioTin } from "./form/form-ban-tin";
-import { NewsletterFormDelete } from "./form/form-delete";
 import { NewsletterFormLinhVuc } from "./form/form-linh-vuc";
 import { ETreeAction, ETreeTag, useNewsSamplesState, useNewsState } from "./news-state";
 
@@ -50,10 +50,23 @@ export function NewsletterModal({ onFinish, confirmLoading }: Props): JSX.Elemen
     reset();
   }, [location.pathname]);
 
+  useEffect(() => {
+    if (action === ETreeAction.DELETE) {
+      Modal.confirm({
+        title: `Bạn có chắc muốn xoá "${data?.title}" không?`,
+        icon: <ExclamationCircleOutlined />,
+        okText: "Xoá",
+        cancelText: "Huỷ",
+        onOk: handleFormFinish,
+        onCancel: handleCancel,
+      });
+    }
+  }, [action]);
+
   return (
     <Modal
       title={t(action!) + t(tag!)}
-      open={action !== null && action !== ETreeAction.SELECT}
+      open={action !== null && action !== ETreeAction.SELECT && action !== ETreeAction.DELETE}
       confirmLoading={confirmLoading}
       getContainer="#modal-mount"
       maskClosable={false}
@@ -62,7 +75,6 @@ export function NewsletterModal({ onFinish, confirmLoading }: Props): JSX.Elemen
       onCancel={handleCancel}
       closable={false}
     >
-      {action === ETreeAction.DELETE && <NewsletterFormDelete />}
       {action !== ETreeAction.SELECT && action !== ETreeAction.DELETE && (
         <Form form={form} {...formItemLayoutWithOutLabel}>
           {tag === ETreeTag.GIO_TIN && <NewsletterFormGioTin />}
