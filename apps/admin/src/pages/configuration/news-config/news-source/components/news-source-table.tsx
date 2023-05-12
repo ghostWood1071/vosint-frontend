@@ -87,7 +87,7 @@ export const SourceNewsTable: React.FC<Props> = ({
         pageSize: pageSize ? +pageSize : 10,
         size: "default",
       }}
-      size={"middle"}
+      size={"small"}
       loading={loading}
     />
   );
