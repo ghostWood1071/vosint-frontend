@@ -171,7 +171,7 @@ export const PipelineTable: React.FC<Props> = ({
       loading={isLoading}
       columns={columns}
       dataSource={data}
-      size="middle"
+      size="small"
       rowKey="_id"
       pagination={{
         position: ["bottomCenter"],

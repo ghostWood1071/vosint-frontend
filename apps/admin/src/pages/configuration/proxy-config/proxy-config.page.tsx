@@ -93,7 +93,7 @@ export const ProxyConfig = () => {
       <div className={styles.mainContainer}>
         <div className={styles.body}>
           <Table
-            size={"middle"}
+            size={"small"}
             columns={columns}
             dataSource={data?.data}
             rowKey="id"

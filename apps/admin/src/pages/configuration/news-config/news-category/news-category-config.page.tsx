@@ -59,9 +59,14 @@ export const CategoryNewsConfig = () => {
             <div className={styles.nameCategory}>Mô tả</div>
             <Row className={styles.row} align="stretch">
               {dataDetail?.title && (
-                <Descriptions.Item label="Tên lĩnh vực" span={3} className={styles.description}>
-                  {dataDetail?.title}
-                </Descriptions.Item>
+                <>
+                  <Col span={6} className={styles.itemLabel}>
+                    Tên lĩnh vực
+                  </Col>
+                  <Col span={18} className={styles.itemContent}>
+                    {dataDetail?.title}
+                  </Col>
+                </>
               )}
               {(dataDetail?.required_keyword?.length ?? 0) > 0 && (
                 <>
