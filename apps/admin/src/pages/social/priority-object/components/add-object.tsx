@@ -10,11 +10,8 @@ interface Props {
   confirmLoading?: boolean;
   isOpen: boolean;
   setIsOpen: (value: any) => void;
-  choosedPriorityObject: any;
   functionAdd: (value: any) => void;
-  functionDelete: (value: any) => void;
   nameType: string;
-  unnecessaryItem: any;
 }
 
 export const AddObjectModal: React.FC<Props> = ({
@@ -22,11 +19,8 @@ export const AddObjectModal: React.FC<Props> = ({
   confirmLoading,
   isOpen,
   setIsOpen,
-  choosedPriorityObject,
   functionAdd,
-  functionDelete,
   nameType,
-  unnecessaryItem,
 }) => {
   const [api, contextHolder] = notification.useNotification();
   const [value, setValue] = useState<string>();
@@ -51,10 +45,6 @@ export const AddObjectModal: React.FC<Props> = ({
     }
   };
 
-  function handleDelete() {
-    functionDelete({ id: unnecessaryItem._id });
-    setIsOpen(false);
-  }
   function handleCancel() {
     setIsOpen(false);
   }
@@ -84,27 +74,6 @@ export const AddObjectModal: React.FC<Props> = ({
     }
     openNotification("top", "invalid");
   };
-
-  if (type === "delete") {
-    return (
-      <Modal
-        title={"Xoá " + nameType}
-        open={isOpen}
-        destroyOnClose
-        confirmLoading={confirmLoading}
-        onOk={handleDelete}
-        onCancel={handleCancel}
-        okText={"Xoá"}
-        closable={false}
-        maskClosable={false}
-      >
-        <div className={styles.deleteBodyContainer}>
-          <div className={styles.leftDeleteBody}>Tên {nameType}:</div>
-          <div className={styles.rightDeleteBody}>{unnecessaryItem.social_name}</div>
-        </div>
-      </Modal>
-    );
-  }
 
   if (type === "add") {
     return (

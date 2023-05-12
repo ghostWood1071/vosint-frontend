@@ -13,6 +13,7 @@ import {
   Tabs,
   TabsProps,
   Tooltip,
+  Typography,
   message,
 } from "antd";
 import dayjs from "dayjs";
@@ -77,7 +78,7 @@ export const AddMindmap: React.FC<ModalEditProps> = ({
   const [listEvent, setListEvent] = useState<any[]>([]);
   const [keyTabs, setKeyTabs] = useState<string>("1");
   const [listNewsAdd, setListNewsAdd] = useState<any[]>([
-    { _id: newsItem._id, "data:title": newsItem["data:title"] },
+    { _id: newsItem._id, "data:title": newsItem["data:title"], "data:url": newsItem["data:url"] },
   ]);
   const { data: dataAllEventNews } = useAllEventNewsList({
     event_name: searchParams.get("text_search_event") ?? "",
@@ -98,17 +99,32 @@ export const AddMindmap: React.FC<ModalEditProps> = ({
 
   const columnsEventTable: TableColumnsType<any> = [
     {
+      key: "event_name",
       title: "Tên sự kiện",
       align: "left",
       dataIndex: "event_name",
     },
     {
+      key: "khach_the",
+      title: "Khách thể",
+      align: "left",
+      dataIndex: "khach_the",
+    },
+    {
+      key: "chu_the",
+      title: "Chủ thể",
+      align: "left",
+      dataIndex: "chu_the",
+    },
+    {
+      key: "date_created",
       title: "Ngày sự kiện",
       align: "left",
       width: 180,
       dataIndex: "date_created",
     },
     {
+      key: "button",
       title: "",
       width: 50,
       align: "center",
@@ -130,25 +146,32 @@ export const AddMindmap: React.FC<ModalEditProps> = ({
     {
       title: "Tiêu đề tin",
       align: "left",
-      dataIndex: "data:title",
+      key: "title",
+      // dataIndex: "data:title",
+      render: (element) => {
+        return (
+          <Typography.Link href={element["data:url"]} target="_blank" rel="noreferrer">
+            {element["data:title"]}
+          </Typography.Link>
+        );
+      },
     },
     {
       title: "",
       width: 50,
       align: "center",
+      key: "button",
       render: (element) => {
-        if (element._id !== newsItem._id) {
-          return (
-            <Space>
-              <Tooltip title={"Xoá"}>
-                <DeleteOutlined
-                  onClick={() => handleDeleteItemList(element)}
-                  className={styles.delete}
-                />
-              </Tooltip>
-            </Space>
-          );
-        }
+        return (
+          <Space>
+            <Tooltip title={"Xoá"}>
+              <DeleteOutlined
+                onClick={() => handleDeleteNewsAddItem(element._id)}
+                className={styles.delete}
+              />
+            </Tooltip>
+          </Space>
+        );
       },
     },
   ];
@@ -242,12 +265,15 @@ export const AddMindmap: React.FC<ModalEditProps> = ({
                   </Button>
                 </div>
               </div>
-              <Table
-                columns={columnsNewsTable}
-                dataSource={listNewsAdd}
-                rowKey="_id"
-                pagination={false}
-              />
+              {listNewsAdd.length > 0 && (
+                <Table
+                  columns={columnsNewsTable}
+                  dataSource={listNewsAdd}
+                  rowKey="_id"
+                  pagination={false}
+                  size="small"
+                />
+              )}
             </Form.Item>
           </Form>
         </div>
@@ -300,27 +326,6 @@ export const AddMindmap: React.FC<ModalEditProps> = ({
       ),
     },
   ];
-  if (typeModal === "delete") {
-    return (
-      <Modal
-        title={"Xoá sự kiện"}
-        open={isOpen}
-        destroyOnClose
-        confirmLoading={confirmLoading}
-        onOk={handleDelete}
-        onCancel={handleCancel}
-        getContainer="#modal-mount"
-        okText={"Xoá"}
-        closable={false}
-        maskClosable={false}
-      >
-        <div className={styles.deleteBodyContainer}>
-          <div className={styles.leftDeleteBody}>Tên sự kiện:</div>
-          <div className={styles.rightDeleteBody}>{choosedEvent.event_name}</div>
-        </div>
-      </Modal>
-    );
-  }
 
   return (
     <Modal
@@ -431,11 +436,6 @@ export const AddMindmap: React.FC<ModalEditProps> = ({
     setIsOpen(false);
   }
 
-  function handleDelete() {
-    functionDelete({ _id: choosedEvent._id });
-    setIsOpen(false);
-  }
-
   function handleClickEdit() {
     form
       .validateFields()
@@ -513,6 +513,11 @@ export const AddMindmap: React.FC<ModalEditProps> = ({
   function handleDeleteItemList(value: any) {
     const result = listEvent.filter((e: any) => e._id !== value._id);
     setListEvent(result);
+  }
+
+  function handleDeleteNewsAddItem(id: string) {
+    const result = listNewsAdd.filter((e: any) => e._id !== id);
+    setListNewsAdd(result);
   }
 
   function handleSearchEvent(value: any) {

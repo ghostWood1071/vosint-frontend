@@ -16,7 +16,6 @@ interface Props {
   choosedCate: any;
   functionAdd: (value: any) => void;
   functionEdit: (value: any) => void;
-  functionDelete: (value: any) => void;
   setChoosedCate: (value: any) => void;
   typeObject: string;
 }
@@ -37,7 +36,6 @@ export const AddCateComponent: React.FC<Props> = ({
   nameTitle,
   choosedCate,
   functionAdd,
-  functionDelete,
   functionEdit,
   setChoosedCate,
   typeObject,
@@ -91,11 +89,6 @@ export const AddCateComponent: React.FC<Props> = ({
   });
   const [form] = Form.useForm<Record<string, any>>();
 
-  function handleDelete() {
-    functionDelete({ _id: choosedCate._id });
-    setIsOpen(false);
-    setChoosedCate(null);
-  }
   function handleCancel() {
     setIsOpen(false);
   }
@@ -152,26 +145,6 @@ export const AddCateComponent: React.FC<Props> = ({
       .catch();
   }
 
-  if (type === "delete") {
-    return (
-      <Modal
-        title={"Xoá " + nameTitle}
-        open={isOpen}
-        destroyOnClose
-        confirmLoading={confirmLoading}
-        onOk={handleDelete}
-        onCancel={handleCancel}
-        okText={"Xoá"}
-        closable={false}
-        maskClosable={false}
-      >
-        <div className={styles.deleteBodyContainer}>
-          <div className={styles.leftDeleteBody}>Tên {nameTitle}:</div>
-          <div className={styles.rightDeleteBody}>{choosedCate.name}</div>
-        </div>
-      </Modal>
-    );
-  }
   if (type === "add" || type === "edit") {
     return (
       <Modal

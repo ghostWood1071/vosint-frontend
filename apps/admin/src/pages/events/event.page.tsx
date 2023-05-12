@@ -1,4 +1,4 @@
-import { Button, DatePicker, Form, List, Space } from "antd";
+import { Button, DatePicker, Form, List, Modal, Space } from "antd";
 import { flatMap, unionBy } from "lodash";
 import React, { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
@@ -27,7 +27,7 @@ export const EventPage: React.FC<Props> = () => {
   const queryClient = useQueryClient();
   const { ref, inView } = useInView();
   const [eventChoosedList, setEventChoosedList] = useState<any[]>([]);
-  const { data, isFetchingNextPage, isFetching, fetchNextPage, hasNextPage } =
+  const { data, isFetchingNextPage, fetchNextPage, hasNextPage } =
     useInfiniteEventsList(filterDate);
   const { mutate } = useMutationEvents();
   const setEvent = useReportModalState((state) => state.setEvent);
@@ -122,9 +122,14 @@ export const EventPage: React.FC<Props> = () => {
   );
 
   function handleClickDelete(value: any) {
-    setChoosedEvent(value);
-    setTypeModal("delete");
-    setIsOpenModal(true);
+    Modal.confirm({
+      title: "Bạn có chắc chắn muốn xoá sự kiện này?",
+      okText: "Xoá",
+      cancelText: "Huỷ",
+      onOk: () => {
+        handleDelete(value._id);
+      },
+    });
   }
 
   function handleClickEdit(value: any) {

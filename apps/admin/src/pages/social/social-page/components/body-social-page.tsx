@@ -18,8 +18,9 @@ export const BodySocialPage: React.FC<BodySocialPageProps> = ({ type, statisticD
   const { ref, inView } = useInView();
   const [pageNumber, setPageNumber] = useState(1);
   const queryClient = useQueryClient();
-  const { data, isFetchingNextPage, isFetching, fetchNextPage, hasNextPage } =
-    useInfiniteSocialPageList({ name: type });
+  const { data, isFetchingNextPage, fetchNextPage, hasNextPage } = useInfiniteSocialPageList({
+    name: type,
+  });
 
   const dataSource = unionBy(flatMap(data?.pages.map((a) => a?.result?.map((e: any) => e))), "_id");
   useEffect(() => {

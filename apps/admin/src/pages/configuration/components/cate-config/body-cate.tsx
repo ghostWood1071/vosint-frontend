@@ -1,5 +1,5 @@
 import { PlusOutlined } from "@ant-design/icons";
-import { Button, Input, List, PageHeader, message } from "antd";
+import { Button, Input, List, Modal, PageHeader, message } from "antd";
 import React, { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
@@ -97,7 +97,6 @@ export const BodyCate: React.FC<Props> = ({ title }) => {
             nameTitle={title}
             choosedCate={choosedCate}
             functionAdd={handleAdd}
-            functionDelete={handleDelete}
             functionEdit={handleUpdate}
             confirmLoading={isObjectCateLoading}
             setChoosedCate={setChoosedCate}
@@ -123,9 +122,15 @@ export const BodyCate: React.FC<Props> = ({ title }) => {
     setTypeModal("edit");
   }
 
-  function handleOpenDeleteCate(value: any) {
-    setIsOpenModal(true);
-    setTypeModal("delete");
+  function handleOpenDeleteCate() {
+    Modal.confirm({
+      title: "Bạn có chắc chắn muốn xoá " + title + " này?",
+      okText: "Xoá",
+      cancelText: "Huỷ",
+      onOk: () => {
+        handleDelete({ _id: choosedCate._id });
+      },
+    });
   }
   function handleAdd(value: any) {
     mutate(
@@ -182,6 +187,7 @@ export const BodyCate: React.FC<Props> = ({ title }) => {
             key: title,
           });
           setIsOpenModal(false);
+          setChoosedCate(null);
         },
       },
     );

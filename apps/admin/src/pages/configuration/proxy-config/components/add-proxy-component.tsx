@@ -2,8 +2,6 @@ import { removeWhitespaceInStartAndEndOfString } from "@/utils/tool-validate-str
 import { Form, Input, InputNumber, Modal } from "antd";
 import React from "react";
 
-import styles from "./add-proxy-component.module.less";
-
 interface Props {
   type: string;
   confirmLoading?: boolean;
@@ -12,7 +10,6 @@ interface Props {
   choosedProxy: any;
   functionAdd: (value: any) => void;
   functionEdit: (value: any) => void;
-  functionDelete: (value: any) => void;
 }
 
 const formItemLayoutWithOutLabel = {
@@ -30,7 +27,6 @@ export const AddProxyComponent: React.FC<Props> = ({
   setIsOpen,
   choosedProxy,
   functionAdd,
-  functionDelete,
   functionEdit,
 }) => {
   const initialValues =
@@ -46,10 +42,6 @@ export const AddProxyComponent: React.FC<Props> = ({
         };
   const [form] = Form.useForm<Record<string, any>>();
 
-  function handleDelete() {
-    functionDelete({ _id: choosedProxy._id });
-    setIsOpen(false);
-  }
   function handleCancel() {
     setIsOpen(false);
   }
@@ -74,128 +66,104 @@ export const AddProxyComponent: React.FC<Props> = ({
       .catch();
   }
 
-  if (type === "delete") {
-    return (
-      <Modal
-        title={"Xoá proxy"}
-        open={isOpen}
-        destroyOnClose
-        confirmLoading={confirmLoading}
-        onOk={handleDelete}
-        onCancel={handleCancel}
-        okText={"Xoá"}
-        closable={false}
-        maskClosable={false}
+  return (
+    <Modal
+      title={(type === "add" ? "Thêm mới " : "Sửa ") + "proxy"}
+      open={isOpen}
+      destroyOnClose
+      confirmLoading={confirmLoading}
+      onOk={type === "add" ? handleAdd : handleEdit}
+      onCancel={handleCancel}
+      width={800}
+      closable={false}
+      maskClosable={false}
+    >
+      <Form
+        initialValues={initialValues ?? {}}
+        form={form}
+        {...formItemLayoutWithOutLabel}
+        preserve={false}
       >
-        <div className={styles.deleteBodyContainer}>
-          <div className={styles.leftDeleteBody}>Tên proxy:</div>
-          <div className={styles.rightDeleteBody}>{choosedProxy.name}</div>
-        </div>
-      </Modal>
-    );
-  }
-  if (type === "add" || type === "edit") {
-    return (
-      <Modal
-        title={(type === "add" ? "Thêm mới " : "Sửa ") + "proxy"}
-        open={isOpen}
-        destroyOnClose
-        confirmLoading={confirmLoading}
-        onOk={type === "add" ? handleAdd : handleEdit}
-        onCancel={handleCancel}
-        width={800}
-        closable={false}
-        maskClosable={false}
-      >
-        <Form
-          initialValues={initialValues ?? {}}
-          form={form}
-          {...formItemLayoutWithOutLabel}
-          preserve={false}
+        <Form.Item
+          label={"Tên proxy"}
+          name={"name"}
+          validateTrigger={["onChange", "onBlur"]}
+          rules={[
+            {
+              required: true,
+              message: "Hãy nhập vào tên proxy!",
+              whitespace: true,
+            },
+          ]}
         >
-          <Form.Item
-            label={"Tên proxy"}
-            name={"name"}
-            validateTrigger={["onChange", "onBlur"]}
-            rules={[
-              {
-                required: true,
-                message: "Hãy nhập vào tên proxy!",
-                whitespace: true,
-              },
-            ]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            validateTrigger={["onChange", "onBlur"]}
-            label="Địa chỉ IP"
-            name={"ip_address"}
-            rules={[
-              {
-                required: true,
-                message: "Hãy nhập vào địa chỉ IP!(VD: 192.168.1.1)",
-                pattern: new RegExp(
-                  "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])[.]){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$",
-                ),
-              },
-            ]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            validateTrigger={["onChange", "onBlur"]}
-            label="Cổng (port)"
-            name={"port"}
-            validateFirst={true}
-            rules={[
-              {
-                required: true,
-                message: "Hãy nhập vào tên cổng(từ 1-65535)!",
-                whitespace: true,
-                min: 1,
-                max: 65535,
-                type: "number",
-              },
-            ]}
-          >
-            <InputNumber style={{ width: "100%" }} />
-          </Form.Item>
-          <Form.Item
-            validateTrigger={["onChange", "onBlur"]}
-            rules={[
-              {
-                required: true,
-                message: "Hãy nhập vào username!",
-                whitespace: true,
-              },
-            ]}
-            label="Tên đăng nhập"
-            name={"username"}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            validateTrigger={["onChange", "onBlur"]}
-            rules={[
-              {
-                required: true,
-                message: "Hãy nhập vào mật khẩu!",
-                whitespace: true,
-              },
-            ]}
-            label="Mật khẩu"
-            name={"password"}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item validateTrigger={["onChange", "onBlur"]} label="Ghi chú" name={"note"}>
-            <Input />
-          </Form.Item>
-        </Form>
-      </Modal>
-    );
-  }
-
-  return null;
+          <Input />
+        </Form.Item>
+        <Form.Item
+          validateTrigger={["onChange", "onBlur"]}
+          label="Địa chỉ IP"
+          name={"ip_address"}
+          rules={[
+            {
+              required: true,
+              message: "Hãy nhập vào địa chỉ IP!(VD: 192.168.1.1)",
+              pattern: new RegExp(
+                "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])[.]){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$",
+              ),
+            },
+          ]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item
+          validateTrigger={["onChange", "onBlur"]}
+          label="Cổng (port)"
+          name={"port"}
+          validateFirst={true}
+          rules={[
+            {
+              required: true,
+              message: "Hãy nhập vào tên cổng(từ 1-65535)!",
+              whitespace: true,
+              min: 1,
+              max: 65535,
+              type: "number",
+            },
+          ]}
+        >
+          <InputNumber style={{ width: "100%" }} />
+        </Form.Item>
+        <Form.Item
+          validateTrigger={["onChange", "onBlur"]}
+          rules={[
+            {
+              required: true,
+              message: "Hãy nhập vào username!",
+              whitespace: true,
+            },
+          ]}
+          label="Tên đăng nhập"
+          name={"username"}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item
+          validateTrigger={["onChange", "onBlur"]}
+          rules={[
+            {
+              required: true,
+              message: "Hãy nhập vào mật khẩu!",
+              whitespace: true,
+            },
+          ]}
+          label="Mật khẩu"
+          name={"password"}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item validateTrigger={["onChange", "onBlur"]} label="Ghi chú" name={"note"}>
+          <Input />
+        </Form.Item>
+      </Form>
+    </Modal>
+  );
 };
