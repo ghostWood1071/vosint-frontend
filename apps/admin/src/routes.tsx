@@ -107,10 +107,14 @@ import { SourceGroup, SourceManagementLayout } from "./pages/source";
 
 export const routers = createBrowserRouter([
   {
-    path: homePath,
+    path: "",
     element: <AppLayout />,
     errorElement: <ErrorBoundary />,
     children: [
+      {
+        path: homePath,
+        element: <Navigate to={newsPath} />,
+      },
       {
         element: <NewsLayout />,
         children: [

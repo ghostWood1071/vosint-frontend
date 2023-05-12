@@ -29,11 +29,11 @@ const Sidebar = () => {
   const { pathname } = useLocation();
 
   const items: MenuProps["items"] = [
-    { label: "THỐNG KÊ TIN", key: socialDashboardPath },
-    { label: "ĐỐI TƯỢNG ƯU TIÊN", key: socialPriorityObjectPath },
-    { label: "FACEBOOK", key: socialFacebookPath },
-    { label: "TWITTER", key: socialTwitterPath },
-    { label: "TIKTOK", key: socialTiktokPath },
+    { label: "Thống kê tin", key: socialDashboardPath },
+    { label: "Đối tượng ưu tiên", key: socialPriorityObjectPath },
+    { label: "Facebook", key: socialFacebookPath },
+    { label: "Twitter", key: socialTwitterPath },
+    { label: "Tiktok", key: socialTiktokPath },
   ];
   function handleClickMenu({ key }: { key: string }) {
     navigate(key);

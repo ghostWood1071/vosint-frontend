@@ -7,15 +7,12 @@ import {
   useUploadAvatar,
 } from "@/pages/configuration/user-management/user-management.loader";
 import { generateImage } from "@/utils/image";
-import { EditOutlined, UserOutlined } from "@ant-design/icons";
+import { UserOutlined } from "@ant-design/icons";
 import {
   Alert,
   Avatar,
   Button,
-  Card,
   Col,
-  Collapse,
-  Divider,
   Form,
   Input,
   Row,
@@ -31,6 +28,8 @@ import { useTranslation } from "react-i18next";
 import { useQueryClient } from "react-query";
 import { useLocalStorage } from "react-use";
 
+import styles from "./user-profile.module.less";
+
 interface Props {
   open: boolean;
   setOpen: React.Dispatch<boolean>;
@@ -41,15 +40,6 @@ export const UserProfile: React.FC<Props> = ({ open, setOpen }) => {
   const { t } = useTranslation();
   const [userProfile, setUserProfile] = useLocalStorage<Record<string, string>>(LOCAL_USER_PROFILE);
   const refInput = useRef<HTMLInputElement>(null);
-
-  const defaultActivePanel = [""];
-  const [activedPanel, setActivedPanel] = useState<string | string[]>(defaultActivePanel);
-  const clickButtonHuy = () => {
-    setActivedPanel([]);
-  };
-  const onChange = (key: string | string[]) => {
-    setActivedPanel(key);
-  };
 
   const onFinishFailed = () => {
     message.error("Vui lòng nhập dữ liệu!");
@@ -71,7 +61,7 @@ export const UserProfile: React.FC<Props> = ({ open, setOpen }) => {
     },
   });
 
-  const { mutate: mutateUploadAvatar, isLoading: isUpdatingAvatar } = useUploadAvatar({
+  const { mutateAsync: mutateUploadAvatar, isLoading: isUpdatingAvatar } = useUploadAvatar({
     onSuccess: (avatar_url) => {
       message.success("Thay đổi avatar thành công");
       setUserProfile({ ...userProfile, avatar_url });
@@ -81,7 +71,7 @@ export const UserProfile: React.FC<Props> = ({ open, setOpen }) => {
 
   const { mutateAsync: mutateUpdateProfile, isLoading: isUpdatingProfile } = useUpdateProfile({
     onSuccess: (_, variables) => {
-      message.success("Thay đổi hồ sơ thành công");
+      message.success("Thay đổi thông tin thành công");
       setUserProfile({ ...userProfile, ...variables });
       queryClient.invalidateQueries([CACHE_KEYS.LIST]);
     },
@@ -102,151 +92,76 @@ export const UserProfile: React.FC<Props> = ({ open, setOpen }) => {
 
   const items: TabsProps["items"] = [
     {
-      label: "Hồ sơ người dùng",
+      label: "Thông tin cá nhân",
       key: "profile-setting",
       children: (
-        <Card
-          bordered={false}
-          title="Cấu hình hồ sơ người dùng"
-          bodyStyle={{ padding: 0 }}
-          style={{ paddingRight: 24, paddingBottom: 24 }}
-        >
-          <Collapse
-            accordion
-            expandIconPosition="end"
-            expandIcon={() => <EditOutlined />}
-            bordered={false}
-            ghost
-            defaultActiveKey={activedPanel}
-            activeKey={activedPanel}
-            onChange={onChange}
+        <div className={styles.card}>
+          <Form
+            labelCol={{
+              span: 6,
+            }}
+            onFinish={handleUpdate}
+            onFinishFailed={onFinishFailed}
+            initialValues={userProfile}
           >
-            <Collapse.Panel header="Họ và tên" key="full-name">
-              <Form
-                labelAlign="right"
-                labelCol={{
-                  offset: 6,
-                }}
-                onFinish={handleUpdate}
-                onFinishFailed={onFinishFailed}
-              >
-                <Form.Item
-                  label="Họ"
-                  name="first"
-                  rules={[{ required: true }, { warningOnly: true }]}
-                >
-                  <Input />
-                </Form.Item>
-                <Form.Item
-                  label="Tên"
-                  name="last"
-                  rules={[{ required: true }, { warningOnly: true }]}
-                >
-                  <Input />
-                </Form.Item>
-                <Form.Item wrapperCol={{ offset: 6 }}>
-                  <Row justify="end">
-                    <Col pull={1}>
-                      <Button type="primary" htmlType="submit" loading={isUpdatingProfile}>
-                        Lưu
-                      </Button>
-                    </Col>
-                    <Col>
-                      <Button onClick={clickButtonHuy}>Huỷ</Button>
-                    </Col>
-                  </Row>
-                </Form.Item>
-              </Form>
-            </Collapse.Panel>
-            <Collapse.Panel header="Username" key="username">
-              <Form
-                labelAlign="right"
-                labelCol={{
-                  offset: 6,
-                }}
-                onFinish={handleUpdate}
-                initialValues={userProfile}
-                onFinishFailed={onFinishFailed}
-              >
-                <Form.Item
-                  label="Username"
-                  name="username"
-                  rules={[{ required: true }, { warningOnly: true }]}
-                >
-                  <Input />
-                </Form.Item>
+            <Form.Item
+              label="Họ và tên"
+              name="full_name"
+              rules={[{ required: true, message: "Vui lòng nhập họ và tên!" }]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              label="Tên tài khoản"
+              name="username"
+              rules={[{ required: true, message: "Vui lòng nhập tên tài khoản" }]}
+            >
+              <Input />
+            </Form.Item>
 
-                <Form.Item wrapperCol={{ offset: 6 }}>
-                  <Row justify="end">
-                    <Col pull={1}>
-                      <Button type="primary" htmlType="submit" loading={isUpdatingProfile}>
-                        Lưu
-                      </Button>
-                    </Col>
-                    <Col>
-                      <Button onClick={clickButtonHuy}>Huỷ</Button>
-                    </Col>
-                  </Row>
-                </Form.Item>
-              </Form>
-            </Collapse.Panel>
-            <Collapse.Panel header="Ảnh đại diện" key="profile-picture">
-              <Row>
-                <Col push={6} span={18}>
-                  <Avatar
-                    size={128}
-                    src={
-                      preview ? (
-                        preview
-                      ) : userProfile?.avatar_url ? (
-                        generateImage(userProfile.avatar_url)
-                      ) : (
-                        <UserOutlined />
-                      )
-                    }
-                    style={{ backgroundColor: "#cccccc" }}
-                  />
-                  <br />
-                  <br />
-                  <Typography.Paragraph>
-                    Tải ảnh với định dạng BMP, JPG, jPEG, hoặc PNG.
-                  </Typography.Paragraph>
-                  <Typography.Paragraph>Kích thước tối đa: 100MB</Typography.Paragraph>
-                  <Divider />
-                  <Space>
-                    <Button type="primary" onClick={() => refInput?.current?.click()}>
-                      Chọn
-                    </Button>
-                    <Button
-                      type="primary"
-                      disabled={!preview}
-                      onClick={handleUploadAvatar}
-                      loading={isUpdatingAvatar}
-                    >
-                      Lưu
-                    </Button>
-                    <Button type="text" onClick={clickButtonHuy}>
-                      Huỷ
-                    </Button>
-                    <input type="file" ref={refInput} hidden onChange={handleSelectFile} />
-                  </Space>
-                </Col>
-              </Row>
-            </Collapse.Panel>
-          </Collapse>
-        </Card>
+            <Row>
+              <Col push={6} span={18}>
+                <Avatar
+                  size={128}
+                  className={styles.avatar}
+                  src={
+                    preview ? (
+                      preview
+                    ) : userProfile?.avatar_url ? (
+                      generateImage(userProfile.avatar_url)
+                    ) : (
+                      <UserOutlined />
+                    )
+                  }
+                  onClick={() => refInput?.current?.click()}
+                />
+                <input type="file" ref={refInput} hidden onChange={handleSelectFile} />
+                <br />
+                <br />
+                <Typography.Paragraph>
+                  Tải ảnh với định dạng BMP, JPG, jPEG, hoặc PNG.
+                </Typography.Paragraph>
+                <Typography.Paragraph>Kích thước tối đa: 10MB</Typography.Paragraph>
+              </Col>
+            </Row>
+            <div className={styles.buttonSubmit}>
+              <Button
+                type="primary"
+                loading={isUpdatingAvatar || isUpdatingProfile}
+                htmlType="submit"
+              >
+                Lưu
+              </Button>
+            </div>
+          </Form>
+        </div>
       ),
     },
     {
-      label: "Bảo mật",
+      label: "Đổi mật khẩu",
       key: "security",
       children: (
-        <Card
-          bordered={false}
-          title="Cấu hình bảo mật"
-          bodyStyle={{ padding: 0 }}
-          style={{ paddingRight: 24, paddingBottom: 24 }}
-        >
+        <div className={styles.card}>
           {isErrorChangePassword && (
             <Alert
               message="Có lỗi xảy ra"
@@ -256,123 +171,108 @@ export const UserProfile: React.FC<Props> = ({ open, setOpen }) => {
               style={{ marginBottom: 24 }}
             />
           )}
-          <Collapse
-            accordion
-            expandIconPosition="end"
-            expandIcon={() => <EditOutlined />}
-            bordered={false}
-            ghost
+          <Form
+            labelCol={{
+              span: 6,
+            }}
+            labelWrap
+            onFinish={handleFinishPassword}
           >
-            <Collapse.Panel header="Mật khẩu" key="full-name">
-              <Form
-                labelAlign="left"
-                labelCol={{
-                  offset: 6,
-                  flex: "100px",
-                }}
-                labelWrap
-                requiredMark={false}
-                onFinish={handleFinishPassword}
-              >
-                <Form.Item
-                  name="password"
-                  label="Mật khẩu hiện tại"
-                  rules={[
-                    {
-                      min: 8,
-                      message: "Mật khẩu phải có ít nhất 8 ký tự!",
-                    },
-                  ]}
-                >
-                  <Input.Password />
-                </Form.Item>
-                <Form.Item
-                  name="new_password"
-                  label="Mật khẩu mới"
-                  dependencies={["password"]}
-                  hasFeedback
-                  rules={[
-                    {
-                      message: "Hãy nhập mật khẩu mới",
-                    },
-                    {
-                      max: 20,
-                      message: "Mật khẩu không được quá 20 ký tự!",
-                    },
-                    {
-                      min: 8,
-                      message: "Mật khẩu phải có ít nhất 8 ký tự!",
-                    },
-                    {
-                      pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/,
-                      message: "Mật khẩu phải có ít nhất 1 chữ hoa, 1 chữ thường và 1 số!",
-                    },
-                    ({ getFieldValue }) => ({
-                      validator(_, value) {
-                        if (!value || getFieldValue("password") !== value) {
-                          return Promise.resolve();
-                        }
-                        return Promise.reject(
-                          new Error("Mật khẩu mới không được trùng với mật khẩu cũ!"),
-                        );
-                      },
-                    }),
-                  ]}
-                >
-                  <Input.Password />
-                </Form.Item>
-                <Form.Item
-                  name="new_confirm_password"
-                  label="Nhập lại mật khẩu mới"
-                  dependencies={["new_password"]}
-                  hasFeedback
-                  rules={[
-                    {
-                      message: t("auth.enter_confirm_password"),
-                    },
-                    {
-                      max: 20,
-                      message: "Mật khẩu không được quá 20 ký tự!",
-                    },
-                    {
-                      min: 8,
-                      message: "Mật khẩu phải có ít nhất 8 ký tự!",
-                    },
-                    ({ getFieldValue }) => ({
-                      validator(_, value) {
-                        if (!value || getFieldValue("new_password") === value) {
-                          return Promise.resolve();
-                        }
-                        return Promise.reject(new Error(t("auth.error_confirm_password")));
-                      },
-                    }),
-                  ]}
-                >
-                  <Input.Password />
-                </Form.Item>
-                <Form.Item wrapperCol={{ offset: 6 }}>
-                  <Row justify="end">
-                    <Col pull={1}>
-                      <Button type="primary" htmlType="submit" loading={isLoadingChangePassword}>
-                        Lưu
-                      </Button>
-                    </Col>
-                    <Col>
-                      <Button>Huỷ</Button>
-                    </Col>
-                  </Row>
-                </Form.Item>
-              </Form>
-            </Collapse.Panel>
-          </Collapse>
-        </Card>
+            <Form.Item
+              name="password"
+              label="Mật khẩu hiện tại"
+              rules={[
+                {
+                  min: 8,
+                  message: "Mật khẩu phải có ít nhất 8 ký tự!",
+                  required: true,
+                },
+              ]}
+            >
+              <Input.Password autoComplete="off" />
+            </Form.Item>
+            <Form.Item
+              name="new_password"
+              label="Mật khẩu mới"
+              dependencies={["password"]}
+              hasFeedback
+              rules={[
+                {
+                  message: "Hãy nhập mật khẩu mới",
+                },
+                {
+                  max: 20,
+                  message: "Mật khẩu không được quá 20 ký tự!",
+                },
+                {
+                  min: 8,
+                  message: "Mật khẩu phải có ít nhất 8 ký tự!",
+                },
+                {
+                  pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/,
+                  message: "Mật khẩu phải có ít nhất 1 chữ hoa, 1 chữ thường và 1 số!",
+                },
+                ({ getFieldValue }) => ({
+                  validator(_, value) {
+                    if (!value || getFieldValue("password") !== value) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(
+                      new Error("Mật khẩu mới không được trùng với mật khẩu cũ!"),
+                    );
+                  },
+                }),
+              ]}
+            >
+              <Input.Password autoComplete="new-password" />
+            </Form.Item>
+            <Form.Item
+              name="new_confirm_password"
+              label="Nhập lại mật khẩu mới"
+              dependencies={["new_password"]}
+              hasFeedback
+              rules={[
+                {
+                  message: t("auth.enter_confirm_password"),
+                },
+                {
+                  max: 20,
+                  message: "Mật khẩu không được quá 20 ký tự!",
+                },
+                {
+                  min: 8,
+                  message: "Mật khẩu phải có ít nhất 8 ký tự!",
+                },
+                ({ getFieldValue }) => ({
+                  validator(_, value) {
+                    if (!value || getFieldValue("new_password") === value) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(new Error(t("auth.error_confirm_password")));
+                  },
+                }),
+              ]}
+            >
+              <Input.Password autoComplete="new-password" />
+            </Form.Item>
+            <Form.Item wrapperCol={{ offset: 6 }}>
+              <Row justify="end">
+                <Col>
+                  <Button type="primary" htmlType="submit" loading={isLoadingChangePassword}>
+                    Lưu
+                  </Button>
+                </Col>
+              </Row>
+            </Form.Item>
+          </Form>
+        </div>
       ),
     },
   ];
 
   return (
     <Modal
-      title="Hồ sơ"
+      title="Thông tin người dùng"
       open={open}
       onCancel={handleCancel}
       destroyOnClose
@@ -393,18 +293,19 @@ export const UserProfile: React.FC<Props> = ({ open, setOpen }) => {
     setPreview(false);
   }
 
-  function handleUpdate({ first, last, username }: Record<string, string>) {
-    if (first && last) {
-      return mutateUpdateProfile({
-        full_name: first ?? "" + last ?? "",
-      });
+  async function handleUpdate({ full_name, username }: Record<string, string>) {
+    await mutateUpdateProfile({
+      full_name,
+      username,
+    });
+    if (selectedFile) {
+      const formData = new FormData();
+      formData.append("file", selectedFile);
+      await mutateUploadAvatar(formData);
     }
 
-    if (username) {
-      return mutateUpdateProfile({
-        username: username ?? "",
-      });
-    }
+    // eslint-disable-next-line no-restricted-globals
+    location.reload();
   }
 
   function handleSelectFile(e: React.ChangeEvent<HTMLInputElement>) {
@@ -422,11 +323,5 @@ export const UserProfile: React.FC<Props> = ({ open, setOpen }) => {
       password: values.password,
       new_password: values.new_password,
     });
-  }
-
-  function handleUploadAvatar() {
-    const formData = new FormData();
-    formData.append("file", selectedFile!);
-    mutateUploadAvatar(formData);
   }
 };

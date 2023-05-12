@@ -65,9 +65,12 @@ export function NewsletterFormLinhVuc({ title }: Props): JSX.Element {
                     </Form.Item>
 
                     {fields.length > 1 ? (
-                      <MinusCircleOutlined
-                        className={styles.deleteButton}
+                      <Button
+                        icon={<DeleteOutlined className={styles.deleteButton} />}
                         onClick={() => remove(field.name)}
+                        type="text"
+                        title="Xoá từ khoá bắt buộc"
+                        danger
                       />
                     ) : null}
                   </Form.Item>
