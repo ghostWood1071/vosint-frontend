@@ -278,8 +278,6 @@ export function SynthesisReport(): JSX.Element {
     Modal.confirm({
       title: "Xác nhận xoá báo cáo",
       content: "Bạn có chắc chắn muốn xoá báo cáo này?",
-      okText: "Xoá",
-      cancelText: "Huỷ",
       getContainer: "#modal-mount",
       onOk: () => {
         deleteReport(id!, {

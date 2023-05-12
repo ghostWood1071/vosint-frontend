@@ -3,10 +3,9 @@ import {
   DeleteOutlined,
   ExclamationCircleOutlined,
   FormOutlined,
-  KeyOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { Avatar, Button, Col, Modal, Row, Space, Table, TableColumnsType, Typography } from "antd";
+import { Avatar, Button, Modal, Space, Table, TableColumnsType, Typography } from "antd";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router-dom";
@@ -110,30 +109,12 @@ export const UserManagerTable: React.FC<Props> = ({
   );
 
   function showConfirmDeleteUser(record: any) {
-    Modal.warning({
+    Modal.confirm({
       icon: <ExclamationCircleOutlined />,
-      title: "Xác nhận xoá người dùng",
-      okCancel: true,
+      title: `Bạn có chắc muốn xoá "${record.full_name}" không?`,
+      okText: "Xoá",
+      cancelText: "Huỷ",
       onOk: () => onDelete?.(record._id),
-      content: (
-        <Row align="middle">
-          <Col span={10}>
-            <Avatar
-              shape="square"
-              size={96}
-              src={record?.avatar_url ? generateImage(record.avatar_url) : <UserOutlined />}
-              style={{ backgroundColor: "#cccccc" }}
-            />
-          </Col>
-          <Col span={14}>
-            <Space direction="vertical">
-              <Typography.Text>{record.full_name}</Typography.Text>
-              <Typography.Text>{record.username}</Typography.Text>
-              <Typography.Text>{record.role}</Typography.Text>
-            </Space>
-          </Col>
-        </Row>
-      ),
     });
   }
 

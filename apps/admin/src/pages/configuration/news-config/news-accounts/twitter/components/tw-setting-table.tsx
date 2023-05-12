@@ -4,19 +4,8 @@ import {
   useMutationUpdateAccountMonitor,
 } from "@/pages/configuration/config.loader";
 import styles from "@/pages/configuration/news-config/news-accounts/facebook/components/fb-setting.module.less";
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import {
-  Alert,
-  Form,
-  Modal,
-  Popover,
-  Space,
-  Table,
-  TableColumnsType,
-  Tag,
-  Tooltip,
-  message,
-} from "antd";
+import { DeleteOutlined, EditOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
+import { Form, Modal, Popover, Space, Table, TableColumnsType, Tag, Tooltip, message } from "antd";
 import React, { useState } from "react";
 import { useQueryClient } from "react-query";
 
@@ -33,13 +22,12 @@ interface Props {
 
 export const SettingTable: React.FC<Props> = ({ data, listProxy, accountMonitor, loading }) => {
   const [isEditOpen, setIsEditOpen] = useState(false);
-  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [isIdTarget, setIsIdTarget] = useState("");
   const [isValueTarget, setIsValueTarget] = useState<any>();
   const queryClient = useQueryClient();
   const [form] = Form.useForm();
   const { mutate: mutateUpdate } = useMutationUpdateAccountMonitor();
-  const { mutate: mutateDelete } = useMutationDeleteAccountMonitor();
+  const { mutateAsync: mutateDelete } = useMutationDeleteAccountMonitor();
 
   const columns: TableColumnsType<any> = [
     {
@@ -138,27 +126,6 @@ export const SettingTable: React.FC<Props> = ({ data, listProxy, accountMonitor,
           onFinish={handleFinishEdit}
         />
       </Modal>
-      <Modal
-        title="Xác nhận xóa tài khoản"
-        open={isDeleteOpen}
-        onCancel={handleCancelDelete}
-        onOk={handleOkDelete}
-        destroyOnClose
-        maskClosable={false}
-      >
-        {isDeleteOpen ? (
-          <Alert
-            description={
-              <div>
-                Bạn có chắc muốn xoá{" "}
-                <span className={styles.fontNormal}>" {isValueTarget.username} "</span> không?
-              </div>
-            }
-            type="error"
-            showIcon
-          />
-        ) : null}
-      </Modal>
     </>
   );
   function handleShowEdit(value: any, values: any) {
@@ -217,26 +184,23 @@ export const SettingTable: React.FC<Props> = ({ data, listProxy, accountMonitor,
   }
 
   function handleShowDelete(value: any, values: any) {
-    setIsIdTarget(value);
     setIsValueTarget(values);
-    setIsDeleteOpen(true);
-  }
-
-  function handleCancelDelete() {
-    setIsDeleteOpen(false);
-  }
-
-  function handleOkDelete() {
-    mutateDelete(isIdTarget, {
-      onSuccess: () => {
-        queryClient.invalidateQueries([CACHE_KEYS.InfoAccountMonitorFB]);
-        message.success({
-          content: "Xoá thành công!",
-          key: CACHE_KEYS.InfoAccountMonitorFB,
-        });
-      },
-      onError: () => {},
+    Modal.confirm({
+      title: `Bạn có chắc muốn xoá "${values.username}" không?`,
+      icon: <ExclamationCircleOutlined />,
+      okText: "Xoá",
+      cancelText: "Huỷ",
+      onOk: () =>
+        mutateDelete(value, {
+          onSuccess: () => {
+            queryClient.invalidateQueries([CACHE_KEYS.InfoAccountMonitorFB]);
+            message.success({
+              content: "Xoá thành công!",
+              key: CACHE_KEYS.InfoFBSetting,
+            });
+          },
+          onError: () => {},
+        }),
     });
-    setIsDeleteOpen(false);
   }
 };

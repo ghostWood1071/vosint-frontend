@@ -150,8 +150,10 @@ export const NewsTable: React.FC<Props> = ({
 
         function handleRemove() {
           Modal.confirm({
-            title: "Bạn có muốn xoá bản tin này?",
+            title: "Bạn có chắc muốn xoá bản tin này?",
             icon: <ExclamationCircleOutlined />,
+            okText: "Xoá",
+            cancelText: "Huỷ",
             content: `${record["data:title"]}`,
             onOk() {
               return onDelete?.(id);
