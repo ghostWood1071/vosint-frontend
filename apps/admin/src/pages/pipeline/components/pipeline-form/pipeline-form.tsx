@@ -1,5 +1,4 @@
 import { VI_LOCALE } from "@/locales/cron";
-import { SaveOutlined } from "@ant-design/icons";
 import { Button, Card, Form, Input } from "antd";
 import React, { useState } from "react";
 import { Cron } from "react-js-cron";

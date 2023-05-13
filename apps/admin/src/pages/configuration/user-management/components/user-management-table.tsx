@@ -104,6 +104,7 @@ export const UserManagerTable: React.FC<Props> = ({
         current: page ? +page : 1,
         onChange: handlePaginationChange,
         pageSize: pageSize ? +pageSize : 10,
+        showSizeChanger: true,
       }}
     />
   );

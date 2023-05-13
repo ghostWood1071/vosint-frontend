@@ -251,12 +251,14 @@ export function ModalAddNewsSamples({
           total: data?.total_record,
           current: paginate.pageNumber,
           pageSize: paginate.pageSize,
+          showSizeChanger: true,
           onChange: handlePaginate,
         }}
         columns={columns}
         dataSource={data?.result}
         rowSelection={rowSelection}
         loading={isLoading}
+        size="small"
       />
     </Modal>
   );

@@ -142,6 +142,7 @@ export const ViewList = () => {
             onChange: handlePaginationChange,
             pageSize: pageSize ? +pageSize : 10,
             size: "default",
+            showSizeChanger: true,
           }}
           rowKey="_id"
           dataSource={data?.data}

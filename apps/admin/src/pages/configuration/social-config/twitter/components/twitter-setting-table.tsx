@@ -108,6 +108,7 @@ export const TwSettingTable: React.FC<Props> = ({
           onChange: handlePaginationChange,
           pageSize: pageSize ? +pageSize : 10,
           size: "default",
+          showSizeChanger: true,
         }}
         loading={loading}
       />

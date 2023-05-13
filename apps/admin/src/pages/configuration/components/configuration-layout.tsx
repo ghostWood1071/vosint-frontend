@@ -16,7 +16,7 @@ import {
   twitterConfigPath,
   userManagementPath,
 } from "@/pages/router";
-import { Menu, MenuProps } from "antd";
+import { Menu, MenuProps, Modal } from "antd";
 import React from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 
@@ -73,5 +73,6 @@ const Sidebar = () => {
 
   function handleClickMenu({ key }: { key: string }) {
     navigate(key);
+    Modal.destroyAll();
   }
 };

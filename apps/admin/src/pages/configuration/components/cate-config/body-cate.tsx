@@ -64,6 +64,7 @@ export const BodyCate: React.FC<Props> = ({ title }) => {
                 position: "bottom",
                 total: data?.total,
                 onChange: handlePaginationChange,
+                showSizeChanger: true,
               }}
               dataSource={data?.data}
               renderItem={(item) => {

@@ -207,7 +207,15 @@ function NewsFilterModal(): JSX.Element {
         renderItem={(item) => {
           return (
             <List.Item
-              actions={[<DeleteOutlined style={{ color: "#ff1207" }} onClick={handleDelete} />]}
+              actions={[
+                <Button
+                  icon={<DeleteOutlined />}
+                  title="Xoá tin khỏi danh sách tin"
+                  onClick={handleDelete}
+                  danger
+                  type="text"
+                />,
+              ]}
             >
               <Typography.Link target="_blank" href={item?.["data:url"]} rel="noreferrer">
                 {item?.["data:title"]}

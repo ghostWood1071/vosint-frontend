@@ -1,13 +1,17 @@
 import { ActionReloadIcon, ActionRunIcon, ActionStopIcon } from "@/assets/svg";
+import { VI_LOCALE } from "@/locales/cron";
 import { pipelineCreatePath } from "@/pages/router";
 import { PlusOutlined } from "@ant-design/icons";
-import { Button, Input, Modal, PageHeader, message } from "antd";
+import { Button, Form, Input, Modal, PageHeader, message } from "antd";
 import classNames from "classnames";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { Cron } from "react-js-cron";
+import "react-js-cron/dist/styles.css";
 import { useQueryClient } from "react-query";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
+import { PipelineForm } from "../components/pipeline-form/pipeline-form";
 import { PipelineHistory } from "../components/pipeline-history";
 import { PipelineTable } from "../components/pipeline-table";
 import {
@@ -26,8 +30,10 @@ const { Search } = Input;
 
 export const PipelineList: React.FC = () => {
   const { t } = useTranslation("translation", { keyPrefix: "pipeline" });
-  const navigate = useNavigate();
+  const [form] = Form.useForm();
   const queryClient = useQueryClient();
+  const [isOpenCreate, setIsOpenCreate] = useState(false);
+  const [cronExpr, setCronExpr] = useState("* * * * *");
 
   const [searchParams, setSearchParams] = useSearchParams();
   const { data: pipelines } = usePipelines({
@@ -89,7 +95,7 @@ export const PipelineList: React.FC = () => {
           <Button
             title="Tạo mới pipeline"
             icon={<PlusOutlined />}
-            onClick={navigateCreatePipeline}
+            onClick={openCreateModal}
             key="create"
           />,
         ]}
@@ -115,6 +121,28 @@ export const PipelineList: React.FC = () => {
       >
         <PipelineHistory isLoading={isLoadingHistory} data={data} />
       </Modal>
+      <Modal
+        title={t("create_new_pipeline")}
+        open={isOpenCreate}
+        onCancel={handleCancelCreate}
+        onOk={handleOkCreate}
+        getContainer="#modal-mount"
+        confirmLoading={isUpdating}
+        width="60%"
+      >
+        <Form layout="vertical" form={form}>
+          <Form.Item
+            label="Tên pipeline"
+            name="name"
+            rules={[{ required: true, whitespace: true, message: "Hãy nhập tên pipeline" }]}
+          >
+            <Input placeholder="Tên pipeline" />
+          </Form.Item>
+          <Form.Item label="Lịch chạy:">
+            <Cron value={cronExpr} setValue={setCronExpr} locale={VI_LOCALE} />
+          </Form.Item>
+        </Form>
+      </Modal>
     </div>
   );
 
@@ -127,8 +155,8 @@ export const PipelineList: React.FC = () => {
     setIsHistoryOpen(false);
   }
 
-  function navigateCreatePipeline() {
-    navigate(pipelineCreatePath);
+  function openCreateModal() {
+    setIsOpenCreate(true);
   }
 
   function handleChangeActive(_id: string, activated: boolean) {
@@ -176,5 +204,27 @@ export const PipelineList: React.FC = () => {
 
   function handleRefresh() {
     queryClient.invalidateQueries([CACHE_KEYS.Pipelines]);
+  }
+
+  function handleOkCreate() {
+    form.validateFields().then(({ name }) => {
+      mutateUpdate(
+        {
+          name,
+          cron_expr: cronExpr,
+          enabled: false,
+        },
+        {
+          onSuccess: () => {
+            setIsOpenCreate(false);
+            queryClient.invalidateQueries([CACHE_KEYS.Pipelines]);
+          },
+        },
+      );
+    });
+  }
+
+  function handleCancelCreate() {
+    setIsOpenCreate(false);
   }
 };
