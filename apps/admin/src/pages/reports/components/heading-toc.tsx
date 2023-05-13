@@ -1,15 +1,7 @@
-import {
-  DeleteOutlined,
-  EditOutlined,
-  EllipsisOutlined,
-  PlusCircleFilled,
-  PlusOutlined,
-} from "@ant-design/icons";
-import { Col, Row, Space, Typography } from "antd";
+import { DeleteOutlined, EditOutlined, PlusCircleFilled, PlusOutlined } from "@ant-design/icons";
+import { Popover, Space, Typography } from "antd";
 import cn from "classnames";
 import { useRef, useState } from "react";
-import { MouseEventHandler } from "react";
-import { useClickAway } from "react-use";
 
 import { useHeadingTocDispatchContext } from "./heading-toc.context";
 import styles from "./heading-toc.module.less";
@@ -30,7 +22,6 @@ export const navigationItemLevel: Record<number, string> = {
 export function HeadingToc({ headingsData }: Props): JSX.Element {
   const [selectedKey, setSelectedKey] = useState<string>("");
   const selectedIndex = useRef(0);
-  const [isOpen, setIsOpen] = useState<string | null>(null);
   const refIsOpen = useRef(null);
 
   const { setMode, setSelectedIndex } = useHeadingTocDispatchContext();
@@ -41,24 +32,6 @@ export function HeadingToc({ headingsData }: Props): JSX.Element {
     selectedIndex.current = currentIndex;
   }
 
-  const handleClickAway = () => {
-    setIsOpen(null);
-  };
-
-  useClickAway(refIsOpen, handleClickAway);
-
-  const handleCreate = () => {
-    setMode("create");
-  };
-
-  const handleUpdate = () => {
-    setMode("update");
-  };
-
-  const handleDelete = () => {
-    setMode("delete");
-  };
-
   const handleAdd = () => {
     setMode("create");
     setSelectedIndex(null);
@@ -66,24 +39,22 @@ export function HeadingToc({ headingsData }: Props): JSX.Element {
 
   return (
     <div className={cn(styles.tableOfContents, "scrollbar table-of-contents")}>
-      <Row align="middle" justify="space-between">
-        <div className={styles.header}>Mục lục</div>
-        <div className={styles.icon}>
+      <Space align="start" className={styles.header}>
+        <div className={styles.textHeader}>Mục lục</div>
+        <div>
           <PlusCircleFilled onClick={handleAdd} />
         </div>
-      </Row>
+      </Space>
       <div className={styles.navigationItemList} tabIndex={0} ref={refIsOpen}>
         {headingsData.map(({ id, level, title }, index) => {
-          const handleOpen: MouseEventHandler<HTMLSpanElement> = (e) => {
-            e.stopPropagation();
-            setIsOpen(id);
+          const handleClick = (mode: "create" | "update" | "delete") => () => {
+            setMode(mode);
             setSelectedIndex(index);
           };
 
           return (
-            <Row
+            <div
               key={id}
-              justify={"space-between"}
               className={cn(
                 {
                   [styles.navigationItem]: true,
@@ -93,35 +64,32 @@ export function HeadingToc({ headingsData }: Props): JSX.Element {
               )}
               role="navigation"
               onClick={() => scrollToNode(id, index)}
-              gutter={[8, 8]}
             >
-              <Col span={20} className={navigationItemLevel[level]}>
-                <Typography.Text ellipsis>{title}</Typography.Text>
-              </Col>
-              <Col span={4} className={styles.right}>
-                {isOpen === id ? (
+              <Popover
+                placement="right"
+                content={
                   <Space>
                     <PlusOutlined
-                      onClick={handleCreate}
+                      onClick={handleClick("create")}
                       className={styles.plus}
                       title={`Thêm tiêu đề bên dưới`}
                     />
                     <EditOutlined
-                      onClick={handleUpdate}
+                      onClick={handleClick("update")}
                       className={styles.edit}
                       title={`Chỉnh sửa tiêu đề`}
                     />
                     <DeleteOutlined
-                      onClick={handleDelete}
+                      onClick={handleClick("delete")}
                       className={styles.delete}
                       title={`Xóa tiêu đề`}
                     />
                   </Space>
-                ) : (
-                  <EllipsisOutlined className={styles.ellips} onClick={handleOpen} />
-                )}
-              </Col>
-            </Row>
+                }
+              >
+                <Typography.Text ellipsis>{title}</Typography.Text>
+              </Popover>
+            </div>
           );
         })}
       </div>

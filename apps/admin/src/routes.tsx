@@ -45,7 +45,6 @@ import {
   ReportLayout,
   SynthesisReportCreate,
   SynthesisReportDetail,
-  SyntheticReport,
 } from "./pages/reports";
 import {
   accountForMonitoringFacebookPath,
@@ -204,7 +203,7 @@ export const routers = createBrowserRouter([
           },
           {
             path: reportSyntheticPath,
-            element: <SyntheticReport />,
+            element: <Navigate to={reportSyntheticCreatePath} />,
           },
           {
             path: reportSyntheticDetailPath,

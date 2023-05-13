@@ -2,7 +2,7 @@ import { OutlineFileWordIcon } from "@/assets/icons";
 import { useEventsState } from "@/components/editor/plugins/events-plugin/events-state";
 import { downloadFile } from "@/components/editor/utils";
 import { useConvertHeadingsToDocx } from "@/components/editor/utils/docx";
-import { getSyntheticReportDetailUrl, reportPath } from "@/pages/router";
+import { reportPath } from "@/pages/router";
 import {
   ArrowLeftOutlined,
   DeleteOutlined,
@@ -11,9 +11,7 @@ import {
   UnorderedListOutlined,
 } from "@ant-design/icons";
 import {
-  Alert,
   Button,
-  Card,
   Col,
   DatePicker,
   Form,
@@ -41,48 +39,40 @@ import {
   useHeadingTocDispatchContext,
 } from "../components/heading-toc.context";
 import { Headings, HeadingsData } from "../components/headings";
-import {
-  CACHE_KEYS,
-  useCreateReport,
-  useDeleteReport,
-  useReport,
-  useUpdateReport,
-} from "../report.loader";
+import { CACHE_KEYS, useDeleteReport, useReport, useUpdateReport } from "../report.loader";
 import styles from "./synthesis-report.module.less";
 
 export function SynthesisReport(): JSX.Element {
-  const { id } = useParams<{ id: string }>();
-  const { data, isLoading } = useReport(id!, {
-    enabled: !!id,
-    onSuccess: (data) => {
-      setTitle(data.title);
-      setHeadings(data?.headings ?? []);
-    },
-  });
-
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-
-  const [headings, setHeadings] = useState<HeadingsData[]>([]);
-  const [form] = Form.useForm();
   const [title, setTitle] = useState("Tên báo cáo");
+  const [headings, setHeadings] = useState<HeadingsData[]>([]);
+
+  const { id } = useParams<{ id: string }>();
+  const { data } = useReport(id!, {
+    enabled: !!id,
+  });
+
+  useEffect(() => {
+    if (!data) return;
+
+    setTitle(data.title);
+    setHeadings(data.headings);
+  }, [data]);
+
+  const [form] = Form.useForm();
   const [isOpen, setIsOpen] = useState(true);
   const [dateTime, setDateTime] = useEventsState(
     (state) => [state.dateTimeFilter, state.setDateTimeFilter],
     shallow,
   );
 
-  const { mutate } = useCreateReport({
-    onSuccess: (data) => {
-      navigate(getSyntheticReportDetailUrl(data));
-      message.success("Tạo báo cáo thành công");
-      queryClient.invalidateQueries(CACHE_KEYS.REPORTS);
-    },
-  });
   const { mutate: deleteReport, isLoading: isDeleting } = useDeleteReport();
   const { mutate: updateReport, isLoading: isUpdating } = useUpdateReport(id!, {
     onSuccess: (_, variables) => {
       setHeadings(variables?.headings ?? []);
+      setTitle(variables?.title ?? "");
+      message.success("Cập nhật báo cáo thành công");
     },
   });
 
@@ -97,10 +87,7 @@ export function SynthesisReport(): JSX.Element {
 
       draft[headingIndex].eventIds.splice(index, 1);
     });
-
-    updateReport({
-      headings: deletedEventsHeadings,
-    });
+    setHeadings(deletedEventsHeadings);
   };
 
   // HeadingTOC
@@ -109,6 +96,13 @@ export function SynthesisReport(): JSX.Element {
 
   useEffect(() => {
     if (mode === "delete") {
+      Modal.confirm({
+        title: "Bạn có chắc chắn muốn xoá tiêu đề này?",
+        content: "Tất cả các sự kiện bên trong tiêu đề này sẽ bị xóa",
+        okText: "Xóa",
+        cancelText: "Hủy",
+        onOk: handleOK,
+      });
       return;
     }
 
@@ -120,98 +114,93 @@ export function SynthesisReport(): JSX.Element {
     if (mode === "create") {
       form.resetFields();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mode]);
 
   return (
     <div className={styles.root}>
-      <Card bordered={false} loading={isLoading}>
-        <Row>
-          <Col span={isOpen ? 5 : 1} className={styles.outline}>
-            <div className={styles.affix}>
-              {isOpen ? (
-                <Button
-                  shape="circle"
-                  title="Đóng outline"
-                  icon={<ArrowLeftOutlined />}
-                  onClick={toggleOutline}
-                />
-              ) : (
-                <Button
-                  shape="circle"
-                  title="Mở outline"
-                  icon={<UnorderedListOutlined />}
-                  onClick={toggleOutline}
-                />
-              )}
-
-              {isOpen && <HeadingToc headingsData={headings} />}
-            </div>
-          </Col>
-          <Col span={isOpen ? 16 : 22} className={styles.container}>
-            <Row justify={"space-between"} align={"middle"}>
-              <Col span={4}></Col>
-              <Col span={16} className={styles.title}>
-                <Typography.Title
-                  level={1}
-                  editable={{
-                    icon: <EditOutlined />,
-                    tooltip: "Chỉnh sửa tên báo cáo",
-                    triggerType: ["text", "icon"],
-                    enterIcon: null,
-                    onChange: (value) => setTitle(value),
-                  }}
-                >
-                  {data?.title}
-                </Typography.Title>
-              </Col>
-              <Col span={4}>
-                <Space>
-                  <Button
-                    title="Xuất file ra docx"
-                    icon={<OutlineFileWordIcon />}
-                    onClick={handleExportDocx}
-                  />
-                </Space>
-              </Col>
-
-              <Col span={24} className={styles.center}>
-                <Space>
-                  <Typography.Text>Từ ngày: </Typography.Text>
-                  <DatePicker.RangePicker
-                    defaultValue={[moment().subtract(7, "days"), moment()]}
-                    format={"DD/MM/YYYY"}
-                    bordered={false}
-                    onChange={(_, formatString) => setDateTime(formatString)}
-                  />
-                </Space>
-              </Col>
-            </Row>
-
-            <Headings headingsData={headings} onDeleteEvent={handleDeleteEvent} />
-          </Col>
-          <Col span={isOpen ? 2 : 1} className={styles.action}>
-            <Space>
+      <Row>
+        <Col md={isOpen ? 4 : 1} lg={isOpen ? 4 : 1} className={styles.outline}>
+          <div className={styles.affix}>
+            {isOpen ? (
               <Button
-                className={styles.save}
-                icon={<SaveOutlined />}
-                type="primary"
-                title="Lưu báo cáo"
-                onClick={handleSave}
+                shape="circle"
+                title="Đóng outline"
+                icon={<ArrowLeftOutlined />}
+                onClick={toggleOutline}
               />
+            ) : (
               <Button
-                icon={<DeleteOutlined />}
-                danger
-                title="Xoá báo cáo"
-                onClick={handleDelete}
-                loading={isDeleting}
+                shape="circle"
+                title="Mở outline"
+                icon={<UnorderedListOutlined />}
+                onClick={toggleOutline}
               />
-            </Space>
-          </Col>
-        </Row>
-      </Card>
+            )}
+
+            {isOpen && <HeadingToc headingsData={headings} />}
+          </div>
+        </Col>
+        <Col md={isOpen ? 16 : 19} span={isOpen ? 16 : 22} className={styles.container}>
+          <Row justify={"space-between"} align={"middle"}>
+            <Col span={4}></Col>
+            <Col span={16} className={styles.title} pull={4}>
+              <Typography.Title
+                level={2}
+                editable={{
+                  icon: <EditOutlined />,
+                  tooltip: "Chỉnh sửa tên báo cáo",
+                  triggerType: ["text", "icon"],
+                  enterIcon: null,
+                  onChange: (value) => setTitle(value),
+                }}
+              >
+                {data?.title}
+              </Typography.Title>
+            </Col>
+
+            <Col span={24} className={styles.center}>
+              <Space>
+                <Typography.Text>Từ ngày: </Typography.Text>
+                <DatePicker.RangePicker
+                  defaultValue={[moment().subtract(7, "days"), moment()]}
+                  format={"DD/MM/YYYY"}
+                  bordered={false}
+                  onChange={(_, formatString) => setDateTime(formatString)}
+                />
+              </Space>
+            </Col>
+          </Row>
+
+          <Headings headingsData={headings} onDeleteEvent={handleDeleteEvent} />
+        </Col>
+        <Col md={isOpen ? 4 : 4} span={isOpen ? 4 : 1} className={styles.action}>
+          <Space>
+            <Button
+              title="Xuất file ra docx"
+              icon={<OutlineFileWordIcon />}
+              onClick={handleExportDocx}
+            />
+            <Button
+              className={styles.save}
+              icon={<SaveOutlined />}
+              type="primary"
+              title="Lưu báo cáo"
+              onClick={handleSave}
+            />
+            <Button
+              icon={<DeleteOutlined />}
+              danger
+              title="Xoá báo cáo"
+              onClick={handleDelete}
+              loading={isDeleting}
+            />
+          </Space>
+        </Col>
+      </Row>
 
       <Modal
-        open={mode !== null}
+        open={mode !== null && mode !== "delete"}
         title={
           mode === "create"
             ? "Thêm tiêu đề bên dưới"
@@ -225,43 +214,32 @@ export function SynthesisReport(): JSX.Element {
         onOk={handleOK}
         confirmLoading={isUpdating}
       >
-        {mode === "delete" && (
-          <Alert
-            message="Bạn có chắc chắn muốn xóa tiêu đề này?"
-            description="Tất cả các sự kiện bên trong tiêu đề này sẽ bị xóa."
-            type="warning"
-            showIcon
-          />
-        )}
-
-        {mode !== "delete" && (
-          <Form form={form} labelCol={{ span: 6 }} initialValues={{ level: 1 }}>
-            <Form.Item
-              label="Tên tiêu đề"
-              name="title"
-              rules={[
-                {
-                  required: true,
-                  whitespace: true,
-                  message: "Vui lòng nhập tên tiêu đề",
-                },
+        <Form form={form} labelCol={{ span: 6 }} initialValues={{ level: 1 }}>
+          <Form.Item
+            label="Tên tiêu đề"
+            name="title"
+            rules={[
+              {
+                required: true,
+                whitespace: true,
+                message: "Vui lòng nhập tên tiêu đề",
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item label="Level" name="level">
+            <Select
+              options={[
+                { label: "Heading 1", value: 1 },
+                { label: "Heading 2", value: 2 },
+                { label: "Heading 3", value: 3 },
+                { label: "Heading 4", value: 4 },
+                { label: "Heading 5", value: 5 },
               ]}
-            >
-              <Input />
-            </Form.Item>
-            <Form.Item label="Level" name="level">
-              <Select
-                options={[
-                  { label: "Heading 1", value: 1 },
-                  { label: "Heading 2", value: 2 },
-                  { label: "Heading 3", value: 3 },
-                  { label: "Heading 4", value: 4 },
-                  { label: "Heading 5", value: 5 },
-                ]}
-              />
-            </Form.Item>
-          </Form>
-        )}
+            />
+          </Form.Item>
+        </Form>
       </Modal>
     </div>
   );
@@ -271,7 +249,7 @@ export function SynthesisReport(): JSX.Element {
   }
 
   function handleSave() {
-    mutate({ title, headings });
+    updateReport({ title, headings });
   }
 
   function handleDelete() {

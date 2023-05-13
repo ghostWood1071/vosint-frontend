@@ -17,14 +17,6 @@ export const QuickReport = lazyLoad(
   },
 );
 
-export const SyntheticReport = lazyLoad(
-  () => import("./synthetic-report"),
-  (module) => module.SyntheticReport,
-  {
-    fallback: <SplashScreen />,
-  },
-);
-
 export const SynthesisReportDetail = lazyLoad(
   () => import("./synthesis-report-detail"),
   (module) => module.SynthesisReportDetail,
