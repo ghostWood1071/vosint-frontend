@@ -5,20 +5,7 @@ import {
   SaveOutlined,
   UnorderedListOutlined,
 } from "@ant-design/icons";
-import {
-  Alert,
-  Button,
-  Card,
-  Col,
-  Form,
-  Input,
-  Modal,
-  Row,
-  Select,
-  Space,
-  Typography,
-  message,
-} from "antd";
+import { Button, Col, Form, Input, Modal, Row, Select, Space, Typography, message } from "antd";
 import produce from "immer";
 import { nanoid } from "nanoid";
 import { useEffect, useState } from "react";
@@ -52,16 +39,19 @@ export function SynthesisReport(): JSX.Element {
     },
   });
 
-  const handleDeleteEvent = (reportId: string) => (eventId: string) => {
-    console.log(reportId, eventId);
-  };
-
   // HeadingTOC
   const { mode, selectedIndex } = useHeadingTocContext();
   const { setMode, setSelectedIndex } = useHeadingTocDispatchContext();
 
   useEffect(() => {
     if (mode === "delete") {
+      Modal.confirm({
+        title: "Bạn có chắc chắn muốn xoá tiêu đề này?",
+        content: "Tất cả các sự kiện bên trong tiêu đề này sẽ bị xóa",
+        okText: "Xóa",
+        cancelText: "Hủy",
+        onOk: handleOK,
+      });
       return;
     }
 
@@ -73,71 +63,70 @@ export function SynthesisReport(): JSX.Element {
     if (mode === "create") {
       form.resetFields();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mode]);
 
   return (
     <div className={styles.root}>
-      <Card bordered={false}>
-        <Row>
-          <Col span={isOpen ? 5 : 1} className={styles.outline}>
-            <div className={styles.affix}>
-              {isOpen ? (
-                <Button
-                  shape="circle"
-                  title="Đóng outline"
-                  icon={<ArrowLeftOutlined />}
-                  onClick={toggleOutline}
-                />
-              ) : (
-                <Button
-                  shape="circle"
-                  title="Mở outline"
-                  icon={<UnorderedListOutlined />}
-                  onClick={toggleOutline}
-                />
-              )}
+      <Row>
+        <Col span={isOpen ? 5 : 1} className={styles.outline}>
+          <div className={styles.affix}>
+            {isOpen ? (
+              <Button
+                shape="circle"
+                title="Đóng outline"
+                icon={<ArrowLeftOutlined />}
+                onClick={toggleOutline}
+              />
+            ) : (
+              <Button
+                shape="circle"
+                title="Mở outline"
+                icon={<UnorderedListOutlined />}
+                onClick={toggleOutline}
+              />
+            )}
 
-              {isOpen && <HeadingToc headingsData={headings} />}
-            </div>
-          </Col>
-          <Col span={isOpen ? 16 : 22} className={styles.container}>
-            <Row justify={"space-between"} align={"middle"}>
-              <Col span={3}></Col>
-              <Col span={16} className={styles.title}>
-                <Typography.Title
-                  level={1}
-                  editable={{
-                    icon: <EditOutlined />,
-                    tooltip: "Chỉnh sửa tên báo cáo",
-                    triggerType: ["text", "icon"],
-                    enterIcon: null,
-                    onChange: (value) => setTitle(value),
-                  }}
-                >
-                  {title}
-                </Typography.Title>
-              </Col>
-              <Col span={3}>
-                <Space>
-                  <Button
-                    className={styles.save}
-                    icon={<SaveOutlined />}
-                    type="primary"
-                    title="Lưu báo cáo"
-                    onClick={handleSave}
-                  />
-                </Space>
-              </Col>
-            </Row>
+            {isOpen && <HeadingToc headingsData={headings} />}
+          </div>
+        </Col>
+        <Col span={isOpen ? 16 : 22} className={styles.container}>
+          <Row justify={"space-between"} align={"middle"}>
+            <Col span={3}></Col>
+            <Col span={16} className={styles.title}>
+              <Typography.Title
+                level={1}
+                editable={{
+                  icon: <EditOutlined />,
+                  tooltip: "Chỉnh sửa tên báo cáo",
+                  triggerType: ["text", "icon"],
+                  enterIcon: null,
+                  onChange: (value) => setTitle(value),
+                }}
+              >
+                {title}
+              </Typography.Title>
+            </Col>
+            <Col span={3}>
+              <Space>
+                <Button
+                  className={styles.save}
+                  icon={<SaveOutlined />}
+                  type="primary"
+                  title="Lưu báo cáo"
+                  onClick={handleSave}
+                />
+              </Space>
+            </Col>
+          </Row>
 
-            <Headings headingsData={headings} onDeleteEvent={handleDeleteEvent} />
-          </Col>
-          <Col span={isOpen ? 2 : 1}></Col>
-        </Row>
-      </Card>
+          <Headings headingsData={headings} />
+        </Col>
+        <Col span={isOpen ? 2 : 1}></Col>
+      </Row>
 
       <Modal
-        open={mode !== null}
+        open={mode !== null && mode !== "delete"}
         title={
           mode === "create"
             ? "Thêm tiêu đề bên dưới"
@@ -150,43 +139,32 @@ export function SynthesisReport(): JSX.Element {
         closable={false}
         onOk={handleOK}
       >
-        {mode === "delete" && (
-          <Alert
-            message="Bạn có chắc chắn muốn xóa tiêu đề này?"
-            description="Tất cả các sự kiện bên trong tiêu đề này sẽ bị xóa."
-            type="warning"
-            showIcon
-          />
-        )}
-
-        {mode !== "delete" && (
-          <Form form={form} labelCol={{ span: 6 }} initialValues={{ level: 1 }}>
-            <Form.Item
-              label="Tên tiêu đề"
-              name="title"
-              rules={[
-                {
-                  required: true,
-                  whitespace: true,
-                  message: "Vui lòng nhập tên tiêu đề",
-                },
+        <Form form={form} labelCol={{ span: 6 }} initialValues={{ level: 1 }}>
+          <Form.Item
+            label="Tên tiêu đề"
+            name="title"
+            rules={[
+              {
+                required: true,
+                whitespace: true,
+                message: "Vui lòng nhập tên tiêu đề",
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item label="Level" name="level">
+            <Select
+              options={[
+                { label: "Heading 1", value: 1 },
+                { label: "Heading 2", value: 2 },
+                { label: "Heading 3", value: 3 },
+                { label: "Heading 4", value: 4 },
+                { label: "Heading 5", value: 5 },
               ]}
-            >
-              <Input />
-            </Form.Item>
-            <Form.Item label="Level" name="level">
-              <Select
-                options={[
-                  { label: "Heading 1", value: 1 },
-                  { label: "Heading 2", value: 2 },
-                  { label: "Heading 3", value: 3 },
-                  { label: "Heading 4", value: 4 },
-                  { label: "Heading 5", value: 5 },
-                ]}
-              />
-            </Form.Item>
-          </Form>
-        )}
+            />
+          </Form.Item>
+        </Form>
       </Modal>
     </div>
   );

@@ -7,20 +7,19 @@
   padding-top: 20px;
 
   .header {
-    letter-spacing: 0.1px;
-    line-height: 16px;
-    text-transform: none;
-    color: #1f1f1f;
-    padding-bottom: 12px;
-    padding-left: 16px;
-  }
+    margin-bottom: 12px;
 
-  .icon {
-    padding-right: 24px;
+    .text-header {
+      letter-spacing: 0.1px;
+      line-height: 16px;
+      text-transform: none;
+      color: #1f1f1f;
+      padding-left: 16px;
+      font-size: 20px;
+    }
   }
 
   .navigation-item-list {
-    padding-right: 16px;
     user-select: none;
     outline: none;
 
@@ -29,31 +28,21 @@
       padding-right: 8px;
 
       cursor: pointer;
-      height: 32px;
-      line-height: 32px;
-
-      .navigation-item-content {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: pre;
-
-        &:not(.navigation-item-level-1) {
-          color: #444746;
-        }
-      }
+      height: 25px;
+      line-height: 25px;
 
       :global {
         .ant-typography {
-          padding-left: 16px;
+          padding-left: 18px;
         }
       }
 
       &.location-indicator-highlight {
-        color: #1967d2 !important;
+        color: #1967d2;
 
         :global {
           .ant-typography {
-            color: #1967d2 !important;
+            color: #1967d2;
 
             &::before {
               content: "-";
@@ -71,18 +60,6 @@
         transform: rotate(90deg);
       }
 
-      .delete {
-        color: #ff4d4f;
-      }
-
-      .edit {
-        color: #1890ff;
-      }
-
-      .plus {
-        color: #096dd9;
-      }
-
       .right {
         text-align: right;
       }
@@ -93,22 +70,38 @@
 .navigation-item-level-1 {
   font-optical-sizing: 0;
   color: #1f1f1f;
-  font-weight: 600;
+  font-weight: 900;
   letter-spacing: 0.25px;
 }
 
 .navigation-item-level-2 {
-  padding-left: 16px;
+  font-weight: 700;
+  padding-left: 8px;
 }
 
 .navigation-item-level-3 {
-  padding-left: 24px;
+  font-weight: 500;
+  padding-left: 16px;
 }
 
 .navigation-item-level-4 {
-  padding-left: 26px;
+  font-weight: 300;
+  padding-left: 24px;
 }
 
 .navigation-item-level-5 {
-  padding-left: 28px;
+  font-weight: 100;
+  padding-left: 32px;
+}
+
+.delete {
+  color: #ff4d4f;
+}
+
+.edit {
+  color: #1890ff;
+}
+
+.plus {
+  color: #096dd9;
 }

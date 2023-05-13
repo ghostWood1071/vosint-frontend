@@ -3,7 +3,7 @@ import { Button, Modal, PageHeader, Radio } from "antd";
 import classNames from "classnames";
 import React, { useState } from "react";
 
-import styles from "./synthetic-report.module.less";
+import styles from "./synthesis-report.module.less";
 
 export const QuickReport: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);

@@ -98,7 +98,7 @@ function Events({ eventIds, headingId, onDeleteEvent }: EventsProps): JSX.Elemen
           <div key={event.data?._id + `headingId` + headingId} className={styles.event}>
             <Row justify="space-between" align={"middle"}>
               <Col span={21}>
-                <Typography.Text ellipsis className={styles.eventTitle} strong>
+                <Typography.Text ellipsis className={styles.eventTitle} italic strong>
                   {event.data?.event_name}
                 </Typography.Text>
               </Col>
@@ -114,7 +114,7 @@ function Events({ eventIds, headingId, onDeleteEvent }: EventsProps): JSX.Elemen
                 />
               </Col>
             </Row>
-            <Typography.Text>Thời gian: {event.data?.date_created}</Typography.Text>
+            <Typography.Text italic>Thời gian: {event.data?.date_created}</Typography.Text>
             <br />
             <Typography.Text italic>{event.data?.event_content}</Typography.Text>
             <Collapse ghost>
