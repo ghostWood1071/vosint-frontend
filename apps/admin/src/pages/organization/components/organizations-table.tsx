@@ -116,6 +116,7 @@ export const OrganizationsTable: React.FC<Props> = ({ dataSource }) => {
       showHeader={false}
       pagination={{
         position: ["topCenter"],
+        showSizeChanger: true,
       }}
       columns={columns}
       dataSource={dataSource}

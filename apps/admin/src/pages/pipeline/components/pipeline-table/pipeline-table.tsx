@@ -157,9 +157,10 @@ export const PipelineTable: React.FC<Props> = ({
         function handleDelete() {
           Modal.confirm({
             title: "Bạn có muốn xoá pipeline này không?",
+            okText: "Xoá",
+            cancelText: "Huỷ",
             content: record.name,
             onOk: () => onDeletePipeline(_id),
-            getContainer: "#modal-mount",
           });
         }
       },
@@ -178,6 +179,7 @@ export const PipelineTable: React.FC<Props> = ({
         onChange: handlePaginationChange,
         current: page ? +page : 1,
         total: totalRecord,
+        showSizeChanger: true,
       }}
     />
   );

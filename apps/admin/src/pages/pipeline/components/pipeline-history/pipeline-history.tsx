@@ -38,6 +38,7 @@ export const PipelineHistory: React.FC<Props> = ({ data, isLoading }) => {
           onChange: handlePaginationChange,
           current: page ? +page : 1,
           total: data?.totalRecord,
+          showSizeChanger: true,
         }}
       />
     </div>

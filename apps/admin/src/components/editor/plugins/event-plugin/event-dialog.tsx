@@ -159,6 +159,7 @@ export function EventDialog(): JSX.Element | null {
                 current: paginate.pageNumber,
                 pageSize: paginate.pageSize,
                 onChange: handlePaginate,
+                showSizeChanger: true,
               }}
               columns={columns}
               dataSource={data?.data}

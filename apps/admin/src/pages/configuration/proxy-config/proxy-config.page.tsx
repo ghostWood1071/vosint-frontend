@@ -104,6 +104,7 @@ export const ProxyConfig = () => {
               onChange: handlePaginationChange,
               pageSize: pageSize ? +pageSize : 10,
               size: "default",
+              showSizeChanger: true,
             }}
             loading={isProxyLoading}
           />

@@ -105,7 +105,7 @@ export const SettingTable: React.FC<Props> = ({ data, listProxy, accountMonitor,
         dataSource={data?.result}
         rowKey="name"
         size="small"
-        pagination={{ position: ["bottomCenter"] }}
+        pagination={{ position: ["bottomCenter"], showSizeChanger: true }}
         loading={loading}
       />
       <Modal

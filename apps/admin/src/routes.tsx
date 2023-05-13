@@ -34,7 +34,6 @@ import { OrganizationsDetailPage, OrganizationsLayout } from "./pages/organizati
 import { InternationalRelationshipGraph } from "./pages/organization/international-relationship-graph/component/international-relationship-graph";
 import {
   DashboardStatistics,
-  PipelineCreate,
   PipelineDetail,
   PipelineLayout,
   PipelineList,
@@ -69,7 +68,6 @@ import {
   organizationDetailPath,
   organizationGraphPath,
   organizationPath,
-  pipelineCreatePath,
   pipelineDashboardPath,
   pipelineDataProcessingPath,
   pipelineDetailPath,
@@ -286,10 +284,6 @@ export const routers = createBrowserRouter([
           {
             path: pipelineListPath,
             element: <PipelineList />,
-          },
-          {
-            path: pipelineCreatePath,
-            element: <PipelineCreate />,
           },
           {
             path: pipelineDetailPath,
