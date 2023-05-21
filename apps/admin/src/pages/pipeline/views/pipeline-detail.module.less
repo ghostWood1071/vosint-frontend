@@ -3,6 +3,9 @@
     .ant-page-header-heading {
       position: relative;
     }
+    .ant-page-header-heading-title {
+      font-size: 16px;
+    }
   }
 }
 
@@ -12,4 +15,97 @@
   line-height: 1.7;
   margin-block: 20px;
   color: #1a2433;
+}
+.header1 {
+  width: 100%;
+  min-height: 50px;
+  position: fixed;
+  z-index: 3;
+  background-color: white;
+  box-shadow: 2px 2px rgba(0, 0, 0, 0.1);
+}
+
+.header2 {
+  width: calc(100% - 270px);
+  min-height: 50px;
+  position: fixed;
+  z-index: 3;
+  background-color: white;
+  box-shadow: 2px 2px rgba(0, 0, 0, 0.1);
+}
+.main-container {
+  width: 100%;
+  position: relative;
+
+  .body {
+    padding-top: 60px;
+  }
+}
+
+.left-header {
+  width: 240px;
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  min-height: 50px;
+  .back-container {
+    width: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .back-button {
+      width: 30px;
+      height: 30px;
+    }
+  }
+
+  .title-container {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    :global {
+      .ant-form-item {
+        margin-bottom: 0px !important;
+      }
+      .ant-typography {
+        margin-bottom: 0px !important;
+      }
+    }
+  }
+}
+
+.right-header {
+  width: calc(100% - 240px);
+  min-height: 50px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  :global {
+    .react-js-cron-field {
+      margin-bottom: 0px;
+    }
+    .react-js-cron-clear-button {
+      margin-bottom: 0px;
+    }
+  }
+}
+
+.edit {
+  font-size: 14px;
+  color: #1890ff;
+}
+
+.input {
+  width: 100%;
+  border: 0px;
+  white-space: nowrap;
+  overflow: hidden;
+  font-weight: bold;
+  text-overflow: ellipsis;
+}
+
+.button {
+  margin-left: 10px;
 }
