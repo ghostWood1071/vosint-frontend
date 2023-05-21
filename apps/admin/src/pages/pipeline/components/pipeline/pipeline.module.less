@@ -1,0 +1,49 @@
+.pipeline-dnd {
+  position: sticky;
+  top: 0;
+  background-color: white;
+  border-top: 1px solid #f0f0f0;
+  :global {
+    .ant-card-body {
+      padding: 10px !important;
+    }
+  }
+}
+
+.pipeline-actions {
+  :global {
+    .ant-card-body {
+      padding: 10px !important;
+    }
+  }
+}
+
+.pipeline-options {
+  position: sticky;
+  top: 65px;
+}
+
+.pipeline-cron {
+  margin-top: 8px;
+}
+
+.pipeline-alert {
+  margin-bottom: 8px;
+}
+
+.body {
+  display: inline-flex;
+  width: 100%;
+  .left-body {
+    width: 220px;
+    margin-right: 10px;
+  }
+
+  .right-body {
+    width: calc(100% - 230px);
+
+    .pipeline-dnd {
+      width: 100%;
+    }
+  }
+}

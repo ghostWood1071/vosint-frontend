@@ -1,7 +1,4 @@
-import { ActionLogIcon } from "@/assets/svg";
-import { VI_LOCALE } from "@/locales/cron";
 import { IActionInfos, IPipelineSchema } from "@/services/pipeline.type";
-import { EditOutlined, SaveOutlined } from "@ant-design/icons";
 import {
   DndContext,
   DragEndEvent,
@@ -17,13 +14,11 @@ import {
 } from "@dnd-kit/core";
 import { SortableContext, arrayMove, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { Alert, Button, Card, Col, Row, Space, Typography } from "antd";
+import { Alert, Card, Col, Row } from "antd";
 import produce from "immer";
 import { nanoid } from "nanoid";
 import { useMemo, useState } from "react";
 import { createPortal } from "react-dom";
-import { useTranslation } from "react-i18next";
-import { Cron } from "react-js-cron";
 import "react-js-cron/dist/styles.css";
 import { shallow } from "zustand/shallow";
 
@@ -31,7 +26,7 @@ import { usePipelineState } from "../../pipeline-state";
 import { PipelineAction } from "./pipeline-action";
 import { PipelineSortableItem } from "./pipeline-sortable-item";
 import { PipelineTreeOptions } from "./pipeline-tree-options";
-import "./pipeline.less";
+import styles from "./pipeline.module.less";
 import { FlattenedItem } from "./pipeline.type";
 import {
   buildTree,
@@ -43,41 +38,22 @@ import {
   setProperty,
 } from "./pipeline.utilities";
 
-const { Paragraph } = Typography;
-
 interface Props {
-  initialItems: IPipelineSchema[];
+  items: IPipelineSchema[];
   initialActions: IActionInfos[];
-  initialNamePipeline?: string;
-  initialCron: string;
-  onSavePipeline?: (args: { pipeline: IPipelineSchema[]; name: string; cron_expr: string }) => void;
-  onVerifyPipeline?: () => void;
+  setItems?: any;
 }
 
 const indentationWidth = 40;
 
-export function Pipeline({
-  initialItems,
-  initialActions,
-  initialNamePipeline,
-  initialCron,
-  onSavePipeline,
-  onVerifyPipeline,
-}: Props) {
-  const { t } = useTranslation("translation", { keyPrefix: "pipeline" });
-  const [items, setItems] = useState(() => initialItems);
+export function Pipeline({ items, initialActions, setItems }: Props) {
   const [actions, setActions] = useState(() => initialActions);
   const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
   const [overId, setOverId] = useState<UniqueIdentifier | null>(null);
   const [offsetLeft, setOffsetLeft] = useState(0);
   const [optionId, setOptionId] = useState<UniqueIdentifier | null>(null);
   const [clonedItems, setClonedItem] = useState<IPipelineSchema[] | null>(null);
-  const [pipelineName, setPipelineName] = useState<string>(
-    initialNamePipeline ?? t("name_pipeline"),
-  );
-  const [cron, setCron] = useState(initialCron);
   const [error] = usePipelineState((state) => [state.error], shallow);
-
   const flattenedItems = useMemo(() => {
     const flattenedTree = flattenTree(items, actions);
     const collapsedItems = flattenedTree.reduce<UniqueIdentifier[]>(
@@ -100,7 +76,6 @@ export function Pipeline({
     activeId && sortedIds.includes(activeId) && overId
       ? getProjection(flattenedItems, activeId, overId, offsetLeft, indentationWidth)
       : null;
-
   return (
     <DndContext
       collisionDetection={closestCenter}
@@ -110,9 +85,9 @@ export function Pipeline({
       onDragMove={handleDragMove}
       onDragCancel={handleDragCancel}
     >
-      <Row className="pipeline">
-        <Col span={5}>
-          <Card title="Action" className="pipeline-actions">
+      <div className={styles.body}>
+        <div className={styles.leftBody}>
+          <Card title={null} className={styles.pipelineActions}>
             {actions.map(({ id, name, display_name, readme }) => (
               <PipelineAction
                 key={id}
@@ -123,40 +98,11 @@ export function Pipeline({
               />
             ))}
           </Card>
-        </Col>
-        <Col span={18} offset={1}>
-          <Card
-            className="pipeline-dnd"
-            title={
-              <Paragraph
-                editable={{
-                  icon: <EditOutlined />,
-                  tooltip: t("edit_pipeline_name"),
-                  onChange: setPipelineName,
-                  triggerType: ["text", "icon"],
-                  enterIcon: null,
-                }}
-              >
-                {pipelineName}
-              </Paragraph>
-            }
-            extra={
-              <Space>
-                {onSavePipeline && (
-                  <Button icon={<SaveOutlined />} title="Save" onClick={handleSavePipeline} />
-                )}
-                {onVerifyPipeline && (
-                  <Button
-                    icon={<ActionLogIcon />}
-                    title="verify pipeline"
-                    onClick={handleVerifyPipeline}
-                  />
-                )}
-              </Space>
-            }
-          >
+        </div>
+        <div className={styles.rightBody}>
+          <Card className={styles.pipelineDnd} title={null}>
             <Row gutter={8}>
-              <Col span={optionId ? 12 : 16} offset={optionId ? 2 : 4}>
+              <Col span={optionId ? 10 : 12} offset={optionId ? 3 : 6}>
                 <SortableContext items={sortedIds} strategy={verticalListSortingStrategy}>
                   {flattenedItems.map(
                     ({
@@ -195,13 +141,13 @@ export function Pipeline({
                 </SortableContext>
               </Col>
               {optionId && optionItem && (
-                <Col span={8} offset={2}>
+                <Col span={8} offset={1}>
                   {error && (
                     <Alert
                       type="error"
                       message={error.actione}
                       description={error.message_error}
-                      className="pipeline-alert"
+                      className={styles.pipelineAlert}
                     />
                   )}
                   <PipelineTreeOptions
@@ -213,11 +159,8 @@ export function Pipeline({
               )}
             </Row>
           </Card>
-          <Card title="Lịch chạy" className="pipeline-cron">
-            <Cron value={cron} setValue={setCron} locale={VI_LOCALE} />
-          </Card>
-        </Col>
-      </Row>
+        </div>
+      </div>
       {createPortal(
         <DragOverlay
           dropAnimation={dropAnimationConfig}
@@ -242,14 +185,6 @@ export function Pipeline({
     </DndContext>
   );
 
-  function handleSavePipeline() {
-    onSavePipeline?.({ name: pipelineName, pipeline: items, cron_expr: cron });
-  }
-
-  function handleVerifyPipeline() {
-    onVerifyPipeline?.();
-  }
-
   function handleDragStart({ active: { id: activeId } }: DragStartEvent) {
     setActiveId(activeId);
     setOverId(activeId);
@@ -267,7 +202,7 @@ export function Pipeline({
     }
 
     setItems(
-      produce((draft) => {
+      produce((draft: any) => {
         draft.push({
           id: active.id,
           name: active!.data!.current!.name,
@@ -315,7 +250,7 @@ export function Pipeline({
   }
 
   function handleRemove(id: UniqueIdentifier) {
-    setItems((items) => {
+    setItems((items: any) => {
       const newItems = removeItem(items, id);
       if (newItems.length === 0) {
         return [{ id: "goto", name: "goto", params: {} }];
@@ -341,7 +276,7 @@ export function Pipeline({
   }
 
   function handleOptionFormValueChange(_changedValues: any, values: Record<string, any>) {
-    optionId && setItems((items) => setProperty(items, optionId, "params", () => values));
+    optionId && setItems((items: any) => setProperty(items, optionId, "params", () => values));
   }
 }
 

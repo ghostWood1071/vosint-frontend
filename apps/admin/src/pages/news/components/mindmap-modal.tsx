@@ -1,7 +1,7 @@
 import { ReportIcon } from "@/assets/svg";
 import { CaretRightOutlined, DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
-import { Button, Col, Collapse, Input, Modal, Row } from "antd";
-import React, { useEffect, useState } from "react";
+import { Button, Collapse, Input, Modal } from "antd";
+import React, { useEffect, useRef, useState } from "react";
 
 import {
   useEventByIdNewsList,
@@ -44,27 +44,31 @@ export const MindmapModal: React.FC<props> = ({ item, isVisible, setHideModal })
 
   return (
     <Modal
-      title={
-        <Row align={"middle"}>
-          <Col span={24}>
-            <h2 style={{ textAlign: "center" }}>Mind map</h2>
-          </Col>
-        </Row>
-      }
+      title={<div style={{ textAlign: "center", fontSize: 18, fontWeight: "bold" }}>Mind map</div>}
       open={isVisible}
       destroyOnClose
       onCancel={() => setHideModal(false)}
       width={"90%"}
       getContainer="#modal-mount"
-      maskClosable={false}
       footer={null}
+      maskClosable={false}
+      wrapClassName={"00000000"}
       className={styles.modal}
     >
-      <Row>
-        <Col span={12}>
-          <div className={styles.leftHeader}>Nội dung</div>
-        </Col>
-        <Col span={12}>
+      <div className={styles.bodyModal}>
+        <div className={styles.leftBody}>
+          <div className={styles.leftHeader}>
+            <div className={styles.leftHeader}>Nội dung</div>
+          </div>
+          <div className={styles.leftContent}>
+            <div
+              dangerouslySetInnerHTML={{ __html: item["data:html"] }}
+              className={styles.detailContent}
+              onClick={(event) => event.stopPropagation()}
+            />
+          </div>
+        </div>
+        <div className={styles.rightBody}>
           <div className={styles.rightHeader}>
             <div className={styles.titleRightHeader}>Các sự kiện</div>
             <div className={styles.addEventButtonContainer}>
@@ -79,67 +83,41 @@ export const MindmapModal: React.FC<props> = ({ item, isVisible, setHideModal })
               </Button>
             </div>
           </div>
-        </Col>
-        <Col span={12}>
-          <div className={styles.leftBody}>
-            <div
-              dangerouslySetInnerHTML={{ __html: item["data:html"] }}
-              className={styles.detailContent}
-              onClick={(event) => event.stopPropagation()}
-            />
-          </div>
-        </Col>
-        <Col span={12}>
-          <div className={styles.rightBody}>
-            <div className={styles.detailAllEvent}>
-              <div className={styles.userEventContainer}>
-                <Collapse
-                  expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
-                  defaultActiveKey={["0"]}
-                  ghost
-                >
-                  <Collapse.Panel
-                    className={styles.headerCollapse}
-                    header={
-                      <div className={styles.textHeaderCollapse}>Sự kiện do người dùng tạo</div>
-                    }
-                    key="1"
-                  >
-                    {dataEventFromUser?.map((element: any) => {
-                      return (
-                        <Items
-                          key={element._id}
-                          item={element}
-                          handleEdit={handleClickEdit}
-                          handleDelete={handleClickDelete}
-                        />
-                      );
-                    })}
-                  </Collapse.Panel>
-                  <Collapse.Panel
-                    className={styles.headerCollapse}
-                    header={
-                      <div className={styles.textHeaderCollapse}>Sự kiện do hệ thống tạo</div>
-                    }
-                    key="2"
-                  >
-                    {dataEventFromSystem?.map((element: any) => {
-                      return (
-                        <Items
-                          key={element._id}
-                          item={element}
-                          handleEdit={handleClickEdit}
-                          handleDelete={handleClickDelete}
-                        />
-                      );
-                    })}
-                  </Collapse.Panel>
-                </Collapse>
+
+          <div className={styles.rightContent}>
+            <div className={styles.eventContainer}>
+              <div className={styles.textHeader}>Sự kiện do người dùng tạo</div>
+              <div className={styles.detailAllEvent}>
+                {dataEventFromUser?.map((element: any) => {
+                  return (
+                    <Items
+                      key={element._id}
+                      item={element}
+                      handleEdit={handleClickEdit}
+                      handleDelete={handleClickDelete}
+                    />
+                  );
+                })}
+              </div>
+            </div>
+            <div className={styles.eventContainer} style={{ border: 0 }}>
+              <div className={styles.textHeader}>Sự kiện do hệ thống tạo</div>
+              <div className={styles.detailAllEvent}>
+                {dataEventFromSystem?.map((element: any) => {
+                  return (
+                    <Items
+                      key={element._id}
+                      item={element}
+                      handleEdit={handleClickEdit}
+                      handleDelete={handleClickDelete}
+                    />
+                  );
+                })}
               </div>
             </div>
           </div>
-        </Col>
-      </Row>
+        </div>
+      </div>
       {isOpenModalEditEvent ? (
         <AddMindmap
           choosedEvent={choosedEvent}
@@ -232,39 +210,47 @@ interface ItemsProps {
 
 const Items: React.FC<ItemsProps> = ({ item, handleEdit, handleDelete }) => {
   const setEvent = useReportModalState((state) => state.setEvent);
+  const Ref = useRef<any>();
 
   return (
-    <div className={styles.itemContainer} key={item._id}>
+    <div className={styles.itemContainer} key={item._id} ref={Ref}>
       <div className={styles.collapseContainer}>
         <Collapse
           expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
-          defaultActiveKey={["0"]}
           ghost
+          onChange={(value) => {
+            if (value[0] === "1") {
+              Ref?.current?.scrollIntoView();
+            }
+          }}
         >
           <Collapse.Panel header={item.event_name} key="1">
             <div className={styles.itemContentContainer}>
-              <Row gutter={[0, 5]}>
-                <Col span={6}>Nội dung</Col>
-                <Col span={1}>:</Col>
-                <Col span={17}>
+              <div className={styles.lineFieldContent}>
+                <div className={styles.titleField}>Nội dung</div>
+                <div className={styles.contentField}>
+                  :{" "}
                   <Input.TextArea
                     bordered={false}
                     className={styles.textContent}
-                    autoSize={{ minRows: 1, maxRows: 5 }}
+                    autoSize={{ minRows: 1, maxRows: 10 }}
                     value={item.event_content}
                     readOnly={true}
                   />
-                </Col>
-                <Col span={6}>Khách thể</Col>
-                <Col span={1}>:</Col>
-                <Col span={17}>{item.khach_the}</Col>
-                <Col span={6}>Chủ thể"</Col>
-                <Col span={1}>:</Col>
-                <Col span={17}>{item.chu_the}</Col>
-                <Col span={6}>Ngày sự kiện</Col>
-                <Col span={1}>:</Col>
-                <Col span={17}>{item.date_created}</Col>
-              </Row>
+                </div>
+              </div>
+              <div className={styles.lineFieldContent}>
+                <div className={styles.titleField}>Chủ thể"</div>
+                <div className={styles.contentField}>: {item.chu_the}</div>
+              </div>
+              <div className={styles.lineFieldContent}>
+                <div className={styles.titleField}>Khách thể</div>
+                <div className={styles.contentField}>: {item.khach_the}</div>
+              </div>
+              <div className={styles.lineFieldContent}>
+                <div className={styles.titleField}>Ngày sự kiện</div>
+                <div className={styles.contentField}>: {item.date_created}</div>
+              </div>
             </div>
           </Collapse.Panel>
         </Collapse>
@@ -274,6 +260,7 @@ const Items: React.FC<ItemsProps> = ({ item, handleEdit, handleDelete }) => {
           onClick={handleOpenReport}
           title="Thêm sự kiện vào báo cáo"
           className={styles.reportIcon}
+          style={{ cursor: "pointer" }}
         />
         <EditOutlined
           onClick={() => {
