@@ -85,9 +85,9 @@ export function Pipeline({ items, initialActions, setItems }: Props) {
       onDragMove={handleDragMove}
       onDragCancel={handleDragCancel}
     >
-      <div className={styles.body}>
-        <div className={styles.leftBody}>
-          <Card title={null} className={styles.pipelineActions}>
+      <div className={styles.bodyBox}>
+        <div className={styles.body}>
+          <div className={styles.leftBody}>
             {actions.map(({ id, name, display_name, readme }) => (
               <PipelineAction
                 key={id}
@@ -97,12 +97,14 @@ export function Pipeline({ items, initialActions, setItems }: Props) {
                 readme={readme}
               />
             ))}
-          </Card>
-        </div>
-        <div className={styles.rightBody}>
-          <Card className={styles.pipelineDnd} title={null}>
-            <Row gutter={8}>
-              <Col span={optionId ? 10 : 12} offset={optionId ? 3 : 6}>
+          </div>
+          <div className={styles.rightBody}>
+            <div className={styles.pipelineContainer}>
+              <div
+                className={
+                  optionId && optionItem ? styles.pipelineBodyWithOption : styles.pipelineBody
+                }
+              >
                 <SortableContext items={sortedIds} strategy={verticalListSortingStrategy}>
                   {flattenedItems.map(
                     ({
@@ -139,26 +141,26 @@ export function Pipeline({ items, initialActions, setItems }: Props) {
                     ),
                   )}
                 </SortableContext>
-              </Col>
-              {optionId && optionItem && (
-                <Col span={8} offset={1}>
-                  {error && (
-                    <Alert
-                      type="error"
-                      message={error.actione}
-                      description={error.message_error}
-                      className={styles.pipelineAlert}
-                    />
-                  )}
-                  <PipelineTreeOptions
-                    onClose={() => setOptionId(null)}
-                    option={optionItem}
-                    onValuesChange={handleOptionFormValueChange}
+              </div>
+            </div>
+            {optionId && optionItem && (
+              <div className={styles.optionContainer}>
+                {error && (
+                  <Alert
+                    type="error"
+                    message={error.actione}
+                    description={error.message_error}
+                    className={styles.pipelineAlert}
                   />
-                </Col>
-              )}
-            </Row>
-          </Card>
+                )}
+                <PipelineTreeOptions
+                  onClose={() => setOptionId(null)}
+                  option={optionItem}
+                  onValuesChange={handleOptionFormValueChange}
+                />
+              </div>
+            )}
+          </div>
         </div>
       </div>
       {createPortal(
