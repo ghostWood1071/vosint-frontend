@@ -61,7 +61,7 @@ export const useInfiniteSocialPageList = (filter: DataFilterSocialPage) => {
     getSocialPage(
       data.pageParam !== undefined
         ? { ...data.pageParam, ...filter }
-        : { page_number: 1, page_size: 30, ...filter },
+        : { page_number: 1, page_size: 50, ...filter },
     ),
   );
 };

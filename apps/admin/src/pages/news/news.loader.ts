@@ -199,7 +199,7 @@ export const useInfiniteNewsList = (filter: any) => {
     getNewsListWithApiJob(
       data.pageParam !== undefined
         ? { ...data.pageParam, ...filter }
-        : { page_number: 1, page_size: 30, ...filter },
+        : { page_number: 1, page_size: 50, ...filter },
     ),
   );
 };
@@ -210,7 +210,7 @@ export const useInfiniteNewsByNewsletter = (id: string, filter: any) => {
       return getNewsVitalsWithApiJob(
         data.pageParam !== undefined
           ? { ...data.pageParam, ...filter }
-          : { page_number: 1, page_size: 30, ...filter },
+          : { page_number: 1, page_size: 50, ...filter },
       );
     }
 
@@ -218,7 +218,7 @@ export const useInfiniteNewsByNewsletter = (id: string, filter: any) => {
       return getNewsBookmarksWithApiJob(
         data.pageParam !== undefined
           ? { ...data.pageParam, ...filter }
-          : { page_number: 1, page_size: 30, ...filter },
+          : { page_number: 1, page_size: 50, ...filter },
       );
     }
 
@@ -226,7 +226,7 @@ export const useInfiniteNewsByNewsletter = (id: string, filter: any) => {
       id,
       data.pageParam !== undefined
         ? { ...data.pageParam, ...filter }
-        : { page_number: 1, page_size: 30, ...filter },
+        : { page_number: 1, page_size: 50, ...filter },
     );
   });
 };

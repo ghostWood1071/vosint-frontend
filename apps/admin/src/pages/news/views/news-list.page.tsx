@@ -60,12 +60,12 @@ export const NewsListPage: React.FC<Props> = () => {
   useEffect(() => {
     queryClient.removeQueries([CACHE_KEYS.NewsList]);
     setNewsSelection([]);
-    fetchNextPage({ pageParam: { page_number: 1, page_size: 30 } });
+    fetchNextPage({ pageParam: { page_number: 1, page_size: 50 } });
     setSkip(1);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [newsFilter]);
   useEffect(() => {
-    fetchNextPage({ pageParam: { page_number: skip, page_size: 30 } });
+    fetchNextPage({ pageParam: { page_number: skip, page_size: 50 } });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [skip]);
   return (

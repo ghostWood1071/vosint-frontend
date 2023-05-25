@@ -1,4 +1,4 @@
-import { Radio } from "antd";
+import { Radio, Tabs, TabsProps } from "antd";
 import React, { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
@@ -396,15 +396,54 @@ export const PriorityObject = () => {
     setTabButton(type);
   }
 
-  const onChange = ({ target: { value } }: any) => {
+  const onChange = (value: string) => {
     setType(value);
     setChoosedPriorityObject(null);
   };
 
+  const items: TabsProps["items"] = [
+    {
+      key: "Object",
+      label: `Đối tượng`,
+      children: (
+        <Layout
+          items={data?.result}
+          typeName={type === "Object" ? "đối tượng" : type === "Group" ? "nhóm" : "fanpage"}
+          choosedPriorityObject={choosedPriorityObject}
+          setChoosedPriorityObject={setChoosedPriorityObject}
+        />
+      ),
+    },
+    {
+      key: "Group",
+      label: `Nhóm`,
+      children: (
+        <Layout
+          items={data?.result}
+          typeName={type === "Object" ? "đối tượng" : type === "Group" ? "nhóm" : "fanpage"}
+          choosedPriorityObject={choosedPriorityObject}
+          setChoosedPriorityObject={setChoosedPriorityObject}
+        />
+      ),
+    },
+    {
+      key: "Fanpage",
+      label: `Fanpage`,
+      children: (
+        <Layout
+          items={data?.result}
+          typeName={type === "Object" ? "đối tượng" : type === "Group" ? "nhóm" : "fanpage"}
+          choosedPriorityObject={choosedPriorityObject}
+          setChoosedPriorityObject={setChoosedPriorityObject}
+        />
+      ),
+    },
+  ];
+
   return (
     <div className={styles.mainContainer}>
       <div className={styles.nameObject}>
-        <div className={styles.optionContainer}>
+        {/* <div className={styles.optionContainer}>
           <Radio.Group defaultValue="Object" buttonStyle="solid" onChange={onChange} value={type}>
             <Radio.Button value="Object">Đối tượng</Radio.Button>
             <Radio.Button value="Group">Nhóm</Radio.Button>
@@ -418,7 +457,8 @@ export const PriorityObject = () => {
             choosedPriorityObject={choosedPriorityObject}
             setChoosedPriorityObject={setChoosedPriorityObject}
           />
-        </div>
+        </div> */}
+        <Tabs onChange={onChange} defaultActiveKey="1" items={items} />
       </div>
       {choosedPriorityObject?.social_type !== undefined ? (
         <div className={styles.content}>

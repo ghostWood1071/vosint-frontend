@@ -1,4 +1,5 @@
-import { AddIcon, DelIcon, UserIcon } from "@/assets/svg";
+import { UserIcon } from "@/assets/svg";
+import { DeleteOutlined, PlusCircleOutlined } from "@ant-design/icons";
 import { Avatar, Input, List, Modal } from "antd";
 import React, { useState } from "react";
 import { useSearchParams } from "react-router-dom";
@@ -19,6 +20,7 @@ interface ItemProps {
   handleClickDelete: (value: any) => void;
   handleChooseObject: (value: any) => void;
   choosedPriorityObject: any;
+  typeName: string;
 }
 
 export const Layout: React.FC<LayoutProps> = ({
@@ -42,7 +44,11 @@ export const Layout: React.FC<LayoutProps> = ({
           />
         </div>
         <div className={styles.addObjectButton}>
-          <AddIcon className={styles.addIcon} onClick={handleClickAdd} />
+          <PlusCircleOutlined
+            onClick={handleClickAdd}
+            title={`Thêm ${typeName}`}
+            className={styles.add}
+          />
         </div>
       </div>
       <div className={styles.content}>
@@ -52,6 +58,7 @@ export const Layout: React.FC<LayoutProps> = ({
           dataSource={items}
           renderItem={(item) => (
             <Item
+              typeName={typeName}
               item={item}
               handleClickDelete={handleClickDelete}
               handleChooseObject={handleChooseObject}
@@ -114,6 +121,7 @@ const Item: React.FC<ItemProps> = ({
   handleChooseObject,
   handleClickDelete,
   choosedPriorityObject,
+  typeName,
 }) => {
   return (
     <div
@@ -133,11 +141,19 @@ const Item: React.FC<ItemProps> = ({
         <div className={styles.fullName}>{item.social_name}</div>
       </div>
       <div className={styles.container2}>
-        <DelIcon
+        {/* <DelIcon
           onClick={(event) => {
             event.stopPropagation();
             handleClickDelete(item);
           }}
+        /> */}
+        <DeleteOutlined
+          title={`Xoá ${typeName}`}
+          onClick={(event) => {
+            event.stopPropagation();
+            handleClickDelete(item);
+          }}
+          className={styles.delete}
         />
       </div>
     </div>
