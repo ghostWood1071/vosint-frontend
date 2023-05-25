@@ -45,7 +45,7 @@ export const getNewsByNewsletterWithApiJob = async (
   newsletterId: string,
   filter: Record<string, string>,
 ) => {
-  const result = await apiClient.get(`${apiNewsBaseV2Url}/Job/api/get_result_job/News`, {
+  const result = await apiClient.get(`${apiNewsBaseV2Url}/Job/api/get_news_from_newsletter_id`, {
     params: filterEmptyString({
       ...filter,
       news_letter_id: newsletterId,
@@ -107,7 +107,7 @@ export const getNewsBookmarks = async (filter: Record<string, string>) => {
 };
 
 export const getNewsBookmarksWithApiJob = async (filter: Record<string, string>) => {
-  const result = await apiClient.get(`${apiNewsBaseV2Url}/Job/api/get_result_job/News`, {
+  const result = await apiClient.get(`${apiNewsBaseV2Url}/Job/api/get_news_from_newsletter_id`, {
     params: filterEmptyString({
       ...filter,
       bookmarks: "1",
@@ -134,7 +134,7 @@ export const getNewsVitals = async (filter: Record<string, string>) => {
 };
 
 export const getNewsVitalsWithApiJob = async (filter: Record<string, string>) => {
-  const result = await apiClient.get(`${apiNewsBaseV2Url}/Job/api/get_result_job/News`, {
+  const result = await apiClient.get(`${apiNewsBaseV2Url}/Job/api/get_news_from_newsletter_id`, {
     params: filterEmptyString({
       ...filter,
       vital: "1",

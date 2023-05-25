@@ -48,7 +48,7 @@ export const EventPage: React.FC<Props> = () => {
 
   useEffect(() => {
     queryClient.removeQueries([CACHE_KEYS.ListEvents]);
-    fetchNextPage({ pageParam: { skip: 1, limit: 30 } });
+    fetchNextPage({ pageParam: { skip: 1, limit: 50 } });
     setSkip(1);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filterDate]);
@@ -60,7 +60,7 @@ export const EventPage: React.FC<Props> = () => {
   }, []);
 
   useEffect(() => {
-    fetchNextPage({ pageParam: { skip: skip, limit: 30 } });
+    fetchNextPage({ pageParam: { skip: skip, limit: 50 } });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [skip]);
   return (

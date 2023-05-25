@@ -15,7 +15,7 @@ export const useInfiniteEventsList = (filter: any) => {
     getAllEventCreatedByUser(
       data.pageParam !== undefined
         ? { ...data.pageParam, ...filter }
-        : { skip: 1, limit: 30, ...filter },
+        : { skip: 1, limit: 50, ...filter },
     ),
   );
 };

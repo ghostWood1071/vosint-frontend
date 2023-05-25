@@ -14,7 +14,7 @@ import {
   ShoppingCartOutlined,
   StarTwoTone,
 } from "@ant-design/icons";
-import { Checkbox, Modal, Space, Tag, Tooltip, Typography } from "antd";
+import { Button, Checkbox, Modal, Space, Tag, Tooltip, Typography } from "antd";
 import React, { useEffect, useRef, useState } from "react";
 import { shallow } from "zustand/shallow";
 
@@ -212,7 +212,7 @@ export const NewsTableItem: React.FC<Props> = ({
                 className={styles.scrollContainer}
               >
                 <button className={styles.hideDetailButton} onClick={() => setTypeShow(!typeShow)}>
-                  <CloseOutlined className={styles.closeIcon} />
+                  <CloseOutlined title="Đóng chi tiết tin" className={styles.closeIcon} />
                 </button>
               </div>
               <div className={styles.detailContainer}>
@@ -295,9 +295,15 @@ export const NewsTableItem: React.FC<Props> = ({
                             }}
                           />
                         </Tooltip>
-                        <Tooltip title={"Link"}>
+                        <Tooltip
+                          placement="topLeft"
+                          arrowPointAtCenter={true}
+                          overlayInnerStyle={{ marginBottom: -10 }}
+                          title={item["data:url"]}
+                          overlayClassName={styles.tooltipLink}
+                        >
                           <Typography.Link href={item["data:url"]} target="_blank" rel="noreferrer">
-                            <LinkOutlined className={styles.iconContent} />
+                            <LinkOutlined style={{ color: "blue" }} />
                           </Typography.Link>
                         </Tooltip>
                       </Space>
@@ -330,7 +336,7 @@ export const NewsTableItem: React.FC<Props> = ({
                             }}
                           />
                         </Tooltip>
-                        <Tooltip title={"Mind map "} placement="topRight">
+                        <Tooltip title={"Mind map "} placement="topRight" arrowPointAtCenter>
                           <AreaChartOutlined
                             className={styles.iconFilterContent}
                             onClick={(event) => {

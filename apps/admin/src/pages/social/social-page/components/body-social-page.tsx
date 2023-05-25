@@ -1,4 +1,4 @@
-import { Input, Radio } from "antd";
+import { Radio } from "antd";
 import { flatMap, unionBy } from "lodash";
 import React, { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
@@ -36,7 +36,7 @@ export const BodySocialPage: React.FC<BodySocialPageProps> = ({ type, statisticD
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useEffect(() => {
-    fetchNextPage({ pageParam: { page_number: pageNumber, page_size: 30 } });
+    fetchNextPage({ pageParam: { page_number: pageNumber, page_size: 50 } });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageNumber]);
   const [tabButton, setTabButton] = useState("baidang");
@@ -58,9 +58,6 @@ export const BodySocialPage: React.FC<BodySocialPageProps> = ({ type, statisticD
             <Radio.Button value="baidang">Danh sách bài đăng</Radio.Button>
             <Radio.Button value="thongke">Thống kê</Radio.Button>
           </Radio.Group>
-        </div>
-        <div className={styles.searchButton}>
-          <Input.Search placeholder="Tìm kiếm" />
         </div>
       </div>
       <div className={styles.content}>
