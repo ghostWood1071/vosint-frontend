@@ -54,6 +54,22 @@ export const getNewsByNewsletterWithApiJob = async (
   return result.data;
 };
 
+export const getEventsByNewsletterWithApiJob = async (
+  // newsletterId: string,
+  filter: Record<string, string>,
+) => {
+  const result = await apiClient.get(`/Job/api/get_event_from_newsletter_list_id`, {
+    params: filterEmptyString({
+      // ...filter,
+      news_letter_id: filter.newsletterId,
+      start_date: filter.startDate,
+      end_date: filter.endDate,
+      event_number: filter.eventNumber,
+    }),
+  });
+  return result.data;
+};
+
 export const addNewsletter = async (data: any) => {
   const result = await apiClient.post<any>(`${apiNewsBaseV2Url}/newsletters`, data);
   return result.data;

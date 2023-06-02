@@ -32,8 +32,8 @@ export const databasePath = "/database";
 
 export const reportPath = "/report";
 
-export const reportPeriodicPath = "/report/periodic";
-export const getReportPeriodicUrl = (reportId: string | number) => `/report/periodic/${reportId}`;
+export const reportPeriodicPath = "/report/periodic/:id";
+export const getPeriodicReportUrl = (reportId: string | number) => `/report/periodic/${reportId}`;
 
 export const reportQuickPath = "/report/quick/:id";
 export const getReportQuickUrl = (reportId: string | number) => `/report/quick/${reportId}`;

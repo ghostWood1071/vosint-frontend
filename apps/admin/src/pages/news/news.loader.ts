@@ -16,6 +16,7 @@ import {
   deleteNewsletter,
   getAllEventNews,
   getEventByIdNews,
+  getEventsByNewsletterWithApiJob,
   getNewsBookmarksWithApiJob,
   getNewsByNewsletterWithApiJob,
   getNewsDetail,
@@ -76,6 +77,12 @@ export const useEventByIdNewsList = (newsId: string) => {
 
 export const useAllEventNewsList = (filter: any) => {
   return useQuery<any>([CACHE_KEYS.NewsEvent, filter], () => getAllEventNews(filter));
+};
+
+export const useEventsByIdNewsList = (filter: any) => {
+  return useQuery<any>([CACHE_KEYS.NewsEvent, filter], () =>
+    getEventsByNewsletterWithApiJob(filter),
+  );
 };
 
 export const useMutationNewsSidebar = () => {
