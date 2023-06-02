@@ -1,8 +1,14 @@
 import { ReportIcon } from "@/assets/svg";
+import { Tree } from "@/components";
 import { EventProvider } from "@/components/editor/plugins/event-plugin/event-context";
 import { EventsNode } from "@/components/editor/plugins/events-plugin/events-node";
+import { ETreeTag } from "@/components/news/news-state";
 import { AppContainer } from "@/pages/app/";
+import { useNewsSidebar } from "@/pages/news/news.loader";
+import { buildTree } from "@/pages/news/news.utils";
 import {
+  getNewsDetailUrl,
+  getPeriodicReportUrl,
   getReportQuickUrl,
   getSyntheticReportDetailUrl,
   reportPeriodicPath,
@@ -11,13 +17,14 @@ import {
   reportSyntheticPath,
 } from "@/pages/router";
 import { EditorNodes, editorTheme } from "@aiacademy/editor";
-import { PlusOutlined } from "@ant-design/icons";
+import { CaretRightOutlined, PlusOutlined } from "@ant-design/icons";
 import { InitialConfigType, LexicalComposer } from "@lexical/react/LexicalComposer";
-import { Button, Input, Menu, MenuProps, Pagination, Space, Spin } from "antd";
+import { Button, Input, Menu, MenuProps, Pagination, Row, Space, Spin } from "antd";
 import { useState } from "react";
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { useReports } from "../report.loader";
+import { DirectoryTree } from "./directory-tree";
 import styles from "./report-layout.module.less";
 
 export const ReportLayout = () => {
@@ -53,6 +60,44 @@ const Sidebar = () => {
   const { data: dataReport, isLoading } = useReports(filter, {
     keepPreviousData: true,
   });
+  const { data: dataNewsLetter, isLoading: isLoadingNewsLetter } = useNewsSidebar();
+  const dataWithDefaultParentId = dataNewsLetter?.linh_vuc.map((item: any) => ({
+    ...item,
+    parent_id: item.parent_id ?? null,
+  }));
+  const objectsWithNotParentId = dataNewsLetter?.linh_vuc?.filter(
+    (obj: any) => !obj.hasOwnProperty("parent_id"),
+  );
+  //
+  const { newsletterId } = useParams();
+
+  const linhVucTree = dataNewsLetter?.linh_vuc && buildTree(dataNewsLetter.linh_vuc);
+
+  const generateTree = (items: any, parentId = null) => {
+    return (
+      items?.length > 0 &&
+      items
+        .filter((item: any) => item.parent_id === parentId || item._id === null)
+        .map((item: any, index: any) => {
+          const { _id, title } = item;
+          const children = generateTree(items, _id); // Đệ quy để tạo cây con
+          const hasChildren = children.length > 0;
+          return {
+            key: getPeriodicReportUrl(_id),
+            label: <div onClick={handleClickMenu}>{title}</div>, // Thay đổi thành hiển thị title của mục con
+            children: hasChildren ? children : null,
+            selectable: false, // Ẩn chọn cho nút có con
+          };
+          function handleClickMenu() {
+            // if (children.length > 0) {
+            //   // Nếu có con, thì không cho phép mở rộng/collapse node khi click vào label
+            //   return;
+            // }
+            navigate(getPeriodicReportUrl(_id));
+          }
+        })
+    );
+  };
 
   const items: MenuProps["items"] = [
     {
@@ -63,10 +108,7 @@ const Sidebar = () => {
         { label: "Báo cáo 8:30, 23-11-2021", key: getReportQuickUrl(2) },
       ],
     },
-    {
-      label: "Báo cáo định kỳ",
-      key: reportPeriodicPath,
-    },
+
     {
       label: "Phân tích tổng hợp",
       key: reportSyntheticPath,
@@ -123,9 +165,61 @@ const Sidebar = () => {
         },
       ],
     },
+    {
+      label: <div onClick={handleClick}>Báo cáo định kỳ</div>,
+      key: reportPeriodicPath,
+      children: [
+        // isLoadingNewsLetter
+        //   ? {
+        //       label: <Spin />,
+        //       key: "loading...",
+        //       className: styles.loading,
+        //     }
+        //   : null,
+        // ...(generateTree(dataWithDefaultParentId, null) || []),
+        // // ...(objectsWithNotParentId?.map((report: any) => ({
+        // //   label: report.title,
+        // //   key: getPeriodicReportUrl(report._id),
+        // //   className: styles.reportItem,
+        // // })) || []),
+        // {
+        //   label: (
+        //     <Pagination
+        //       defaultCurrent={1}
+        //       showSizeChanger={false}
+        //       total={objectsWithNotParentId?.total || 0}
+        //       current={filter.page}
+        //       pageSize={filter.limit}
+        //       onChange={handleChangePaginate}
+        //       size="small"
+        //     />
+        //   ),
+        //   key: "paginate",
+        //   disabled: true,
+        //   className: styles.pagination,
+        // },
+      ],
+    },
   ];
+  const [showComponent, setShowComponent] = useState(false);
 
-  return <Menu mode="inline" items={items} selectedKeys={[pathname]} onClick={handleClickMenu} />;
+  return (
+    <>
+      <Menu mode="inline" items={items} selectedKeys={[pathname]} onClick={handleClickMenu} />
+      <Row className={styles.report_periodic}>
+        {showComponent && linhVucTree && (
+          <Tree
+            title=""
+            treeData={linhVucTree}
+            isSpinning={isLoading}
+            onClickTitle={handleClickTitle}
+            tag={ETreeTag.LINH_VUC}
+            selectedKeys={newsletterId ? [newsletterId] : []}
+          />
+        )}
+      </Row>
+    </>
+  );
 
   function handleClickMenu({ key }: { key: string }) {
     if (key.includes("search") || key.includes("paginate") || key.includes("loading")) {
@@ -145,5 +239,11 @@ const Sidebar = () => {
 
   function navigateCreateReport() {
     navigate(reportSyntheticCreatePath);
+  }
+  function handleClickTitle(newsletterId: string, tag: ETreeTag) {
+    navigate(getPeriodicReportUrl(newsletterId));
+  }
+  function handleClick() {
+    setShowComponent(!showComponent);
   }
 };
