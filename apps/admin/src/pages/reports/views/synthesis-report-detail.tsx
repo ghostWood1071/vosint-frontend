@@ -91,9 +91,8 @@ export function SynthesisReport(): JSX.Element {
   };
 
   // HeadingTOC
-  const { mode, selectedIndex } = useHeadingTocContext();
-  const { setMode, setSelectedIndex } = useHeadingTocDispatchContext();
-
+  const { mode, selectedIndex, currentHeading } = useHeadingTocContext();
+  const { setMode, setSelectedIndex, setCurrentHeading } = useHeadingTocDispatchContext();
   useEffect(() => {
     if (mode === "delete") {
       Modal.confirm({
@@ -102,6 +101,11 @@ export function SynthesisReport(): JSX.Element {
         okText: "Xóa",
         cancelText: "Hủy",
         onOk: handleOK,
+        onCancel: () => {
+          setMode(null);
+          setSelectedIndex(null);
+          setCurrentHeading(null);
+        },
       });
       return;
     }
@@ -113,6 +117,7 @@ export function SynthesisReport(): JSX.Element {
 
     if (mode === "create") {
       form.resetFields();
+      form.setFieldValue("level", currentHeading);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mode]);
@@ -208,7 +213,11 @@ export function SynthesisReport(): JSX.Element {
             ? "Chỉnh sửa tiêu đề"
             : "Xóa tiêu đề"
         }
-        onCancel={() => setMode(null)}
+        onCancel={() => {
+          setMode(null);
+          setSelectedIndex(null);
+          setCurrentHeading(null);
+        }}
         getContainer={"#modal-mount"}
         closable={false}
         onOk={handleOK}
@@ -231,11 +240,11 @@ export function SynthesisReport(): JSX.Element {
           <Form.Item label="Level" name="level">
             <Select
               options={[
-                { label: "Heading 1", value: 1 },
-                { label: "Heading 2", value: 2 },
-                { label: "Heading 3", value: 3 },
-                { label: "Heading 4", value: 4 },
-                { label: "Heading 5", value: 5 },
+                { label: "Tiêu đề mức 1", value: 1 },
+                { label: "Tiêu đề mức 2", value: 2 },
+                { label: "Tiêu đề mức 3", value: 3 },
+                { label: "Tiêu đề mức 4", value: 4 },
+                { label: "Tiêu đề mức 5", value: 5 },
               ]}
             />
           </Form.Item>
