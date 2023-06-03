@@ -24,7 +24,7 @@ export function HeadingToc({ headingsData }: Props): JSX.Element {
   const selectedIndex = useRef(0);
   const refIsOpen = useRef(null);
 
-  const { setMode, setSelectedIndex } = useHeadingTocDispatchContext();
+  const { setMode, setSelectedIndex, setCurrentHeading } = useHeadingTocDispatchContext();
 
   function scrollToNode(id: string, currentIndex: number) {
     window.location.hash = id;
@@ -49,6 +49,7 @@ export function HeadingToc({ headingsData }: Props): JSX.Element {
         {headingsData.map(({ id, level, title }, index) => {
           const handleClick = (mode: "create" | "update" | "delete") => () => {
             setMode(mode);
+            setCurrentHeading(level);
             setSelectedIndex(index);
           };
 
