@@ -24,7 +24,10 @@ export const NewsListPage: React.FC<Props> = () => {
   const queryClient = useQueryClient();
   const { ref, inView } = useInView();
   const newsFilter = useNewsFilter();
-  const { data, isFetchingNextPage, fetchNextPage, hasNextPage } = useInfiniteNewsList(newsFilter);
+  const { data, isFetchingNextPage, fetchNextPage, hasNextPage } = useInfiniteNewsList({
+    ...newsFilter,
+    order: "pub_date",
+  });
   const { data: dataIAm } = useGetMe();
   const { mutate: mutateChangeStatusSeenPost } = useMutationChangeStatusSeenPost();
   const { mutateAsync: mutateDelete } = useDeleteNewsInNewsletter();
@@ -51,7 +54,7 @@ export const NewsListPage: React.FC<Props> = () => {
   }, []);
 
   React.useEffect(() => {
-    if (inView && skip * 30 <= data?.pages[0].total_record) {
+    if (inView && skip * 50 <= data?.pages[0].total_record) {
       setSkip(skip + 1);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

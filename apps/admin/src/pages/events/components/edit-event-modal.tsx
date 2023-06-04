@@ -1,6 +1,17 @@
+import { useInfiniteNewsList, useNewsList } from "@/pages/news/news.loader";
 import { removeWhitespaceInStartAndEndOfString } from "@/utils/tool-validate-string";
 import { DeleteOutlined } from "@ant-design/icons";
-import { DatePicker, Form, Input, Modal, Table, TableColumnsType, Tooltip } from "antd";
+import {
+  Button,
+  DatePicker,
+  Form,
+  Input,
+  Modal,
+  Select,
+  Table,
+  TableColumnsType,
+  Tooltip,
+} from "antd";
 import moment from "moment";
 import React, { useState } from "react";
 import { useSearchParams } from "react-router-dom";
@@ -27,6 +38,11 @@ interface ModalEditProps {
   functionDelete: (value: string) => void;
 }
 
+interface SelectCustomProps {
+  value: string;
+  label: string;
+}
+
 export const EditEventModal: React.FC<ModalEditProps> = ({
   confirmLoading,
   isOpen,
@@ -38,12 +54,36 @@ export const EditEventModal: React.FC<ModalEditProps> = ({
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [listEvent, setListEvent] = useState<any[]>([]);
+  const [valueNewsSelect, setValueNewsSelect] = useState<SelectCustomProps>({
+    value: "",
+    label: "",
+  });
+
+  const [listNewsAdd, setListNewsAdd] = useState<any[]>([
+    // { _id: newsItem._id, "data:title": newsItem["data:title"], "data:url": newsItem["data:url"] },
+  ]);
+
+  const { data: dataNews } = useNewsList({
+    skip: 1,
+    limit: 50,
+  });
 
   const initialValues =
     typeModal === "edit"
       ? {
           ...choosedEvent,
-          date_created: moment(choosedEvent.date_created, dateFormat),
+          date_created: moment(
+            (new Date(choosedEvent.date_created).getDate() < 10
+              ? "0" + new Date(choosedEvent.date_created).getDate()
+              : new Date(choosedEvent.date_created).getDate()) +
+              "/" +
+              (new Date(choosedEvent.date_created).getMonth() < 9
+                ? "0" + (new Date(choosedEvent.date_created).getMonth() + 1)
+                : new Date(choosedEvent.date_created).getMonth() + 1) +
+              "/" +
+              new Date(choosedEvent.date_created).getFullYear(),
+            dateFormat,
+          ),
         }
       : {};
 
@@ -127,17 +167,49 @@ export const EditEventModal: React.FC<ModalEditProps> = ({
         >
           <DatePicker format={"DD/MM/YYYY"} />
         </Form.Item>
-        {/* <Form.Item validateTrigger={["onChange", "onBlur"]} label="Danh sách tin" name={"news"}>
-          <Table
-            columns={columnsNewsTable}
-            dataSource={listNewsAdd}
-            rowKey="_id"
-            pagination={false}
-          />
-        </Form.Item> */}
+        <Form.Item validateTrigger={["onChange", "onBlur"]} label="Danh sách tin" name={"news"}>
+          <div className={styles.addExistEventHeader}>
+            <div className={styles.leftAddExistNewsContainer}>
+              <Select
+                showSearch
+                className={styles.newsEventSelect}
+                value={valueNewsSelect}
+                placeholder={"Nhập tiêu đề tin"}
+                defaultActiveFirstOption={false}
+                showArrow={false}
+                filterOption={false}
+                onSearch={handleSearchNews}
+                onChange={handleChangeNewsSelect}
+                notFoundContent={null}
+                options={(dataNews?.result || []).map((d: any) => ({
+                  value: d._id,
+                  label: d["data:title"],
+                }))}
+              />
+            </div>
+            <div className={styles.rightAddExistNewsContainer}>
+              <Button type="primary" className={styles.addButton} onClick={addNews}>
+                Thêm
+              </Button>
+            </div>
+          </div>
+          {listNewsAdd.length > 0 && (
+            <Table
+              columns={columnsNewsTable}
+              dataSource={listNewsAdd}
+              rowKey="_id"
+              pagination={false}
+              size="small"
+            />
+          )}
+        </Form.Item>
       </Form>
     </Modal>
   );
+
+  function handleChangeNewsSelect(newValue: SelectCustomProps) {
+    setValueNewsSelect(newValue);
+  }
 
   function handleCancel() {
     setIsOpen(false);

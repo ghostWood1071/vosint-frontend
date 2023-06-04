@@ -15,7 +15,7 @@ export function SocialFilter(): JSX.Element {
             <DatePicker.RangePicker />
           </Form.Item>
           {/* <Form.Item noStyle> */}
-          <Select placeholder="Dịch" defaultValue="nuoc-ngoai">
+          <Select placeholder="Dịch" defaultValue="nguon">
             <Select.Option key="nuoc-ngoai">Dịch tiếng nước ngoài</Select.Option>
             <Select.Option key="nguon">Hiển thị ngôn ngữ nguồn</Select.Option>
           </Select>

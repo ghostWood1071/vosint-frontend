@@ -10,6 +10,7 @@ import { NewsletterDto } from "@/services/news.type";
 import { PlusOutlined } from "@ant-design/icons";
 import { Button, Card, Col, Input, List, PageHeader, Row, Typography } from "antd";
 import { Descriptions } from "antd";
+import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { shallow } from "zustand/shallow";
 
@@ -29,6 +30,7 @@ export const CategoryNewsConfig = () => {
     shallow,
   );
   const { data: dataDetail } = useNewsletterDetail(newsSelectId as string, {});
+  const [conditionValue, setConditionValue] = useState("keyword_vi");
 
   return (
     <>
@@ -68,23 +70,85 @@ export const CategoryNewsConfig = () => {
                   </Col>
                 </>
               )}
-              {(dataDetail?.required_keyword?.length ?? 0) > 0 && (
+              {dataDetail?.title && (
+                <Col span={24}>
+                  <div className={styles.allItemCondition}>
+                    <div className={styles.conditionOptionContainer}>
+                      <div
+                        className={
+                          conditionValue === "keyword_vi"
+                            ? styles.conditionOptionType1
+                            : styles.conditionOptionType2
+                        }
+                        onClick={() => {
+                          setConditionValue("keyword_vi");
+                        }}
+                      >
+                        Tiếng Việt
+                      </div>
+                    </div>
+                    <div className={styles.conditionOptionContainer}>
+                      <div
+                        className={
+                          conditionValue === "keyword_en"
+                            ? styles.conditionOptionType1
+                            : styles.conditionOptionType2
+                        }
+                        onClick={() => {
+                          setConditionValue("keyword_en");
+                        }}
+                      >
+                        Tiếng Anh
+                      </div>
+                    </div>
+                    <div className={styles.conditionOptionContainer}>
+                      <div
+                        className={
+                          conditionValue === "keyword_cn"
+                            ? styles.conditionOptionType1
+                            : styles.conditionOptionType2
+                        }
+                        onClick={() => {
+                          setConditionValue("keyword_cn");
+                        }}
+                      >
+                        Tiếng Trung
+                      </div>
+                    </div>
+                    <div className={styles.conditionOptionContainer}>
+                      <div
+                        className={
+                          conditionValue === "keyword_ru"
+                            ? styles.conditionOptionType1
+                            : styles.conditionOptionType2
+                        }
+                        onClick={() => {
+                          setConditionValue("keyword_ru");
+                        }}
+                      >
+                        Tiếng Nga
+                      </div>
+                    </div>
+                  </div>
+                </Col>
+              )}
+              {(dataDetail?.[conditionValue]?.required_keyword?.length ?? 0) > 0 && (
                 <>
                   <Col span={6} className={styles.itemLabel}>
                     Từ khoá bắt buộc
                   </Col>
                   <Col span={18} className={styles.itemContent}>
-                    {dataDetail?.required_keyword?.map((i: any) => i + ", ")}
+                    {dataDetail?.[conditionValue]?.required_keyword?.map((i: any) => i + ", ")}
                   </Col>
                 </>
               )}
-              {dataDetail?.exclusion_keyword && (
+              {dataDetail?.[conditionValue]?.exclusion_keyword && (
                 <>
                   <Col span={6} className={styles.itemLabel}>
                     Từ khoá loại trừ
                   </Col>
                   <Col span={18} className={styles.itemContent}>
-                    {dataDetail.exclusion_keyword}
+                    {dataDetail?.[conditionValue]?.exclusion_keyword}
                   </Col>
                 </>
               )}

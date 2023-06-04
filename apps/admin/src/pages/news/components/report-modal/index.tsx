@@ -70,6 +70,21 @@ export function ReportModal(): JSX.Element {
       width: 130,
       align: "left",
       dataIndex: "date_created",
+      render: (item) => {
+        return (
+          <>
+            {(new Date(item).getDate() < 10
+              ? "0" + new Date(item).getDate()
+              : new Date(item).getDate()) +
+              "/" +
+              (new Date(item).getMonth() < 9
+                ? "0" + (new Date(item).getMonth() + 1)
+                : new Date(item).getMonth() + 1) +
+              "/" +
+              new Date(item).getFullYear()}
+          </>
+        );
+      },
     },
   ];
 

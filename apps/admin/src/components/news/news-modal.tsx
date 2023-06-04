@@ -2,16 +2,16 @@ import { useNewsletterDetail } from "@/pages/news/news.loader";
 import { NewsletterDto } from "@/services/news.type";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
 import { Form, Modal } from "antd";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
 
 import { NewsletterFormGioTin } from "./form/form-ban-tin";
-import { NewsletterFormLinhVuc } from "./form/form-linh-vuc";
-import { ETreeAction, ETreeTag, useNewsSamplesState, useNewsState } from "./news-state";
+import { NewsletterFormChuDe } from "./form/form-chu-de";
+import { ETreeAction, ETreeTag, useNewsSamplesTopicState, useNewsState } from "./news-state";
 
 const formItemLayoutWithOutLabel = {
-  labelCol: { span: 6 },
+  labelCol: { span: 5 },
   wrapperCol: {
     xs: { span: 24, offset: 0 },
     sm: { span: 20, offset: 1 },
@@ -23,6 +23,25 @@ interface Props {
   confirmLoading?: boolean;
 }
 
+const defaultKeyword = {
+  keyword_vi: {
+    required_keyword: [],
+    exclusion_keyword: "",
+  },
+  keyword_en: {
+    required_keyword: [],
+    exclusion_keyword: "",
+  },
+  keyword_cn: {
+    required_keyword: [],
+    exclusion_keyword: "",
+  },
+  keyword_ru: {
+    required_keyword: [],
+    exclusion_keyword: "",
+  },
+};
+
 export function NewsletterModal({ onFinish, confirmLoading }: Props): JSX.Element {
   const { t } = useTranslation("translation", { keyPrefix: "news" });
   const { action, tag, data } = useNewsState((state) => state.news);
@@ -30,19 +49,27 @@ export function NewsletterModal({ onFinish, confirmLoading }: Props): JSX.Elemen
   const newsSelectId = useNewsState((state) => state.newsSelectId);
   const { data: initialData } = useNewsletterDetail(newsSelectId as string, {});
   const location = useLocation();
-
   const setNews = useNewsState((state) => state.setNews);
-  const newsSamples = useNewsSamplesState((state) => state.newsSamples);
-  const [form] = Form.useForm<NewsletterDto & { isSample?: boolean }>();
+  const newsSamples = useNewsSamplesTopicState((state) => state.newsSamples);
+  const setNewsSamples = useNewsSamplesTopicState((state) => state.setNewsSamples);
+  const [form] = Form.useForm<NewsletterDto & { is_sample?: boolean }>();
+  const [keyword, setKeyword] = useState<any>(null);
 
   useEffect(() => {
     if (action === ETreeAction.UPDATE && initialData) {
       form.setFieldsValue({
         ...initialData,
-        isSample: !!initialData?.news_samples?.length,
       });
+      setKeyword({
+        keyword_vi: initialData.keyword_vi ?? [],
+        keyword_en: initialData.keyword_en ?? [],
+        keyword_cn: initialData.keyword_cn ?? [],
+        keyword_ru: initialData.keyword_ru ?? [],
+      });
+      setNewsSamples(initialData.news_samples);
     } else {
       form.resetFields();
+      setKeyword(defaultKeyword);
     }
   }, [initialData, action]);
 
@@ -74,12 +101,17 @@ export function NewsletterModal({ onFinish, confirmLoading }: Props): JSX.Elemen
       onOk={handleFormFinish}
       onCancel={handleCancel}
       closable={false}
+      width={"80%"}
     >
       {action !== ETreeAction.SELECT && action !== ETreeAction.DELETE && (
         <Form form={form} {...formItemLayoutWithOutLabel}>
           {tag === ETreeTag.GIO_TIN && <NewsletterFormGioTin />}
-          {tag === ETreeTag.CHU_DE && <NewsletterFormLinhVuc title="Chủ đề" />}
-          {tag === ETreeTag.LINH_VUC && <NewsletterFormLinhVuc title="Lĩnh vực" />}
+          {tag === ETreeTag.CHU_DE && (
+            <NewsletterFormChuDe title="Chủ đề" keyword={keyword} setKeyword={setKeyword} />
+          )}
+          {tag === ETreeTag.LINH_VUC && (
+            <NewsletterFormChuDe title="Lĩnh vực" keyword={keyword} setKeyword={setKeyword} />
+          )}
         </Form>
       )}
     </Modal>
@@ -87,20 +119,17 @@ export function NewsletterModal({ onFinish, confirmLoading }: Props): JSX.Elemen
 
   function handleFormFinish() {
     form.validateFields().then((value) => {
-      if (value?.isSample) {
-        value.news_samples = newsSamples.map((i) => i._id);
-        value.required_keyword = [];
-        value.exclusion_keyword = "";
-        delete value.isSample;
-      } else {
-        value.news_samples = [];
-      }
-
       if (data?.parent_id) {
         value.parent_id = data.parent_id;
       }
 
-      onFinish({ ...value, tag, action, _id: data?._id });
+      if (value?.is_sample) {
+        value.news_samples = newsSamples;
+        onFinish({ ...value, ...defaultKeyword, tag, action, _id: data?._id });
+      } else {
+        value.news_samples = [];
+        onFinish({ ...value, ...keyword, tag, action, _id: data?._id });
+      }
     });
   }
 

@@ -70,7 +70,11 @@ export const EventPage: React.FC<Props> = () => {
           <Form.Item noStyle name="datetime">
             <DatePicker.RangePicker format={"DD/MM/YYYY"} onChange={handleChangeFilterTime} />
           </Form.Item>
-          <Button onClick={handleAddManyEvent} disabled={eventChoosedList.length === 0}>
+          <Button
+            style={{ borderColor: eventChoosedList.length === 0 ? "rgb(230,230,230)" : "#1890ff" }}
+            onClick={handleAddManyEvent}
+            disabled={eventChoosedList.length === 0}
+          >
             Thêm sự kiện vào báo cáo ({eventChoosedList.length})
           </Button>
         </Space>

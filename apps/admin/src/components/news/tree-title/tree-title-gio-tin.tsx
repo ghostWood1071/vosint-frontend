@@ -13,10 +13,12 @@ interface Props extends TreeDataNode {
   title: string;
   onClick?: (_id: string, tag: ETreeTag) => void;
   tag: ETreeTag;
+  type?: ETreeTag;
 }
 
 export function TreeTitleGioTin({ onClick, children, isEditable, ...node }: Props): JSX.Element {
   const setNews = useNewsState((state) => state.setNews);
+  const setNewsSelectId = useNewsState((state) => state.setNewsSelectId);
 
   const [isOpen, setIsOpen] = useState(false);
   const ref = useRef(null);
@@ -68,7 +70,7 @@ export function TreeTitleGioTin({ onClick, children, isEditable, ...node }: Prop
   );
 
   function handleClick() {
-    onClick?.(node._id, node.tag);
+    onClick?.(node._id, node.type ?? node.tag);
   }
 
   function handleClickAway() {
@@ -87,6 +89,7 @@ export function TreeTitleGioTin({ onClick, children, isEditable, ...node }: Prop
         parent_id: node._id,
       },
     });
+    setNewsSelectId(node._id);
   }
 
   function handleUpdate() {
@@ -97,6 +100,7 @@ export function TreeTitleGioTin({ onClick, children, isEditable, ...node }: Prop
         _id: node._id,
       },
     });
+    setNewsSelectId(node._id);
   }
 
   function handleDelete() {
@@ -108,5 +112,6 @@ export function TreeTitleGioTin({ onClick, children, isEditable, ...node }: Prop
         title: node.title,
       },
     });
+    setNewsSelectId(node._id);
   }
 }

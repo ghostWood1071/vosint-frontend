@@ -33,17 +33,22 @@ interface Props {
 
 export function NewsletterFormLinhVuc({ title }: Props): JSX.Element {
   const form = Form.useFormInstance();
-  const isSample = Form.useWatch("isSample", form);
+  const is_sample = Form.useWatch("is_sample", form);
 
   return (
     <>
       <Form.Item label={`Tên ${title}`} name="title" rules={rulesTitle(title)}>
         <Input placeholder={`Nhập tên ${title}`} />
       </Form.Item>
-      <Form.Item name="isSample" label="Định nghĩa tin mẫu" valuePropName="checked">
+      <Form.Item
+        hidden={title === "Lĩnh vực"}
+        name="is_sample"
+        label="Định nghĩa tin mẫu"
+        valuePropName="checked"
+      >
         <Switch />
       </Form.Item>
-      {isSample ? (
+      {is_sample && title !== "Lĩnh vực" ? (
         <ListNewsSampleLinhVuc />
       ) : (
         <>

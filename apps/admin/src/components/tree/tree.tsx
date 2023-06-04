@@ -57,7 +57,9 @@ export const Tree: React.FC<Props> = ({
   );
 
   function handleSelect(selectedKeys: React.Key[]) {
-    setNewsSelectId(selectedKeys[0]);
+    if (selectedKeys[0] !== undefined) {
+      setNewsSelectId(selectedKeys[0]);
+    }
   }
 
   function handleAdd() {

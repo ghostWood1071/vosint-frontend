@@ -23,6 +23,7 @@ import {
   getNewsListWithApiJob,
   getNewsSidebar,
   getNewsSummary,
+  getNewsViaSourceAndApiJob,
   getNewsVitalsWithApiJob,
   getNewsletterDetail,
   updateEventNews,
@@ -54,7 +55,7 @@ export const useNewsSidebar = (title?: string) => {
 };
 
 export const useNewsList = (filter: any, options?: UseQueryOptions<any, unknown>) => {
-  return useQuery<any>([CACHE_KEYS.NewsList, filter], () => getNewsList(filter), options);
+  return useQuery<any>([CACHE_KEYS.NewsList, filter], () => getNewsListWithApiJob(filter), options);
 };
 
 export const useNewsDetail = (id: string | null) => {
@@ -204,8 +205,16 @@ export const useInfiniteNewsList = (filter: any) => {
   );
 };
 
-export const useInfiniteNewsByNewsletter = (id: string, filter: any) => {
+export const useInfiniteNewsByNewsletter = (id: string, filter: any, tag: string) => {
   return useInfiniteQuery([CACHE_KEYS.NewsList, id], (data) => {
+    if (tag === "source" || tag === "source_group") {
+      return getNewsViaSourceAndApiJob(
+        data.pageParam !== undefined
+          ? { ...data.pageParam, ...filter, type: tag, id: id }
+          : { page_number: 1, page_size: 50, ...filter, type: tag, id: id },
+      );
+    }
+
     if (id === ETreeTag.QUAN_TRONG) {
       return getNewsVitalsWithApiJob(
         data.pageParam !== undefined

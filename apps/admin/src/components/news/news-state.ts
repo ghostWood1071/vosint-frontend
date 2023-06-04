@@ -38,6 +38,16 @@ export const useNewsSamplesState = create<NewsSamplesState>((set) => ({
   setNewsSamples: (newsSamples) => set({ newsSamples: newsSamples }),
 }));
 
+interface NewsSamplesTopicState {
+  newsSamples: any[];
+  setNewsSamples: Dispatch<any[]>;
+}
+
+export const useNewsSamplesTopicState = create<NewsSamplesTopicState>((set) => ({
+  newsSamples: [],
+  setNewsSamples: (newsSamples) => set({ newsSamples: newsSamples }),
+}));
+
 interface NewsSelectionState {
   open: boolean;
   setOpen: Dispatch<boolean>;
@@ -59,7 +69,12 @@ export type NewsType = {
     title?: string;
     exclusion_keyword?: string;
     required_keyword?: string[];
-    news_samples?: TNews[];
+    keyword_vi?: any;
+    keyword_en?: any;
+    keyword_cn?: any;
+    keyword_ru?: any;
+    is_sample?: boolean;
+    news_samples?: any[];
     parent_id?: string;
     _id?: string;
   } | null;
@@ -71,6 +86,8 @@ export enum ETreeTag {
   GIO_TIN = "gio_tin",
   QUAN_TRONG = "quan_trong",
   DANH_DAU = "danh_dau",
+  NGUON_TIN = "source",
+  NHOM_NGUON_TIN = "source_group",
 }
 
 export enum ETreeAction {
@@ -93,4 +110,6 @@ export const MTreeTag: Record<ETreeTag, string> = {
   [ETreeTag.GIO_TIN]: "giỏ tin",
   [ETreeTag.QUAN_TRONG]: "quan trọng",
   [ETreeTag.DANH_DAU]: "đánh dấu",
+  [ETreeTag.NGUON_TIN]: "nguồn tin",
+  [ETreeTag.NHOM_NGUON_TIN]: "nhóm nguồn tin",
 };

@@ -139,7 +139,13 @@ export const PipelineList: React.FC = () => {
             <Input placeholder="Tên pipeline" />
           </Form.Item>
           <Form.Item label="Lịch chạy:">
-            <Cron value={cronExpr} setValue={setCronExpr} locale={VI_LOCALE} />
+            <Cron
+              allowedPeriods={["week", "day", "hour", "minute", "reboot"]}
+              value={cronExpr}
+              setValue={setCronExpr}
+              locale={VI_LOCALE}
+              clearButtonProps={{ type: "default" }}
+            />
           </Form.Item>
         </Form>
       </Modal>

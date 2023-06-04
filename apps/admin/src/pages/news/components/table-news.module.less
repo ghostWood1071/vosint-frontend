@@ -241,6 +241,23 @@
       line-height: 1.7;
       margin-block: 20px;
       color: #1a2433;
+      video {
+        display: none !important;
+      }
+      img {
+        max-width: 500px !important;
+
+        @media screen and (max-width: 1200px) {
+          max-width: 400px !important;
+        }
+
+        @media screen and (max-width: 960px) {
+          max-width: 300px !important;
+        }
+        @media screen and (max-width: 760px) {
+          max-width: 200px !important;
+        }
+      }
     }
   }
 }

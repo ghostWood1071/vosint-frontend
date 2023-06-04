@@ -48,7 +48,7 @@ export const BodySocialPage: React.FC<BodySocialPageProps> = ({ type, statisticD
       <div className={styles.topButtonContainer}>
         <div className={styles.tabButtonContainer}>
           <Radio.Group
-            size={"large"}
+            size={"middle"}
             value={tabButton}
             buttonStyle="solid"
             onChange={(e) => {
