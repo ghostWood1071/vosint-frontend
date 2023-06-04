@@ -11,7 +11,7 @@ const Tree = (props: any) => {
   const renderTree = (nodes: any) => {
     return (
       <ul style={{ listStyle: "none" }}>
-        {nodes.map((node: any) => (
+        {nodes?.map((node: any) => (
           <li key={node._id}>
             {node.title}
             {node.children && node.children.length > 0 && renderTree(node.children)}
