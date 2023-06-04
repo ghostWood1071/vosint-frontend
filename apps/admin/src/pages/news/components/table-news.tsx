@@ -123,7 +123,7 @@ export const NewsTableItem: React.FC<Props> = ({
                 <Tooltip title="Tích cực">
                   <CaretUpFilled className={styles.goodIcon} />
                 </Tooltip>
-              ) : item["data:class_sacthai"] === "-1" ? (
+              ) : item["data:class_sacthai"] === "2" ? (
                 <Tooltip title="Tiêu cực">
                   <CaretDownFilled className={styles.badIcon} />
                 </Tooltip>
@@ -223,7 +223,7 @@ export const NewsTableItem: React.FC<Props> = ({
                         <Tooltip title="Tích cực">
                           <CaretUpFilled className={styles.goodIcon} />
                         </Tooltip>
-                      ) : item["data:class_sacthai"] === "-1" ? (
+                      ) : item["data:class_sacthai"] === "2" ? (
                         <Tooltip title="Tiêu cực">
                           <CaretDownFilled className={styles.badIcon} />
                         </Tooltip>

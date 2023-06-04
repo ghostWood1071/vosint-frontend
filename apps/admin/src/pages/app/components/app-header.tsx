@@ -88,8 +88,11 @@ export const AppHeader: React.FC = () => {
         <Row justify="space-between" align="middle">
           {(role === "admin" ? NAVBAR_HEADER_ADMIN : NAVBAR_HEADER).map(({ title, to, icon }) => (
             <Col key={to}>
-              <NavLink to={to} title={t(title)} className={handleActive}>
-                {icon}
+              <NavLink to={to} className={handleActive}>
+                <div className={styles.tabContainer}>
+                  {icon}
+                  <div className={styles.title}>{t(title)}</div>
+                </div>
               </NavLink>
             </Col>
           ))}

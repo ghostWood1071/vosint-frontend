@@ -4,6 +4,7 @@ import { ETreeAction, ETreeTag, useNewsState } from "@/components/news/news-stat
 import { AppContainer } from "@/pages/app";
 import { buildTree, getAllChildIds } from "@/pages/news/news.utils";
 import { getNewsDetailUrl } from "@/pages/router";
+import { useGroupSourceList } from "@/pages/source/source-group/source-group.loader";
 import { Space } from "antd";
 import classNames from "classnames";
 import { NavLink, Outlet, useNavigate, useParams } from "react-router-dom";
@@ -31,16 +32,41 @@ function Sidebar() {
   const { mutateAsync, isLoading: isMutateLoading } = useMutationNewsSidebar();
   const navigate = useNavigate();
   const resetNewsState = useNewsState((state) => state.reset);
+  const { data: dataSourceGroup } = useGroupSourceList({
+    skip: 1,
+    limit: 100,
+    text_search: "",
+  });
+
+  const dataSourceGroupFinal = dataSourceGroup?.data?.map((e: any) => {
+    const dataChildren: any[] = [];
+    e.news.forEach((element: any) => {
+      dataChildren.push({ key: element.id, _id: element.id, title: element.name, type: "source" });
+    });
+    return {
+      key: e._id,
+      _id: e._id,
+      title: e.source_name,
+      type: "source_group",
+      children: dataChildren,
+    };
+  });
 
   if (isLoading) return null;
 
   const gioTinTree = data?.gio_tin && buildTree(data.gio_tin);
   const linhVucTree = data?.linh_vuc && buildTree(data.linh_vuc);
   const chuDeTree = data?.chu_de && buildTree(data.chu_de);
-
   return (
     <>
       <Space direction="vertical" className={styles.sidebar} size={16}>
+        <NavLink to={getNewsDetailUrl(ETreeTag.QUAN_TRONG)} className={handleActive}>
+          Tin quan trọng
+        </NavLink>
+
+        <NavLink to={getNewsDetailUrl(ETreeTag.DANH_DAU)} className={handleActive}>
+          Tin được đánh dấu
+        </NavLink>
         {gioTinTree && (
           <Tree
             title="Giỏ tin"
@@ -49,6 +75,18 @@ function Sidebar() {
             isEditable
             onClickTitle={handleClickTitle}
             tag={ETreeTag.GIO_TIN}
+            selectedKeys={newsletterId ? [newsletterId] : []}
+          />
+        )}
+
+        {dataSourceGroup && (
+          <Tree
+            title="Nhóm nguồn tin"
+            treeData={dataSourceGroupFinal}
+            isSpinning={isLoading}
+            // isEditable
+            onClickTitle={handleClickTitleSource}
+            tag={ETreeTag.NGUON_TIN}
             selectedKeys={newsletterId ? [newsletterId] : []}
           />
         )}
@@ -75,14 +113,6 @@ function Sidebar() {
             selectedKeys={newsletterId ? [newsletterId] : []}
           />
         )}
-
-        <NavLink to={getNewsDetailUrl(ETreeTag.QUAN_TRONG)} className={handleActive}>
-          Tin quan trọng
-        </NavLink>
-
-        <NavLink to={getNewsDetailUrl(ETreeTag.DANH_DAU)} className={handleActive}>
-          Tin được đánh dấu
-        </NavLink>
       </Space>
       <NewsletterModal onFinish={handleFinish} confirmLoading={isMutateLoading} />
     </>
@@ -104,6 +134,10 @@ function Sidebar() {
   }
 
   function handleClickTitle(newsletterId: string, tag: ETreeTag) {
+    navigate(getNewsDetailUrl(newsletterId, tag));
+  }
+
+  function handleClickTitleSource(newsletterId: string, tag: ETreeTag) {
     navigate(getNewsDetailUrl(newsletterId, tag));
   }
 }

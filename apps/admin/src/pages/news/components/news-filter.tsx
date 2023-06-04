@@ -74,14 +74,17 @@ export function NewsFilter(): JSX.Element {
             <Select placeholder="Điểm tin">
               <Select.Option key="all">Sắc thái tin</Select.Option>
               <Select.Option key="1">Tích cực</Select.Option>
-              <Select.Option key="-1">Tiêu cực</Select.Option>
+              <Select.Option key="2">Tiêu cực</Select.Option>
               <Select.Option key="0">Trung tính</Select.Option>
             </Select>
           </Form.Item>
           {/* <Form.Item noStyle name="title"> */}
           <Input.Search placeholder="Tìm kiếm" onSearch={handleSearch} />
           {/* </Form.Item> */}
-          <Button disabled={newsSelectionIds.length === 0}>
+          <Button
+            style={{ borderColor: newsSelectionIds.length === 0 ? "rgb(230,230,230)" : "#1890ff" }}
+            disabled={newsSelectionIds.length === 0}
+          >
             Tóm tắt tin ({newsSelectionIds.length})
           </Button>
           <Button

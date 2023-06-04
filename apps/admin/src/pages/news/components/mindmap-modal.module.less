@@ -9,25 +9,41 @@
     height: 100%;
     .left-header {
       padding-left: 10px;
-      font-size: 16px;
-      height: 40px;
+      font-size: 14px;
+      height: 35px;
       font-weight: bold;
       display: flex;
       align-items: center;
     }
     .left-content {
       width: 100%;
-      height: calc(100% - 40px);
+      height: calc(100% - 35px);
       border: 1px solid rgb(200, 200, 200);
       overflow: auto;
       padding-left: 10px;
       .scroll-class;
       .detail-content {
         font-family: serif;
-        font-size: 16px;
+        font-size: 14px;
         line-height: 1.7;
         margin-block: 20px;
         color: #1a2433;
+        video {
+          display: none !important;
+        }
+        img {
+          max-width: 450px !important;
+          @media screen and (max-width: 1200px) {
+            max-width: 400px !important;
+          }
+
+          @media screen and (max-width: 960px) {
+            max-width: 300px !important;
+          }
+          @media screen and (max-width: 760px) {
+            max-width: 200px !important;
+          }
+        }
       }
     }
   }
@@ -40,10 +56,10 @@
       display: inline-flex;
       align-items: center;
       width: 100%;
-      height: 40px;
+      height: 35px;
 
       .title-right-header {
-        font-size: 16px;
+        font-size: 14px;
         font-weight: bold;
         padding-block: 10px;
         width: 40%;
@@ -63,8 +79,10 @@
 
     .right-content {
       width: 100%;
-      height: calc(100% - 40px);
+      height: calc(100% - 35px);
       border: 1px solid rgb(200, 200, 200);
+      overflow: auto;
+      .scroll-class;
 
       .event-container {
         width: 100%;
@@ -175,6 +193,7 @@
   margin-left: 5px;
   font-size: 14px;
 }
+
 .delete {
   color: #ff4d4f;
   font-size: 14px;
@@ -191,9 +210,9 @@
 }
 
 .report-icon {
-  width: 10px;
-  height: 18px;
-  margin-right: 3px;
+  color: black;
+  margin-left: 5px;
+  font-size: 14px;
 }
 
 .modal {
@@ -207,4 +226,34 @@
       height: calc(100vh - 60px);
     }
   }
+}
+
+.add-exist-event-container {
+  width: 100%;
+  padding-bottom: 20px;
+}
+.add-exist-event-header {
+  width: 100%;
+
+  display: inline-flex;
+  .left-add-exist-news-container {
+    width: calc(100% - 80px);
+    .news-event-select {
+      width: 100%;
+    }
+  }
+  .right-add-exist-news-container {
+    width: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .add-button {
+      border-radius: 5px;
+    }
+  }
+}
+
+.add-new-event-container {
+  padding-bottom: 20px;
 }

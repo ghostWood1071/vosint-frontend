@@ -226,3 +226,12 @@ export const SetNotSeenPost = async (newsId: string) => {
   const result = await apiClient.post<any>(`${apiNewsBaseV2Url}/news/unread/${newsId}`);
   return result.data;
 };
+
+export const getNewsViaSourceAndApiJob = async (filter: Record<string, string>) => {
+  const result = await apiClient.get(`${apiNewsBaseV2Url}/Job/api/get_news_from_id_source`, {
+    params: filterEmptyString({
+      ...filter,
+    }),
+  });
+  return result.data;
+};

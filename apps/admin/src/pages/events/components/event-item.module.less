@@ -13,11 +13,39 @@
     }
     .header {
       width: 100%;
-      .header-item;
-    }
-    .header-edit {
-      width: calc(100% - 50px);
-      .header-item;
+      height: 33px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+
+      .checkbox-container {
+        width: 40px;
+        display: flex;
+        justify-content: center;
+      }
+      .content-header-container {
+        width: calc(100% - 210px);
+        padding-right: 10px;
+        .content-header;
+      }
+
+      .title-created-by-system-container {
+        width: calc(100% - 210px);
+        padding-right: 10px;
+        .content-header;
+      }
+      .all-button-container {
+        width: 60px;
+        display: inline-flex;
+        justify-content: flex-start;
+      }
+
+      .time {
+        width: 90px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
     }
 
     .edit {
@@ -116,55 +144,23 @@
   }
 }
 
+.content-header {
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: calc(100%);
+  color: black;
+  .detail-content-header {
+    font-weight: 300;
+  }
+}
+
 .like-icon {
   width: 20px;
   height: 20px;
-}
-
-.header-item {
-  height: 33px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  font-family: Roboto, sans-serif;
-
-  .checkbox-container {
-    width: 40px;
-    display: flex;
-    justify-content: center;
-  }
-
-  .option-container {
-    width: 60px;
-    display: flex;
-    justify-content: center;
-  }
-
-  .content-header-container {
-    width: calc(100% - 180px);
-    padding-right: 20px;
-    cursor: pointer;
-
-    .content-header {
-      font-weight: bold;
-      font-size: 14px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: calc(100%);
-      color: black;
-      .detail-content-header {
-        font-weight: 300;
-      }
-    }
-  }
-
-  .time {
-    max-width: 80px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
 }
 
 .icon-content {
@@ -183,17 +179,14 @@
 }
 
 .report-icon {
-  width: 20px;
-  height: 20px;
-  cursor: pointer;
+  color: black;
+  font-size: 14px;
 }
 .edit {
   color: #1890ff;
-  margin-left: 5px;
   font-size: 14px;
 }
 .delete {
   color: #ff4d4f;
   font-size: 14px;
-  margin-left: 5px;
 }

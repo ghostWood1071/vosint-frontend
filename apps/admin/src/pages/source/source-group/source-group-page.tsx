@@ -203,7 +203,14 @@ export const ViewList = () => {
   function handleClickRemoveItem(value: any) {
     const dataItem = data.data.find((e: any) => e._id === value.idGroup);
     const dataNewsResult = dataItem.news.filter((e: any) => e.id !== value.data.id);
-    handeDeleteItemSource({ ...dataItem, news: dataNewsResult });
+    Modal.confirm({
+      title: "Bạn có chắc chắn muốn xoá nguồn tin này?",
+      okText: "Xoá",
+      cancelText: "Huỷ",
+      onOk: () => {
+        handeDeleteItemSource({ ...dataItem, news: dataNewsResult });
+      },
+    });
   }
   function handleClickEditGroup(value: any) {
     setIsOpenGroupModal(true);

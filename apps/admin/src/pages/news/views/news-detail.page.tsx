@@ -19,7 +19,7 @@ import {
 import styles from "./news-detail.module.less";
 
 export const NewsDetailPage = () => {
-  let { newsletterId } = useParams();
+  let { newsletterId, tag } = useParams();
   const [setNewsSelection] = useNewsSelection((state) => [state.setNewsSelection], shallow);
   const { ref, inView } = useInView();
   const queryClient = useQueryClient();
@@ -29,6 +29,7 @@ export const NewsDetailPage = () => {
   const { data, isFetchingNextPage, fetchNextPage, hasNextPage } = useInfiniteNewsByNewsletter(
     newsletterId!,
     newsFilter,
+    tag ?? "",
   );
   const { data: dataIAm } = useGetMe();
   const { mutateAsync: mutateDelete } = useDeleteNewsInNewsletter();
@@ -55,7 +56,7 @@ export const NewsDetailPage = () => {
   }, [newsletterId, newsFilter]);
 
   useEffect(() => {
-    if (inView && skip * 30 < data?.pages[data?.pages.length - 1].total_record) {
+    if (inView && skip * 50 < data?.pages[data?.pages.length - 1].total_record) {
       setSkip(skip + 1);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
