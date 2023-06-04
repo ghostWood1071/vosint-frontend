@@ -37,7 +37,7 @@ export function PeriodicReportDetail(): JSX.Element {
     eventNumber: eventNumber,
   });
   const dataWithDefaultParentId =
-    dataEventsById?.infor_tree.map((item: any) => ({
+    dataEventsById?.infor_tree?.map((item: any) => ({
       ...item,
       parent_id: item.parent_id ?? null,
     })) ?? [];
@@ -46,7 +46,7 @@ export function PeriodicReportDetail(): JSX.Element {
     let listEvent = Object.values(item)[0] as any[];
     listEvent?.map((obj: any) => {
       const b: any[] = [];
-      obj.new_list.map((item2: any) => {
+      obj.new_list?.map((item2: any) => {
         if (item2 != null) b.push({ title: item2["data:title"], url: item2["data:url"] });
       });
       datatest.push({
@@ -162,7 +162,7 @@ export function PeriodicReportDetail(): JSX.Element {
     });
   }
   function generateTreeDocs(nodes: any, section: any) {
-    nodes.map((node: any, index: any) => {
+    nodes?.map((node: any, index: any) => {
       const titleNode = new Paragraph({
         text: node.time ? index + 1 + ". Ngày " + node.time + ", " + node.title : node.title,
         heading: headingLevel[node.level + 1],
