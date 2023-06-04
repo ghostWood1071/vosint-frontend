@@ -146,7 +146,7 @@ export function SynthesisReport(): JSX.Element {
             {isOpen && <HeadingToc headingsData={headings} />}
           </div>
         </Col>
-        <Col md={isOpen ? 16 : 19} span={isOpen ? 16 : 22} className={styles.container}>
+        <Col md={isOpen ? 16 : 21} span={isOpen ? 16 : 22} className={styles.container}>
           <Row justify={"space-between"} align={"middle"}>
             <Col span={4}></Col>
             <Col span={16} className={styles.title} pull={4}>
@@ -179,7 +179,7 @@ export function SynthesisReport(): JSX.Element {
 
           <Headings headingsData={headings} onDeleteEvent={handleDeleteEvent} />
         </Col>
-        <Col md={isOpen ? 4 : 4} span={isOpen ? 4 : 1} className={styles.action}>
+        <Col md={isOpen ? 4 : 2} span={isOpen ? 4 : 1} className={styles.action} pull={3}>
           <Space>
             <Button
               title="Xuất file ra docx"
@@ -244,7 +244,6 @@ export function SynthesisReport(): JSX.Element {
                 { label: "Tiêu đề mức 2", value: 2 },
                 { label: "Tiêu đề mức 3", value: 3 },
                 { label: "Tiêu đề mức 4", value: 4 },
-                { label: "Tiêu đề mức 5", value: 5 },
               ]}
             />
           </Form.Item>

@@ -170,7 +170,6 @@ export function SynthesisReport(): JSX.Element {
                 { label: "Tiêu đề mức 2", value: 2 },
                 { label: "Tiêu đề mức 3", value: 3 },
                 { label: "Tiêu đề mức 4", value: 4 },
-                { label: "Tiêu đề mức 5", value: 5 },
               ]}
             />
           </Form.Item>
