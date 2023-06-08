@@ -3,12 +3,9 @@ import { apiClient, filterEmptyString } from "@/utils/api";
 const apiGroupSourceConfigBaseV2Url = "";
 
 export const getGroupSource = async (filter: any) => {
-  const result = await apiClient.get<any>(
-    `${apiGroupSourceConfigBaseV2Url}/Source-group/${filter.text_search}`,
-    {
-      params: filterEmptyString(filter),
-    },
-  );
+  const result = await apiClient.get<any>(`${apiGroupSourceConfigBaseV2Url}/Source-group/`, {
+    params: filterEmptyString(filter),
+  });
   return result.data;
 };
 

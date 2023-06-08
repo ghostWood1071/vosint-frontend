@@ -62,7 +62,13 @@ export function TreeTitleGioTin({ onClick, children, isEditable, ...node }: Prop
               />
             </Space>
           ) : (
-            <EllipsisOutlined className={styles.ellips} onClick={handleOpen} />
+            <EllipsisOutlined
+              className={styles.ellips}
+              onClick={(event) => {
+                event.stopPropagation();
+                handleOpen();
+              }}
+            />
           )}
         </Col>
       )}

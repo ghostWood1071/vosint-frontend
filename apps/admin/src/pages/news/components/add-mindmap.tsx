@@ -1,4 +1,7 @@
-import { removeWhitespaceInStartAndEndOfString } from "@/utils/tool-validate-string";
+import {
+  convertTimeToShowInUI,
+  removeWhitespaceInStartAndEndOfString,
+} from "@/utils/tool-validate-string";
 import { DeleteOutlined } from "@ant-design/icons";
 import {
   Button,
@@ -90,18 +93,7 @@ export const AddMindmap: React.FC<ModalEditProps> = ({
     typeModal === "edit"
       ? {
           ...choosedEvent,
-          date_created: moment(
-            (new Date(choosedEvent.date_created).getDate() < 10
-              ? "0" + new Date(choosedEvent.date_created).getDate()
-              : new Date(choosedEvent.date_created).getDate()) +
-              "/" +
-              (new Date(choosedEvent.date_created).getMonth() < 9
-                ? "0" + (new Date(choosedEvent.date_created).getMonth() + 1)
-                : new Date(choosedEvent.date_created).getMonth() + 1) +
-              "/" +
-              new Date(choosedEvent.date_created).getFullYear(),
-            dateFormat,
-          ),
+          date_created: moment(convertTimeToShowInUI(choosedEvent.date_created), dateFormat),
         }
       : {};
 

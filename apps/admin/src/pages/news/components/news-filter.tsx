@@ -1,5 +1,6 @@
 import { Tree } from "@/components";
 import { ETreeTag, useNewsSelection, useNewsState } from "@/components/news/news-state";
+import { useSidebar } from "@/pages/app/app.store";
 import {
   useDeleteNewsInNewsletter,
   useNewsIdToNewsletter,
@@ -26,6 +27,8 @@ export function NewsFilter(): JSX.Element {
     (state) => [state.newsSelection, state.setNewsSelection],
     shallow,
   );
+  const pinned = useSidebar((state) => state.pinned);
+
   const newsSelectionIds: string[] = newsSelection.map((i) => i?._id);
   let { newsletterId: detailIds, tag } = useParams();
   const { mutateAsync: mutateDelete } = useDeleteNewsInNewsletter();
@@ -39,71 +42,72 @@ export function NewsFilter(): JSX.Element {
   const setNewsFilter = useNewsFilterDispatch();
 
   return (
-    <div className={styles.filter}>
+    <div className={pinned ? styles.filterWithSidebar : styles.filter}>
       <Form
         onValuesChange={handleFinish}
         initialValues={{
           sac_thai: "all",
         }}
+        style={{ width: "100%", display: "flex", flexDirection: "row", flexWrap: "wrap" }}
       >
-        <Space wrap>
-          <Form.Item noStyle name="datetime">
-            <DatePicker.RangePicker format={"DD/MM/YYYY"} />
-          </Form.Item>
-          <Form.Item noStyle name={"type_translate"}>
-            <Select placeholder="Dịch" defaultValue="nguon">
-              <Select.Option key="nuoc-ngoai">Dịch tiếng nước ngoài</Select.Option>
-              <Select.Option key="nguon">Hiển thị ngôn ngữ nguồn</Select.Option>
-            </Select>
-          </Form.Item>
-          <Form.Item noStyle name="language_source">
-            <Select
-              placeholder="Ngôn ngữ"
-              mode="multiple"
-              showArrow
-              allowClear
-              style={{ minWidth: 100 }}
-            >
-              <Select.Option key="en">Tiếng Anh</Select.Option>
-              <Select.Option key="vi">Tiếng Việt</Select.Option>
-              <Select.Option key="cn">Tiếng Trung</Select.Option>
-              <Select.Option key="ru">Tiếng Nga</Select.Option>
-            </Select>
-          </Form.Item>
-          <Form.Item noStyle name="sac_thai">
-            <Select placeholder="Điểm tin">
-              <Select.Option key="all">Sắc thái tin</Select.Option>
-              <Select.Option key="1">Tích cực</Select.Option>
-              <Select.Option key="2">Tiêu cực</Select.Option>
-              <Select.Option key="0">Trung tính</Select.Option>
-            </Select>
-          </Form.Item>
-          {/* <Form.Item noStyle name="title"> */}
-          <Input.Search placeholder="Tìm kiếm" onSearch={handleSearch} />
-          {/* </Form.Item> */}
-          <Button
-            style={{ borderColor: newsSelectionIds.length === 0 ? "rgb(230,230,230)" : "#1890ff" }}
-            disabled={newsSelectionIds.length === 0}
+        <Form.Item className={styles.item} name="datetime">
+          <DatePicker.RangePicker format={"DD/MM/YYYY"} />
+        </Form.Item>
+        <Form.Item className={styles.item} name={"type_translate"}>
+          <Select placeholder="Dịch" defaultValue="nguon">
+            <Select.Option key="nuoc-ngoai">Dịch tiếng nước ngoài</Select.Option>
+            <Select.Option key="nguon">Hiển thị ngôn ngữ nguồn</Select.Option>
+          </Select>
+        </Form.Item>
+        <Form.Item className={styles.item} name="language_source">
+          <Select
+            placeholder="Ngôn ngữ"
+            mode="multiple"
+            showArrow
+            allowClear
+            style={{ minWidth: 100 }}
           >
-            Tóm tắt tin ({newsSelectionIds.length})
-          </Button>
+            <Select.Option key="en">Tiếng Anh</Select.Option>
+            <Select.Option key="vi">Tiếng Việt</Select.Option>
+            <Select.Option key="cn">Tiếng Trung</Select.Option>
+            <Select.Option key="ru">Tiếng Nga</Select.Option>
+          </Select>
+        </Form.Item>
+        <Form.Item className={styles.item} name="sac_thai">
+          <Select placeholder="Điểm tin">
+            <Select.Option key="all">Sắc thái tin</Select.Option>
+            <Select.Option key="1">Tích cực</Select.Option>
+            <Select.Option key="2">Tiêu cực</Select.Option>
+            <Select.Option key="0">Trung tính</Select.Option>
+          </Select>
+        </Form.Item>
+        <Button
+          className={styles.item}
+          style={{ borderColor: newsSelectionIds.length === 0 ? "rgb(230,230,230)" : "#1890ff" }}
+          disabled={newsSelectionIds.length === 0}
+        >
+          Tóm tắt tin ({newsSelectionIds.length})
+        </Button>
+        <Button
+          className={styles.item}
+          icon={<PlusCircleTwoTone />}
+          onClick={handleAddBasket}
+          disabled={newsSelectionIds.length === 0}
+          title="Thêm tin"
+        />
+        {detailIds && ![ETreeTag.LINH_VUC, ETreeTag.CHU_DE].includes((tag ?? "") as ETreeTag) && (
           <Button
-            icon={<PlusCircleTwoTone />}
-            onClick={handleAddBasket}
+            className={styles.item}
+            icon={<MinusCircleTwoTone twoToneColor="#ff4d4f" />}
+            danger
             disabled={newsSelectionIds.length === 0}
-            title="Thêm tin"
+            onClick={handleRemoveNewsIds}
+            title="Xoá tin"
           />
-          {detailIds && ![ETreeTag.LINH_VUC, ETreeTag.CHU_DE].includes((tag ?? "") as ETreeTag) && (
-            <Button
-              icon={<MinusCircleTwoTone twoToneColor="#ff4d4f" />}
-              danger
-              disabled={newsSelectionIds.length === 0}
-              onClick={handleRemoveNewsIds}
-              title="Xoá tin"
-            />
-          )}
-          <Button type="primary" icon={<ExportOutlined />} title="Xuất file dữ liệu" disabled />
-        </Space>
+        )}
+        <div className={styles.input}>
+          <Input.Search className={styles.search} placeholder="Tìm kiếm" onSearch={handleSearch} />
+        </div>
       </Form>
 
       {openSelection && <NewsFilterModal />}

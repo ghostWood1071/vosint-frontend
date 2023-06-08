@@ -1,5 +1,7 @@
 import { ETreeTag, useNewsSelection } from "@/components/news/news-state";
 import { useGetMe } from "@/pages/auth/auth.loader";
+import { getContentTranslation } from "@/services/news.service";
+import { Empty } from "antd";
 import { flatMap, unionBy } from "lodash";
 import React, { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
@@ -76,18 +78,23 @@ export const NewsListPage: React.FC<Props> = () => {
       <div className={styles.bodyNews}>
         <table style={{ width: "100%" }}>
           <tbody>
-            {dataSource.map((item) => (
-              <NewsTableItem
-                userId={dataIAm._id}
-                key={item._id}
-                item={item}
-                onDelete={handleDelete}
-                onAdd={handleAdd}
-                typeTranslate={newsFilter.type_translate}
-                lengthDataSource={dataSource?.length}
-                setSeen={handleSetSeen}
-              />
-            ))}
+            {dataSource[0] !== undefined ? (
+              dataSource.map((item) => (
+                <NewsTableItem
+                  userId={dataIAm._id}
+                  key={item._id}
+                  item={item}
+                  onDelete={handleDelete}
+                  onAdd={handleAdd}
+                  typeTranslate={newsFilter.type_translate}
+                  lengthDataSource={dataSource?.length}
+                  setSeen={handleSetSeen}
+                  handleUpdateCache={handleUpdateCache}
+                />
+              ))
+            ) : (
+              <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={"Trống"} />
+            )}
           </tbody>
         </table>
         <div>
@@ -97,13 +104,38 @@ export const NewsListPage: React.FC<Props> = () => {
               disabled={!hasNextPage || isFetchingNextPage}
               style={{ padding: 0, margin: 0, border: 0 }}
             >
-              {isFetchingNextPage ? "Đang lấy thêm tin..." : ""}
+              {isFetchingNextPage ? "Đang lấy tin..." : ""}
             </button>
           ) : null}
         </div>
       </div>
     </div>
   );
+
+  async function handleUpdateCache(value: string, attachedFunction: Function) {
+    const dataCache: any = queryClient.getQueryData(CACHE_KEYS.NewsList);
+    let index1 = 0;
+    let index2 = 0;
+    for (let i = 0; i < dataCache.pages.length; i++) {
+      for (let j = 0; j < dataCache.pages[i].result.length; j++) {
+        if (dataCache.pages[i].result[j]._id === value) {
+          index2 = j;
+          break;
+        }
+      }
+      if (index2 !== 0) {
+        index1 = i;
+        break;
+      }
+    }
+    const a = dataCache.pages[index1].result[index2];
+    let result = await getContentTranslation(a?.source_language, a?.["data:content"]);
+    if (result) {
+      attachedFunction();
+      dataCache.pages[index1].result[index2]["data:content_translate"] = result.results;
+      queryClient.setQueryData(CACHE_KEYS.NewsList, dataCache);
+    }
+  }
 
   function handleSetSeen(checkedSeen: boolean, idNews: string) {
     if (checkedSeen) {

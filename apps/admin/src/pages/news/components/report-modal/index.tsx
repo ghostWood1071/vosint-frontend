@@ -2,6 +2,7 @@ import { navigationItemLevel } from "@/pages/reports/components/heading-toc";
 import { HeadingsData } from "@/pages/reports/components/headings";
 import { CACHE_KEYS, useReports, useUpdateReport } from "@/pages/reports/report.loader";
 import { IEventDto, TReport } from "@/services/report-type";
+import { convertTimeToShowInUI } from "@/utils/tool-validate-string";
 import {
   Col,
   Input,
@@ -71,19 +72,7 @@ export function ReportModal(): JSX.Element {
       align: "left",
       dataIndex: "date_created",
       render: (item) => {
-        return (
-          <>
-            {(new Date(item).getDate() < 10
-              ? "0" + new Date(item).getDate()
-              : new Date(item).getDate()) +
-              "/" +
-              (new Date(item).getMonth() < 9
-                ? "0" + (new Date(item).getMonth() + 1)
-                : new Date(item).getMonth() + 1) +
-              "/" +
-              new Date(item).getFullYear()}
-          </>
-        );
+        return <>{convertTimeToShowInUI(item)}</>;
       },
     },
   ];

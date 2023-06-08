@@ -1,4 +1,5 @@
 import { apiClient, filterEmptyString } from "@/utils/api";
+import axios from "axios";
 
 import type { INewsSummaryDto } from "./news.type";
 
@@ -232,6 +233,16 @@ export const getNewsViaSourceAndApiJob = async (filter: Record<string, string>) 
     params: filterEmptyString({
       ...filter,
     }),
+  });
+  return result.data;
+};
+
+const apiNewsTranslationUrl = "pipeline/Job/api/translate";
+
+export const getContentTranslation = async (inputLanguage: string, data: any) => {
+  const result = await apiClient.post(`/${apiNewsTranslationUrl}`, {
+    lang: inputLanguage,
+    content: data,
   });
   return result.data;
 };
