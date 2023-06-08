@@ -1,12 +1,16 @@
 .main-container {
-  min-height: calc(100vh - 49px);
-  max-height: calc(100vh - 167px);
+  height: calc(100vh - 180px);
   border-top: 1px solid rgba(240, 240, 240, 1);
-  padding-top: 52px;
+  padding-top: 40px;
+  @media screen and (max-width: 1200px) {
+    padding-top: 70px;
+  }
   .bodyNews {
     padding: 10px;
-    min-height: calc(100vh - 109px);
-    max-height: calc(100vh - 227px);
+    height: calc(100vh - 95px);
+    @media screen and (max-width: 1200px) {
+      height: calc(100vh - 125px);
+    }
     &:hover::-webkit-scrollbar-thumb {
       background-color: #9da5b1;
     }

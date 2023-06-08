@@ -1,4 +1,5 @@
 import { UserIcon } from "@/assets/svg";
+import { convertTimeToShowInUI } from "@/utils/tool-validate-string";
 import { CloseOutlined, CommentOutlined, LikeOutlined, ShareAltOutlined } from "@ant-design/icons";
 import { Tag } from "antd";
 import React, { useRef, useState } from "react";
@@ -73,15 +74,7 @@ export const PostItem: React.FC<PostItemProps> = ({ item }) => {
             </div>
             <div className={styles.likeHeaderContainer}>
               <Tag className={seen ? styles.seenTagTime : styles.tagTime}>
-                {(new Date(item.created_at).getDate() < 10
-                  ? "0" + new Date(item.created_at).getDate()
-                  : new Date(item.created_at).getDate()) +
-                  "-" +
-                  (new Date(item.created_at).getMonth() < 10
-                    ? "0" + (new Date(item.created_at).getMonth() + 1)
-                    : new Date(item.created_at).getMonth() + 1) +
-                  "-" +
-                  new Date(item.created_at).getFullYear()}
+                {convertTimeToShowInUI(item.created_at)}
               </Tag>
             </div>
           </div>
@@ -107,17 +100,7 @@ export const PostItem: React.FC<PostItemProps> = ({ item }) => {
               <div className={styles.rightDetailHeader}>
                 <div className={styles.name}>{item.header}</div>
                 <div className={styles.time}>
-                  <Tag className={styles.tag}>
-                    {(new Date(item.created_at).getDate() < 10
-                      ? "0" + new Date(item.created_at).getDate()
-                      : new Date(item.created_at).getDate()) +
-                      "-" +
-                      (new Date(item.created_at).getMonth() < 10
-                        ? "0" + (new Date(item.created_at).getMonth() + 1)
-                        : new Date(item.created_at).getMonth() + 1) +
-                      "-" +
-                      new Date(item.created_at).getFullYear()}
-                  </Tag>
+                  <Tag className={styles.tag}>{convertTimeToShowInUI(item.created_at)}</Tag>
                 </div>
                 <div className={styles.allNumberContainer}>
                   <div className={styles.likeHeaderContainer}>

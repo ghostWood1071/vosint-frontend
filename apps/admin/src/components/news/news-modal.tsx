@@ -70,6 +70,7 @@ export function NewsletterModal({ onFinish, confirmLoading }: Props): JSX.Elemen
     } else {
       form.resetFields();
       setKeyword(defaultKeyword);
+      setNewsSamples([]);
     }
   }, [initialData, action]);
 

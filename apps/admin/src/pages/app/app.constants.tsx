@@ -96,6 +96,11 @@ export const NAVBAR_HEADER = [
   //   icon: <DatabaseIcon />,
   // },
   {
+    title: "Event",
+    to: eventPath,
+    icon: <EventIcon />,
+  },
+  {
     title: "Report",
     to: reportPath,
     icon: <ReportIcon />,

@@ -37,8 +37,13 @@ function Sidebar() {
     limit: 100,
     text_search: "",
   });
-
-  const dataSourceGroupFinal = dataSourceGroup?.data?.map((e: any) => {
+  const dataFirst: any[] = [];
+  dataSourceGroup?.data?.forEach((e: any) => {
+    if (e.is_hide === false) {
+      return dataFirst.push(e);
+    }
+  });
+  const dataSourceGroupFinal = dataFirst?.map((e: any) => {
     const dataChildren: any[] = [];
     e.news.forEach((element: any) => {
       dataChildren.push({ key: element.id, _id: element.id, title: element.name, type: "source" });

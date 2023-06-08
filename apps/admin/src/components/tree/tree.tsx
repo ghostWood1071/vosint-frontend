@@ -43,16 +43,18 @@ export const Tree: React.FC<Props> = ({
           </Col>
         )}
       </Row>
-      <TreeAntd
-        className={styles.treeAnt}
-        blockNode
-        treeData={treeData}
-        titleRender={(node: any) => (
-          <TreeTitleGioTin {...node} isEditable={isEditable} onClick={onClickTitle} tag={tag} />
-        )}
-        selectedKeys={selectedKeys}
-        onSelect={handleSelect}
-      />
+      {treeData.length >= 1 && (
+        <TreeAntd
+          className={styles.treeAnt}
+          blockNode
+          treeData={treeData}
+          titleRender={(node: any) => (
+            <TreeTitleGioTin {...node} isEditable={isEditable} onClick={onClickTitle} tag={tag} />
+          )}
+          selectedKeys={selectedKeys}
+          onSelect={handleSelect}
+        />
+      )}
     </div>
   );
 

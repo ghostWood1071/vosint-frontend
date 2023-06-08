@@ -1,11 +1,15 @@
 import { ReportIcon } from "@/assets/svg";
-import { removeWhitespaceInStartAndEndOfString } from "@/utils/tool-validate-string";
+import {
+  convertTimeToShowInUI,
+  removeWhitespaceInStartAndEndOfString,
+} from "@/utils/tool-validate-string";
 import {
   CaretRightOutlined,
   DeleteOutlined,
   EditOutlined,
   FileTextOutlined,
   PlusOutlined,
+  TranslationOutlined,
 } from "@ant-design/icons";
 import {
   Button,
@@ -15,6 +19,7 @@ import {
   Input,
   Modal,
   Select,
+  Skeleton,
   Space,
   Table,
   TableColumnsType,
@@ -42,6 +47,9 @@ interface props {
   item: any;
   isVisible: boolean;
   setHideModal: (value: any) => void;
+  isTranslation: boolean;
+  isGettingData: boolean;
+  handleClickTranslation: () => void;
 }
 
 interface SelectCustomProps {
@@ -57,7 +65,14 @@ const formItemLayoutWithOutLabel = {
   },
 };
 
-export const MindmapModal: React.FC<props> = ({ item, isVisible, setHideModal }) => {
+export const MindmapModal: React.FC<props> = ({
+  item,
+  isVisible,
+  setHideModal,
+  isTranslation,
+  handleClickTranslation,
+  isGettingData,
+}) => {
   const [choosedEvent, setChoosedEvent] = useState<any>();
   const [isOpenModalEditEvent, setIsOpenModalEditEvent] = useState<boolean>(false);
   const [typeModal, setTypeModal] = useState("edit");
@@ -116,19 +131,7 @@ export const MindmapModal: React.FC<props> = ({ item, isVisible, setHideModal })
       width: 180,
       dataIndex: "date_created",
       render: (item) => {
-        return (
-          <>
-            {(new Date(item).getDate() < 10
-              ? "0" + new Date(item).getDate()
-              : new Date(item).getDate()) +
-              "/" +
-              (new Date(item).getMonth() < 9
-                ? "0" + (new Date(item).getMonth() + 1)
-                : new Date(item).getMonth() + 1) +
-              "/" +
-              new Date(item).getFullYear()}
-          </>
-        );
+        return <>{convertTimeToShowInUI(item)}</>;
       },
     },
     {
@@ -363,7 +366,9 @@ export const MindmapModal: React.FC<props> = ({ item, isVisible, setHideModal })
     <Modal
       title={
         <div style={{ textAlign: "center", fontSize: 18, fontWeight: "bold" }}>
-          {item["data:title"]}
+          {isTranslation && item["data:title_translate"]?.length > 1
+            ? item["data:title_translate"]
+            : item["data:title"]}
         </div>
       }
       open={isVisible}
@@ -378,14 +383,51 @@ export const MindmapModal: React.FC<props> = ({ item, isVisible, setHideModal })
       <div className={styles.bodyModal}>
         <div className={styles.leftBody}>
           <div className={styles.leftHeader}>
-            <div className={styles.leftHeader}>Nội dung</div>
+            <div
+              className={
+                isTranslation ? styles.titleLeftHeaderWithTranslation : styles.titleLeftHeader
+              }
+              onClick={(event) => {
+                event.stopPropagation();
+                if (!isGettingData) {
+                  handleClickTranslation();
+                }
+              }}
+            >
+              {isGettingData ? (
+                <Button className={styles.loadingButton} loading={true} />
+              ) : (
+                <TranslationOutlined
+                  className={
+                    isTranslation ? styles.choosedIconFilterContent : styles.iconFilterContent
+                  }
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    handleClickTranslation();
+                  }}
+                />
+              )}{" "}
+              {isTranslation ? "Nội dung đã dịch" : "Nội dung nguồn"}
+            </div>
           </div>
           <div className={styles.leftContent}>
-            <div
-              dangerouslySetInnerHTML={{ __html: item["data:html"] }}
-              className={styles.detailContent}
-              onClick={(event) => event.stopPropagation()}
-            />
+            {isTranslation ? (
+              isGettingData ? (
+                <Skeleton className={styles.skeleton} active />
+              ) : (
+                <div
+                  dangerouslySetInnerHTML={{ __html: item["data:content_translate"] }}
+                  className={styles.detailContent}
+                  onClick={(event) => event.stopPropagation()}
+                />
+              )
+            ) : (
+              <div
+                dangerouslySetInnerHTML={{ __html: item["data:html"] }}
+                className={styles.detailContent}
+                onClick={(event) => event.stopPropagation()}
+              />
+            )}
           </div>
         </div>
         <div className={styles.rightBody}>
@@ -475,7 +517,11 @@ export const MindmapModal: React.FC<props> = ({ item, isVisible, setHideModal })
 
   function addManyEvent() {
     const allEventAdd = listEvent.map((e) => e._id);
-    handleAddManyEvent(allEventAdd);
+    if (allEventAdd[0] !== undefined) {
+      handleAddManyEvent(allEventAdd);
+    } else {
+      message.warning("Chưa có sự kiện nào để thêm!");
+    }
   }
 
   function onChangeTabs(key: string) {
@@ -667,16 +713,7 @@ const Items: React.FC<ItemsProps> = ({ item, handleEdit, handleDelete }) => {
               <div className={styles.lineFieldContent}>
                 <div className={styles.titleField}>Ngày sự kiện</div>
                 <div className={styles.contentField}>
-                  :{" "}
-                  {(new Date(item.date_created).getDate() < 10
-                    ? "0" + new Date(item.date_created).getDate()
-                    : new Date(item.date_created).getDate()) +
-                    "/" +
-                    (new Date(item.date_created).getMonth() < 9
-                      ? "0" + (new Date(item.date_created).getMonth() + 1)
-                      : new Date(item.date_created).getMonth() + 1) +
-                    "/" +
-                    new Date(item.date_created).getFullYear()}
+                  : {convertTimeToShowInUI(item.date_created)}
                 </div>
               </div>
             </div>

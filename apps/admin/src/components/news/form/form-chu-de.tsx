@@ -235,9 +235,9 @@ export function ListNewsSampleChuDe(): JSX.Element {
   const setNewsSamples = useNewsSamplesTopicState((state) => state.setNewsSamples);
   const [open, setOpen] = useState(false);
 
-  useEffect(() => {
-    setNewsSamples(data?.news_samples ?? []);
-  }, [data]);
+  // useEffect(() => {
+  //   setNewsSamples(data?.news_samples ?? []);
+  // }, [data]);
 
   return (
     <>

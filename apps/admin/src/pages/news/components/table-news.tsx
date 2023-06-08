@@ -1,4 +1,5 @@
 import { ETreeTag, useNewsSelection } from "@/components/news/news-state";
+import { convertTimeToShowInUI } from "@/utils/tool-validate-string";
 import {
   AreaChartOutlined,
   BellTwoTone,
@@ -13,8 +14,9 @@ import {
   ProfileOutlined,
   ShoppingCartOutlined,
   StarTwoTone,
+  TranslationOutlined,
 } from "@ant-design/icons";
-import { Button, Checkbox, Modal, Space, Tag, Tooltip, Typography } from "antd";
+import { Button, Checkbox, Modal, Skeleton, Space, Tag, Tooltip, Typography } from "antd";
 import React, { useEffect, useRef, useState } from "react";
 import { shallow } from "zustand/shallow";
 
@@ -31,6 +33,7 @@ interface Props {
   typeTranslate: string;
   userId?: string;
   setSeen: (value: boolean, idNews: string) => void;
+  handleUpdateCache: (value: string, func: Function) => void;
 }
 
 export const NewsTableItem: React.FC<Props> = ({
@@ -42,6 +45,7 @@ export const NewsTableItem: React.FC<Props> = ({
   typeTranslate,
   userId,
   setSeen,
+  handleUpdateCache,
 }) => {
   const [newsSelection, setNewsSelection] = useNewsSelection(
     (state) => [state.newsSelection, state.setNewsSelection],
@@ -53,6 +57,8 @@ export const NewsTableItem: React.FC<Props> = ({
   const checkSeen = item.list_user_read?.findIndex((e: string) => e === userId) ?? -1;
   const [typeDetail, setTypeDetail] = useState<any>("content");
   const [isVisibleModalMindmap, setIsVisibleModalMindmap] = useState<boolean>(false);
+  const [isTranslation, setIsTranslation] = useState<boolean>(false);
+  const [isGettingData, setIsGettingData] = useState<boolean>(false);
   const Ref = useRef<any>();
   useEffect(() => {
     const a = newsSelection.findIndex((e) => e._id === item._id);
@@ -181,15 +187,9 @@ export const NewsTableItem: React.FC<Props> = ({
                 </Tooltip>
               </div>
               <div className={styles.time}>
-                {(new Date(item.pub_date).getDate() < 10
-                  ? "0" + new Date(item.pub_date).getDate()
-                  : new Date(item.pub_date).getDate()) +
-                  "/" +
-                  (new Date(item.pub_date).getMonth() < 9
-                    ? "0" + (new Date(item.pub_date).getMonth() + 1)
-                    : new Date(item.pub_date).getMonth() + 1) +
-                  "/" +
-                  new Date(item.pub_date).getFullYear()}
+                {item.pub_date
+                  ? convertTimeToShowInUI(item.pub_date)
+                  : convertTimeToShowInUI(item.created_at)}
               </div>
             </div>
           </td>
@@ -233,7 +233,9 @@ export const NewsTableItem: React.FC<Props> = ({
                         </Tooltip>
                       )}
                     </span>
-                    {item["data:title"]}
+                    {isTranslation && item["data:title_translate"]?.length > 1
+                      ? item["data:title_translate"]
+                      : item["data:title"]}
                   </div>
                   <div className={styles.container1}>
                     {item["data:author"] ? (
@@ -310,6 +312,23 @@ export const NewsTableItem: React.FC<Props> = ({
                     </div>
                     <div className={styles.rightContainer3}>
                       <Space>
+                        <Tooltip title="Dịch nội dung">
+                          {isGettingData ? (
+                            <Button className={styles.loadingButton} loading={true} />
+                          ) : (
+                            <TranslationOutlined
+                              className={
+                                isTranslation
+                                  ? styles.choosedIconFilterContent
+                                  : styles.iconFilterContent
+                              }
+                              onClick={(event) => {
+                                event.stopPropagation();
+                                handleClickTranslation();
+                              }}
+                            />
+                          )}
+                        </Tooltip>
                         <Tooltip title="Nội dung">
                           <ProfileOutlined
                             className={
@@ -349,11 +368,23 @@ export const NewsTableItem: React.FC<Props> = ({
                     </div>
                   </div>
                   {typeDetail === "content" ? (
-                    <div
-                      dangerouslySetInnerHTML={{ __html: item["data:html"] }}
-                      className={styles.detailContent}
-                      onClick={(event) => event.stopPropagation()}
-                    />
+                    isTranslation ? (
+                      isGettingData ? (
+                        <Skeleton className={styles.skeleton} active />
+                      ) : (
+                        <div
+                          dangerouslySetInnerHTML={{ __html: item["data:content_translate"] }}
+                          className={styles.detailContent}
+                          onClick={(event) => event.stopPropagation()}
+                        />
+                      )
+                    ) : (
+                      <div
+                        dangerouslySetInnerHTML={{ __html: item["data:html"] }}
+                        className={styles.detailContent}
+                        onClick={(event) => event.stopPropagation()}
+                      />
+                    )
                   ) : (
                     <div className={styles.detailContent}>
                       <NewDetailSummary content={item["data:content"]} title={item["data:title"]} />
@@ -364,6 +395,9 @@ export const NewsTableItem: React.FC<Props> = ({
                       isVisible={isVisibleModalMindmap}
                       item={item}
                       setHideModal={setIsVisibleModalMindmap}
+                      isTranslation={isTranslation}
+                      handleClickTranslation={handleClickTranslation}
+                      isGettingData={isGettingData}
                     />
                   ) : null}
                 </div>
@@ -374,6 +408,17 @@ export const NewsTableItem: React.FC<Props> = ({
       )}
     </>
   );
+
+  function handleClickTranslation() {
+    setIsGettingData(true);
+    if (!isTranslation && item["data:content_translate"].length < 1) {
+      handleUpdateCache(item._id, () => setIsGettingData(false));
+    } else {
+      setIsGettingData(false);
+    }
+    setIsTranslation(!isTranslation);
+  }
+
   function onChangeCheckbox() {
     if (checkbox === false) {
       setNewsSelection([...newsSelection, item]);
