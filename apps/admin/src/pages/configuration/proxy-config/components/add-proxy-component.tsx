@@ -74,7 +74,7 @@ export const AddProxyComponent: React.FC<Props> = ({
       confirmLoading={confirmLoading}
       onOk={type === "add" ? handleAdd : handleEdit}
       onCancel={handleCancel}
-      width={800}
+      width={700}
       closable={false}
       maskClosable={false}
     >

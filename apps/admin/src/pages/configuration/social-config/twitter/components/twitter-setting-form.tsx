@@ -10,6 +10,14 @@ interface Props {
   onFinish: (values: any) => void;
 }
 
+const formItemLayoutWithOutLabel = {
+  labelCol: { span: 4 },
+  wrapperCol: {
+    xs: { span: 24, offset: 0 },
+    sm: { span: 24, offset: 0 },
+  },
+};
+
 export const SettingCreateForm: React.FC<Props> = ({
   setAdminSelect,
   adminData,
@@ -36,13 +44,11 @@ export const SettingCreateForm: React.FC<Props> = ({
   };
   return (
     <Form
-      labelCol={{ span: 8 }}
-      wrapperCol={{ span: 16 }}
       onFinish={onFinish}
       id="user-create"
       form={form}
-      labelAlign="left"
       validateMessages={validateMessages}
+      {...formItemLayoutWithOutLabel}
     >
       <Form.Item
         name="social_name"
@@ -108,7 +114,7 @@ export const SettingCreateForm: React.FC<Props> = ({
         name="followed_by"
         label="Chọn tài khoản giám sát: "
         labelCol={{
-          span: 10,
+          span: 6.5,
         }}
         rules={[
           {

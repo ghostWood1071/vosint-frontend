@@ -7,18 +7,24 @@ interface Props {
   isUpdate?: boolean;
 }
 
+const formItemLayoutWithOutLabel = {
+  labelCol: { span: 4 },
+  wrapperCol: {
+    xs: { span: 24, offset: 0 },
+    sm: { span: 24, offset: 0 },
+  },
+};
+
 export const UserManagerForm: React.FC<Props> = ({ form, onFinish, isUpdate }) => {
   return (
     <Form
-      labelCol={{ span: 8 }}
-      wrapperCol={{ span: 16 }}
       onFinish={onFinish}
       id="user-create"
       form={form}
-      labelAlign="left"
       initialValues={{
         role: "leader",
       }}
+      {...formItemLayoutWithOutLabel}
     >
       <Form.Item name="role" label="Loại tài khoản">
         <Select

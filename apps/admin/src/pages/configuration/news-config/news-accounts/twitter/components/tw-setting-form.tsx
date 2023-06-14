@@ -9,6 +9,13 @@ interface Props {
   form: FormInstance<any>;
   onFinish: (values: any) => void;
 }
+const formItemLayoutWithOutLabel = {
+  labelCol: { span: 4 },
+  wrapperCol: {
+    xs: { span: 24, offset: 0 },
+    sm: { span: 24, offset: 0 },
+  },
+};
 
 export const SettingCreateForm: React.FC<Props> = ({
   listProxy,
@@ -37,13 +44,11 @@ export const SettingCreateForm: React.FC<Props> = ({
   return (
     <>
       <Form
-        labelCol={{ span: 8 }}
-        wrapperCol={{ span: 16 }}
         onFinish={onFinish}
         id="user-create"
         form={form}
-        labelAlign="left"
         validateMessages={validateMessages}
+        {...formItemLayoutWithOutLabel}
       >
         <Form.Item
           name="username"
@@ -82,7 +87,7 @@ export const SettingCreateForm: React.FC<Props> = ({
           name="users_follow"
           label="Các tài khoản được giám sát: "
           labelCol={{
-            span: 10,
+            span: 6.5,
           }}
           rules={[
             {
@@ -104,9 +109,6 @@ export const SettingCreateForm: React.FC<Props> = ({
         <Form.Item
           name="list_proxy"
           label="Proxy: "
-          labelCol={{
-            span: 10,
-          }}
           rules={[
             {
               required: true,

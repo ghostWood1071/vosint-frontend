@@ -37,7 +37,7 @@ export function TreeTitleGioTin({ onClick, children, isEditable, ...node }: Prop
             })}
             onClick={handleClick}
           >
-            {node.title?.toString()}
+            <div className={styles.titleNode}>{node.title?.toString()}</div>
           </Typography.Paragraph>
         </Space>
       </Col>
