@@ -126,9 +126,8 @@ export const PipelineList: React.FC = () => {
         open={isOpenCreate}
         onCancel={handleCancelCreate}
         onOk={handleOkCreate}
-        getContainer="#modal-mount"
         confirmLoading={isUpdating}
-        width="60%"
+        width={700}
       >
         <Form layout="vertical" form={form}>
           <Form.Item

@@ -108,7 +108,7 @@ export function PeriodicReportDetail(): JSX.Element {
             <DirectoryTree data={datatest} id={id} />
           </Row>
         </Col>
-        <Col md={isOpen ? 4 : 4} span={isOpen ? 4 : 1} className={styles.action}>
+        <Col md={isOpen ? 4 : 2} span={isOpen ? 4 : 1} className={styles.action} pull={2}>
           <Space>
             <Button
               title="Xuất file ra docx"

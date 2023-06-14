@@ -135,7 +135,13 @@ export const UserProfile: React.FC<Props> = ({ open, setOpen }) => {
                   }
                   onClick={() => refInput?.current?.click()}
                 />
-                <input type="file" ref={refInput} hidden onChange={handleSelectFile} />
+                <input
+                  type="file"
+                  accept=".bmp, .jpg, .jpeg, .png"
+                  ref={refInput}
+                  hidden
+                  onChange={handleSelectFile}
+                />
                 <br />
                 <br />
                 <Typography.Paragraph>

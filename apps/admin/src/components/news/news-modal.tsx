@@ -14,7 +14,7 @@ const formItemLayoutWithOutLabel = {
   labelCol: { span: 5 },
   wrapperCol: {
     xs: { span: 24, offset: 0 },
-    sm: { span: 20, offset: 1 },
+    sm: { span: 24, offset: 0 },
   },
 };
 
@@ -96,13 +96,12 @@ export function NewsletterModal({ onFinish, confirmLoading }: Props): JSX.Elemen
       title={t(action!) + t(tag!)}
       open={action !== null && action !== ETreeAction.SELECT && action !== ETreeAction.DELETE}
       confirmLoading={confirmLoading}
-      getContainer="#modal-mount"
       maskClosable={false}
       destroyOnClose
       onOk={handleFormFinish}
       onCancel={handleCancel}
       closable={false}
-      width={"80%"}
+      width={700}
     >
       {action !== ETreeAction.SELECT && action !== ETreeAction.DELETE && (
         <Form form={form} {...formItemLayoutWithOutLabel}>

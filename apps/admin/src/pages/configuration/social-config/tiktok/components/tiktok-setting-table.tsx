@@ -119,6 +119,8 @@ export const TTSettingTable: React.FC<Props> = ({
         onOk={handleOkEdit}
         destroyOnClose
         maskClosable={false}
+        closeIcon={true}
+        width={700}
       >
         <SettingCreateForm
           setAdminSelect

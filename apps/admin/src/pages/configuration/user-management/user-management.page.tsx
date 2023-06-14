@@ -127,7 +127,8 @@ export const UserManagerList: React.FC = () => {
         confirmLoading={isCreating || isUpdating}
         destroyOnClose
         maskClosable={false}
-        getContainer="#modal-mount"
+        closeIcon={true}
+        width={700}
       >
         {(isErrorCreate || isErrorUpdate) && (
           <Alert

@@ -65,6 +65,8 @@ export const AccountForMonitoringTwitter: React.FC = () => {
         onOk={handleOkCreate}
         destroyOnClose
         maskClosable={false}
+        closeIcon={true}
+        width={700}
       >
         <SettingCreateForm
           listProxy={listProxy}
