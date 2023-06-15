@@ -179,7 +179,14 @@ export const AddGroupModal: React.FC<Props> = ({
           <Form.Item label={"Danh sách nguồn tin"}>
             <div className={styles.mainContainer}>
               {listSource.length > 0 ? (
-                <Table columns={columns} dataSource={listSource} rowKey="id" pagination={false} />
+                <Table
+                  columns={columns}
+                  dataSource={listSource}
+                  rowKey="id"
+                  pagination={false}
+                  size="small"
+                  scroll={{ y: 300 }}
+                />
               ) : null}
               <div className={styles.addSourceContainer}>
                 <div className={styles.leftContainer}>

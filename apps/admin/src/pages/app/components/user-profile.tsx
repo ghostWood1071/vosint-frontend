@@ -40,7 +40,6 @@ export const UserProfile: React.FC<Props> = ({ open, setOpen }) => {
   const { t } = useTranslation();
   const [userProfile, setUserProfile] = useLocalStorage<Record<string, string>>(LOCAL_USER_PROFILE);
   const refInput = useRef<HTMLInputElement>(null);
-
   const onFinishFailed = () => {
     message.error("Vui lòng nhập dữ liệu!");
   };
@@ -52,7 +51,7 @@ export const UserProfile: React.FC<Props> = ({ open, setOpen }) => {
     mutate: mutateChangePassword,
     isLoading: isLoadingChangePassword,
     isError: isErrorChangePassword,
-    error: errorChangePassword,
+    reset: resetChangePassword,
   } = useChangePassword({
     onSuccess: () => {
       localStorage.clear();
@@ -98,7 +97,7 @@ export const UserProfile: React.FC<Props> = ({ open, setOpen }) => {
         <div className={styles.card}>
           <Form
             labelCol={{
-              span: 6,
+              span: 5,
             }}
             onFinish={handleUpdate}
             onFinishFailed={onFinishFailed}
@@ -151,13 +150,20 @@ export const UserProfile: React.FC<Props> = ({ open, setOpen }) => {
               </Col>
             </Row>
             <div className={styles.buttonSubmit}>
-              <Button
-                type="primary"
-                loading={isUpdatingAvatar || isUpdatingProfile}
-                htmlType="submit"
-              >
-                Lưu
-              </Button>
+              <Row justify={"end"}>
+                <Col className={styles.buttonFooter}>
+                  <Button onClick={handleCancel}>Hủy</Button>
+                </Col>
+                <Col>
+                  <Button
+                    type="primary"
+                    loading={isUpdatingAvatar || isUpdatingProfile}
+                    htmlType="submit"
+                  >
+                    OK
+                  </Button>
+                </Col>
+              </Row>
             </div>
           </Form>
         </div>
@@ -168,18 +174,9 @@ export const UserProfile: React.FC<Props> = ({ open, setOpen }) => {
       key: "security",
       children: (
         <div className={styles.card}>
-          {isErrorChangePassword && (
-            <Alert
-              message="Có lỗi xảy ra"
-              description={errorChangePassword.response?.data.detail}
-              type="error"
-              showIcon
-              style={{ marginBottom: 24 }}
-            />
-          )}
           <Form
             labelCol={{
-              span: 6,
+              span: 7,
             }}
             labelWrap
             onFinish={handleFinishPassword}
@@ -189,11 +186,13 @@ export const UserProfile: React.FC<Props> = ({ open, setOpen }) => {
               label="Mật khẩu hiện tại"
               rules={[
                 {
-                  min: 8,
-                  message: "Mật khẩu phải có ít nhất 8 ký tự!",
                   required: true,
+                  message: "Vui lòng nhập mật khẩu hiện tại!",
                 },
               ]}
+              validateStatus={isErrorChangePassword ? "error" : undefined}
+              hasFeedback
+              help={isErrorChangePassword ? "Mật khẩu không chính xác" : ""}
             >
               <Input.Password autoComplete="off" />
             </Form.Item>
@@ -205,6 +204,7 @@ export const UserProfile: React.FC<Props> = ({ open, setOpen }) => {
               rules={[
                 {
                   message: "Hãy nhập mật khẩu mới",
+                  required: true,
                 },
                 {
                   max: 20,
@@ -240,6 +240,7 @@ export const UserProfile: React.FC<Props> = ({ open, setOpen }) => {
               rules={[
                 {
                   message: t("auth.enter_confirm_password"),
+                  required: true,
                 },
                 {
                   max: 20,
@@ -263,9 +264,12 @@ export const UserProfile: React.FC<Props> = ({ open, setOpen }) => {
             </Form.Item>
             <Form.Item wrapperCol={{ offset: 6 }}>
               <Row justify="end">
+                <Col className={styles.buttonFooter}>
+                  <Button onClick={handleCancel}>Hủy</Button>
+                </Col>
                 <Col>
                   <Button type="primary" htmlType="submit" loading={isLoadingChangePassword}>
-                    Lưu
+                    OK
                   </Button>
                 </Col>
               </Row>
@@ -289,12 +293,14 @@ export const UserProfile: React.FC<Props> = ({ open, setOpen }) => {
         minHeight: 400,
       }}
       maskClosable={false}
+      closeIcon={true}
     >
       <Tabs tabPosition="left" items={items} />
     </Modal>
   );
 
   function handleCancel() {
+    resetChangePassword();
     setOpen(false);
     setPreview(false);
   }
