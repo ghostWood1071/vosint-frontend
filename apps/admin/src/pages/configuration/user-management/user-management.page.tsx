@@ -31,11 +31,13 @@ export const UserManagerList: React.FC = () => {
     isLoading: isCreating,
     error: errorCreate,
     isError: isErrorCreate,
+    reset: resetCreate,
   } = useCreateUser({
     onSuccess: () => {
       message.success("Thêm người dùng thành công");
       setIsOpen(null);
       queryClient.invalidateQueries([CACHE_KEYS.LIST]);
+      form.resetFields();
     },
     onError: (err) => {
       if (err.response?.data.detail === "User already exist") {
@@ -51,11 +53,13 @@ export const UserManagerList: React.FC = () => {
     isLoading: isUpdating,
     isError: isErrorUpdate,
     error: errorUpdate,
+    reset: resetUpdate,
   } = useUpdateUser({
     onSuccess: () => {
       message.success("Sửa người dùng thành công");
       setIsOpen(null);
       queryClient.invalidateQueries([CACHE_KEYS.LIST]);
+      form.resetFields();
     },
     onError: () => {
       message.error("Sửa người dùng thất bại");
@@ -152,6 +156,8 @@ export const UserManagerList: React.FC = () => {
   }
 
   function handleCancel() {
+    resetCreate();
+    resetUpdate();
     setIsOpen(null);
     form.resetFields();
   }
