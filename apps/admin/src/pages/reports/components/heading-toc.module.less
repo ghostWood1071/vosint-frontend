@@ -63,6 +63,24 @@
       .right {
         text-align: right;
       }
+
+      .clone {
+        opacity: 1;
+      }
+
+      .ghost {
+        height: 3px;
+        background-color: #2389ff;
+        border-radius: 2px;
+
+        * {
+          display: none;
+        }
+      }
+
+      &.disable-interaction {
+        pointer-events: none;
+      }
     }
   }
 }
