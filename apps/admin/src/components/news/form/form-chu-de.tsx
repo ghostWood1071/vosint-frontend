@@ -1,23 +1,10 @@
-import { CACHE_KEYS } from "@/pages/news/news.loader";
 import { TNews } from "@/services/news.type";
 import { removeWhitespaceInStartAndEndOfString } from "@/utils/tool-validate-string";
-import { DeleteOutlined, PlusCircleOutlined, PlusOutlined } from "@ant-design/icons";
-import {
-  Button,
-  Form,
-  Input,
-  List,
-  Modal,
-  Switch,
-  Table,
-  TableColumnsType,
-  Typography,
-} from "antd";
-import produce from "immer";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { useQueryClient } from "react-query";
+import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
+import { Button, Form, Input, Switch, Table, TableColumnsType, Typography } from "antd";
+import { useState } from "react";
 
-import { NewsType, useNewsSamplesTopicState, useNewsState } from "../news-state";
+import { useNewsSamplesTopicState } from "../news-state";
 import { rulesRequiredItemKeyword, rulesTitle } from "./form-rules";
 import styles from "./form.module.less";
 
@@ -27,8 +14,18 @@ interface Props {
   setKeyword: (value: any) => void;
 }
 
+const formItemLayoutWithOutLabel = {
+  labelCol: { span: 4 },
+  wrapperCol: {
+    xs: { span: 24, offset: 0 },
+    sm: { span: 24, offset: 0 },
+  },
+};
+
 export function NewsletterFormChuDe({ title, keyword, setKeyword }: Props): JSX.Element {
   const form = Form.useFormInstance();
+  const [formNewsSample] = Form.useForm<Record<string, any>>();
+
   const is_sample = Form.useWatch("is_sample", form);
   const [conditionValue, setConditionValue] = useState("keyword_vi");
   const [requiredKeywordInput, setRequiredKeywordInput] = useState<string>("");
@@ -38,6 +35,9 @@ export function NewsletterFormChuDe({ title, keyword, setKeyword }: Props): JSX.
   const [requiredKeywordData, setRequiredKeywordData] = useState<any[]>(
     keyword["keyword_vi"].required_keyword,
   );
+  const newsSamples = useNewsSamplesTopicState((state) => state.newsSamples);
+  const setNewsSamples = useNewsSamplesTopicState((state) => state.setNewsSamples);
+  const [isShowAddedNewsSample, setIsShowAddedNewsSample] = useState<boolean>(false);
 
   const columnsRequiredKeyword: TableColumnsType<any> = [
     {
@@ -61,24 +61,143 @@ export function NewsletterFormChuDe({ title, keyword, setKeyword }: Props): JSX.
       },
     },
   ];
+
+  const columns: TableColumnsType<TNews> = [
+    {
+      key: "title",
+      dataIndex: "title",
+      title: "Tên tin mẫu",
+    },
+    {
+      key: "content",
+      title: "Nội dung tin",
+      dataIndex: "content",
+    },
+    {
+      key: "link",
+      title: "Đường dẫn",
+      dataIndex: "link",
+      render: (value) => (
+        <Typography.Link target="_blank" href={value} rel="noreferrer">
+          {value}
+        </Typography.Link>
+      ),
+    },
+    {
+      key: "button",
+      title: "",
+      width: 50,
+      align: "center",
+      render: (item) => {
+        return (
+          <DeleteOutlined
+            title="Xoá từ khoá"
+            onClick={() => handleDeleteNewsSampleItem(item)}
+            className={styles.delete}
+          />
+        );
+      },
+    },
+  ];
+
   return (
     <>
-      <Form.Item label={`Tên ${title}`} name="title" rules={rulesTitle(title)}>
+      <Form.Item
+        labelAlign="right"
+        label={<div style={{ width: 110 }}>{`Tên ${title}`}</div>}
+        name="title"
+        rules={rulesTitle(title)}
+      >
         <Input placeholder={`Nhập tên ${title}`} />
       </Form.Item>
       <Form.Item
         hidden={title === "Lĩnh vực"}
         name="is_sample"
-        label="Định nghĩa tin mẫu"
+        labelAlign="right"
+        label={<div style={{ width: 120 }}>Định nghĩa tin mẫu</div>}
         valuePropName="checked"
       >
         <Switch />
       </Form.Item>
       {is_sample && title !== "Lĩnh vực" ? (
-        <ListNewsSampleChuDe />
+        <>
+          <Form.Item labelAlign="right" label={<div style={{ width: 120 }}>Tin mẫu</div>}>
+            <Button
+              type="primary"
+              onClick={(event) => {
+                event.stopPropagation();
+                setIsShowAddedNewsSample(!isShowAddedNewsSample);
+              }}
+            >
+              {isShowAddedNewsSample ? "Đóng tin mẫu" : "Thêm tin mẫu"}
+            </Button>
+            {isShowAddedNewsSample && (
+              <Form style={{ marginTop: 10 }} form={formNewsSample} preserve={false}>
+                <Form.Item
+                  labelAlign="right"
+                  label={<div style={{ width: 80 }}>Tên tin mẫu</div>}
+                  name={"title"}
+                  validateTrigger={["onChange", "onBlur"]}
+                  rules={[
+                    {
+                      required: true,
+                      message: "Hãy nhập vào tên tin mẫu!",
+                      whitespace: true,
+                    },
+                  ]}
+                >
+                  <Input />
+                </Form.Item>
+                <Form.Item
+                  labelAlign="right"
+                  validateTrigger={["onChange", "onBlur"]}
+                  label={<div style={{ width: 80 }}>Nội dung tin</div>}
+                  name={"content"}
+                  rules={[
+                    {
+                      required: true,
+                      message: "Hãy nhập vào nội dung tin",
+                      whitespace: true,
+                    },
+                  ]}
+                >
+                  <Input.TextArea autoSize={{ minRows: 1, maxRows: 10 }} />
+                </Form.Item>
+
+                <Form.Item
+                  labelAlign="right"
+                  validateTrigger={["onChange", "onBlur"]}
+                  label={<div style={{ width: 90 }}>Đường dẫn</div>}
+                  name={"link"}
+                >
+                  <Input />
+                </Form.Item>
+                <div className={styles.addButtonContainer}>
+                  <Button
+                    type="primary"
+                    className={styles.addButton}
+                    onClick={addOneNewsSampleItem}
+                  >
+                    Thêm
+                  </Button>
+                </div>
+              </Form>
+            )}
+
+            {newsSamples.length > 0 && (
+              <Table
+                columns={columns}
+                dataSource={newsSamples}
+                rowKey="id"
+                pagination={false}
+                size="small"
+              />
+            )}
+          </Form.Item>
+        </>
       ) : (
         <>
-          <Form.Item label="Loại ngôn ngữ">
+          <Form.Item labelAlign="right" label={<div style={{ width: 120 }}>Loại ngôn ngữ</div>}>
             <div className={styles.allItemCondition}>
               <div className={styles.conditionOptionContainer}>
                 <div
@@ -139,7 +258,11 @@ export function NewsletterFormChuDe({ title, keyword, setKeyword }: Props): JSX.
             </div>
           </Form.Item>
           <div className={styles.detailOptionItemContainer}>
-            <Form.Item rules={rulesRequiredItemKeyword} label="Từ khoá bắt buộc">
+            <Form.Item
+              labelAlign="right"
+              label={<div style={{ width: 120 }}>Từ khoá bắt buộc</div>}
+              rules={rulesRequiredItemKeyword}
+            >
               <div className={styles.requiredKeywordContainer}>
                 <div className={styles.requiredKeywordInputBox}>
                   <Input
@@ -169,7 +292,10 @@ export function NewsletterFormChuDe({ title, keyword, setKeyword }: Props): JSX.
                 ) : null}
               </div>
             </Form.Item>
-            <Form.Item label="Từ khoá loại trừ">
+            <Form.Item
+              labelAlign="right"
+              label={<div style={{ width: 120 }}>Từ khoá loại trừ</div>}
+            >
               <Input
                 value={exclusionKeywordInput}
                 onChange={(event) => {
@@ -191,6 +317,24 @@ export function NewsletterFormChuDe({ title, keyword, setKeyword }: Props): JSX.
     </>
   );
 
+  function handleDeleteNewsSampleItem(value: any) {
+    const result = newsSamples.filter((e: any) => e.id !== value.id);
+
+    setNewsSamples(result);
+  }
+
+  function addOneNewsSampleItem() {
+    formNewsSample
+      .validateFields()
+      .then((values) => {
+        values.id = new Date().getTime().toString();
+        const data = removeWhitespaceInStartAndEndOfString(values);
+        setNewsSamples([...newsSamples, data]);
+        formNewsSample.resetFields();
+      })
+      .catch();
+  }
+
   function handleChangeKeyword(key: string) {
     setConditionValue(key);
     setRequiredKeywordData(keyword[key].required_keyword);
@@ -199,15 +343,18 @@ export function NewsletterFormChuDe({ title, keyword, setKeyword }: Props): JSX.
   }
 
   function handleAddRequiredKeyword() {
-    setRequiredKeywordData([...requiredKeywordData, requiredKeywordInput]);
-    setKeyword({
-      ...keyword,
-      [conditionValue]: {
-        required_keyword: [...requiredKeywordData, requiredKeywordInput],
-        exclusion_keyword: exclusionKeywordInput,
-      },
-    });
-    setRequiredKeywordInput("");
+    const text = requiredKeywordInput.trim();
+    if (text !== "") {
+      setRequiredKeywordData([...requiredKeywordData, requiredKeywordInput]);
+      setKeyword({
+        ...keyword,
+        [conditionValue]: {
+          required_keyword: [...requiredKeywordData, requiredKeywordInput],
+          exclusion_keyword: exclusionKeywordInput,
+        },
+      });
+      setRequiredKeywordInput("");
+    }
   }
 
   function handleDeleteItemList(value: string) {
@@ -220,228 +367,5 @@ export function NewsletterFormChuDe({ title, keyword, setKeyword }: Props): JSX.
         exclusion_keyword: exclusionKeywordInput,
       },
     });
-  }
-}
-
-export function ListNewsSampleChuDe(): JSX.Element {
-  const newsSelectId = useNewsState((state) => state.newsSelectId);
-  const queryClient = useQueryClient();
-  const data = queryClient.getQueryData<NewsType["data"]>([
-    CACHE_KEYS.NewsletterDetail,
-    newsSelectId,
-  ]);
-
-  const newsSamples = useNewsSamplesTopicState((state) => state.newsSamples);
-  const setNewsSamples = useNewsSamplesTopicState((state) => state.setNewsSamples);
-  const [open, setOpen] = useState(false);
-
-  // useEffect(() => {
-  //   setNewsSamples(data?.news_samples ?? []);
-  // }, [data]);
-
-  return (
-    <>
-      <Form.Item label="Tin mẫu">
-        <Button type="primary" onClick={handleOpen}>
-          Thêm tin mẫu
-        </Button>
-
-        <List
-          dataSource={newsSamples}
-          renderItem={(item) => {
-            return (
-              <List.Item
-                actions={[
-                  <Button
-                    icon={<DeleteOutlined />}
-                    onClick={handleDelete}
-                    danger
-                    type="text"
-                    key="delete"
-                    title="Xoá tin mẫu"
-                  />,
-                ]}
-              >
-                {item?.["title"]}
-              </List.Item>
-            );
-
-            function handleDelete() {
-              const deletedNews = produce(newsSamples, (draft) => {
-                const index = draft.findIndex((i) => i._id === item._id);
-                if (index !== -1) draft.splice(index, 1);
-              });
-              setNewsSamples(deletedNews);
-            }
-          }}
-        />
-      </Form.Item>
-
-      <ModalAddNewsSamples open={open} setOpen={setOpen} selected={newsSamples} onOk={handleOk} />
-    </>
-  );
-
-  function handleOpen() {
-    setOpen(true);
-  }
-
-  function handleOk(selected: any[]) {
-    setNewsSamples(selected);
-  }
-}
-
-const formItemLayoutWithOutLabel = {
-  labelCol: { span: 4 },
-  wrapperCol: {
-    xs: { span: 24, offset: 0 },
-    sm: { span: 24, offset: 0 },
-  },
-};
-
-interface ModalAddNewsSamplesProps {
-  open: boolean;
-  selected: any[];
-  onOk: (selected: any[]) => void;
-  setOpen: Dispatch<SetStateAction<boolean>>;
-}
-
-export function ModalAddNewsSamples({
-  open,
-  selected,
-  setOpen,
-  onOk,
-}: ModalAddNewsSamplesProps): JSX.Element {
-  const [newsSamples, setNewsSamples] = useState<any[]>(selected);
-
-  const [form] = Form.useForm<Record<string, any>>();
-
-  const columns: TableColumnsType<TNews> = [
-    {
-      key: "title",
-      dataIndex: "title",
-      title: "Tên tin mẫu",
-    },
-    {
-      key: "content",
-      title: "Nội dung tin",
-      dataIndex: "content",
-    },
-    {
-      key: "link",
-      title: "Đường dẫn",
-      dataIndex: "link",
-      render: (value) => (
-        <Typography.Link target="_blank" href={value} rel="noreferrer">
-          {value}
-        </Typography.Link>
-      ),
-    },
-    {
-      key: "button",
-      title: "",
-      width: 50,
-      align: "center",
-      render: (item) => {
-        return (
-          <DeleteOutlined
-            title="Xoá từ khoá"
-            onClick={() => handleDeleteItemList(item)}
-            className={styles.delete}
-          />
-        );
-      },
-    },
-  ];
-
-  return (
-    <Modal
-      open={open}
-      onCancel={handleCancel}
-      onOk={handleOk}
-      title="Thêm tin mẫu"
-      style={{ top: 20 }}
-      width="75%"
-      getContainer="#modal-mount"
-      zIndex={1001}
-      destroyOnClose
-      closable={false}
-      maskClosable={false}
-    >
-      <Form form={form} {...formItemLayoutWithOutLabel} preserve={false}>
-        <Form.Item
-          label={"Tên tin mẫu"}
-          name={"title"}
-          validateTrigger={["onChange", "onBlur"]}
-          rules={[
-            {
-              required: true,
-              message: "Hãy nhập vào tên tin mẫu!",
-              whitespace: true,
-            },
-          ]}
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item
-          validateTrigger={["onChange", "onBlur"]}
-          label="Nội dung tin"
-          name={"content"}
-          rules={[
-            {
-              required: true,
-              message: "Hãy nhập vào nội dung tin",
-              whitespace: true,
-            },
-          ]}
-        >
-          <Input />
-        </Form.Item>
-
-        <Form.Item validateTrigger={["onChange", "onBlur"]} label="Đường dẫn" name={"link"}>
-          <Input />
-        </Form.Item>
-        <div className={styles.addButtonContainer}>
-          <Button type="primary" className={styles.addButton} onClick={addOneEvent}>
-            Thêm
-          </Button>
-        </div>
-        {newsSamples.length > 0 && (
-          <Table
-            columns={columns}
-            dataSource={newsSamples}
-            rowKey="_id"
-            pagination={false}
-            size="small"
-          />
-        )}
-      </Form>
-    </Modal>
-  );
-
-  function addOneEvent() {
-    form
-      .validateFields()
-      .then((values) => {
-        values.id = new Date().getTime().toString();
-        const data = removeWhitespaceInStartAndEndOfString(values);
-        setNewsSamples([...newsSamples, data]);
-        form.resetFields();
-      })
-      .catch();
-  }
-
-  function handleCancel() {
-    setOpen(false);
-  }
-
-  function handleOk() {
-    setOpen(false);
-    onOk(newsSamples);
-  }
-
-  function handleDeleteItemList(value: any) {
-    const result = newsSamples.filter((e: any) => e._id !== value._id);
-
-    setNewsSamples(result);
   }
 }

@@ -1,4 +1,4 @@
-import { PlusCircleFilled } from "@ant-design/icons";
+import { PlusCircleOutlined } from "@ant-design/icons";
 import { Col, Row, Tree as TreeAntd } from "antd";
 import type { DataNode } from "antd/lib/tree";
 import React from "react";
@@ -39,7 +39,11 @@ export const Tree: React.FC<Props> = ({
         </Col>
         {isEditable && (
           <Col span={8} className={styles.icon}>
-            <PlusCircleFilled onClick={handleAdd} title={`Thêm ${MTreeTag[tag]} con`} />
+            <PlusCircleOutlined
+              style={{ fontSize: 16, color: "#1890ff", cursor: "pointer" }}
+              onClick={handleAdd}
+              title={`Thêm ${MTreeTag[tag]} con`}
+            />
           </Col>
         )}
       </Row>

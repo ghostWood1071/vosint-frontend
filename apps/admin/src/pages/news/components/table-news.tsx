@@ -1,5 +1,13 @@
+import { EventNodes, EventPlugin } from "@/components/editor/plugins/event-plugin";
+import {
+  EventEditorConfig,
+  EventProvider,
+} from "@/components/editor/plugins/event-plugin/event-context";
+import { EventFilterNode } from "@/components/editor/plugins/event-plugin/event-filter-node";
+import { EventNode } from "@/components/editor/plugins/event-plugin/event-node";
 import { ETreeTag, useNewsSelection } from "@/components/news/news-state";
 import { convertTimeToShowInUI } from "@/utils/tool-validate-string";
+import { ContentEditable, EditorNodes, editorTheme } from "@aiacademy/editor";
 import {
   AreaChartOutlined,
   BellTwoTone,
@@ -11,12 +19,18 @@ import {
   ExclamationCircleOutlined,
   LineOutlined,
   LinkOutlined,
+  LoadingOutlined,
   ProfileOutlined,
   ShoppingCartOutlined,
   StarTwoTone,
   TranslationOutlined,
 } from "@ant-design/icons";
-import { Button, Checkbox, Modal, Skeleton, Space, Tag, Tooltip, Typography } from "antd";
+import { InitialConfigType, LexicalComposer } from "@lexical/react/LexicalComposer";
+import LexicalErrorBoundary from "@lexical/react/LexicalErrorBoundary";
+import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
+import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
+import { TabIndentationPlugin } from "@lexical/react/LexicalTabIndentationPlugin";
+import { Button, Checkbox, Modal, Skeleton, Space, Tag, Tooltip, Typography, message } from "antd";
 import React, { useEffect, useRef, useState } from "react";
 import { shallow } from "zustand/shallow";
 
@@ -60,6 +74,27 @@ export const NewsTableItem: React.FC<Props> = ({
   const [isTranslation, setIsTranslation] = useState<boolean>(false);
   const [isGettingData, setIsGettingData] = useState<boolean>(false);
   const Ref = useRef<any>();
+
+  const initialConfig: InitialConfigType = {
+    namespace: "synthetic-report",
+    onError: (error) => {
+      console.error(error);
+      throw new Error("synthetic-report?");
+    },
+    theme: editorTheme,
+    nodes: [...EditorNodes, EventNode, EventFilterNode],
+  };
+
+  const eventConfig: EventEditorConfig = {
+    namespace: "synthetic-report",
+    onError: (error) => {
+      console.error(error);
+      throw new Error("synthetic-event?");
+    },
+    theme: editorTheme,
+    nodes: [...EventNodes],
+  };
+
   useEffect(() => {
     const a = newsSelection.findIndex((e) => e._id === item._id);
     if (a !== -1) {
@@ -314,7 +349,7 @@ export const NewsTableItem: React.FC<Props> = ({
                       <Space>
                         <Tooltip title="Dịch nội dung">
                           {isGettingData ? (
-                            <Button className={styles.loadingButton} loading={true} />
+                            <LoadingOutlined className={styles.loadingIcon} />
                           ) : (
                             <TranslationOutlined
                               className={
@@ -324,7 +359,11 @@ export const NewsTableItem: React.FC<Props> = ({
                               }
                               onClick={(event) => {
                                 event.stopPropagation();
-                                handleClickTranslation();
+                                if (item.source_language !== "vi") {
+                                  handleClickTranslation();
+                                } else {
+                                  message.info("Nội dung đã ở dạng tiếng việt!");
+                                }
                               }}
                             />
                           )}
@@ -391,14 +430,27 @@ export const NewsTableItem: React.FC<Props> = ({
                     </div>
                   )}
                   {isVisibleModalMindmap ? (
-                    <MindmapModal
-                      isVisible={isVisibleModalMindmap}
-                      item={item}
-                      setHideModal={setIsVisibleModalMindmap}
-                      isTranslation={isTranslation}
-                      handleClickTranslation={handleClickTranslation}
-                      isGettingData={isGettingData}
-                    />
+                    <LexicalComposer initialConfig={initialConfig}>
+                      <EventProvider>
+                        <EventPlugin eventEditorConfig={eventConfig}>
+                          <HistoryPlugin />
+                          <RichTextPlugin
+                            contentEditable={<ContentEditable />}
+                            placeholder={null}
+                            ErrorBoundary={LexicalErrorBoundary}
+                          />
+                          <TabIndentationPlugin />
+                        </EventPlugin>
+                        <MindmapModal
+                          isVisible={isVisibleModalMindmap}
+                          item={item}
+                          setHideModal={setIsVisibleModalMindmap}
+                          isTranslation={isTranslation}
+                          handleClickTranslation={handleClickTranslation}
+                          isGettingData={isGettingData}
+                        />
+                      </EventProvider>
+                    </LexicalComposer>
                   ) : null}
                 </div>
               </div>

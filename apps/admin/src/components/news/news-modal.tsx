@@ -101,10 +101,10 @@ export function NewsletterModal({ onFinish, confirmLoading }: Props): JSX.Elemen
       onOk={handleFormFinish}
       onCancel={handleCancel}
       closable={false}
-      width={700}
+      width={"90%"}
     >
       {action !== ETreeAction.SELECT && action !== ETreeAction.DELETE && (
-        <Form form={form} {...formItemLayoutWithOutLabel}>
+        <Form form={form}>
           {tag === ETreeTag.GIO_TIN && <NewsletterFormGioTin />}
           {tag === ETreeTag.CHU_DE && (
             <NewsletterFormChuDe title="Chủ đề" keyword={keyword} setKeyword={setKeyword} />

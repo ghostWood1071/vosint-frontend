@@ -44,6 +44,7 @@ import {
 export const CACHE_KEYS = {
   NewsSidebar: "NEWS_SIDEBAR",
   NewsList: "NEWS_LIST",
+  NewsListSearch: "NEWS_LIST_SEARCH",
   CreateNewsletter: "CREATE_NEWSLETTER",
   NewsDetail: "NEWS_DETAIL",
   NewsletterDetail: "NEWSLETTER_DETAIL",
@@ -332,5 +333,11 @@ export const useMutationChangeStatusSeenPost = () => {
       },
       onError: () => {},
     },
+  );
+};
+
+export const useNewsListForSearchingInEvent = (filter: any) => {
+  return useQuery<any>([CACHE_KEYS.NewsListSearch, filter], () =>
+    getNewsListWithApiJob({ page_number: 1, page_size: 50, ...filter }),
   );
 };

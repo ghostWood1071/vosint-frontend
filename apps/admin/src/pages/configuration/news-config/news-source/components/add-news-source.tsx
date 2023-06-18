@@ -1,5 +1,5 @@
 import { removeWhitespaceInStartAndEndOfString } from "@/utils/tool-validate-string";
-import { Form, Input, Modal, Select } from "antd";
+import { Checkbox, Form, Input, Modal, Select } from "antd";
 import React from "react";
 
 interface Props {
@@ -41,7 +41,9 @@ export const AddNewsSourceComponent: React.FC<Props> = ({
       .validateFields()
       .then((values) => {
         const data = removeWhitespaceInStartAndEndOfString(values);
-
+        if (data.event_detect === undefined) {
+          data.event_detect = false;
+        }
         functionAdd(data);
       })
       .catch();
@@ -52,6 +54,9 @@ export const AddNewsSourceComponent: React.FC<Props> = ({
       .validateFields()
       .then((values) => {
         const data = removeWhitespaceInStartAndEndOfString(values);
+        if (data.event_detect === undefined) {
+          data.event_detect = false;
+        }
         functionEdit({ ...initialValues, ...data });
       })
       .catch();
@@ -157,6 +162,9 @@ export const AddNewsSourceComponent: React.FC<Props> = ({
               <Select.Option value="Blog cá nhân">Blog cá nhân</Select.Option>
               <Select.Option value="Báo phản động">Báo phản động</Select.Option>
             </Select>
+          </Form.Item>
+          <Form.Item label="Phát hiện sự kiện" name={"event_detect"} valuePropName="checked">
+            <Checkbox></Checkbox>
           </Form.Item>
         </Form>
       </Modal>

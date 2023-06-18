@@ -1,4 +1,5 @@
-import { useInfiniteNewsList, useNewsList } from "@/pages/news/news.loader";
+import { EventEditorParagraph } from "@/components/editor/plugins/event-plugin/event-component";
+import { useNewsListForSearchingInEvent } from "@/pages/news/news.loader";
 import {
   convertTimeToShowInUI,
   removeWhitespaceInStartAndEndOfString,
@@ -13,8 +14,12 @@ import {
   Select,
   Table,
   TableColumnsType,
-  Tooltip,
+  Tabs,
+  TabsProps,
+  Typography,
+  message,
 } from "antd";
+import { debounce } from "lodash";
 import moment from "moment";
 import React, { useState } from "react";
 import { useSearchParams } from "react-router-dom";
@@ -31,20 +36,22 @@ const formItemLayoutWithOutLabel = {
   },
 };
 
+interface SelectCustomProps {
+  value: string;
+  label: string;
+}
+
 interface ModalEditProps {
   confirmLoading?: boolean;
   isOpen: boolean;
   setIsOpen: (value: boolean) => void;
   choosedEvent: any;
   functionEdit: (value: any) => void;
+  functionAdd: (value: any) => void;
   typeModal: string;
-  functionDelete: (value: string) => void;
 }
 
-interface SelectCustomProps {
-  value: string;
-  label: string;
-}
+const defaultContent = `{"root":{"children":[{"children":[],"direction":null,"format":"","indent":0,"type":"paragraph","version":1}],"direction":null,"format":"","indent":0,"type":"root","version":1}}`;
 
 export const EditEventModal: React.FC<ModalEditProps> = ({
   confirmLoading,
@@ -53,24 +60,24 @@ export const EditEventModal: React.FC<ModalEditProps> = ({
   choosedEvent,
   functionEdit,
   typeModal,
-  functionDelete,
+  functionAdd,
 }) => {
+  const [listNewsAddedByUser, setListNewsAddedByUser] = useState<any[]>(
+    typeModal === "add" ? [] : choosedEvent?.news_added_by_user ?? [],
+  );
+
+  const [listNewsFromServer, setListNewsFromServer] = useState<any[]>(
+    typeModal === "add" ? [] : choosedEvent?.new_list ?? [],
+  );
   const [searchParams, setSearchParams] = useSearchParams();
-  const [listEvent, setListEvent] = useState<any[]>([]);
+  const [eventContent, setEventContent] = useState(
+    typeModal === "add" ? defaultContent : choosedEvent?.event_content,
+  );
+  const [isShowedEnterFieldNews, setIsShowedEnterFieldNews] = useState(false);
   const [valueNewsSelect, setValueNewsSelect] = useState<SelectCustomProps>({
     value: "",
     label: "",
   });
-
-  const [listNewsAdd, setListNewsAdd] = useState<any[]>([
-    // { _id: newsItem._id, "data:title": newsItem["data:title"], "data:url": newsItem["data:url"] },
-  ]);
-
-  const { data: dataNews } = useNewsList({
-    skip: 1,
-    limit: 50,
-  });
-
   const initialValues =
     typeModal === "edit"
       ? {
@@ -80,12 +87,23 @@ export const EditEventModal: React.FC<ModalEditProps> = ({
       : {};
 
   const [form] = Form.useForm<Record<string, any>>();
+  const [formNews] = Form.useForm<Record<string, any>>();
+
+  const { data: dataNews } = useNewsListForSearchingInEvent({
+    text_search: searchParams.get("text_search_news") ?? "",
+  });
 
   const columnsNewsTable: TableColumnsType<any> = [
     {
       title: "Tiêu đề tin",
       align: "left",
-      dataIndex: "data:title",
+      render: (element) => {
+        return (
+          <Typography.Link href={element?.link} target="_blank" rel="noreferrer">
+            {element.title}
+          </Typography.Link>
+        );
+      },
     },
     {
       title: "",
@@ -93,30 +111,137 @@ export const EditEventModal: React.FC<ModalEditProps> = ({
       align: "center",
       render: (element) => {
         return (
-          <Tooltip title={"Xoá"}>
-            <DeleteOutlined
-              onClick={() => handleDeleteItemList(element)}
-              className={styles.delete}
-            />
-          </Tooltip>
+          <DeleteOutlined
+            title={"Xoá tin"}
+            onClick={() => handleDeleteItemNewsList(element)}
+            className={styles.delete}
+          />
         );
       },
     },
   ];
 
+  const columnsNewsFromServer: TableColumnsType<any> = [
+    {
+      title: "Tiêu đề tin",
+      align: "left",
+      render: (element) => {
+        return (
+          <Typography.Link href={element?.["data:url"]} target="_blank" rel="noreferrer">
+            {element["data:title"]}
+          </Typography.Link>
+        );
+      },
+    },
+    {
+      title: "",
+      width: 50,
+      align: "center",
+      render: (element) => {
+        return (
+          <DeleteOutlined
+            title={"Xoá tin"}
+            onClick={() => handleDeleteItemNewsFromServer(element)}
+            className={styles.delete}
+          />
+        );
+      },
+    },
+  ];
+
+  const items: TabsProps["items"] = [
+    {
+      key: "1",
+      label: `Tìm kiếm từ cơ sở dữ liệu`,
+      children: (
+        <div className={styles.addExistEventHeader}>
+          <div className={styles.leftAddExistNewsContainer}>
+            <Select
+              showSearch
+              className={styles.newsEventSelect}
+              value={valueNewsSelect}
+              placeholder={"Nhập tiêu đề tin"}
+              defaultActiveFirstOption={false}
+              showArrow={false}
+              filterOption={false}
+              onSearch={handleSearchNews}
+              onChange={handleChangeNewsSelect}
+              notFoundContent={null}
+              options={(dataNews?.result || []).map((d: any) => ({
+                value: d._id,
+                label: d["data:title"],
+              }))}
+            />
+          </div>
+          <div className={styles.rightAddExistNewsContainer}>
+            <Button type="primary" className={styles.addButton} onClick={addNewsFromServer}>
+              Thêm
+            </Button>
+          </div>
+        </div>
+      ),
+    },
+    {
+      key: "2",
+      label: `Tự nhập tin`,
+      children: (
+        <Form form={formNews} {...formItemLayoutWithOutLabel} preserve={false}>
+          <Form.Item
+            validateTrigger={["onChange", "onBlur"]}
+            rules={[
+              {
+                required: true,
+                message: "Hãy nhập vào tiêu đề tin!",
+                whitespace: true,
+              },
+            ]}
+            label="Tiêu đề"
+            name={"title"}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            validateTrigger={["onChange", "onBlur"]}
+            rules={[
+              {
+                required: true,
+                message: "Hãy nhập vào đường dẫn tới tin!",
+                whitespace: true,
+              },
+            ]}
+            label="Đường dẫn"
+            name={"link"}
+          >
+            <Input />
+          </Form.Item>
+          <div className={styles.addButtonContainer}>
+            <Button type="primary" className={styles.addButton} onClick={handleAddNews}>
+              Thêm
+            </Button>
+          </div>
+        </Form>
+      ),
+    },
+  ];
+
+  const processChange = debounce((value: string) => {
+    setSearchParams({
+      text_search_news: value.trim(),
+    });
+  }, 500);
   return (
     <Modal
-      title={"Sửa sự kiện"}
+      title={typeModal === "add" ? "Thêm mới sự kiện" : "Sửa sự kiện"}
       open={isOpen}
       destroyOnClose
       confirmLoading={confirmLoading}
-      onOk={handleClickEdit}
+      onOk={typeModal === "add" ? handleClickAdd : handleClickEdit}
       onCancel={handleCancel}
-      width={800}
-      okText={"Sửa"}
+      width={900}
       getContainer="#modal-mount"
       closable={false}
       maskClosable={false}
+      className={styles.modal}
     >
       <Form
         initialValues={initialValues}
@@ -138,12 +263,14 @@ export const EditEventModal: React.FC<ModalEditProps> = ({
         >
           <Input />
         </Form.Item>
-        <Form.Item
-          validateTrigger={["onChange", "onBlur"]}
-          label="Nội dung sự kiện"
-          name={"event_content"}
-        >
-          <Input.TextArea autoSize={{ minRows: 1, maxRows: 5 }} />
+        <Form.Item validateTrigger={["onChange", "onBlur"]} label="Nội dung" name={"event_content"}>
+          {/* <Input.TextArea autoSize={{ minRows: 1, maxRows: 5 }} /> */}
+          <EventEditorParagraph
+            data={typeModal === "add" ? defaultContent : choosedEvent?.event_content}
+            setData={(value) => {
+              setEventContent(value);
+            }}
+          />
         </Form.Item>
         <Form.Item validateTrigger={["onChange", "onBlur"]} label="Khách thể" name={"khach_the"}>
           <Input />
@@ -159,39 +286,31 @@ export const EditEventModal: React.FC<ModalEditProps> = ({
         >
           <DatePicker format={"DD/MM/YYYY"} />
         </Form.Item>
-        <Form.Item validateTrigger={["onChange", "onBlur"]} label="Danh sách tin" name={"news"}>
-          <div className={styles.addExistEventHeader}>
-            <div className={styles.leftAddExistNewsContainer}>
-              <Select
-                showSearch
-                className={styles.newsEventSelect}
-                value={valueNewsSelect}
-                placeholder={"Nhập tiêu đề tin"}
-                defaultActiveFirstOption={false}
-                showArrow={false}
-                filterOption={false}
-                onSearch={handleSearchNews}
-                onChange={handleChangeNewsSelect}
-                notFoundContent={null}
-                options={(dataNews?.result || []).map((d: any) => ({
-                  value: d._id,
-                  label: d["data:title"],
-                }))}
-              />
-            </div>
-            <div className={styles.rightAddExistNewsContainer}>
-              <Button type="primary" className={styles.addButton} onClick={addNews}>
-                Thêm
-              </Button>
-            </div>
+        <Form.Item validateTrigger={["onChange", "onBlur"]} label="Nguồn tin" name={"news"}>
+          <div>
+            <Button type="primary" className={styles.addButton} onClick={handleShowEnterFieldNews}>
+              {isShowedEnterFieldNews ? "Đóng" : "Thêm"}
+            </Button>
+            {isShowedEnterFieldNews && <Tabs defaultActiveKey="1" items={items} />}
           </div>
-          {listNewsAdd.length > 0 && (
+          {listNewsAddedByUser.length > 0 && (
             <Table
               columns={columnsNewsTable}
-              dataSource={listNewsAdd}
+              dataSource={listNewsAddedByUser}
+              rowKey="id"
+              pagination={false}
+              showHeader={false}
+              size="small"
+            />
+          )}
+          {listNewsFromServer.length > 0 && (
+            <Table
+              columns={columnsNewsFromServer}
+              dataSource={listNewsFromServer}
               rowKey="_id"
               pagination={false}
               size="small"
+              showHeader={false}
             />
           )}
         </Form.Item>
@@ -199,12 +318,51 @@ export const EditEventModal: React.FC<ModalEditProps> = ({
     </Modal>
   );
 
-  function handleChangeNewsSelect(newValue: SelectCustomProps) {
-    setValueNewsSelect(newValue);
+  function handleShowEnterFieldNews() {
+    setIsShowedEnterFieldNews(!isShowedEnterFieldNews);
+  }
+
+  function handleAddNews() {
+    formNews.validateFields().then((values) => {
+      values["id"] = new Date().getTime().toString();
+      setListNewsAddedByUser([...listNewsAddedByUser, values]);
+      formNews.resetFields();
+    });
+  }
+
+  function addNewsFromServer() {
+    const indexNewsInTable = listNewsFromServer.findIndex((e) => e._id === valueNewsSelect);
+    if (indexNewsInTable !== -1) {
+      message.warning("Tin đã có trong bảng!");
+      return;
+    }
+
+    const choosedNewsIndex = dataNews?.result.findIndex((e: any) => e._id === valueNewsSelect);
+    const choosedNewsData = {
+      _id: dataNews.result[choosedNewsIndex]._id,
+      "data:title": dataNews?.result[choosedNewsIndex]["data:title"],
+      "data:url": dataNews?.result[choosedNewsIndex]["data:url"],
+    };
+    setListNewsFromServer([...listNewsFromServer, choosedNewsData]);
+    setValueNewsSelect({
+      value: "",
+      label: "",
+    });
+    setSearchParams({
+      text_search_news: "",
+    });
   }
 
   function handleCancel() {
     setIsOpen(false);
+  }
+
+  function handleSearchNews(value: any) {
+    processChange(value);
+  }
+
+  function handleChangeNewsSelect(newValue: SelectCustomProps) {
+    setValueNewsSelect(newValue);
   }
 
   function handleClickEdit() {
@@ -212,7 +370,16 @@ export const EditEventModal: React.FC<ModalEditProps> = ({
       .validateFields()
       .then((values) => {
         values.date_created = values.date_created.format("DD/MM/YYYY");
+        values.new_list = listNewsFromServer.map((e) => e._id);
+        values.news_added_by_user = listNewsAddedByUser;
+        values.event_content = eventContent;
+        values.list_report = [];
+        if (initialValues.list_report[0] !== undefined) {
+          values.list_report = initialValues.list_report.map((e: any) => e._id);
+        }
+
         const data = removeWhitespaceInStartAndEndOfString(values);
+        console.log("hello", values);
         functionEdit({
           ...initialValues,
           ...data,
@@ -220,15 +387,31 @@ export const EditEventModal: React.FC<ModalEditProps> = ({
       })
       .catch();
   }
-  function addNews() {}
 
-  function handleSearchNews(value: any) {
-    setSearchParams({
-      text_search_news: value.trim(),
-    });
+  function handleClickAdd() {
+    form
+      .validateFields()
+      .then((values) => {
+        values.date_created = values.date_created.format("DD/MM/YYYY");
+        values.new_list = listNewsFromServer.map((e) => e._id);
+        values.news_added_by_user = listNewsAddedByUser;
+        values.event_content = eventContent;
+        const data = removeWhitespaceInStartAndEndOfString(values);
+        functionAdd({
+          ...initialValues,
+          ...data,
+        });
+      })
+      .catch();
   }
-  function handleDeleteItemList(value: any) {
-    const result = listEvent.filter((e: any) => e._id !== value._id);
-    setListEvent(result);
+
+  function handleDeleteItemNewsList(value: any) {
+    const result = listNewsAddedByUser.filter((e: any) => e.id !== value.id);
+    setListNewsAddedByUser(result);
+  }
+
+  function handleDeleteItemNewsFromServer(value: any) {
+    const result = listNewsFromServer.filter((e: any) => e._id !== value._id);
+    setListNewsFromServer(result);
   }
 };

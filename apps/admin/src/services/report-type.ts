@@ -40,6 +40,7 @@ export type TReports = {
 export interface IReportDto {
   title?: string;
   headings?: HeadingsData[];
+  event_list?: Array<string | undefined> | null;
 }
 
 export type TReportContent = {
