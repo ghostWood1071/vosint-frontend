@@ -24,20 +24,18 @@
         justify-content: center;
       }
       .content-header-container {
-        width: calc(100% - 210px);
+        width: calc(100% - 220px);
         padding-right: 10px;
         .content-header;
       }
 
       .title-created-by-system-container {
-        width: calc(100% - 210px);
+        width: calc(100% - 220px);
         padding-right: 10px;
         .content-header;
       }
       .all-button-container {
-        width: 60px;
-        display: inline-flex;
-        justify-content: flex-start;
+        width: 80px;
       }
 
       .time {
@@ -46,13 +44,6 @@
         overflow: hidden;
         text-overflow: ellipsis;
       }
-    }
-
-    .edit {
-      width: 50px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
     }
   }
   .content {
@@ -79,52 +70,37 @@
       }
     }
     .detail-container {
-      width: 960px;
+      max-width: 960px;
+      width: 100%;
 
       .detail-header {
         width: 100%;
         display: flex;
         flex-direction: column;
-        padding-block-end: 15px;
         .title {
           font-size: 27px;
           font-weight: bold;
-          padding-block-end: 10px;
           line-height: 35px;
         }
-        .container1 {
-          display: flex;
-          flex-direction: row;
-          padding-block: 5px;
 
-          .source {
-            max-width: 500px;
-            margin-right: 20px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-          }
-          .time {
-            max-width: 200px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-          }
-        }
-        .container2 {
+        .container1 {
           display: flex;
           flex-direction: column;
 
           .khachthe_container {
-            padding-block: 5px;
+            padding-block: 0px;
             font-size: 14px;
+          }
+        }
+        .container2 {
+          .tag {
+            margin-bottom: 3px;
           }
         }
         .comtainer3 {
           display: inline-flex;
           align-items: center;
-          margin-top: 10px;
-          padding-block: 5px;
+          margin-top: 15px;
           .left-container3 {
             width: 40%;
           }
@@ -137,7 +113,7 @@
       }
       .detail-content {
         font-size: 14px;
-        margin-block: 20px;
+        margin-block: 15px;
         color: #1a2433;
       }
     }
@@ -189,4 +165,19 @@
 .delete {
   color: #ff4d4f;
   font-size: 14px;
+}
+
+.ring-icon {
+  color: black;
+  font-size: 16px;
+}
+
+.title-news {
+  padding-block: 5px;
+  font-size: 14px;
+}
+
+.title-text {
+  font-size: 14px;
+  font-weight: bold;
 }

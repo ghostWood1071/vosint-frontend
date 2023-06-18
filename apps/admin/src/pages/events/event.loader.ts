@@ -1,4 +1,5 @@
 import {
+  createEventFromUser,
   deleteEventCreatedByUser,
   getAllEventCreatedByUser,
   updateEventCreatedByUser,
@@ -6,12 +7,12 @@ import {
 import { message } from "antd";
 import { useInfiniteQuery, useMutation, useQueryClient } from "react-query";
 
-export const CACHE_KEYS = {
+export const EVENT_CACHE_KEYS = {
   ListEvents: "LIST_EVENT",
 };
 
 export const useInfiniteEventsList = (filter: any) => {
-  return useInfiniteQuery<any>([CACHE_KEYS.ListEvents], (data) =>
+  return useInfiniteQuery<any>([EVENT_CACHE_KEYS.ListEvents], (data) =>
     getAllEventCreatedByUser(
       data.pageParam !== undefined
         ? { ...data.pageParam, ...filter }
@@ -28,6 +29,10 @@ export const useMutationEvents = () => {
         return updateEventCreatedByUser(_id, data);
       }
 
+      if (action === "add") {
+        return createEventFromUser(data);
+      }
+
       if (action === "delete") {
         return deleteEventCreatedByUser(_id);
       }
@@ -36,9 +41,14 @@ export const useMutationEvents = () => {
     },
     {
       onSuccess: (data: any, variables) => {
-        queryClient.invalidateQueries([CACHE_KEYS.ListEvents]);
+        queryClient.invalidateQueries([EVENT_CACHE_KEYS.ListEvents]);
         message.success({
-          content: (variables.action === "update" ? "Sửa" : "Xoá") + " sự kiện thành công",
+          content:
+            (variables.action === "update"
+              ? "Sửa"
+              : variables.action === "add"
+              ? "Thêm mới"
+              : "Xoá") + " sự kiện thành công",
         });
       },
       onError: () => {

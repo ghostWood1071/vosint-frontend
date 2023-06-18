@@ -1,3 +1,4 @@
+import { EVENT_CACHE_KEYS } from "@/pages/events/event.loader";
 import { navigationItemLevel } from "@/pages/reports/components/heading-toc";
 import { HeadingsData } from "@/pages/reports/components/headings";
 import { CACHE_KEYS, useReports, useUpdateReport } from "@/pages/reports/report.loader";
@@ -164,9 +165,17 @@ export function ReportModal(): JSX.Element {
       ) as string[];
     });
 
-    updateReport({
-      headings: headingsUpdated.headings,
-    });
+    updateReport(
+      {
+        headings: headingsUpdated.headings,
+        event_list: events.map((e) => e._id),
+      },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries(EVENT_CACHE_KEYS.ListEvents);
+        },
+      },
+    );
   }
 }
 

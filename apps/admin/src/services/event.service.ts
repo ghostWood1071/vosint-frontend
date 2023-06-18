@@ -18,3 +18,8 @@ export const updateEventCreatedByUser = async (event_id: string, data: any) => {
   const result = await apiClient.put(`${apiNewsBaseV2Url}/event/${event_id}`, data);
   return result.data;
 };
+
+export const createEventFromUser = async (data: any) => {
+  const result = await apiClient.post<any>(`${apiNewsBaseV2Url}/event`, data);
+  return result.data;
+};

@@ -1,25 +1,57 @@
 .main-container {
-  padding: 1px;
   width: calc(100%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  .filter-container {
+  .body {
+    height: calc(100vh - 100px);
+    margin-top: 40px;
     width: 100%;
     display: flex;
-    justify-content: center;
-    padding-block: 5px;
-    z-index: 1;
-    position: fixed;
-    background-color: white;
-    box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.25);
-    border-bottom: 1px solid rgba(240, 240, 240, 1);
-  }
+    flex-direction: column;
+    align-items: center;
+    &:hover::-webkit-scrollbar-thumb {
+      background-color: #9da5b1;
+    }
 
-  .body {
-    margin-top: 50px;
-    max-width: 1400px;
-    width: 100%;
+    &::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+
+    &::-webkit-scrollbar-corner {
+      background-color: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: transparent;
+      border: 2px solid transparent;
+      background-clip: padding-box;
+      border-radius: 6px;
+      transition: cubic-bezier(0.165, 0.84, 0.44, 1);
+    }
+    overflow-y: auto;
+    .records-container {
+      padding: 10px;
+      height: calc(100%);
+      max-width: 1400px;
+      width: 100%;
+    }
   }
+  #container {
+    overflow-y: unset;
+  }
+}
+
+.add-button {
+  border-radius: 2px;
+}
+
+.filter-container {
+  width: calc(100vw);
+  display: flex;
+  justify-content: center;
+  padding-block: 5px;
+  z-index: 1;
+  top: 0px;
+  position: absolute;
+  background-color: white;
+  border-bottom: 1px solid rgba(220, 220, 220, 1);
 }
