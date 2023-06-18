@@ -93,7 +93,7 @@ export function SynthesisReport(): JSX.Element {
               />
             )}
 
-            {isOpen && <HeadingToc headingsData={headings} />}
+            {isOpen && <HeadingToc headingsData={headings} setHeadingsData={setHeadings} />}
           </div>
         </Col>
         <Col span={isOpen ? 16 : 22} className={styles.container}>
