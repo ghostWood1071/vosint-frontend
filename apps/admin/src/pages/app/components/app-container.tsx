@@ -16,13 +16,15 @@ export const AppContainer: React.FC<AppContainerProps> = ({ children, sidebar, f
   return (
     <>
       <Row className={styles.root} wrap={false}>
-        {sidebar
-          ? pinned && (
-              <Col flex="0 0 270px" className={classNames(styles.sidebar, "scrollbar")}>
-                {sidebar}
-              </Col>
-            )
-          : null}
+        {sidebar ? (
+          <Col
+            style={{ display: pinned ? "inherit" : "none" }}
+            flex="0 0 270px"
+            className={classNames(styles.sidebar, "scrollbar")}
+          >
+            {sidebar}
+          </Col>
+        ) : null}
         <Col flex="1 1 auto" id="modal-mount">
           <div className={classNames(styles.container, "scrollbar")} id="container">
             {children}

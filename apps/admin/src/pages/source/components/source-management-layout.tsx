@@ -6,7 +6,7 @@ import { Outlet, useLocation, useNavigate } from "react-router-dom";
 
 export const SourceManagementLayout: React.FC = () => {
   return (
-    <AppContainer sidebar={<Sidebar />}>
+    <AppContainer>
       <Outlet />
     </AppContainer>
   );

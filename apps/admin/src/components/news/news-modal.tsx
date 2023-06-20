@@ -10,14 +10,6 @@ import { NewsletterFormGioTin } from "./form/form-ban-tin";
 import { NewsletterFormChuDe } from "./form/form-chu-de";
 import { ETreeAction, ETreeTag, useNewsSamplesTopicState, useNewsState } from "./news-state";
 
-const formItemLayoutWithOutLabel = {
-  labelCol: { span: 5 },
-  wrapperCol: {
-    xs: { span: 24, offset: 0 },
-    sm: { span: 24, offset: 0 },
-  },
-};
-
 interface Props {
   onFinish: (values: NewsletterDto) => Promise<any>;
   confirmLoading?: boolean;
@@ -98,10 +90,11 @@ export function NewsletterModal({ onFinish, confirmLoading }: Props): JSX.Elemen
       confirmLoading={confirmLoading}
       maskClosable={false}
       destroyOnClose
+      getContainer="#modal-mount"
       onOk={handleFormFinish}
       onCancel={handleCancel}
       closable={false}
-      width={"90%"}
+      width={900}
     >
       {action !== ETreeAction.SELECT && action !== ETreeAction.DELETE && (
         <Form form={form}>

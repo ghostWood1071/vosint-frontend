@@ -8,6 +8,8 @@ import {
   TReports,
 } from "@/services/report-type";
 import {
+  UpdateReportAndEvent,
+  UpdateReportAndEventType,
   addEventIdsToReport,
   createReport,
   createReportEvents,
@@ -147,6 +149,10 @@ export const useUpdateReport = (
   >,
 ) => {
   return useMutation((data: IReportDto) => updateReport(id, data), options);
+};
+
+export const useUpdateReportAndEvent = () => {
+  return useMutation((data: UpdateReportAndEventType) => UpdateReportAndEvent(data));
 };
 
 export const useGetReportEvents = (

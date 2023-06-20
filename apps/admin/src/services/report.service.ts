@@ -1,4 +1,4 @@
-import { apiClient } from "@/utils/api";
+import { apiClient, filterEmptyString } from "@/utils/api";
 
 import { IEventDto, IReportDto, TEvents, TReportEventsDto } from "./report-type";
 
@@ -93,5 +93,17 @@ export const removeEventIdsToReport = async (id: string, data: string[]) => {
 
 export const getEventsDetail = async (id: string) => {
   const result = await apiClient.get<IEventDto[]>(`${apiEventBaseV2Url}/report/events/${id}/event`);
+  return result.data;
+};
+
+export interface UpdateReportAndEventType {
+  id_report: string | undefined;
+  id_heading: string | undefined;
+}
+
+export const UpdateReportAndEvent = async (data: UpdateReportAndEventType) => {
+  const result = await apiClient.put(`${apiReportBaseV2Url}/report/remove-heading/`, "", {
+    params: filterEmptyString(data),
+  });
   return result.data;
 };

@@ -463,6 +463,8 @@ export const MindmapModal: React.FC<props> = ({
               dataSource={listEvent}
               rowKey="id"
               pagination={false}
+              size="small"
+              style={{ marginTop: 10 }}
             />
           ) : null}
           <div className={styles.addButtonContainer}>

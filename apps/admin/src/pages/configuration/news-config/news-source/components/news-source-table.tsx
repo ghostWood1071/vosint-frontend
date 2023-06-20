@@ -14,6 +14,13 @@ interface Props {
   handleClickDelete: (value: any) => void;
 }
 
+const valueLanguage: Record<string, string> = {
+  vi: "Tiếng Việt",
+  ru: "Tiếng Nga",
+  cn: "Tiếng Trung",
+  en: "Tiếng Anh",
+};
+
 export const SourceNewsTable: React.FC<Props> = ({
   data,
   loading,
@@ -40,6 +47,9 @@ export const SourceNewsTable: React.FC<Props> = ({
       title: "Ngôn ngữ",
       align: "left",
       dataIndex: "language",
+      render: (value) => {
+        return <>{valueLanguage[value]}</>;
+      },
     },
     {
       title: "Quốc gia xuất bản",

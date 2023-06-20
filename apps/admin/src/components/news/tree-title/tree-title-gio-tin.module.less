@@ -1,16 +1,31 @@
 .title {
   padding: 2px 0;
+  text-transform: uppercase;
 }
 
 .tree-title {
   &:hover {
     .titleNode {
       color: #224170;
+      display: flex;
+      flex-wrap: wrap;
+    }
+  }
+
+  .titleNode {
+    display: flex;
+    font-size: 14px;
+    flex-wrap: wrap;
+  }
+
+  :global {
+    .ant-typography-single-line {
+      white-space: unset;
     }
   }
 
   .paragraph {
-    width: 145px;
+    width: 100%;
     margin-bottom: 0;
 
     &.is-open {

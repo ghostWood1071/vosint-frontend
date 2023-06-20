@@ -51,7 +51,7 @@ function buildMenuItem(
           >
             {i?.name}
           </Avatar>
-          <Typography.Text>{i?.name}</Typography.Text>
+          <Typography.Text style={{ textTransform: "uppercase" }}>{i?.name}</Typography.Text>
         </Space>
       ),
       key: getOrganizationsDetailUrl(i._id),
@@ -114,7 +114,7 @@ function Sidebar(): JSX.Element {
 
   const items: MenuProps["items"] = [
     {
-      label: "Danh mục đối tượng",
+      label: "DANH MỤC ĐỐI TƯỢNG",
       key: OBJECT_TYPE.DOI_TUONG,
       icon: <UserTieIcon />,
       children: buildMenuItem(
@@ -125,7 +125,7 @@ function Sidebar(): JSX.Element {
       ),
     },
     {
-      label: "Danh mục tổ chức",
+      label: "DANH MỤC TỔ CHỨC",
       key: OBJECT_TYPE.TO_CHUC,
       icon: <GroupIcon />,
       children: buildMenuItem(
@@ -136,7 +136,7 @@ function Sidebar(): JSX.Element {
       ),
     },
     {
-      label: "Danh mục quốc gia",
+      label: "DANH MỤC QUỐC GIA",
       key: OBJECT_TYPE.QUOC_GIA,
       icon: <FlagIcon />,
       children: buildMenuItem(
@@ -147,7 +147,7 @@ function Sidebar(): JSX.Element {
       ),
     },
     {
-      label: "Đồ thị quan hệ quốc tế",
+      label: "ĐỒ THỊ QUAN HỆ QUỐC TẾ",
       key: organizationGraphPath,
       icon: <EarthIcon />,
     },

@@ -32,7 +32,7 @@ export const BodyCate: React.FC<Props> = ({ title }) => {
 
   return (
     <PageHeader
-      title={`Danh mục ${title}`}
+      title={`Danh sách ${title}`}
       extra={[
         <Input.Search
           placeholder="Tìm kiếm"
