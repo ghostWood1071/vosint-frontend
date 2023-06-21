@@ -27,7 +27,7 @@ export function TreeTitleGioTin({ onClick, children, isEditable, ...node }: Prop
 
   return (
     <Row className={styles.treeTitle} align="middle">
-      <Col span={16}>
+      <Col span={isEditable ? 16 : 24}>
         <Space className={styles.title}>
           <Typography.Paragraph
             ellipsis={{ rows: 1 }}

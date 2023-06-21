@@ -20,22 +20,6 @@ export const SourceNewsConfigList: React.FC = () => {
   const [typeModal, setTypeModal] = useState("");
   const [choosedNewsSource, setChoosedNewsSource] = useState(null);
 
-  const dataSource = data?.data?.map((element: any) => {
-    let item = { ...element };
-    if (element.language === "vi") {
-      item.language = "Tiếng Việt";
-    }
-    if (element.language === "en") {
-      item.language = "Tiếng Anh";
-    }
-    if (element.language === "cn") {
-      item.language = "Tiếng Trung";
-    }
-    if (element.language === "ru") {
-      item.language = "Tiếng Nga";
-    }
-    return item;
-  });
   return (
     <PageHeader
       title="Danh sách cấu hình nguồn tin"
@@ -61,7 +45,7 @@ export const SourceNewsConfigList: React.FC = () => {
         <div className={styles.body}>
           <SourceNewsTable
             total_record={data?.total_record}
-            data={dataSource}
+            data={data?.data}
             loading={isNewsSourceLoading}
             handleClickEdit={handleClickEdit}
             handleClickDelete={handleClickDelete}

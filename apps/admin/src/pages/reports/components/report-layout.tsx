@@ -82,7 +82,11 @@ const Sidebar = () => {
           const hasChildren = children.length > 0;
           return {
             key: getPeriodicReportUrl(_id),
-            label: <div onClick={handleClickMenu}>{title}</div>, // Thay đổi thành hiển thị title của mục con
+            label: (
+              <div className={styles.title} onClick={handleClickMenu}>
+                {title}
+              </div>
+            ), // Thay đổi thành hiển thị title của mục con
             children: hasChildren ? children : null,
             selectable: false, // Ẩn chọn cho nút có con
           };
@@ -99,7 +103,7 @@ const Sidebar = () => {
 
   const items: MenuProps["items"] = [
     {
-      label: "Báo cáo nhanh",
+      label: "BÁO CÁO NHANH",
       icon: <FundFilled />,
       className: styles.reportMenu,
       key: reportQuickPath,
@@ -110,7 +114,7 @@ const Sidebar = () => {
     },
 
     {
-      label: "Phân tích tổng hợp",
+      label: "PHÂN TÍCH TỔNG HỢP",
       key: reportSyntheticPath,
       icon: <ReportIcon />,
       className: styles.reportMenu,
@@ -166,7 +170,7 @@ const Sidebar = () => {
       ],
     },
     {
-      label: <div onClick={handleClick}>Báo cáo định kỳ</div>,
+      label: <div onClick={handleClick}>BÁO CÁO ĐỊNH KỲ</div>,
       icon: <ContainerFilled />,
       className: styles.reportMenu,
       key: reportPeriodicPath,

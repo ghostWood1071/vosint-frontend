@@ -137,7 +137,7 @@ export const AddProxyComponent: React.FC<Props> = ({
           rules={[
             {
               required: true,
-              message: "Hãy nhập vào username!",
+              message: "Hãy nhập vào tên đăng nhập!",
               whitespace: true,
             },
           ]}

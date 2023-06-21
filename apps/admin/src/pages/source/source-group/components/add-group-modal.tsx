@@ -146,6 +146,7 @@ export const AddGroupModal: React.FC<Props> = ({
         title={(type === "add" ? "Thêm mới " : "Sửa ") + "nhóm nguồn tin"}
         open={isOpen}
         destroyOnClose
+        getContainer="#modal-mount"
         confirmLoading={confirmLoading}
         onOk={type === "add" ? handleAdd : handleEdit}
         onCancel={handleCancel}
@@ -185,7 +186,7 @@ export const AddGroupModal: React.FC<Props> = ({
                   rowKey="id"
                   pagination={false}
                   size="small"
-                  scroll={{ y: 300 }}
+                  // scroll={{ y: 300 }}
                 />
               ) : null}
               <div className={styles.addSourceContainer}>

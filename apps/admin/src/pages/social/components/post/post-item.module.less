@@ -14,7 +14,7 @@
     }
 
     .status-container {
-      width: 40px;
+      width: 30px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -59,7 +59,7 @@
     }
 
     .type-post-container {
-      width: 40px;
+      width: 30px;
       display: flex;
       // align-items: center;
       justify-content: start;
@@ -70,7 +70,7 @@
       }
     }
     .content-header-container {
-      width: calc(100% - 380px);
+      width: calc(100% - 390px);
       display: flex;
       flex-direction: row;
       color: black;
@@ -93,7 +93,7 @@
       }
     }
     .seen-content-header-container {
-      width: calc(100% - 380px);
+      width: calc(100% - 390px);
       display: flex;
       flex-direction: row;
       color: #c0c0c0;
@@ -116,30 +116,35 @@
     .all-number-header {
       display: inline-flex;
       justify-content: flex-end;
-      width: 300px;
+      width: 330px;
       .like-header-container {
         display: inline;
 
         .tag {
-          width: 60px;
-          padding-inline: 3px;
+          width: 70px;
+          padding-right: 1px;
           display: flex;
           flex-direction: row;
           justify-content: flex-end;
+          align-items: center;
           height: 22px;
           margin: 3px;
           .number-like {
-            margin-right: 2px;
+            margin-right: 0px;
           }
         }
         .seen-tag {
-          width: 60px;
-          padding-inline: 3px;
+          width: 70px;
+          padding-right: 1px;
+          display: flex;
+          flex-direction: row;
+          justify-content: flex-end;
+          align-items: center;
           height: 22px;
           color: #c0c0c0;
           margin: 3px;
           .number-like {
-            margin-right: 2px;
+            margin-right: 0px;
           }
         }
 
@@ -188,13 +193,14 @@
         display: flex;
         flex-direction: row;
         .left-detail-header {
-          width: 150px;
-          height: 100px;
+          width: 120px;
+          max-height: 100px;
           display: flex;
           justify-content: center;
+          align-items: center;
           .avatar {
-            width: 90px;
-            height: 90px;
+            width: 70px;
+            height: 70px;
             border-radius: 50px;
           }
         }

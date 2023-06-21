@@ -39,7 +39,13 @@ import {
   useHeadingTocDispatchContext,
 } from "../components/heading-toc.context";
 import { Headings, HeadingsData } from "../components/headings";
-import { CACHE_KEYS, useDeleteReport, useReport, useUpdateReport } from "../report.loader";
+import {
+  CACHE_KEYS,
+  useDeleteReport,
+  useReport,
+  useUpdateReport,
+  useUpdateReportAndEvent,
+} from "../report.loader";
 import styles from "./synthesis-report.module.less";
 
 export function SynthesisReport(): JSX.Element {
@@ -68,10 +74,12 @@ export function SynthesisReport(): JSX.Element {
   );
 
   const { mutate: deleteReport, isLoading: isDeleting } = useDeleteReport();
+  const { mutate: updateReportAndEvent } = useUpdateReportAndEvent();
   const { mutate: updateReport, isLoading: isUpdating } = useUpdateReport(id!, {
     onSuccess: (_, variables) => {
       setHeadings(variables?.headings ?? []);
       setTitle(variables?.title ?? "");
+      queryClient.invalidateQueries(CACHE_KEYS.REPORTS);
       message.success("Cập nhật báo cáo thành công");
     },
   });
@@ -160,7 +168,7 @@ export function SynthesisReport(): JSX.Element {
                   onChange: (value) => setTitle(value),
                 }}
               >
-                {data?.title}
+                {title}
               </Typography.Title>
             </Col>
 
@@ -294,6 +302,26 @@ export function SynthesisReport(): JSX.Element {
   // Handle CRUD heading toc
   function handleOK() {
     form.validateFields().then((values) => {
+      if (mode === "delete") {
+        const updatedHeadings = produce(headings, (draft) => {
+          if (mode === "delete") {
+            draft.splice(selectedIndex!, 1);
+          }
+        });
+        updateReportAndEvent(
+          { id_report: id, id_heading: headings[selectedIndex!]?.id },
+          {
+            onSuccess: () => {
+              setHeadings(updatedHeadings);
+              // Reset form
+              message.success(`Đã xoá tiêu đề`);
+              setMode(null);
+              setSelectedIndex(null);
+            },
+          },
+        );
+        return;
+      }
       const updatedHeadings = produce(headings, (draft) => {
         if (mode === "create") {
           if (selectedIndex !== null) {
@@ -319,9 +347,9 @@ export function SynthesisReport(): JSX.Element {
           draft[selectedIndex!].level = values.level;
         }
 
-        if (mode === "delete") {
-          draft.splice(selectedIndex!, 1);
-        }
+        // if (mode === "delete") {
+        //   draft.splice(selectedIndex!, 1);
+        // }
       });
       updateReport(
         { headings: updatedHeadings },
@@ -329,7 +357,7 @@ export function SynthesisReport(): JSX.Element {
           onSuccess: () => {
             setHeadings(updatedHeadings);
             // Reset form
-            message.success(`Đã ${mode === "delete" ? "xoá" : "lưu"} tiêu đề`);
+            message.success(`Đã lưu tiêu đề`);
             setMode(null);
             setSelectedIndex(null);
           },

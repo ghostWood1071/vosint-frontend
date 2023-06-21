@@ -89,7 +89,7 @@ export const PostItem: React.FC<PostItemProps> = ({ item }) => {
             className={styles.scrollContainer}
           >
             <button className={styles.hideDetailButton} onClick={() => setTypeShow(!typeShow)}>
-              <CloseOutlined className={styles.closeIcon} />
+              <CloseOutlined title="Đóng chi tiết" className={styles.closeIcon} />
             </button>
           </div>
           <div className={styles.detailContainer}>

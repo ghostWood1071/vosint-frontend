@@ -14,14 +14,6 @@ interface Props {
   setKeyword: (value: any) => void;
 }
 
-const formItemLayoutWithOutLabel = {
-  labelCol: { span: 4 },
-  wrapperCol: {
-    xs: { span: 24, offset: 0 },
-    sm: { span: 24, offset: 0 },
-  },
-};
-
 export function NewsletterFormChuDe({ title, keyword, setKeyword }: Props): JSX.Element {
   const form = Form.useFormInstance();
   const [formNewsSample] = Form.useForm<Record<string, any>>();
@@ -30,10 +22,10 @@ export function NewsletterFormChuDe({ title, keyword, setKeyword }: Props): JSX.
   const [conditionValue, setConditionValue] = useState("keyword_vi");
   const [requiredKeywordInput, setRequiredKeywordInput] = useState<string>("");
   const [exclusionKeywordInput, setExclusionKeywordInput] = useState<string>(
-    keyword["keyword_vi"].exclusion_keyword,
+    keyword?.["keyword_vi"].exclusion_keyword,
   );
   const [requiredKeywordData, setRequiredKeywordData] = useState<any[]>(
-    keyword["keyword_vi"].required_keyword,
+    keyword?.["keyword_vi"].required_keyword,
   );
   const newsSamples = useNewsSamplesTopicState((state) => state.newsSamples);
   const setNewsSamples = useNewsSamplesTopicState((state) => state.setNewsSamples);

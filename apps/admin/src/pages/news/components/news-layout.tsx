@@ -66,15 +66,15 @@ function Sidebar() {
     <>
       <Space direction="vertical" className={styles.sidebar} size={16}>
         <NavLink to={getNewsDetailUrl(ETreeTag.QUAN_TRONG)} className={handleActive}>
-          Tin quan trọng
+          TIN QUAN TRỌNG
         </NavLink>
 
         <NavLink to={getNewsDetailUrl(ETreeTag.DANH_DAU)} className={handleActive}>
-          Tin được đánh dấu
+          TIN ĐƯỢC ĐÁNH DẤU
         </NavLink>
         {gioTinTree && (
           <Tree
-            title="Giỏ tin"
+            title="GIỎ TIN"
             treeData={gioTinTree}
             isSpinning={isLoading}
             isEditable
@@ -86,7 +86,7 @@ function Sidebar() {
 
         {dataSourceGroup && (
           <Tree
-            title="Nhóm nguồn tin"
+            title="NHÓM NGUỒN TIN"
             treeData={dataSourceGroupFinal}
             isSpinning={isLoading}
             // isEditable
@@ -95,26 +95,27 @@ function Sidebar() {
             selectedKeys={newsletterId ? [newsletterId] : []}
           />
         )}
-
-        {linhVucTree && (
-          <Tree
-            title="Lĩnh vực tin"
-            treeData={linhVucTree}
-            isSpinning={isLoading}
-            onClickTitle={handleClickTitle}
-            tag={ETreeTag.LINH_VUC}
-            selectedKeys={newsletterId ? [newsletterId] : []}
-          />
-        )}
-
         {chuDeTree && (
           <Tree
-            title="Danh mục chủ đề"
+            title="DANH MỤC CHỦ ĐỀ"
             treeData={chuDeTree}
             isSpinning={isLoading}
             isEditable
             onClickTitle={handleClickTitle}
             tag={ETreeTag.CHU_DE}
+            selectedKeys={newsletterId ? [newsletterId] : []}
+          />
+        )}
+        <NavLink to={getNewsDetailUrl(ETreeTag.DANH_DAU)} className={handleActive}>
+          TIN TTXVN
+        </NavLink>
+        {linhVucTree && (
+          <Tree
+            title="LĨNH VỰC TIN"
+            treeData={linhVucTree}
+            isSpinning={isLoading}
+            onClickTitle={handleClickTitle}
+            tag={ETreeTag.LINH_VUC}
             selectedKeys={newsletterId ? [newsletterId] : []}
           />
         )}

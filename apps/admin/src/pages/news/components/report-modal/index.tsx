@@ -84,6 +84,7 @@ export function ReportModal(): JSX.Element {
       title="Chọn báo cáo"
       onCancel={handleCancel}
       onOk={handleOk}
+      maskClosable={false}
       width="70%"
       confirmLoading={isLoadingUpdate}
       getContainer="#modal-mount"

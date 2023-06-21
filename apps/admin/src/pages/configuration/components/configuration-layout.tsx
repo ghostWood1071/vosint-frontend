@@ -33,40 +33,40 @@ const Sidebar = () => {
   const { pathname } = useLocation();
 
   const items: MenuProps["items"] = [
-    { label: "Cấu hình lĩnh vực tin", key: newsCategoryConfigPath },
+    { label: "CẤU HÌNH LĨNH VỰC TIN", key: newsCategoryConfigPath },
     {
-      label: "Cấu hình mạng xã hội",
+      label: "CẤU HÌNH MẠNG XÃ HỘI",
       key: "social-config",
       children: [
-        { label: "Facebook", key: facebookConfigPath },
-        { label: "Twitter", key: twitterConfigPath },
-        { label: "Tiktok", key: tiktokConfigPath },
-        { label: "Các nguồn tổng hợp", key: collectDataConfigPath },
+        { label: "FACEBOOK", key: facebookConfigPath },
+        { label: "TWITTER", key: twitterConfigPath },
+        { label: "TIKTOK", key: tiktokConfigPath },
+        { label: "CÁC NGUỒN TỔNG HỢP", key: collectDataConfigPath },
       ],
     },
     {
-      label: "Cấu hình khác",
+      label: "CẤU HÌNH KHÁC",
       key: "khac",
       children: [
-        { label: "Danh mục proxy", key: proxyConfigPath },
+        { label: "DANH MỤC PROXY", key: proxyConfigPath },
         {
-          label: "Các tài khoản lấy tin",
+          label: "CÁC TÀI KHOẢN LẤY TIN",
           key: "haha",
           children: [
-            { label: "Facebook", key: accountForMonitoringFacebookPath },
-            { label: "Twitter", key: accountForMonitoringTwitterPath },
-            { label: "Tiktok", key: accountForMonitoringTiktokPath },
+            { label: "FACEBOOK", key: accountForMonitoringFacebookPath },
+            { label: "TWITTER", key: accountForMonitoringTwitterPath },
+            { label: "TIKTOK", key: accountForMonitoringTiktokPath },
           ],
         },
-        { label: "Danh mục nguồn tin", key: newsSourceConfigPath },
+        { label: "DANH MỤC NGUỒN TIN", key: newsSourceConfigPath },
       ],
     },
 
-    { label: "Danh mục tổ chức", key: organizationCateConfigPath },
-    { label: "Danh mục quốc gia", key: countryCateConfigPath },
-    { label: "Danh mục đối tượng", key: objectCateConfigPath },
-    { label: "Thu thập tin theo pipeline", key: pipelineListPath },
-    { label: "Quản lý người dùng", key: userManagementPath },
+    { label: "DANH MỤC TỔ CHỨC", key: organizationCateConfigPath },
+    { label: "DANH MỤC QUỐC GIA", key: countryCateConfigPath },
+    { label: "DANH MỤC ĐỐI TƯỢNG", key: objectCateConfigPath },
+    { label: "THU THẬP TIN THEO PIPELINE", key: pipelineListPath },
+    { label: "QUẢN LÝ NGƯỜI DÙNG", key: userManagementPath },
   ];
 
   return <Menu mode="inline" items={items} selectedKeys={[pathname]} onClick={handleClickMenu} />;
