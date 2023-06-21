@@ -93,6 +93,7 @@ export const AddGroupModal: React.FC<Props> = ({
   function handleDeleteItemList(value: any) {
     const result = listSource.filter((e) => e.id !== value.id);
     setListSource(result);
+    message.success({ content: "Xoá nguồn tin thành công" });
   }
 
   function addSource() {

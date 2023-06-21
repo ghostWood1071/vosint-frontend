@@ -86,6 +86,26 @@ export const SettingCreateForm: React.FC<Props> = ({
           <Select defaultValue={"Facebook"} options={[{ value: "Facebook", label: "Facebook" }]} />
         </Form.Item>
         <Form.Item
+          name="list_proxy"
+          label="Proxy: "
+          rules={[
+            {
+              required: true,
+            },
+          ]}
+        >
+          <Select
+            mode="multiple"
+            placeholder="Chọn proxy"
+            options={
+              initialListProxy?.map((item: any) => ({
+                label: item.name,
+                value: item._id,
+              })) ?? []
+            }
+          />
+        </Form.Item>
+        <Form.Item
           name="users_follow"
           label="Các tài khoản được giám sát: "
           labelCol={{
@@ -103,26 +123,6 @@ export const SettingCreateForm: React.FC<Props> = ({
             options={
               initialaccountMonitor?.map((item: any) => ({
                 label: item.social_name,
-                value: item._id,
-              })) ?? []
-            }
-          />
-        </Form.Item>
-        <Form.Item
-          name="list_proxy"
-          label="Proxy: "
-          rules={[
-            {
-              required: true,
-            },
-          ]}
-        >
-          <Select
-            mode="multiple"
-            placeholder="Chọn proxy"
-            options={
-              initialListProxy?.map((item: any) => ({
-                label: item.name,
                 value: item._id,
               })) ?? []
             }

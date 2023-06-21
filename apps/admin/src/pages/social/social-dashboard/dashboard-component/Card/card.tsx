@@ -70,6 +70,8 @@ export const Card: React.FC<CardProps> = ({ titleSource, data }) => {
             width={600}
             onOk={handleSetDate}
             onCancel={() => setIsVisible(false)}
+            closable={false}
+            maskClosable={false}
           >
             <DatePicker.RangePicker format={"DD/MM/YYYY"} onChange={handleChangeTime} />
           </Modal>
