@@ -1,6 +1,8 @@
+import styles from "@/pages/configuration/social-config/facebook/components/fb-setting.module.less";
 import { generateImage } from "@/utils/image";
 import {
   DeleteOutlined,
+  EditOutlined,
   ExclamationCircleOutlined,
   FormOutlined,
   UserOutlined,
@@ -64,10 +66,11 @@ export const UserManagerTable: React.FC<Props> = ({
           <Space>
             {onUpdate && (
               <Button
-                icon={<FormOutlined />}
+                icon={<EditOutlined />}
                 onClick={handleClickUpdate}
                 title="Sửa người dùng"
                 type="text"
+                className={styles.edit}
               />
             )}
             <Button

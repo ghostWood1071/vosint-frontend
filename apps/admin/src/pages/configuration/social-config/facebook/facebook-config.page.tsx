@@ -74,7 +74,7 @@ export const FacebookConfig: React.FC = () => {
         destroyOnClose
         maskClosable={false}
         closeIcon={true}
-        width={700}
+        width={800}
       >
         <SettingCreateForm
           setAdminSelect={setAdminSelect}

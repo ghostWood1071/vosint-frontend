@@ -28,6 +28,8 @@ export const AddObjectModal: React.FC<Props> = ({
   const [socialMedia, setSocialMedia] = useState<any>();
   const [avatarUrl, setAvatarUrl] = useState<any>();
   const [accountLink, setAccountLink] = useState<any>();
+  const [valiName, setValiName] = useState<any>(false);
+
   const { data } = useSocialObjectList({
     skip: 1,
     limit: 50,
@@ -50,6 +52,10 @@ export const AddObjectModal: React.FC<Props> = ({
   }
   async function handleAdd() {
     const item = data.data.find((e: any) => e._id === value);
+    if (item === undefined) {
+      setValiName(true);
+      return;
+    }
     const addData = {
       id: item._id,
     };
@@ -65,6 +71,7 @@ export const AddObjectModal: React.FC<Props> = ({
 
   const handleChange = (newValue: string) => {
     setValue(newValue);
+    setValiName(false);
     const item = data.data.find((e: any) => e._id === newValue);
     if (item !== undefined) {
       setAvatarUrl(item.avatar_url);
@@ -91,11 +98,13 @@ export const AddObjectModal: React.FC<Props> = ({
         {contextHolder}
 
         <div className={styles.mainContainer}>
-          <Row>
-            <Col span={8}>
-              <div className={styles.title}>Nhập tên {nameType}:</div>
+          <Row justify={"end"} wrap={true}>
+            <Col span={4}>
+              <div className={styles.title}>
+                <span className={styles.requied}>*</span>Tên {nameType}:
+              </div>
             </Col>
-            <Col span={16}>
+            <Col span={19}>
               <div className={styles.inputContainer}>
                 <Select
                   showSearch
@@ -113,35 +122,36 @@ export const AddObjectModal: React.FC<Props> = ({
                     label: d.social_name,
                   }))}
                 />
+                {valiName && <span className={styles.requied}>Vui lòng nhập tên {nameType}</span>}
               </div>
             </Col>
           </Row>
-          <Row>
-            <Col span={8}>
+          <Row justify={"end"}>
+            <Col span={3}>
               <div className={styles.title}>Mạng xã hội:</div>
             </Col>
-            <Col span={16}>
+            <Col span={19}>
               <div className={styles.inputContainer}>
                 <Input disabled={true} value={socialMedia} />
               </div>
             </Col>
           </Row>
-          <Row>
-            <Col span={8}>
-              <div className={styles.title}>Avatar:</div>
+          <Row justify={"end"}>
+            <Col span={2}>
+              <div className={styles.title}> Avatar:</div>
             </Col>
-            <Col span={16}>
+            <Col span={19}>
               <div className={styles.inputContainer}>
                 <Avatar src={avatarUrl} className={styles.image} />
                 {/* <Input disabled={true} value={avatarUrl} /> */}
               </div>
             </Col>
           </Row>
-          <Row>
-            <Col span={8}>
+          <Row justify={"end"}>
+            <Col span={3}>
               <div className={styles.title}>Account Link:</div>
             </Col>
-            <Col span={16}>
+            <Col span={19}>
               <div className={styles.inputContainer}>
                 <Input disabled={true} value={accountLink} />
               </div>

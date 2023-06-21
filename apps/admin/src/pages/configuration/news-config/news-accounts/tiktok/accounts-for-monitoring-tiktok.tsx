@@ -65,7 +65,7 @@ export const AccountForMonitoringTiktok: React.FC = () => {
         destroyOnClose
         maskClosable={false}
         closeIcon={true}
-        width={700}
+        width={800}
       >
         <SettingCreateForm
           listProxy={listProxy}

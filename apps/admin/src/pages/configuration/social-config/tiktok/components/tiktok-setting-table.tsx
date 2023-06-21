@@ -120,7 +120,7 @@ export const TTSettingTable: React.FC<Props> = ({
         destroyOnClose
         maskClosable={false}
         closeIcon={true}
-        width={700}
+        width={800}
       >
         <SettingCreateForm
           setAdminSelect

@@ -154,7 +154,7 @@ export const AddCateComponent: React.FC<Props> = ({
         confirmLoading={confirmLoading}
         onOk={type === "add" ? handleAdd : handleEdit}
         onCancel={handleCancel}
-        width={700}
+        width={800}
         closable={false}
         maskClosable={false}
       >

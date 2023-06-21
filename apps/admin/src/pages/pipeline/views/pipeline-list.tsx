@@ -127,7 +127,7 @@ export const PipelineList: React.FC = () => {
         onCancel={handleCancelCreate}
         onOk={handleOkCreate}
         confirmLoading={isUpdating}
-        width={700}
+        width={800}
       >
         <Form layout="vertical" form={form}>
           <Form.Item

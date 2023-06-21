@@ -94,7 +94,7 @@ export function NewsletterModal({ onFinish, confirmLoading }: Props): JSX.Elemen
       onOk={handleFormFinish}
       onCancel={handleCancel}
       closable={false}
-      width={900}
+      width={800}
     >
       {action !== ETreeAction.SELECT && action !== ETreeAction.DELETE && (
         <Form form={form}>
