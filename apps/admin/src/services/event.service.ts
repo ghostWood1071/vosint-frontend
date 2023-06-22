@@ -23,3 +23,10 @@ export const createEventFromUser = async (data: any) => {
   const result = await apiClient.post<any>(`${apiNewsBaseV2Url}/event`, data);
   return result.data;
 };
+
+export const cloneSystemEventToUserEvent = async (event_id: string) => {
+  const result = await apiClient.put(`${apiNewsBaseV2Url}/event/`, "", {
+    params: { id_event: event_id },
+  });
+  return result;
+};
