@@ -28,7 +28,7 @@ import { AdminPage } from "./pages/dashboard/admin/admin.page";
 import { ExpertPage } from "./pages/dashboard/expert/expert.page";
 import { LeaderLayout } from "./pages/dashboard/leader/leader.page";
 import { ErrorBoundary } from "./pages/errors/error-boundary";
-import { EventLayout, EventPage } from "./pages/events";
+import { EventLayout, EventPage, SystemEventPage } from "./pages/events";
 import { NewsDetailPage, NewsLayout, NewsListPage } from "./pages/news";
 import { OrganizationsDetailPage, OrganizationsLayout } from "./pages/organization";
 import { InternationalRelationshipGraph } from "./pages/organization/international-relationship-graph/component/international-relationship-graph";
@@ -63,6 +63,7 @@ import {
   newsCategoryConfigPath,
   newsPath,
   newsSourceConfigPath,
+  newsTTXVNPath,
   objectCateConfigPath,
   organizationCateConfigPath,
   organizationDetailPath,
@@ -87,6 +88,7 @@ import {
   socialTiktokPath,
   socialTwitterPath,
   sourceGroupPath,
+  systemEventPath,
   tiktokConfigPath,
   twitterConfigPath,
   userManagementPath,
@@ -110,14 +112,18 @@ export const routers = createBrowserRouter([
     children: [
       {
         path: homePath,
-        element: <Navigate to={newsPath} />,
+        element: <Navigate to={systemEventPath} />,
       },
       {
         element: <NewsLayout />,
         children: [
           {
-            path: newsPath,
+            path: newsTTXVNPath,
             element: <NewsListPage />,
+          },
+          {
+            path: systemEventPath,
+            element: <SystemEventPage />,
           },
           {
             path: "/news/:newsletterId",

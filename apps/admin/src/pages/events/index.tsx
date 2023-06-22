@@ -8,3 +8,9 @@ export const EventPage = lazyLoad(
   (module) => module.EventPage,
   { fallback: <SplashScreen /> },
 );
+
+export const SystemEventPage = lazyLoad(
+  () => import("./system-event.page"),
+  (module) => module.SystemEventPage,
+  { fallback: <SplashScreen /> },
+);

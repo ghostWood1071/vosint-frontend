@@ -1,4 +1,5 @@
 import {
+  cloneSystemEventToUserEvent,
   createEventFromUser,
   deleteEventCreatedByUser,
   getAllEventCreatedByUser,
@@ -54,6 +55,28 @@ export const useMutationEvents = () => {
       onError: () => {
         message.error({
           content: "Tên sự kiện đã tồn tại. Hãy nhập lại!",
+        });
+      },
+    },
+  );
+};
+
+export const useMutationSystemEvents = () => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    ({ event_id }: any) => {
+      return cloneSystemEventToUserEvent(event_id);
+    },
+    {
+      onSuccess: (data: any, variables) => {
+        queryClient.invalidateQueries([EVENT_CACHE_KEYS.ListEvents]);
+        message.success({
+          content: "Clone sự kiện thành công",
+        });
+      },
+      onError: () => {
+        message.error({
+          content: "Đã xảy ra lỗi!",
         });
       },
     },

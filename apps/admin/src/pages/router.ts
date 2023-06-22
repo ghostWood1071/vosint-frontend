@@ -11,7 +11,10 @@ export const dashboardAdminPath = "/dashboard/admin";
 
 export const searchPath = "/search";
 
+export const systemEventPath = "/sytstem-event";
 export const newsPath = "/news";
+export const newsTTXVNPath = "/news-ttxvn";
+
 export const getNewsDetailUrl = (id: string | number, tag?: ETreeTag) => `/news/${id}/${tag ?? ""}`;
 
 export const organizationPath = "/organization";

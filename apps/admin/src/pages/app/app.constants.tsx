@@ -15,6 +15,7 @@ import {
   reportPath,
   socialPath,
   sourceGroupPath,
+  systemEventPath,
 } from "@/pages/router";
 
 export const DEFAULT_ENTITY_EXPLORER_WIDTH = 270;
@@ -24,7 +25,7 @@ export const DEFAULT_ENTITY_EXPLORER_ACTIVE = false;
 export const NAVBAR_HEADER_ADMIN = [
   {
     title: "News",
-    to: newsPath,
+    to: systemEventPath,
     icon: <NewsIcon />,
   },
   {
@@ -72,7 +73,7 @@ export const NAVBAR_HEADER_ADMIN = [
 export const NAVBAR_HEADER = [
   {
     title: "News",
-    to: newsPath,
+    to: systemEventPath,
     icon: <NewsIcon />,
   },
   {

@@ -11,14 +11,12 @@ import { NavLink, Outlet, useNavigate, useParams } from "react-router-dom";
 
 import { NewsFilterProvider } from "../news.context";
 import { useMutationNewsSidebar, useNewsSidebar } from "../news.loader";
-import { NewsFilter } from "./news-filter";
 import styles from "./news-layout.module.less";
 
 export const NewsLayout: React.FC = () => {
   return (
     <NewsFilterProvider>
       <AppContainer sidebar={<Sidebar />}>
-        <NewsFilter />
         <Outlet />
       </AppContainer>
     </NewsFilterProvider>
@@ -106,7 +104,7 @@ function Sidebar() {
             selectedKeys={newsletterId ? [newsletterId] : []}
           />
         )}
-        <NavLink to={getNewsDetailUrl(ETreeTag.DANH_DAU)} className={handleActive}>
+        <NavLink to={"/news-ttxvn"} className={handleActive}>
           TIN TTXVN
         </NavLink>
         {linhVucTree && (

@@ -83,7 +83,7 @@ export function NewsletterFormChuDe({ title, keyword, setKeyword }: Props): JSX.
       render: (item) => {
         return (
           <DeleteOutlined
-            title="Xoá từ khoá"
+            title="Xoá tin mẫu"
             onClick={() => handleDeleteNewsSampleItem(item)}
             className={styles.delete}
           />

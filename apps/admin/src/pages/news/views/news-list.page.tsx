@@ -8,6 +8,7 @@ import { useInView } from "react-intersection-observer";
 import { useQueryClient } from "react-query";
 import { shallow } from "zustand/shallow";
 
+import { NewsFilter } from "../components/news-filter";
 import { NewsTableItem } from "../components/table-news";
 import { useNewsFilter } from "../news.context";
 import {
@@ -74,42 +75,45 @@ export const NewsListPage: React.FC<Props> = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [skip]);
   return (
-    <div className={styles.mainContainer}>
-      <div className={styles.bodyNews}>
-        <table style={{ width: "100%" }}>
-          <tbody>
-            {dataSource[0] !== undefined ? (
-              dataSource.map((item) => (
-                <NewsTableItem
-                  userId={dataIAm._id}
-                  key={item._id}
-                  item={item}
-                  onDelete={handleDelete}
-                  onAdd={handleAdd}
-                  typeTranslate={newsFilter.type_translate}
-                  lengthDataSource={dataSource?.length}
-                  setSeen={handleSetSeen}
-                  handleUpdateCache={handleUpdateCache}
-                />
-              ))
-            ) : (
-              <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={"Trống"} />
-            )}
-          </tbody>
-        </table>
-        <div>
-          {skip >= 1 ? (
-            <button
-              ref={ref}
-              disabled={!hasNextPage || isFetchingNextPage}
-              style={{ padding: 0, margin: 0, border: 0 }}
-            >
-              {isFetchingNextPage ? "Đang lấy tin..." : ""}
-            </button>
-          ) : null}
+    <>
+      <NewsFilter />
+      <div className={styles.mainContainer}>
+        <div className={styles.bodyNews}>
+          <table style={{ width: "100%" }}>
+            <tbody>
+              {dataSource[0] !== undefined ? (
+                dataSource.map((item) => (
+                  <NewsTableItem
+                    userId={dataIAm._id}
+                    key={item._id}
+                    item={item}
+                    onDelete={handleDelete}
+                    onAdd={handleAdd}
+                    typeTranslate={newsFilter.type_translate}
+                    lengthDataSource={dataSource?.length}
+                    setSeen={handleSetSeen}
+                    handleUpdateCache={handleUpdateCache}
+                  />
+                ))
+              ) : (
+                <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={"Trống"} />
+              )}
+            </tbody>
+          </table>
+          <div>
+            {skip >= 1 ? (
+              <button
+                ref={ref}
+                disabled={!hasNextPage || isFetchingNextPage}
+                style={{ padding: 0, margin: 0, border: 0 }}
+              >
+                {isFetchingNextPage ? "Đang lấy tin..." : ""}
+              </button>
+            ) : null}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 
   async function handleUpdateCache(value: string, attachedFunction: Function) {
