@@ -1,15 +1,20 @@
+import { useEventContext } from "@/components/editor/plugins/event-plugin/event-context";
 import { EventEditorParagraph } from "@/components/editor/plugins/event-plugin/event-dialog";
 import { filterIsBetween } from "@/components/editor/plugins/events-plugin/events-components";
 import { useEventsState } from "@/components/editor/plugins/events-plugin/events-state";
+import { generateHTMLFromJSON } from "@/pages/events/components/event-item";
 import { IEventDto } from "@/services/report-type";
 import { getEvent } from "@/services/report.service";
+import { useLexicalComposerContext } from "@aiacademy/editor";
 import { DeleteOutlined } from "@ant-design/icons";
 import { Alert, Button, Col, Collapse, List, Row, Spin, Typography } from "antd";
 import { AxiosError } from "axios";
 import classNames from "classnames";
+import { createEditor } from "lexical";
+import { useMemo } from "react";
 import { UseQueryResult, useQueries } from "react-query";
 
-import styles from "./headings.module.less";
+import styles from "./quick-headings.module.less";
 
 export const headingLevel: Record<number, string> = {
   1: styles.h1,
@@ -20,18 +25,21 @@ export const headingLevel: Record<number, string> = {
 };
 
 interface Props {
-  headingsData: HeadingsData[];
+  headingsData: IQuickHeading[];
   onDeleteEvent?: (reportId: string) => (eventId: string) => void;
 }
 
-export interface HeadingsData {
+export interface IQuickHeading {
   id: string;
   level: 1 | 2 | 3 | 4 | 5;
   title: string;
+  required_keyword: string[];
+  exclusion_keyword: string;
   eventIds: string[];
+  username: string;
 }
 
-export function Headings({ headingsData, onDeleteEvent }: Props): JSX.Element {
+export function QuickHeadings({ headingsData, onDeleteEvent }: Props): JSX.Element {
   return (
     <div className={styles.headings}>
       {headingsData.map((heading) => (
@@ -45,6 +53,10 @@ export function Headings({ headingsData, onDeleteEvent }: Props): JSX.Element {
         >
           <Row justify={"space-between"} align={"middle"}>
             <Typography.Title level={heading.level}>{heading.title}</Typography.Title>
+            <Typography.Paragraph type="secondary">
+              Cập nhật lần cuối bởi:
+              {" " + heading?.username}
+            </Typography.Paragraph>
           </Row>
           <Events
             headingId={heading.id}
@@ -62,7 +74,21 @@ interface EventsProps {
   eventIds: string[];
   onDeleteEvent?: (eventId: string) => void;
 }
-function Events({ eventIds, headingId, onDeleteEvent }: EventsProps): JSX.Element {
+function Events({ eventIds, headingId, onDeleteEvent }: EventsProps): JSX.Element | null {
+  const [editor] = useLexicalComposerContext();
+  const { eventEditorConfig } = useEventContext();
+  const eventEditor = useMemo(() => {
+    if (eventEditorConfig === null) return null;
+
+    const _eventEditor = createEditor({
+      namespace: eventEditorConfig?.namespace,
+      nodes: eventEditorConfig?.nodes,
+      onError: (error) => eventEditorConfig?.onError(error, editor),
+      theme: eventEditorConfig?.theme,
+    });
+    return _eventEditor;
+  }, [eventEditorConfig]);
+
   const [startDate, endDate] = useEventsState((state) => state.dateTimeFilter);
   const events = useQueries(
     eventIds.map((id) => ({
@@ -74,6 +100,8 @@ function Events({ eventIds, headingId, onDeleteEvent }: EventsProps): JSX.Elemen
       },
     })) ?? [],
   );
+
+  if (eventEditor === null) return null;
 
   return (
     <div className={styles.events}>
@@ -117,7 +145,14 @@ function Events({ eventIds, headingId, onDeleteEvent }: EventsProps): JSX.Elemen
             </Row>
             <Typography.Text italic>Thời gian: {event.data?.date_created}</Typography.Text>
             <br />
-            <EventEditorParagraph data={event.data?.event_content ?? defaultContent} />
+            <div
+              dangerouslySetInnerHTML={{
+                __html: generateHTMLFromJSON(
+                  event.data?.event_content ?? defaultContent,
+                  eventEditor,
+                ),
+              }}
+            />
             <Collapse ghost>
               <Collapse.Panel key={event.data?._id ?? index} header="Danh sách tin nói về sự kiện">
                 <List

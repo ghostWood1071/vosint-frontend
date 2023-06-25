@@ -5,6 +5,7 @@ import {
   removeWhitespaceInStartAndEndOfString,
 } from "@/utils/tool-validate-string";
 import {
+  BellOutlined,
   CaretRightOutlined,
   DeleteOutlined,
   EditOutlined,
@@ -35,7 +36,6 @@ import {
 } from "antd";
 import { LexicalEditor, createEditor } from "lexical";
 import { debounce } from "lodash";
-import moment from "moment";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
@@ -48,6 +48,8 @@ import {
 } from "../news.loader";
 import { AddMindmap } from "./add-mindmap";
 import styles from "./mindmap-modal.module.less";
+import { QuickReportModal } from "./quick-report-modal";
+import { useQuickReportModalState } from "./quick-report-modal/index.state";
 import { ReportModal } from "./report-modal";
 import { useReportModalState } from "./report-modal/index.state";
 
@@ -630,6 +632,7 @@ export const MindmapModal: React.FC<props> = ({
         />
       ) : null}
       <ReportModal />
+      <QuickReportModal />
     </Modal>
   );
 
@@ -834,6 +837,7 @@ interface ItemsProps {
 
 const Items: React.FC<ItemsProps> = ({ item, handleEdit, handleDelete }) => {
   const setEvent = useReportModalState((state) => state.setEvent);
+  const setQuickEvent = useQuickReportModalState((state) => state.setEvent);
   const Ref = useRef<any>();
   const [editor] = useLexicalComposerContext();
   const { eventEditorConfig } = useEventContext();
@@ -907,6 +911,7 @@ const Items: React.FC<ItemsProps> = ({ item, handleEdit, handleDelete }) => {
           title="Thêm sự kiện vào báo cáo"
           className={styles.reportIcon}
         />
+        <BellOutlined onClick={handleOpenQuickReport} title="Thêm sự kiện vào báo cáo nhanh" />
         <EditOutlined
           onClick={() => {
             handleEdit(item);
@@ -927,6 +932,10 @@ const Items: React.FC<ItemsProps> = ({ item, handleEdit, handleDelete }) => {
 
   function handleOpenReport() {
     setEvent([item]);
+  }
+
+  function handleOpenQuickReport() {
+    setQuickEvent([item]);
   }
 };
 

@@ -1,7 +1,7 @@
 import { EVENT_CACHE_KEYS } from "@/pages/events/event.loader";
 import { navigationItemLevel } from "@/pages/reports/components/heading-toc";
 import { HeadingsData } from "@/pages/reports/components/headings";
-import { CACHE_KEYS, useReports, useUpdateReport } from "@/pages/reports/report.loader";
+import { CACHE_KEYS, useQuickReports, useUpdateReport } from "@/pages/reports/report.loader";
 import { IEventDto, TReport } from "@/services/report-type";
 import { convertTimeToShowInUI } from "@/utils/tool-validate-string";
 import {
@@ -26,11 +26,11 @@ import { useQueryClient } from "react-query";
 import { shallow } from "zustand/shallow";
 
 import styles from "./index.module.less";
-import { useReportModalState } from "./index.state";
+import { useQuickReportModalState } from "./index.state";
 
-export function ReportModal(): JSX.Element {
+export function QuickReportModal(): JSX.Element {
   const queryClient = useQueryClient();
-  const [events, setEvent, selectedHeading] = useReportModalState(
+  const [events, setEvent, selectedHeading] = useQuickReportModalState(
     (state) => [state.events, state.setEvent, state.selectedHeading],
     shallow,
   );
@@ -40,7 +40,7 @@ export function ReportModal(): JSX.Element {
     title: "",
   });
   const [selectedReport, setSelectedReport] = useState<TReport | null>(null);
-  const { data, isLoading } = useReports(filter, {
+  const { data: dataQuickReport, isLoading } = useQuickReports(filter, {
     enabled: events !== null,
     keepPreviousData: true,
   });
@@ -72,16 +72,14 @@ export function ReportModal(): JSX.Element {
       width: 130,
       align: "left",
       dataIndex: "date_created",
-      render: (item) => {
-        return <>{convertTimeToShowInUI(item)}</>;
-      },
+      render: (item) => convertTimeToShowInUI(item),
     },
   ];
 
   return (
     <Modal
       open={events !== null}
-      title="Chọn báo cáo"
+      title="Chọn báo cáo nhanh"
       onCancel={handleCancel}
       onOk={handleOk}
       maskClosable={false}
@@ -100,7 +98,7 @@ export function ReportModal(): JSX.Element {
           <Spin spinning={isLoading}>
             <Radio.Group onChange={handleChange}>
               <Space direction="vertical">
-                {data?.data.map((report, index) => (
+                {dataQuickReport?.data.map((report, index) => (
                   <Radio key={report._id} value={index}>
                     {report.title}
                   </Radio>
@@ -109,7 +107,7 @@ export function ReportModal(): JSX.Element {
                   size="small"
                   current={filter.skip}
                   pageSize={filter.limit}
-                  total={data?.total}
+                  total={dataQuickReport?.total}
                   onChange={(page, pageSize) => {
                     setFilter({
                       ...filter,
@@ -146,8 +144,8 @@ export function ReportModal(): JSX.Element {
   );
 
   function handleChange(e: any) {
-    if (!data?.data) return;
-    setSelectedReport(data?.data[e.target.value]);
+    if (!dataQuickReport?.data) return;
+    setSelectedReport(dataQuickReport?.data[e.target.value]);
   }
 
   function handleCancel() {
@@ -185,7 +183,7 @@ interface TableOfContentsProps {
 }
 
 function TableOfContents({ headingsData }: TableOfContentsProps): JSX.Element {
-  const [selectedHeading, setSelectedHeading] = useReportModalState(
+  const [selectedHeading, setSelectedHeading] = useQuickReportModalState(
     (state) => [state.selectedHeading, state.setSelectedHeading],
     shallow,
   );

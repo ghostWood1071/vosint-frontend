@@ -1,4 +1,5 @@
 import { HeadingsData } from "@/pages/reports/components/headings";
+import { IQuickHeading } from "@/pages/reports/components/quick-heading";
 
 export type TEvent = {
   event_name: string;
@@ -32,6 +33,12 @@ export type TReport = {
   headings: HeadingsData[];
 };
 
+export type TQuickReport = {
+  _id: string;
+  title: string;
+  headings: IQuickHeading[];
+};
+
 export type TReports = {
   data: TReport[];
   total: number;
@@ -40,6 +47,12 @@ export type TReports = {
 export interface IReportDto {
   title?: string;
   headings?: HeadingsData[];
+  event_list?: Array<string | undefined> | null;
+}
+
+export interface IQuickReportDto {
+  title?: string;
+  headings?: IQuickHeading[];
   event_list?: Array<string | undefined> | null;
 }
 

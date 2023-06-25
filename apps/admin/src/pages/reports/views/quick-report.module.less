@@ -1,0 +1,65 @@
+.delete-button {
+  width: 30px;
+  height: 30px;
+}
+
+.form-item {
+  width: 80%;
+}
+
+.root {
+  padding: 20px;
+  min-height: 100%;
+  background: rgb(249, 251, 253);
+
+  .outline {
+    :global {
+      .table-of-contents {
+        height: calc(100vh - 193px);
+      }
+    }
+
+    .affix {
+      position: sticky;
+      top: 24px;
+    }
+  }
+
+  .container {
+    padding: 20px;
+    background: #ffffff;
+    outline: 1px solid #c7c7c7;
+
+    .title {
+      text-align: center;
+
+      :global {
+        .ant-typography {
+          margin-bottom: 0;
+        }
+      }
+    }
+
+    .save {
+      margin: 10px 0;
+      :global {
+        .anticon svg {
+          width: 1em;
+          height: 1em;
+        }
+      }
+    }
+  }
+
+  .action {
+    padding-top: 30px;
+  }
+}
+
+.center {
+  text-align: center;
+}
+.inputFilter {
+  width: 40px;
+  text-align: center;
+}

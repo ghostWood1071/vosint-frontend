@@ -19,6 +19,7 @@ import { useInView } from "react-intersection-observer";
 import { useQueryClient } from "react-query";
 
 import { useSidebar } from "../app/app.store";
+import { QuickReportModal } from "../news/components/quick-report-modal";
 import { ReportModal } from "../news/components/report-modal";
 import { useReportModalState } from "../news/components/report-modal/index.state";
 import { EditEventModal } from "./components/edit-event-modal";
@@ -202,6 +203,7 @@ export const SystemEventPage: React.FC<Props> = () => {
         </LexicalComposer>
       ) : null}
       <ReportModal />
+      <QuickReportModal />
     </div>
   );
 

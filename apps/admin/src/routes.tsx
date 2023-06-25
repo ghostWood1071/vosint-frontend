@@ -40,7 +40,8 @@ import {
 } from "./pages/pipeline";
 import {
   PeriodicReport,
-  QuickReport,
+  QuickReportCreate,
+  QuickReportDetail,
   ReportLayout,
   SynthesisReportCreate,
   SynthesisReportDetail,
@@ -76,6 +77,7 @@ import {
   proxyConfigPath,
   reportPath,
   reportPeriodicPath,
+  reportQuickCreatePath,
   reportQuickPath,
   reportSyntheticCreatePath,
   reportSyntheticDetailPath,
@@ -203,7 +205,11 @@ export const routers = createBrowserRouter([
           },
           {
             path: reportQuickPath,
-            element: <QuickReport />,
+            element: <QuickReportDetail />,
+          },
+          {
+            path: reportQuickCreatePath,
+            element: <QuickReportCreate />,
           },
           {
             path: reportSyntheticPath,

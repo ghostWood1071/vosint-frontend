@@ -107,3 +107,11 @@ export const UpdateReportAndEvent = async (data: UpdateReportAndEventType) => {
   });
   return result.data;
 };
+
+// Quick report
+export const getQuickReports = async (filter: Record<string, any>) => {
+  const result = await apiClient.get(`${apiReportBaseV2Url}/report/quick-report`, {
+    params: filter,
+  });
+  return result.data;
+};

@@ -1,14 +1,7 @@
 import { useEventContext } from "@/components/editor/plugins/event-plugin/event-context";
+import { useQuickReportModalState } from "@/pages/news/components/quick-report-modal/index.state";
 import { convertTimeToShowInUI } from "@/utils/tool-validate-string";
-import {
-  BellOutlined,
-  CloseOutlined,
-  DeleteOutlined,
-  EditOutlined,
-  FileTextOutlined,
-  ShareAltOutlined,
-  StarOutlined,
-} from "@ant-design/icons";
+import { BellOutlined, CloseOutlined, ShareAltOutlined, StarOutlined } from "@ant-design/icons";
 import { $generateHtmlFromNodes } from "@lexical/html";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { Checkbox, Empty, Space, Tag, Tooltip, Typography } from "antd";
@@ -36,6 +29,7 @@ export const SystemEventItem: React.FC<Props> = ({
   setEventChoosedList,
   onClickReport,
 }) => {
+  const setQuickEvent = useQuickReportModalState((state) => state.setEvent);
   const [checkbox, setCheckbox] = useState<boolean>(false);
 
   const [typeShow, setTypeShow] = useState<boolean>(true);
@@ -119,12 +113,7 @@ export const SystemEventItem: React.FC<Props> = ({
                   placement="topRight"
                   title={"Thêm sự kiện vào báo cáo nhanh"}
                 >
-                  <BellOutlined
-                    className={styles.ringIcon}
-                    onClick={(event) => {
-                      event.stopPropagation();
-                    }}
-                  />
+                  <BellOutlined className={styles.ringIcon} onClick={handleOpenQuickReport} />
                 </Tooltip>
               </Space>
             </div>
@@ -160,12 +149,7 @@ export const SystemEventItem: React.FC<Props> = ({
                       <StarOutlined onClick={handleOpenReport} className={styles.reportIcon} />
                     </Tooltip>
                     <Tooltip title={"Thêm sự kiện vào báo cáo nhanh"}>
-                      <BellOutlined
-                        className={styles.ringIcon}
-                        onClick={(event) => {
-                          event.stopPropagation();
-                        }}
-                      />
+                      <BellOutlined className={styles.ringIcon} onClick={handleOpenQuickReport} />
                     </Tooltip>
                   </Space>
                 </div>
@@ -239,6 +223,11 @@ export const SystemEventItem: React.FC<Props> = ({
   function handleOpenReport() {
     setEventChoosedList([item]);
     onClickReport([item]);
+  }
+
+  function handleOpenQuickReport() {
+    setEventChoosedList([item]);
+    setQuickEvent([item]);
   }
 };
 
