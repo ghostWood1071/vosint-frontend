@@ -1,4 +1,5 @@
 import { useEventContext } from "@/components/editor/plugins/event-plugin/event-context";
+import { useQuickReportModalState } from "@/pages/news/components/quick-report-modal/index.state";
 import { convertTimeToShowInUI } from "@/utils/tool-validate-string";
 import {
   BellOutlined,
@@ -35,6 +36,7 @@ export const EventItem: React.FC<Props> = ({
   setEventChoosedList,
   onClickReport,
 }) => {
+  const setQuickEvent = useQuickReportModalState((state) => state.setEvent);
   const [checkbox, setCheckbox] = useState<boolean>(false);
 
   const [typeShow, setTypeShow] = useState<boolean>(true);
@@ -113,12 +115,7 @@ export const EventItem: React.FC<Props> = ({
                   placement="topRight"
                   title={"Thêm sự kiện vào báo cáo nhanh"}
                 >
-                  <BellOutlined
-                    className={styles.ringIcon}
-                    onClick={(event) => {
-                      event.stopPropagation();
-                    }}
-                  />
+                  <BellOutlined className={styles.ringIcon} onClick={handleOpenQuickReport} />
                 </Tooltip>
 
                 <Tooltip placement="topRight" arrowPointAtCenter={true} title="Sửa sự kiện">
@@ -175,12 +172,7 @@ export const EventItem: React.FC<Props> = ({
                       <FileTextOutlined onClick={handleOpenReport} className={styles.reportIcon} />
                     </Tooltip>
                     <Tooltip title={"Thêm sự kiện vào báo cáo nhanh"}>
-                      <BellOutlined
-                        className={styles.ringIcon}
-                        onClick={(event) => {
-                          event.stopPropagation();
-                        }}
-                      />
+                      <BellOutlined className={styles.ringIcon} onClick={handleOpenQuickReport} />
                     </Tooltip>
 
                     <Tooltip placement="topRight" arrowPointAtCenter={true} title="Sửa sự kiện">
@@ -276,11 +268,16 @@ export const EventItem: React.FC<Props> = ({
     setEventChoosedList([item]);
     onClickReport([item]);
   }
+
+  function handleOpenQuickReport() {
+    setEventChoosedList([item]);
+    setQuickEvent([item]);
+  }
 };
 
 export const eventHTMLCache: Map<string, string> = new Map();
 
-function generateHTMLFromJSON(editorStateJSON: string, eventEditor: LexicalEditor): string {
+export function generateHTMLFromJSON(editorStateJSON: string, eventEditor: LexicalEditor): string {
   const editorState = eventEditor.parseEditorState(editorStateJSON);
   let html = eventHTMLCache.get(editorStateJSON);
   if (html === undefined) {
@@ -290,11 +287,11 @@ function generateHTMLFromJSON(editorStateJSON: string, eventEditor: LexicalEdito
   return html;
 }
 
-function returnTextFromRichText(richText: any) {
-  const obj = JSON.parse(richText);
-  let plainText = "";
+const defaultContent = (text: string) =>
+  `{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":${text},"type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1}],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}`;
 
-  function extractTextFromObject(obj: any) {
+function render(plainText: string) {
+  return function extractTextFromObject(obj: any): string {
     if (obj.children) {
       for (const child of obj.children) {
         if (child.text) {
@@ -303,8 +300,19 @@ function returnTextFromRichText(richText: any) {
         extractTextFromObject(child);
       }
     }
-  }
+    return plainText;
+  };
+}
 
-  extractTextFromObject(obj.root);
-  return plainText.trim();
+function returnTextFromRichText(richText: any) {
+  let plainText = render("");
+  try {
+    var obj = JSON.parse(richText);
+  } catch {
+    console.log("here?");
+    obj = JSON.parse(defaultContent(JSON.stringify(richText)));
+  }
+  console.log("🚀 ~ file: event-item.tsx:313 ~ returnTextFromRichText ~ obj:", obj);
+
+  return plainText(obj).trim();
 }

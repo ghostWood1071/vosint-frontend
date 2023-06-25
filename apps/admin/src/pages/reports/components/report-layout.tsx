@@ -1,7 +1,12 @@
 import { ReportIcon } from "@/assets/svg";
 import { Tree } from "@/components";
-import { EventProvider } from "@/components/editor/plugins/event-plugin/event-context";
-import { EventsNode } from "@/components/editor/plugins/events-plugin/events-node";
+import { EventNodes, EventPlugin } from "@/components/editor/plugins/event-plugin";
+import {
+  EventEditorConfig,
+  EventProvider,
+} from "@/components/editor/plugins/event-plugin/event-context";
+import { EventFilterNode } from "@/components/editor/plugins/event-plugin/event-filter-node";
+import { EventNode } from "@/components/editor/plugins/event-plugin/event-node";
 import { ETreeTag } from "@/components/news/news-state";
 import { AppContainer } from "@/pages/app/";
 import { useNewsSidebar } from "@/pages/news/news.loader";
@@ -11,35 +16,60 @@ import {
   getReportQuickUrl,
   getSyntheticReportDetailUrl,
   reportPeriodicPath,
+  reportQuickCreatePath,
   reportQuickPath,
   reportSyntheticCreatePath,
   reportSyntheticPath,
 } from "@/pages/router";
-import { EditorNodes, editorTheme } from "@aiacademy/editor";
+import { ContentEditable, EditorNodes, editorTheme } from "@aiacademy/editor";
+import "@aiacademy/editor/style.css";
 import { ContainerFilled, FundFilled, PlusOutlined } from "@ant-design/icons";
 import { InitialConfigType, LexicalComposer } from "@lexical/react/LexicalComposer";
+import LexicalErrorBoundary from "@lexical/react/LexicalErrorBoundary";
+import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
+import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
+import { TabIndentationPlugin } from "@lexical/react/LexicalTabIndentationPlugin";
 import { Button, Input, Menu, MenuProps, Pagination, Row, Space, Spin } from "antd";
 import { useState } from "react";
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 
-import { useReports } from "../report.loader";
+import { useQuickReports, useReports } from "../report.loader";
 import styles from "./report-layout.module.less";
 
 export const ReportLayout = () => {
   const initialConfig: InitialConfigType = {
-    namespace: "synthetic-report",
+    namespace: "quick-report",
     onError: (error) => {
       console.error(error);
-      throw new Error("synthetic-report?");
+      throw new Error("quick-report?");
     },
     theme: editorTheme,
-    nodes: [...EditorNodes, EventsNode],
+    nodes: [...EditorNodes, EventNode, EventFilterNode],
+  };
+
+  const eventConfig: EventEditorConfig = {
+    namespace: "quick-report",
+    onError: (error) => {
+      console.error(error);
+      throw new Error("synthetic-event?");
+    },
+    theme: editorTheme,
+    nodes: [...EventNodes],
   };
 
   return (
     <AppContainer sidebar={<Sidebar />}>
       <LexicalComposer initialConfig={initialConfig}>
         <EventProvider>
+          <EventPlugin eventEditorConfig={eventConfig}>
+            <HistoryPlugin />
+            <RichTextPlugin
+              contentEditable={<ContentEditable />}
+              placeholder={null}
+              ErrorBoundary={LexicalErrorBoundary}
+            />
+            <TabIndentationPlugin />
+          </EventPlugin>
           <Outlet />
         </EventProvider>
       </LexicalComposer>
@@ -55,30 +85,33 @@ const Sidebar = () => {
     limit: 10,
     title: "",
   });
+  const [quickFilter, setQuickFilter] = useState({
+    page: 1,
+    limit: 10,
+    title: "",
+  });
   const { data: dataReport, isLoading } = useReports(filter, {
     keepPreviousData: true,
   });
-  const { data: dataNewsLetter, isLoading: isLoadingNewsLetter } = useNewsSidebar();
-  const dataWithDefaultParentId = dataNewsLetter?.linh_vuc.map((item: any) => ({
-    ...item,
-    parent_id: item.parent_id ?? null,
-  }));
-  const objectsWithNotParentId = dataNewsLetter?.linh_vuc?.filter(
-    (obj: any) => !obj.hasOwnProperty("parent_id"),
-  );
-  //
+
+  const { data: dataQuickReport, isLoading: isQuickReportLoading } = useQuickReports(quickFilter, {
+    keepPreviousData: true,
+  });
+
+  const { data: dataNewsLetter } = useNewsSidebar();
+
   const { newsletterId } = useParams();
 
   const linhVucTree = dataNewsLetter?.linh_vuc && buildTree(dataNewsLetter.linh_vuc);
 
-  const generateTree = (items: any, parentId = null) => {
+  const _generateTree = (items: any, parentId = null) => {
     return (
       items?.length > 0 &&
       items
         .filter((item: any) => item.parent_id === parentId || item._id === null)
         .map((item: any, index: any) => {
           const { _id, title } = item;
-          const children = generateTree(items, _id); // Đệ quy để tạo cây con
+          const children = _generateTree(items, _id); // Đệ quy để tạo cây con
           const hasChildren = children.length > 0;
           return {
             key: getPeriodicReportUrl(_id),
@@ -108,8 +141,54 @@ const Sidebar = () => {
       className: styles.reportMenu,
       key: reportQuickPath,
       children: [
-        { label: "Báo cáo 8:30, 22-11-2021", key: getReportQuickUrl(1) },
-        { label: "Báo cáo 8:30, 23-11-2021", key: getReportQuickUrl(2) },
+        {
+          label: (
+            <Space align="center">
+              <Input.Search
+                placeholder="Tìm kiếm báo cáo nhanh"
+                onSearch={handleQuickSearch}
+                className={styles.input}
+              />
+              <Button
+                icon={<PlusOutlined />}
+                title="Thêm báo cáo nhanh"
+                type="primary"
+                onClick={navigateCreateQuickReport}
+              />
+            </Space>
+          ),
+          key: "quick-search",
+          disabled: true,
+          className: styles.search,
+        },
+        isQuickReportLoading
+          ? {
+              label: <Spin />,
+              key: "quick-loading",
+              className: styles.loading,
+            }
+          : null,
+        ...(dataQuickReport?.data?.map((report) => ({
+          label: report.title,
+          key: getReportQuickUrl(report._id),
+          className: styles.reportItem,
+        })) || []),
+        {
+          label: (
+            <Pagination
+              defaultCurrent={1}
+              showSizeChanger={false}
+              total={dataQuickReport?.total || 0}
+              current={quickFilter.page}
+              pageSize={quickFilter.limit}
+              onChange={handleQuickChangePaginate}
+              size="small"
+            />
+          ),
+          key: "quick-pagination",
+          disabled: true,
+          className: styles.pagination,
+        },
       ],
     },
 
@@ -142,7 +221,7 @@ const Sidebar = () => {
         isLoading
           ? {
               label: <Spin />,
-              key: "loading...",
+              key: "loading",
               className: styles.loading,
             }
           : null,
@@ -213,12 +292,26 @@ const Sidebar = () => {
     setFilter((prev) => ({ ...prev, page }));
   }
 
+  function handleQuickSearch(value: string) {
+    setQuickFilter((prev) => ({ ...prev, title: value }));
+  }
+
+  function handleQuickChangePaginate(page: number) {
+    setQuickFilter((prev) => ({ ...prev, page }));
+  }
+
+  function navigateCreateQuickReport() {
+    navigate(reportQuickCreatePath);
+  }
+
   function navigateCreateReport() {
     navigate(reportSyntheticCreatePath);
   }
+
   function handleClickTitle(newsletterId: string, tag: ETreeTag) {
     navigate(getPeriodicReportUrl(newsletterId));
   }
+
   function handleClick() {
     setShowComponent(!showComponent);
   }

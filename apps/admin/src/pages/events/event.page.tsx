@@ -12,12 +12,13 @@ import LexicalErrorBoundary from "@lexical/react/LexicalErrorBoundary";
 import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
 import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 import { TabIndentationPlugin } from "@lexical/react/LexicalTabIndentationPlugin";
-import { Button, DatePicker, Form, Input, List, Modal, Space } from "antd";
+import { Button, DatePicker, Input, List, Modal, Space } from "antd";
 import { flatMap, unionBy } from "lodash";
 import React, { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import { useQueryClient } from "react-query";
 
+import { QuickReportModal } from "../news/components/quick-report-modal";
 import { ReportModal } from "../news/components/report-modal";
 import { useReportModalState } from "../news/components/report-modal/index.state";
 import { EditEventModal } from "./components/edit-event-modal";
@@ -75,6 +76,7 @@ export const EventPage: React.FC<Props> = () => {
     nodes: [...EventNodes],
   };
 
+  // TODO: Fix later. This is a hack to make sure the editor is not re-rendered when the event is changed
   React.useEffect(() => {
     if (inView && skip * 50 <= data?.pages[0].total) {
       setSkip(skip + 1);
@@ -201,6 +203,7 @@ export const EventPage: React.FC<Props> = () => {
         </LexicalComposer>
       ) : null}
       <ReportModal />
+      <QuickReportModal />
     </div>
   );
 
@@ -258,7 +261,7 @@ export const EventPage: React.FC<Props> = () => {
     setFilterEvent({ start_date: start_date, end_date: end_date });
   }
 
-  function handleAddManyEvent(value: any) {
+  function handleAddManyEvent() {
     setEvent(eventChoosedList);
   }
 

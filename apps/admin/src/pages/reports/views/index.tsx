@@ -1,6 +1,14 @@
 import { SplashScreen } from "@/components";
 import { lazyLoad } from "@/utils/loadable";
 
+export const ReportLayout = lazyLoad(
+  () => import("../components/report-layout"),
+  (module) => module.ReportLayout,
+  {
+    fallback: <SplashScreen />,
+  },
+);
+
 export const PeriodicReport = lazyLoad(
   () => import("./periodic-report"),
   (module) => module.PeriodicReport,
@@ -9,9 +17,17 @@ export const PeriodicReport = lazyLoad(
   },
 );
 
-export const QuickReport = lazyLoad(
-  () => import("./quick-report"),
-  (module) => module.QuickReport,
+export const QuickReportDetail = lazyLoad(
+  () => import("./quick-report-detail"),
+  (module) => module.QuickReportDetail,
+  {
+    fallback: <SplashScreen />,
+  },
+);
+
+export const QuickReportCreate = lazyLoad(
+  () => import("./quick-report-create"),
+  (module) => module.QuickReportCreate,
   {
     fallback: <SplashScreen />,
   },

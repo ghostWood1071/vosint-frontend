@@ -47,9 +47,9 @@ export default defineConfig({
       localsConvention: "camelCase",
     },
   },
-  test: {
-    globals: true,
-    environment: "jsdom",
-    setupFiles: ["./src/setup-test.ts"],
+  server: {
+    proxy: {
+      "/api": "http://vosint.aiacademy.edu.vn",
+    },
   },
 });

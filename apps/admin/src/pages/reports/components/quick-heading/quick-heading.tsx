@@ -21,13 +21,13 @@ import { Popover, Space, Typography } from "antd";
 import cn from "classnames";
 import { CSSProperties, Dispatch, SetStateAction, forwardRef, useRef, useState } from "react";
 
-import { useHeadingTocDispatchContext } from "./heading-toc.context";
-import styles from "./heading-toc.module.less";
-import { HeadingsData } from "./headings";
+import { useQuickHeadingDispatchContext } from "./quick-heading.context";
+import styles from "./quick-heading.module.less";
+import { IQuickHeading } from "./quick-headings";
 
 interface Props {
-  headingsData: HeadingsData[];
-  setHeadingsData: Dispatch<SetStateAction<HeadingsData[]>>;
+  headingsData: IQuickHeading[];
+  setHeadingsData: Dispatch<SetStateAction<IQuickHeading[]>>;
 }
 
 export const navigationItemLevel: Record<number, string> = {
@@ -38,7 +38,7 @@ export const navigationItemLevel: Record<number, string> = {
   5: styles.navigationItemLevel5,
 };
 
-export function HeadingToc({ headingsData, setHeadingsData }: Props): JSX.Element {
+export function QuickHeading({ headingsData, setHeadingsData }: Props): JSX.Element {
   const [activeId, setActiveId] = useState<string | null>(null);
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -56,7 +56,7 @@ export function HeadingToc({ headingsData, setHeadingsData }: Props): JSX.Elemen
   const selectedIndex = useRef(0);
   const refIsOpen = useRef(null);
 
-  const { setMode, setSelectedIndex } = useHeadingTocDispatchContext();
+  const { setMode, setSelectedIndex } = useQuickHeadingDispatchContext();
 
   function handleScrollToNode(id: string, currentIndex: number) {
     window.location.hash = id;
@@ -113,7 +113,6 @@ export function HeadingToc({ headingsData, setHeadingsData }: Props): JSX.Elemen
                 index={index}
                 id={heading.id}
                 onScroll={handleScrollToNode}
-                key={heading.id}
               />
             ))}
           </SortableContext>
@@ -134,7 +133,7 @@ function SortableItem({
   ...props
 }: {
   id: string;
-  heading: HeadingsData;
+  heading: IQuickHeading;
   clone?: boolean;
   selectedKey: string;
   index: number;
@@ -172,7 +171,7 @@ const Item = forwardRef<HTMLDivElement, any>(
     { heading, style, handleProps, clone, ghost, disableInteraction, index, selectedKey, onScroll },
     ref,
   ) => {
-    const { setMode, setSelectedIndex, setCurrentHeading } = useHeadingTocDispatchContext();
+    const { setMode, setSelectedIndex, setCurrentHeading } = useQuickHeadingDispatchContext();
     const { id, level, title } = heading;
 
     const handleClick = (mode: "create" | "update" | "delete") => () => {

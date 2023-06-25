@@ -39,6 +39,7 @@ export const reportPeriodicPath = "/report/periodic/:id";
 export const getPeriodicReportUrl = (reportId: string | number) => `/report/periodic/${reportId}`;
 
 export const reportQuickPath = "/report/quick/:id";
+export const reportQuickCreatePath = "/report/quick/create";
 export const getReportQuickUrl = (reportId: string | number) => `/report/quick/${reportId}`;
 
 export const reportSyntheticPath = "/report/synthesis";

@@ -1,8 +1,10 @@
 import {
   IEventDto,
+  IQuickReportDto,
   IReportDto,
   TEvent,
   TEvents,
+  TQuickReport,
   TReport,
   TReportEventsDto,
   TReports,
@@ -13,6 +15,7 @@ import {
   addEventIdsToReport,
   createReport,
   createReportEvents,
+  getQuickReports,
   getReport,
   getReportEvents,
   removeEventIdsToReport,
@@ -41,6 +44,7 @@ export const CACHE_KEYS = {
   REPORTS: "REPORTS",
   REPORT: "REPORT",
   REPORT_EVENT: "REPORT_EVENT",
+  QUICK_REPORT: "QUICK_REPORT",
 };
 
 export const useEvent = (id: string, options?: UseQueryOptions<TEvent, unknown>) => {
@@ -135,6 +139,10 @@ export const useReport = (id: string, options?: UseQueryOptions<TReport, unknown
   return useQuery<TReport>([CACHE_KEYS.REPORT, id], () => getReport(id), options);
 };
 
+export const useQuickReport = (id: string, options?: UseQueryOptions<TQuickReport, unknown>) => {
+  return useQuery<TQuickReport>([CACHE_KEYS.QUICK_REPORT, id], () => getReport(id), options);
+};
+
 export const useCreateReport = (options?: UseMutationOptions<string, unknown, IReportDto>) => {
   return useMutation((data: IReportDto) => createReport(data), options);
 };
@@ -144,7 +152,7 @@ export const useUpdateReport = (
   options?: UseMutationOptions<
     string,
     unknown,
-    IReportDto,
+    IReportDto | IQuickReportDto,
     { previousData?: IReportDto; newData?: IReportDto }
   >,
 ) => {
@@ -188,4 +196,21 @@ export const useDeleteReport = (
   options?: UseMutationOptions<string, unknown, string, { previousData?: any; newData?: any }>,
 ) => {
   return useMutation((id) => removeReport(id), options);
+};
+
+// export const useReports = (
+//   filter: Record<string, any>,
+//   options?: UseQueryOptions<any, unknown>,
+// ) => {
+//   return useQuery<TReports>([CACHE_KEYS.REPORTS, filter], () => getReports(filter), options);
+// };
+export const useQuickReports = (
+  filter: Record<string, any>,
+  options?: UseQueryOptions<any, unknown>,
+) => {
+  return useQuery<TReports>(
+    [CACHE_KEYS.QUICK_REPORT, filter],
+    () => getQuickReports(filter),
+    options,
+  );
 };

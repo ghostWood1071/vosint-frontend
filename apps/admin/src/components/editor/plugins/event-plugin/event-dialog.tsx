@@ -175,13 +175,13 @@ export function EventDialog(): JSX.Element | null {
         ) : (
           <>
             <Form.Item label="Tên">
-              <EventEditorParagraph data={defaultName} setData={setName} />
+              <EventEditorParagraphWithChange data={defaultName} setData={setName} />
             </Form.Item>
             <Form.Item label="Thời gian">
               <DatePicker bordered={false} format={"YYYY-MM-YY"} onChange={handleDateChange} />
             </Form.Item>
             <Form.Item label="Nội dung">
-              <EventEditorParagraph data={defaultContent} setData={setContent} />
+              <EventEditorParagraphWithChange data={defaultContent} setData={setContent} />
             </Form.Item>
             <ListNewsSampleLinhVuc />
           </>
@@ -204,7 +204,7 @@ export const useEventDialogStore = create<EventDialogState>((set) => ({
   setOpen: (open: boolean) => set({ open }),
 }));
 
-export function EventEditorParagraph({
+export function EventEditorParagraphWithChange({
   data,
   setData,
 }: {
@@ -276,4 +276,43 @@ function generateHTMLFromJSON(editorStateJSON: string, eventEditor: LexicalEdito
     eventHTMLCache.set(editorStateJSON, html);
   }
   return html;
+}
+
+export function EventEditorParagraph({ data }: { data: string }) {
+  const [editor] = useLexicalComposerContext();
+
+  const { eventEditorConfig } = useEventContext();
+  const eventEditor = useMemo(() => {
+    if (eventEditorConfig === null) return null;
+
+    const _eventEditor = createEditor({
+      namespace: eventEditorConfig.namespace,
+      nodes: eventEditorConfig.nodes,
+      onError: (error) => eventEditorConfig.onError(error, editor),
+      theme: eventEditorConfig.theme,
+    });
+    return _eventEditor;
+  }, [eventEditorConfig]);
+
+  useEffect(() => {
+    if (eventEditor === null) return;
+
+    eventEditor.update(() => {
+      const editorState = eventEditor.parseEditorState(data);
+      eventEditor.setEditorState(editorState);
+    });
+  }, [data, eventEditor]);
+
+  if (eventEditor === null) return null;
+
+  return (
+    <>
+      <EventEditor eventEditor={eventEditor} />
+      <OnChangePlugin
+        onChange={(e) => {
+          console.log(e);
+        }}
+      />
+    </>
+  );
 }
