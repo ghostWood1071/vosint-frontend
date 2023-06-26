@@ -71,7 +71,7 @@ export const useMutationSystemEvents = () => {
       onSuccess: (data: any, variables) => {
         queryClient.invalidateQueries([EVENT_CACHE_KEYS.ListEvents]);
         message.success({
-          content: "Clone sự kiện thành công",
+          content: "Thêm vào danh sách các sự kiện do người dùng tạo thành công",
         });
       },
       onError: () => {

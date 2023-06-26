@@ -72,6 +72,7 @@ export const newsSourceConfigPath = "/config/news-source";
 export const countryCateConfigPath = "/config/country-cate-config";
 export const objectCateConfigPath = "/config/object-cate-config";
 export const organizationCateConfigPath = "/config/organization-cate-config";
+export const ttxvnPath = "/config/ttxvn";
 
 export const sourceConfigPath = "/config/news";
 export const userManagementPath = "/config/user";

@@ -92,6 +92,7 @@ import {
   sourceGroupPath,
   systemEventPath,
   tiktokConfigPath,
+  ttxvnPath,
   twitterConfigPath,
   userManagementPath,
 } from "./pages/router";
@@ -105,6 +106,7 @@ import {
   Twitter,
 } from "./pages/social";
 import { SourceGroup, SourceManagementLayout } from "./pages/source";
+import { TTXVNNewsPage } from "./pages/ttxvn";
 
 export const routers = createBrowserRouter([
   {
@@ -296,6 +298,10 @@ export const routers = createBrowserRouter([
           {
             path: pipelineListPath,
             element: <PipelineList />,
+          },
+          {
+            path: ttxvnPath,
+            element: <TTXVNNewsPage />,
           },
           {
             path: pipelineDetailPath,

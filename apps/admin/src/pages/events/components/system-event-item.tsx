@@ -1,13 +1,11 @@
-import { useEventContext } from "@/components/editor/plugins/event-plugin/event-context";
+import { useGetMe } from "@/pages/auth/auth.loader";
 import { useQuickReportModalState } from "@/pages/news/components/quick-report-modal/index.state";
 import { convertTimeToShowInUI } from "@/utils/tool-validate-string";
-import { BellOutlined, CloseOutlined, ShareAltOutlined, StarOutlined } from "@ant-design/icons";
-import { $generateHtmlFromNodes } from "@lexical/html";
-import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
-import { Checkbox, Empty, Space, Tag, Tooltip, Typography } from "antd";
-import { LexicalEditor, createEditor } from "lexical";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import { BellOutlined, CloseOutlined, ShareAltOutlined, StarTwoTone } from "@ant-design/icons";
+import { Checkbox, Space, Tooltip, message } from "antd";
+import React, { useEffect, useRef, useState } from "react";
 
+import { useMutationSystemEvents } from "../event.loader";
 import styles from "./system-event-item.module.less";
 
 interface Props {
@@ -34,6 +32,8 @@ export const SystemEventItem: React.FC<Props> = ({
 
   const [typeShow, setTypeShow] = useState<boolean>(true);
   const Ref = useRef<any>();
+  const { mutate } = useMutationSystemEvents();
+  const { data: dataIAm } = useGetMe();
 
   useEffect(() => {
     const a = eventChoosedList.findIndex((e) => e._id === item._id);
@@ -44,22 +44,8 @@ export const SystemEventItem: React.FC<Props> = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [eventChoosedList]);
+  const checkoutClone = item?.list_user_clone?.includes(dataIAm?._id);
 
-  const [editor] = useLexicalComposerContext();
-  const { eventEditorConfig } = useEventContext();
-  const eventEditor = useMemo(() => {
-    if (eventEditorConfig === null) return null;
-
-    const _eventEditor = createEditor({
-      namespace: eventEditorConfig?.namespace,
-      nodes: eventEditorConfig?.nodes,
-      onError: (error) => eventEditorConfig?.onError(error, editor),
-      theme: eventEditorConfig?.theme,
-    });
-    return _eventEditor;
-  }, [eventEditorConfig]);
-
-  if (eventEditor === null) return null;
   return (
     <div className={styles.mainContainer} key={item._id}>
       {typeShow ? (
@@ -74,7 +60,7 @@ export const SystemEventItem: React.FC<Props> = ({
                 }}
               />
             </div>
-            <div className={styles.time}>{convertTimeToShowInUI(item.date_created)}</div>
+            <div className={styles.time}>{convertTimeToShowInUI(item?.date_created)}</div>
 
             <div
               className={
@@ -88,10 +74,8 @@ export const SystemEventItem: React.FC<Props> = ({
               }}
             >
               <div className={styles.contentHeader}>
-                {item.event_name}.{" "}
-                <span className={styles.detailContentHeader}>
-                  {returnTextFromRichText(item.event_content)}
-                </span>
+                {item?.event_name}.{" "}
+                <span className={styles.detailContentHeader}>{item?.event_content}</span>
               </div>
             </div>
             <div className={styles.allButtonContainer}>
@@ -101,10 +85,19 @@ export const SystemEventItem: React.FC<Props> = ({
                   title="Thêm vào danh sách các sự kiện do người dùng tạo"
                   placement="topRight"
                 >
-                  <StarOutlined
+                  <StarTwoTone
+                    disabled={checkoutClone}
                     onClick={(event) => {
                       event.stopPropagation();
+                      if (checkoutClone) {
+                        message.warning(
+                          "Sự kiện đã được thêm vào danh sách các sự kiện do người dùng tạo",
+                        );
+                      } else {
+                        handleCloneToEventCreatedByUser();
+                      }
                     }}
+                    twoToneColor={checkoutClone ? "#00A94E" : "#A6A6A6"}
                     className={styles.reportIcon}
                   />
                 </Tooltip>
@@ -143,12 +136,30 @@ export const SystemEventItem: React.FC<Props> = ({
                   <Space>
                     <Tooltip
                       arrowPointAtCenter={true}
-                      title="Thêm sự kiện vào báo cáo"
+                      title="Thêm vào danh sách các sự kiện do người dùng tạo"
                       placement="topRight"
                     >
-                      <StarOutlined onClick={handleOpenReport} className={styles.reportIcon} />
+                      <StarTwoTone
+                        disabled={checkoutClone}
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          if (checkoutClone) {
+                            message.warning(
+                              "Sự kiện đã được thêm vào danh sách các sự kiện do người dùng tạo",
+                            );
+                          } else {
+                            handleCloneToEventCreatedByUser();
+                          }
+                        }}
+                        twoToneColor={checkoutClone ? "#00A94E" : "#A6A6A6"}
+                        className={styles.reportIcon}
+                      />
                     </Tooltip>
-                    <Tooltip title={"Thêm sự kiện vào báo cáo nhanh"}>
+                    <Tooltip
+                      arrowPointAtCenter={true}
+                      placement="topRight"
+                      title={"Thêm sự kiện vào báo cáo nhanh"}
+                    >
                       <BellOutlined className={styles.ringIcon} onClick={handleOpenQuickReport} />
                     </Tooltip>
                   </Space>
@@ -167,7 +178,7 @@ export const SystemEventItem: React.FC<Props> = ({
                 ) : null}
               </div>
 
-              {item.list_report?.[0] !== undefined && (
+              {/* {item.list_report?.[0] !== undefined && (
                 <div className={styles.container2}>
                   {item.list_report?.map((element: any, index: any) => {
                     return (
@@ -177,16 +188,17 @@ export const SystemEventItem: React.FC<Props> = ({
                     );
                   })}
                 </div>
-              )}
+              )} */}
 
               <div className={styles.detailContent} onClick={(event) => event.stopPropagation()}>
-                <div
-                  dangerouslySetInnerHTML={{
-                    __html: generateHTMLFromJSON(item?.event_content, eventEditor),
-                  }}
-                />
+                {item?.event_content?.split(".").map((e: string) => {
+                  if (e === "") {
+                    return null;
+                  }
+                  return <p>{e + "."}</p>;
+                })}
               </div>
-              <div className={styles.listNewsContainer}>
+              {/* <div className={styles.listNewsContainer}>
                 <div className={styles.titleText}>Danh sách các tin:</div>
                 {item.new_list?.length === 0 && item.news_added_by_user?.length === 0 && (
                   <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={"Trống"} />
@@ -205,7 +217,7 @@ export const SystemEventItem: React.FC<Props> = ({
                     </Typography.Link>
                   </div>
                 ))}
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
@@ -220,6 +232,10 @@ export const SystemEventItem: React.FC<Props> = ({
     }
   }
 
+  function handleCloneToEventCreatedByUser() {
+    mutate({ event_id: item._id });
+  }
+
   function handleOpenReport() {
     setEventChoosedList([item]);
     onClickReport([item]);
@@ -230,34 +246,3 @@ export const SystemEventItem: React.FC<Props> = ({
     setQuickEvent([item]);
   }
 };
-
-export const eventHTMLCache: Map<string, string> = new Map();
-
-function generateHTMLFromJSON(editorStateJSON: string, eventEditor: LexicalEditor): string {
-  const editorState = eventEditor.parseEditorState(editorStateJSON);
-  let html = eventHTMLCache.get(editorStateJSON);
-  if (html === undefined) {
-    html = editorState.read(() => $generateHtmlFromNodes(eventEditor, null));
-    eventHTMLCache.set(editorStateJSON, html);
-  }
-  return html;
-}
-
-function returnTextFromRichText(richText: any) {
-  const obj = JSON.parse(richText);
-  let plainText = "";
-
-  function extractTextFromObject(obj: any) {
-    if (obj.children) {
-      for (const child of obj.children) {
-        if (child.text) {
-          plainText += child.text + " ";
-        }
-        extractTextFromObject(child);
-      }
-    }
-  }
-
-  extractTextFromObject(obj.root);
-  return plainText.trim();
-}
