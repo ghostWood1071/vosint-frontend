@@ -13,6 +13,7 @@ import {
   pipelineListPath,
   proxyConfigPath,
   tiktokConfigPath,
+  ttxvnPath,
   twitterConfigPath,
   userManagementPath,
 } from "@/pages/router";
@@ -66,6 +67,7 @@ const Sidebar = () => {
     { label: "DANH MỤC QUỐC GIA", key: countryCateConfigPath },
     { label: "DANH MỤC ĐỐI TƯỢNG", key: objectCateConfigPath },
     { label: "THU THẬP TIN THEO PIPELINE", key: pipelineListPath },
+    { label: "THU THẬP TIN TTXVN", key: ttxvnPath },
     { label: "QUẢN LÝ NGƯỜI DÙNG", key: userManagementPath },
   ];
 

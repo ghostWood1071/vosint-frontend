@@ -50,11 +50,6 @@ export const EventPage: React.FC<Props> = () => {
   const setEvent = useReportModalState((state) => state.setEvent);
 
   const dataSource = unionBy(flatMap(data?.pages.map((a) => a?.data?.map((e: any) => e))), "_id");
-  useEffect(() => {
-    queryClient.removeQueries([EVENT_CACHE_KEYS]);
-    setSkip(1);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const initialConfig: InitialConfigType = {
     namespace: "synthetic-report",
@@ -165,7 +160,7 @@ export const EventPage: React.FC<Props> = () => {
               />
             </EventProvider>
           </LexicalComposer>
-          {skip >= 1 && isFetchingNextPage ? (
+          {skip >= 1 ? (
             <div>
               <button
                 ref={ref}
@@ -258,7 +253,7 @@ export const EventPage: React.FC<Props> = () => {
   function handleChangeFilterTime(value: any) {
     const start_date = value?.[0].format("DD/MM/YYYY");
     const end_date = value?.[1].format("DD/MM/YYYY");
-    setFilterEvent({ start_date: start_date, end_date: end_date });
+    setFilterEvent({ ...filterEvent, start_date: start_date, end_date: end_date });
   }
 
   function handleAddManyEvent() {

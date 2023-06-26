@@ -1,17 +1,4 @@
-import { EventNodes, EventPlugin } from "@/components/editor/plugins/event-plugin";
-import {
-  EventEditorConfig,
-  EventProvider,
-} from "@/components/editor/plugins/event-plugin/event-context";
-import { EventFilterNode } from "@/components/editor/plugins/event-plugin/event-filter-node";
-import { EventNode } from "@/components/editor/plugins/event-plugin/event-node";
-import { ContentEditable, EditorNodes, editorTheme } from "@aiacademy/editor";
 import { PlusOutlined } from "@ant-design/icons";
-import { InitialConfigType, LexicalComposer } from "@lexical/react/LexicalComposer";
-import LexicalErrorBoundary from "@lexical/react/LexicalErrorBoundary";
-import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
-import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
-import { TabIndentationPlugin } from "@lexical/react/LexicalTabIndentationPlugin";
 import { Button, DatePicker, Input, List, Modal, Space } from "antd";
 import { flatMap, unionBy } from "lodash";
 import React, { useEffect, useState } from "react";
@@ -45,37 +32,14 @@ export const SystemEventPage: React.FC<Props> = () => {
   const queryClient = useQueryClient();
   const { ref, inView } = useInView();
   const [eventChoosedList, setEventChoosedList] = useState<any[]>([]);
-  const { data, isFetchingNextPage, fetchNextPage, hasNextPage } =
-    useInfiniteEventsList(filterEvent);
+  const { data, isFetchingNextPage, fetchNextPage, hasNextPage } = useInfiniteEventsList({
+    ...filterEvent,
+    system_created: true,
+  });
   const { mutate } = useMutationEvents();
   const setEvent = useReportModalState((state) => state.setEvent);
 
   const dataSource = unionBy(flatMap(data?.pages.map((a) => a?.data?.map((e: any) => e))), "_id");
-  useEffect(() => {
-    queryClient.removeQueries([EVENT_CACHE_KEYS]);
-    setSkip(1);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const initialConfig: InitialConfigType = {
-    namespace: "synthetic-report",
-    onError: (error) => {
-      console.error(error);
-      throw new Error("synthetic-report?");
-    },
-    theme: editorTheme,
-    nodes: [...EditorNodes, EventNode, EventFilterNode],
-  };
-
-  const eventConfig: EventEditorConfig = {
-    namespace: "synthetic-report",
-    onError: (error) => {
-      console.error(error);
-      throw new Error("synthetic-event?");
-    },
-    theme: editorTheme,
-    nodes: [...EventNodes],
-  };
 
   React.useEffect(() => {
     if (inView && skip * 50 <= data?.pages[0].total) {
@@ -134,38 +98,26 @@ export const SystemEventPage: React.FC<Props> = () => {
       </div>
       <div className={styles.body}>
         <div className={styles.recordsContainer}>
-          <LexicalComposer initialConfig={initialConfig}>
-            <EventProvider>
-              <EventPlugin eventEditorConfig={eventConfig}>
-                <HistoryPlugin />
-                <RichTextPlugin
-                  contentEditable={<ContentEditable />}
-                  placeholder={null}
-                  ErrorBoundary={LexicalErrorBoundary}
+          <List
+            itemLayout="vertical"
+            size="small"
+            dataSource={dataSource}
+            renderItem={(item) => {
+              return (
+                <SystemEventItem
+                  item={item}
+                  onClickDelete={handleClickDelete}
+                  onClickEdit={handleClickEdit}
+                  eventChoosedList={eventChoosedList}
+                  lengthDataSource={dataSource?.length}
+                  setEventChoosedList={setEventChoosedList}
+                  onClickReport={handleClickReport}
                 />
-                <TabIndentationPlugin />
-              </EventPlugin>
-              <List
-                itemLayout="vertical"
-                size="small"
-                dataSource={dataSource}
-                renderItem={(item) => {
-                  return (
-                    <SystemEventItem
-                      item={item}
-                      onClickDelete={handleClickDelete}
-                      onClickEdit={handleClickEdit}
-                      eventChoosedList={eventChoosedList}
-                      lengthDataSource={dataSource?.length}
-                      setEventChoosedList={setEventChoosedList}
-                      onClickReport={handleClickReport}
-                    />
-                  );
-                }}
-              />
-            </EventProvider>
-          </LexicalComposer>
-          {skip >= 1 && isFetchingNextPage ? (
+              );
+            }}
+          />
+
+          {skip >= 1 ? (
             <div>
               <button
                 ref={ref}
@@ -180,27 +132,14 @@ export const SystemEventPage: React.FC<Props> = () => {
       </div>
 
       {isOpenModal ? (
-        <LexicalComposer initialConfig={initialConfig}>
-          <EventProvider>
-            <EventPlugin eventEditorConfig={eventConfig}>
-              <HistoryPlugin />
-              <RichTextPlugin
-                contentEditable={<ContentEditable />}
-                placeholder={null}
-                ErrorBoundary={LexicalErrorBoundary}
-              />
-              <TabIndentationPlugin />
-            </EventPlugin>
-            <EditEventModal
-              isOpen={isOpenModal}
-              setIsOpen={setIsOpenModal}
-              choosedEvent={choosedEvent}
-              functionEdit={handleEdit}
-              functionAdd={handleAdd}
-              typeModal={typeModal}
-            />
-          </EventProvider>
-        </LexicalComposer>
+        <EditEventModal
+          isOpen={isOpenModal}
+          setIsOpen={setIsOpenModal}
+          choosedEvent={choosedEvent}
+          functionEdit={handleEdit}
+          functionAdd={handleAdd}
+          typeModal={typeModal}
+        />
       ) : null}
       <ReportModal />
       <QuickReportModal />
@@ -258,7 +197,7 @@ export const SystemEventPage: React.FC<Props> = () => {
   function handleChangeFilterTime(value: any) {
     const start_date = value?.[0].format("DD/MM/YYYY");
     const end_date = value?.[1].format("DD/MM/YYYY");
-    setFilterEvent({ start_date: start_date, end_date: end_date });
+    setFilterEvent({ ...filterEvent, start_date: start_date, end_date: end_date });
   }
 
   function handleAddManyEvent(value: any) {
