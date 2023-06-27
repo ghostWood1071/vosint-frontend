@@ -83,7 +83,6 @@ export const NewsDetailPage = () => {
                     userId={dataIAm._id}
                     key={item?._id}
                     item={item}
-                    type="edit"
                     onDelete={handleDelete}
                     onAdd={handleAdd}
                     typeTranslate={newsFilter.type_translate}
