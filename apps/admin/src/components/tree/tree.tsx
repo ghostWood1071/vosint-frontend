@@ -49,7 +49,7 @@ export const Tree: React.FC<Props> = ({
       </Row>
       {treeData.length >= 1 && (
         <TreeAntd
-          className={styles.treeAnt}
+          className={`${styles.treeAnt} tree-antd-report`}
           blockNode
           treeData={treeData}
           titleRender={(node: any) => (

@@ -29,7 +29,7 @@ import LexicalErrorBoundary from "@lexical/react/LexicalErrorBoundary";
 import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
 import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 import { TabIndentationPlugin } from "@lexical/react/LexicalTabIndentationPlugin";
-import { Button, Input, Menu, MenuProps, Pagination, Row, Space, Spin } from "antd";
+import { Button, Col, Input, Menu, MenuProps, Pagination, Row, Space, Spin } from "antd";
 import { useState } from "react";
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 
@@ -100,8 +100,7 @@ const Sidebar = () => {
 
   const { data: dataNewsLetter } = useNewsSidebar();
 
-  const { newsletterId } = useParams();
-
+  const { id } = useParams();
   const linhVucTree = dataNewsLetter?.linh_vuc && buildTree(dataNewsLetter.linh_vuc);
 
   const _generateTree = (items: any, parentId = null) => {
@@ -260,19 +259,23 @@ const Sidebar = () => {
 
   return (
     <>
-      <Menu mode="inline" items={items} selectedKeys={[pathname]} onClick={handleClickMenu} />
-      <Row className={styles.report_periodic}>
-        {showComponent && linhVucTree && (
-          <Tree
-            title=""
-            treeData={linhVucTree}
-            isSpinning={isLoading}
-            onClickTitle={handleClickTitle}
-            tag={ETreeTag.LINH_VUC}
-            selectedKeys={newsletterId ? [newsletterId] : []}
-          />
-        )}
-      </Row>
+      <Col className={styles.listReport}>
+        <Row>
+          <Menu mode="inline" items={items} selectedKeys={[pathname]} onClick={handleClickMenu} />
+        </Row>
+        <div className={styles.report_periodic}>
+          {showComponent && linhVucTree && (
+            <Tree
+              title=""
+              treeData={linhVucTree}
+              isSpinning={isLoading}
+              onClickTitle={handleClickTitle}
+              tag={ETreeTag.LINH_VUC}
+              selectedKeys={id ? [id] : []}
+            />
+          )}
+        </div>
+      </Col>
     </>
   );
 

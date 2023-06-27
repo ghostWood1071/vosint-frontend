@@ -26,18 +26,17 @@ export function TreeTitleGioTin({ onClick, children, isEditable, ...node }: Prop
   useClickAway(ref, handleClickAway);
 
   return (
-    <Row className={styles.treeTitle} align="middle">
+    <Row className={`${styles.treeTitle} tree-title-gio-tin`} onClick={handleClick} align="middle">
       <Col span={isEditable ? 16 : 24}>
-        <Space className={styles.title}>
+        <Space className={`${styles.title} title-report`}>
           <Typography.Paragraph
             ellipsis={{ rows: 1 }}
             className={classNames({
               [styles.paragraph]: true,
               [styles.isOpen]: isOpen,
             })}
-            onClick={handleClick}
           >
-            <div className={styles.titleNode}>{node.title?.toString()}</div>
+            <div className={`${styles.titleNode} title-node-report`}>{node.title?.toString()}</div>
           </Typography.Paragraph>
         </Space>
       </Col>
