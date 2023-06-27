@@ -8,6 +8,7 @@ import { EventNode } from "@/components/editor/plugins/event-plugin/event-node";
 import { ETreeTag, useNewsSelection } from "@/components/news/news-state";
 import { convertTimeToShowInUI } from "@/utils/tool-validate-string";
 import { ContentEditable, EditorNodes, editorTheme } from "@aiacademy/editor";
+import "@aiacademy/editor/style.css";
 import {
   AreaChartOutlined,
   BellTwoTone,
@@ -30,7 +31,7 @@ import LexicalErrorBoundary from "@lexical/react/LexicalErrorBoundary";
 import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
 import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 import { TabIndentationPlugin } from "@lexical/react/LexicalTabIndentationPlugin";
-import { Button, Checkbox, Modal, Skeleton, Space, Tag, Tooltip, Typography, message } from "antd";
+import { Checkbox, Modal, Skeleton, Space, Tag, Tooltip, Typography, message } from "antd";
 import React, { useEffect, useRef, useState } from "react";
 import { shallow } from "zustand/shallow";
 
@@ -40,7 +41,7 @@ import styles from "./table-news.module.less";
 
 interface Props {
   item: any;
-  type?: "edit";
+  type?: string;
   onDelete?: (id: string, tag?: ETreeTag) => void;
   onAdd?: (id: string, tag: ETreeTag) => void;
   lengthDataSource: number;
@@ -441,6 +442,7 @@ export const NewsTableItem: React.FC<Props> = ({
                           />
                           <TabIndentationPlugin />
                         </EventPlugin>
+
                         <MindmapModal
                           isVisible={isVisibleModalMindmap}
                           item={item}

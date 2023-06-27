@@ -1,7 +1,7 @@
 import { useGetMe } from "@/pages/auth/auth.loader";
 import { useQuickReportModalState } from "@/pages/news/components/quick-report-modal/index.state";
 import { convertTimeToShowInUI } from "@/utils/tool-validate-string";
-import { BellOutlined, CloseOutlined, ShareAltOutlined, StarTwoTone } from "@ant-design/icons";
+import { BellOutlined, CloseOutlined, StarTwoTone } from "@ant-design/icons";
 import { Checkbox, Space, Tooltip, message } from "antd";
 import React, { useEffect, useRef, useState } from "react";
 
@@ -10,22 +10,14 @@ import styles from "./system-event-item.module.less";
 
 interface Props {
   item: any;
-  onClickDelete: (value: any) => void;
-  onClickEdit: (value: any) => void;
-  onClickReport: (value: any) => void;
-  lengthDataSource: number;
   eventChoosedList: any[];
   setEventChoosedList: (value: any) => void;
 }
 
 export const SystemEventItem: React.FC<Props> = ({
   item,
-  onClickDelete,
-  onClickEdit,
-  lengthDataSource,
   eventChoosedList,
   setEventChoosedList,
-  onClickReport,
 }) => {
   const setQuickEvent = useQuickReportModalState((state) => state.setEvent);
   const [checkbox, setCheckbox] = useState<boolean>(false);
@@ -178,18 +170,6 @@ export const SystemEventItem: React.FC<Props> = ({
                 ) : null}
               </div>
 
-              {/* {item.list_report?.[0] !== undefined && (
-                <div className={styles.container2}>
-                  {item.list_report?.map((element: any, index: any) => {
-                    return (
-                      <Tag key={index} className={styles.tag}>
-                        {element.title}
-                      </Tag>
-                    );
-                  })}
-                </div>
-              )} */}
-
               <div className={styles.detailContent} onClick={(event) => event.stopPropagation()}>
                 {item?.event_content?.split(".").map((e: string) => {
                   if (e === "") {
@@ -198,26 +178,6 @@ export const SystemEventItem: React.FC<Props> = ({
                   return <p>{e + "."}</p>;
                 })}
               </div>
-              {/* <div className={styles.listNewsContainer}>
-                <div className={styles.titleText}>Danh sách các tin:</div>
-                {item.new_list?.length === 0 && item.news_added_by_user?.length === 0 && (
-                  <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={"Trống"} />
-                )}
-                {item.new_list?.map((e: any) => (
-                  <div className={styles.titleNews}>
-                    <Typography.Link href={e?.["data:url"]} target="_blank" rel="noreferrer">
-                      <ShareAltOutlined /> {e?.["data:title"]}
-                    </Typography.Link>
-                  </div>
-                ))}
-                {item.news_added_by_user?.map((e: any) => (
-                  <div className={styles.titleNews}>
-                    <Typography.Link href={e?.["link"]} target="_blank" rel="noreferrer">
-                      <ShareAltOutlined /> {e?.title}
-                    </Typography.Link>
-                  </div>
-                ))}
-              </div> */}
             </div>
           </div>
         </div>
@@ -234,11 +194,6 @@ export const SystemEventItem: React.FC<Props> = ({
 
   function handleCloneToEventCreatedByUser() {
     mutate({ event_id: item._id });
-  }
-
-  function handleOpenReport() {
-    setEventChoosedList([item]);
-    onClickReport([item]);
   }
 
   function handleOpenQuickReport() {

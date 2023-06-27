@@ -1,5 +1,4 @@
-import { PlusOutlined } from "@ant-design/icons";
-import { Button, DatePicker, Input, List, Modal, Space } from "antd";
+import { Button, DatePicker, Input, List, Space } from "antd";
 import { flatMap, unionBy } from "lodash";
 import React, { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
@@ -7,11 +6,10 @@ import { useQueryClient } from "react-query";
 
 import { useSidebar } from "../app/app.store";
 import { QuickReportModal } from "../news/components/quick-report-modal";
+import { useQuickReportModalState } from "../news/components/quick-report-modal/index.state";
 import { ReportModal } from "../news/components/report-modal";
-import { useReportModalState } from "../news/components/report-modal/index.state";
-import { EditEventModal } from "./components/edit-event-modal";
 import { SystemEventItem } from "./components/system-event-item";
-import { EVENT_CACHE_KEYS, useInfiniteEventsList, useMutationEvents } from "./event.loader";
+import { EVENT_CACHE_KEYS, useInfiniteEventsList } from "./event.loader";
 import styles from "./event.module.less";
 
 interface Props {}
@@ -25,9 +23,6 @@ interface FilterEventProps {
 export const SystemEventPage: React.FC<Props> = () => {
   const [skip, setSkip] = useState<number>(1);
   const pinned = useSidebar((state) => state.pinned);
-  const [choosedEvent, setChoosedEvent] = useState<any>();
-  const [typeModal, setTypeModal] = useState<string>("");
-  const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
   const [filterEvent, setFilterEvent] = useState<FilterEventProps>();
   const queryClient = useQueryClient();
   const { ref, inView } = useInView();
@@ -36,12 +31,17 @@ export const SystemEventPage: React.FC<Props> = () => {
     ...filterEvent,
     system_created: true,
   });
-  const { mutate } = useMutationEvents();
-  const setEvent = useReportModalState((state) => state.setEvent);
+  const setQuickEvent = useQuickReportModalState((state) => state.setEvent);
 
   const dataSource = unionBy(flatMap(data?.pages.map((a) => a?.data?.map((e: any) => e))), "_id");
 
-  React.useEffect(() => {
+  useEffect(() => {
+    queryClient.removeQueries([EVENT_CACHE_KEYS.ListEvents]);
+    setSkip(1);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
     if (inView && skip * 50 <= data?.pages[0].total) {
       setSkip(skip + 1);
     }
@@ -54,12 +54,6 @@ export const SystemEventPage: React.FC<Props> = () => {
     setSkip(1);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filterEvent]);
-
-  useEffect(() => {
-    queryClient.removeQueries([EVENT_CACHE_KEYS.ListEvents]);
-    setSkip(1);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   useEffect(() => {
     fetchNextPage({ pageParam: { skip: skip, limit: 50 } });
@@ -85,15 +79,6 @@ export const SystemEventPage: React.FC<Props> = () => {
           >
             Thêm sự kiện vào báo cáo ({eventChoosedList.length})
           </Button>
-          <Button
-            onClick={handleClickCreate}
-            type="primary"
-            className={styles.addButton}
-            icon={<PlusOutlined />}
-            key="button"
-          >
-            Thêm sự kiện
-          </Button>
         </Space>
       </div>
       <div className={styles.body}>
@@ -106,12 +91,8 @@ export const SystemEventPage: React.FC<Props> = () => {
               return (
                 <SystemEventItem
                   item={item}
-                  onClickDelete={handleClickDelete}
-                  onClickEdit={handleClickEdit}
                   eventChoosedList={eventChoosedList}
-                  lengthDataSource={dataSource?.length}
                   setEventChoosedList={setEventChoosedList}
-                  onClickReport={handleClickReport}
                 />
               );
             }}
@@ -131,68 +112,10 @@ export const SystemEventPage: React.FC<Props> = () => {
         </div>
       </div>
 
-      {isOpenModal ? (
-        <EditEventModal
-          isOpen={isOpenModal}
-          setIsOpen={setIsOpenModal}
-          choosedEvent={choosedEvent}
-          functionEdit={handleEdit}
-          functionAdd={handleAdd}
-          typeModal={typeModal}
-        />
-      ) : null}
       <ReportModal />
       <QuickReportModal />
     </div>
   );
-
-  function handleClickCreate() {
-    setIsOpenModal(true);
-    setTypeModal("add");
-  }
-
-  function handleClickDelete(value: any) {
-    Modal.confirm({
-      title: "Bạn có chắc chắn muốn xoá sự kiện này?",
-      okText: "Xoá",
-      cancelText: "Huỷ",
-      onOk: () => {
-        handleDelete(value._id);
-      },
-    });
-  }
-
-  function handleClickEdit(value: any) {
-    setChoosedEvent(value);
-    setTypeModal("edit");
-    setIsOpenModal(true);
-  }
-
-  function handleDelete(value: string) {
-    mutate({ action: "delete", _id: value });
-  }
-
-  function handleEdit(value: any) {
-    mutate(
-      { action: "update", _id: value._id, data: value },
-      {
-        onSuccess: () => {
-          setIsOpenModal(false);
-        },
-      },
-    );
-  }
-
-  function handleAdd(value: any) {
-    mutate(
-      { action: "add", data: value },
-      {
-        onSuccess: () => {
-          setIsOpenModal(false);
-        },
-      },
-    );
-  }
 
   function handleChangeFilterTime(value: any) {
     const start_date = value?.[0].format("DD/MM/YYYY");
@@ -201,10 +124,6 @@ export const SystemEventPage: React.FC<Props> = () => {
   }
 
   function handleAddManyEvent(value: any) {
-    setEvent(eventChoosedList);
-  }
-
-  function handleClickReport(value: any) {
-    setEvent(value);
+    setQuickEvent(eventChoosedList);
   }
 };

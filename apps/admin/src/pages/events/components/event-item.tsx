@@ -309,10 +309,7 @@ function returnTextFromRichText(richText: any) {
   try {
     var obj = JSON.parse(richText);
   } catch {
-    console.log("here?");
     obj = JSON.parse(defaultContent(JSON.stringify(richText)));
   }
-  console.log("🚀 ~ file: event-item.tsx:313 ~ returnTextFromRichText ~ obj:", obj);
-
   return plainText(obj).trim();
 }
