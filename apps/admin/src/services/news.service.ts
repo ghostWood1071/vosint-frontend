@@ -1,5 +1,5 @@
+import { BASE_URL_PIPELINE } from "@/constants/config";
 import { apiClient, filterEmptyString } from "@/utils/api";
-import axios from "axios";
 
 import type { INewsSummaryDto } from "./news.type";
 
@@ -179,7 +179,7 @@ export const getNewsSummary = async ({ k, ...data }: INewsSummaryDto) => {
   const query = new URLSearchParams({ k });
 
   return apiClient
-    .post(`http://vosint.aiacademy.edu.vn/api${apiSummBaseUrl}/summary/?${query.toString()}`, data)
+    .post(`${BASE_URL_PIPELINE}${apiSummBaseUrl}/summary/?${query.toString()}`, data)
     .then((res) => res.data);
 };
 
