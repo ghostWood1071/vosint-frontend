@@ -47,9 +47,4 @@ export default defineConfig({
       localsConvention: "camelCase",
     },
   },
-  server: {
-    proxy: {
-      "/api": "http://vosint.aiacademy.edu.vn",
-    },
-  },
 });
