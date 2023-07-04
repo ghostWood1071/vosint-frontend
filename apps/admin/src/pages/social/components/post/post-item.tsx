@@ -62,13 +62,13 @@ export const PostItem: React.FC<PostItemProps> = ({ item }) => {
             </div>
             <div className={styles.likeHeaderContainer}>
               <Tag className={seen ? styles.seenTag : styles.tag}>
-                <span className={styles.numberLike}>{item.comments ?? 0}</span>
+                <span className={styles.numberLike}>{item.comments ?? item.reply ?? 0}</span>
                 <CommentOutlined className={styles.likeIcon} />
               </Tag>
             </div>
             <div className={styles.likeHeaderContainer}>
               <Tag className={seen ? styles.seenTag : styles.tag}>
-                <span className={styles.numberLike}>{item.share ?? 0}</span>
+                <span className={styles.numberLike}>{item.share ?? item.retweet ?? 0}</span>
                 <ShareAltOutlined className={styles.likeIcon} />
               </Tag>
             </div>
@@ -105,19 +105,19 @@ export const PostItem: React.FC<PostItemProps> = ({ item }) => {
                 <div className={styles.allNumberContainer}>
                   <div className={styles.likeHeaderContainer}>
                     <Tag className={styles.tag}>
-                      {item.like ?? 0}
+                      <span className={styles.numberLike}>{item.like ?? 0}</span>
                       <LikeOutlined className={styles.likeIcon} />
                     </Tag>
                   </div>
                   <div className={styles.likeHeaderContainer}>
                     <Tag className={styles.tag}>
-                      {item.comments ?? 0}
+                      <span className={styles.numberLike}>{item.comments ?? item.reply ?? 0}</span>
                       <CommentOutlined className={styles.likeIcon} />
                     </Tag>
                   </div>
                   <div className={styles.likeHeaderContainer}>
                     <Tag className={styles.tag}>
-                      {item.share ?? 0}
+                      <span className={styles.numberLike}>{item.share ?? item.retweet ?? 0}</span>
                       <ShareAltOutlined className={styles.likeIcon} />
                     </Tag>
                   </div>
