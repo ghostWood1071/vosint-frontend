@@ -111,11 +111,6 @@ export const SettingCreateForm: React.FC<Props> = ({
           labelCol={{
             span: 6.5,
           }}
-          rules={[
-            {
-              required: true,
-            },
-          ]}
         >
           <Select
             mode="multiple"

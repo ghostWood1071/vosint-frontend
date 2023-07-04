@@ -37,7 +37,7 @@ export function SocialFilter(): JSX.Element {
             </Select>
           </Form.Item>
           <Form.Item noStyle name="title">
-            <Input placeholder="Từ khoá" />
+            <Input.Search placeholder="Từ khoá" />
           </Form.Item>
         </Space>
       </Form>

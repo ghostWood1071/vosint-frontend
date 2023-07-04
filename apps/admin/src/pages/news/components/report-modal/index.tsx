@@ -93,7 +93,7 @@ export function ReportModal(): JSX.Element {
         <Col span={12}>
           <Input.Search
             placeholder={"Tìm theo tên báo cáo"}
-            onSearch={(value) => setFilter({ ...filter, title: value })}
+            onSearch={(value) => setFilter({ ...filter, title: value.trim() })}
           />
           <br />
           <br />
