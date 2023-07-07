@@ -4,4 +4,4 @@
 cp .env ./apps/admin
 
 # Build docker
-docker build -t vosint-frontend -f ./apps/admin/Dockerfile.prod .
+docker build --no-cache -t vosint-frontend -f ./apps/admin/Dockerfile.prod .
