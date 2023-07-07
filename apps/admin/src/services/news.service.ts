@@ -171,7 +171,7 @@ export const deleteNewsInVitalUser = async (newsIds: string[]) => {
 };
 
 export const getNewsletterDetail = async (id: string) => {
-  const result = await apiClient.get(`${apiNewsBaseV2Url}/newsletters/${id}`);
+  const result = await apiClient.get(`${apiNewsBaseV2Url}/newsletterssssssssssss/${id}`);
   return result.data;
 };
 
