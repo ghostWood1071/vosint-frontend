@@ -1,4 +1,5 @@
 import { BASE_URL_PIPELINE } from "@/constants/config";
+import { BASE_URL_SUMM } from "@/constants/config";
 import { apiClient, filterEmptyString } from "@/utils/api";
 
 import type { INewsSummaryDto } from "./news.type";
@@ -171,7 +172,7 @@ export const deleteNewsInVitalUser = async (newsIds: string[]) => {
 };
 
 export const getNewsletterDetail = async (id: string) => {
-  const result = await apiClient.get(`${apiNewsBaseV2Url}/newsletterssssssssssss/${id}`);
+  const result = await apiClient.get(`${apiNewsBaseV2Url}/newsletters/${id}`);
   return result.data;
 };
 
@@ -179,7 +180,7 @@ export const getNewsSummary = async ({ k, ...data }: INewsSummaryDto) => {
   const query = new URLSearchParams({ k });
 
   return apiClient
-    .post(`${BASE_URL_PIPELINE}${apiSummBaseUrl}/summary/?${query.toString()}`, data)
+    .post(`${BASE_URL_SUMM}${apiSummBaseUrl}/summary/?${query.toString()}`, data)
     .then((res) => res.data);
 };
 
