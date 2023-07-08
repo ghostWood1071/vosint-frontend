@@ -3,7 +3,7 @@ import {
   rulesRequiredListKeyword,
 } from "@/components/news/form/form-rules";
 import { LOCAL_USER_PROFILE } from "@/constants/config";
-import { getSyntheticReportDetailUrl } from "@/pages/router";
+import { getReportQuickUrl } from "@/pages/router";
 import {
   ArrowLeftOutlined,
   DeleteOutlined,
@@ -58,7 +58,7 @@ export function QuickReport(): JSX.Element {
 
   const { mutate } = useCreateReport({
     onSuccess: (data) => {
-      navigate(getSyntheticReportDetailUrl(data));
+      navigate(getReportQuickUrl(data));
       message.success("Tạo báo cáo thành công");
       queryClient.invalidateQueries(CACHE_KEYS.REPORTS);
     },
