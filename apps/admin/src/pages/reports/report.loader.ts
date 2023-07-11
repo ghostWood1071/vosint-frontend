@@ -13,6 +13,7 @@ import {
   UpdateReportAndEvent,
   UpdateReportAndEventType,
   addEventIdsToReport,
+  createQuickReport,
   createReport,
   createReportEvents,
   getQuickReports,
@@ -150,7 +151,7 @@ export const useCreateReport = (options?: UseMutationOptions<string, unknown, IR
 export const useCreateQuickReport = (
   options?: UseMutationOptions<string, unknown, IQuickReportDto>,
 ) => {
-  return useMutation((data: IQuickReportDto) => createReport(data), options);
+  return useMutation((data: IQuickReportDto) => createQuickReport(data), options);
 };
 
 export const useUpdateReport = (
