@@ -1,4 +1,5 @@
 import {
+  ActionRunIcon,
   PipelineCloneIcon,
   PipelineHistoryIcon,
   PipelineRunIcon,
@@ -7,7 +8,7 @@ import {
 import { SwitchCustom } from "@/components/";
 import { getPipelineDetailPath } from "@/pages/router";
 import { IPipelines } from "@/services/pipeline.type";
-import Icon, { DeleteOutlined } from "@ant-design/icons";
+import Icon, { DeleteOutlined, PlayCircleTwoTone } from "@ant-design/icons";
 import { Button, Modal, Space, Table, TableColumnsType } from "antd";
 import React from "react";
 import { useTranslation } from "react-i18next";
@@ -19,11 +20,11 @@ interface Props {
   totalRecord?: number;
 
   onHistory?(id: string): void;
-
   onChangeEnabled: (_id: string, enabled: boolean) => void;
   onClonePipeline: (_id: string) => void;
   onDeletePipeline: (_id: string) => Promise<any>;
   onChangeActive: (_id: string, enabled: boolean) => void;
+  onVerifyPipeline: (_id: string) => void;
 }
 
 export const PipelineTable: React.FC<Props> = ({
@@ -35,6 +36,7 @@ export const PipelineTable: React.FC<Props> = ({
   onClonePipeline,
   onDeletePipeline,
   onChangeActive,
+  onVerifyPipeline,
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const page = searchParams.get("page_number");
@@ -133,6 +135,13 @@ export const PipelineTable: React.FC<Props> = ({
       render: (_id: string, record) => {
         return (
           <Space>
+            <Button
+              title={`Chạy pipeline "${record.name}"`}
+              icon={<PlayCircleTwoTone twoToneColor="#52c41a" />}
+              type="text"
+              onClick={() => onVerifyPipeline(_id)}
+            />
+
             <Icon
               style={{ fontSize: 16 }}
               component={PipelineCloneIcon}
