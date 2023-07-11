@@ -7,7 +7,7 @@ import {
   FormOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { Avatar, Button, Modal, Space, Table, TableColumnsType, Typography } from "antd";
+import { Avatar, Button, Modal, Space, Table, TableColumnsType, Tooltip, Typography } from "antd";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router-dom";
@@ -65,21 +65,13 @@ export const UserManagerTable: React.FC<Props> = ({
         return (
           <Space>
             {onUpdate && (
-              <Button
-                icon={<EditOutlined />}
-                onClick={handleClickUpdate}
-                title="Sửa người dùng"
-                type="text"
-                className={styles.edit}
-              />
+              <Tooltip title={"Sửa người dùng"}>
+                <EditOutlined onClick={handleClickUpdate} className={styles.edit} />
+              </Tooltip>
             )}
-            <Button
-              icon={<DeleteOutlined />}
-              danger
-              onClick={handleDelete}
-              title="Xoá người dùng"
-              type="text"
-            />
+            <Tooltip title={"Xoá người dùng"}>
+              <DeleteOutlined onClick={handleDelete} className={styles.delete} />
+            </Tooltip>
           </Space>
         );
 
