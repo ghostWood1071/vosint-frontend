@@ -8,7 +8,7 @@ interface Props {
 }
 
 const formItemLayoutWithOutLabel = {
-  labelCol: { span: 4 },
+  labelCol: { span: 5 },
   wrapperCol: {
     xs: { span: 24, offset: 0 },
     sm: { span: 24, offset: 0 },
@@ -78,8 +78,8 @@ export const UserManagerForm: React.FC<Props> = ({ form, onFinish, isUpdate }) =
             message: "Mật khẩu phải có ít nhất 8 ký tự!",
           },
           {
-            pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/,
-            message: "Mật khẩu phải có ít nhất 1 chữ hoa, 1 chữ thường và 1 số!",
+            pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[a-zA-Z\d!@#$%^&*]{8,}$/,
+            message: "Mật khẩu phải có ít nhất 1 kí tự đặc biệt, 1 chữ hoa, 1 chữ thường và 1 số!",
           },
         ]}
       >

@@ -62,7 +62,6 @@ export const Card: React.FC<CardProps> = ({ titleSource, data }) => {
           />
           <Modal
             title="Chọn ngày để lọc"
-            centered
             open={isVisible}
             bodyStyle={{
               height: 360,

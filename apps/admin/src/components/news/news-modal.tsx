@@ -90,7 +90,6 @@ export function NewsletterModal({ onFinish, confirmLoading }: Props): JSX.Elemen
       confirmLoading={confirmLoading}
       maskClosable={false}
       destroyOnClose
-      getContainer="#modal-mount"
       onOk={handleFormFinish}
       onCancel={handleCancel}
       closable={false}
