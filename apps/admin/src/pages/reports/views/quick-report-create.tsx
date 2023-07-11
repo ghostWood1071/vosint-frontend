@@ -28,7 +28,7 @@ import {
   useQuickHeadingContext,
   useQuickHeadingDispatchContext,
 } from "../components/quick-heading";
-import { CACHE_KEYS, useCreateReport } from "../report.loader";
+import { CACHE_KEYS, useCreateQuickReport } from "../report.loader";
 import styles from "./quick-report.module.less";
 
 const formItemLayoutWithOutLabel = {
@@ -56,7 +56,7 @@ export function QuickReport(): JSX.Element {
   const [title, setTitle] = useState("Báo cáo nhanh");
   const [isOpen, setIsOpen] = useState(true);
 
-  const { mutate } = useCreateReport({
+  const { mutate } = useCreateQuickReport({
     onSuccess: (data) => {
       navigate(getReportQuickUrl(data));
       message.success("Tạo báo cáo thành công");
