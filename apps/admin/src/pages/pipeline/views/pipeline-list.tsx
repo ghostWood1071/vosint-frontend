@@ -1,6 +1,5 @@
 import { ActionReloadIcon, ActionRunIcon, ActionStopIcon } from "@/assets/svg";
 import { VI_LOCALE } from "@/locales/cron";
-import { pipelineCreatePath } from "@/pages/router";
 import { PlusOutlined } from "@ant-design/icons";
 import { Button, Form, Input, Modal, PageHeader, message } from "antd";
 import classNames from "classnames";
@@ -9,9 +8,8 @@ import { useTranslation } from "react-i18next";
 import { Cron } from "react-js-cron";
 import "react-js-cron/dist/styles.css";
 import { useQueryClient } from "react-query";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 
-import { PipelineForm } from "../components/pipeline-form/pipeline-form";
 import { PipelineHistory } from "../components/pipeline-history";
 import { PipelineTable } from "../components/pipeline-table";
 import {
@@ -23,6 +21,7 @@ import {
   usePipelineHistory,
   usePipelines,
   usePutPipeline,
+  useVerifyPipeline,
 } from "../pipeline.loader";
 import styles from "./pipeline-list.module.less";
 
@@ -68,6 +67,28 @@ export const PipelineList: React.FC = () => {
     },
   });
 
+  const { mutate: handleVerifyPipeline } = useVerifyPipeline({
+    onSuccess: () => {
+      message.success({
+        content: "Chạy pipeline thành công",
+        key: CACHE_KEYS.PipelineVerify,
+      });
+    },
+    onError: () => {
+      message.error({
+        content: "Chạy pipeline thất bại",
+        key: CACHE_KEYS.PipelineVerify,
+      });
+    },
+    onMutate: () => {
+      message.loading({
+        content: "Đang chạy...",
+        key: CACHE_KEYS.PipelineVerify,
+        duration: 0,
+      });
+    },
+  });
+
   return (
     <div id="pipeline-gathering" className={classNames(styles.informationGathering, "modal-mount")}>
       <PageHeader
@@ -108,6 +129,7 @@ export const PipelineList: React.FC = () => {
           onChangeActive={handleChangeActive}
           onClonePipeline={handleClonePipeline}
           onDeletePipeline={handleDeletePipeline}
+          onVerifyPipeline={handleVerifyPipeline}
           totalRecord={pipelines?.total}
         />
       </PageHeader>
