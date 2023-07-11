@@ -1,6 +1,6 @@
 import { apiClient, filterEmptyString } from "@/utils/api";
 
-import { IEventDto, IReportDto, TEvents, TReportEventsDto } from "./report-type";
+import { IEventDto, IQuickReportDto, IReportDto, TEvents, TReportEventsDto } from "./report-type";
 
 const apiEventBaseV2Url = "";
 const apiReportBaseV2Url = "";
@@ -113,5 +113,10 @@ export const getQuickReports = async (filter: Record<string, any>) => {
   const result = await apiClient.get(`${apiReportBaseV2Url}/report/quick-report`, {
     params: filter,
   });
+  return result.data;
+};
+
+export const createQuickReport = async (data: IQuickReportDto) => {
+  const result = await apiClient.post(`${apiReportBaseV2Url}/report/quick-report`, data);
   return result.data;
 };

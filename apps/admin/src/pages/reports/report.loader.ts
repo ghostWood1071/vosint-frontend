@@ -147,6 +147,12 @@ export const useCreateReport = (options?: UseMutationOptions<string, unknown, IR
   return useMutation((data: IReportDto) => createReport(data), options);
 };
 
+export const useCreateQuickReport = (
+  options?: UseMutationOptions<string, unknown, IQuickReportDto>,
+) => {
+  return useMutation((data: IQuickReportDto) => createReport(data), options);
+};
+
 export const useUpdateReport = (
   id: string,
   options?: UseMutationOptions<
