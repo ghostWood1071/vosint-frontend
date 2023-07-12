@@ -70,13 +70,16 @@ function QuickReport(): JSX.Element {
   const [userProfile] = useLocalStorage<Record<string, string>>(LOCAL_USER_PROFILE);
 
   const { id } = useParams<{ id: string }>();
-  useQuickReport(id!, {
+  const { data } = useQuickReport(id!, {
     enabled: !!id,
-    onSuccess: (data) => {
-      setTitle(data.title);
-      setHeadings(data.headings);
-    },
   });
+
+  useEffect(() => {
+    if (!data) return;
+
+    setTitle(data.title);
+    setHeadings(data.headings);
+  }, [data]);
 
   const [form] = Form.useForm();
   const [isOpen, setIsOpen] = useState(true);
