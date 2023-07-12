@@ -37,6 +37,7 @@ export interface IQuickHeading {
   exclusion_keyword: string;
   eventIds: string[];
   username: string;
+  ttxvn: boolean;
 }
 
 export function QuickHeadings({ headingsData, onDeleteEvent }: Props): JSX.Element {
