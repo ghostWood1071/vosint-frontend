@@ -12,7 +12,19 @@ import {
   SaveOutlined,
   UnorderedListOutlined,
 } from "@ant-design/icons";
-import { Button, Col, Form, Input, Modal, Row, Select, Space, Typography, message } from "antd";
+import {
+  Button,
+  Col,
+  Form,
+  Input,
+  Modal,
+  Row,
+  Select,
+  Space,
+  Switch,
+  Typography,
+  message,
+} from "antd";
 import produce from "immer";
 import { nanoid } from "nanoid";
 import { useEffect, useState } from "react";
@@ -53,6 +65,7 @@ export function QuickReport(): JSX.Element {
 
   const [headings, setHeadings] = useState<IQuickHeading[]>([]);
   const [form] = Form.useForm();
+  const isTtxvn = Form.useWatch("ttxvn", form);
   const [title, setTitle] = useState("Tạo báo cáo nhanh");
   const [isOpen, setIsOpen] = useState(true);
 
@@ -92,7 +105,7 @@ export function QuickReport(): JSX.Element {
 
     if (mode === "create") {
       form.resetFields();
-      form.setFieldValue("level", currentHeading ?? 1);
+      form.setFieldValue("level", currentHeading || 1);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mode]);
@@ -199,55 +212,62 @@ export function QuickReport(): JSX.Element {
               ]}
             />
           </Form.Item>
-          <Form.List name="required_keyword" rules={rulesRequiredListKeyword}>
-            {(fields, { add, remove }, { errors }) => (
-              <>
-                {fields.map((field, index) => (
-                  <Form.Item
-                    required
-                    key={field.key}
-                    {...(index === 0 ? "" : formItemLayoutWithOutLabel2)}
-                    label={index === 0 ? "Từ khoá bắt buộc:" : ""}
-                  >
-                    <Form.Item {...field} rules={rulesRequiredItemKeyword} noStyle>
-                      <Input
-                        placeholder="Các từ phân tách nhau bởi dấu phẩy"
-                        className={styles.formItem}
-                      />
-                    </Form.Item>
-
-                    {fields.length > 1 ? (
-                      <Button
-                        icon={<DeleteOutlined className={styles.deleteButton} />}
-                        onClick={() => remove(field.name)}
-                        type="text"
-                        title="Xoá từ khoá bắt buộc"
-                        danger
-                      />
-                    ) : null}
-                  </Form.Item>
-                ))}
-                <Form.Item
-                  {...(fields.length < 1 ? "" : formItemLayoutWithOutLabel2)}
-                  label={fields.length < 1 ? "Từ khoá bắt buộc:" : ""}
-                  required
-                >
-                  <Button
-                    type="dashed"
-                    onClick={() => add()}
-                    icon={<PlusOutlined />}
-                    className={styles.formItem}
-                  >
-                    Thêm từ khoá bắt buộc
-                  </Button>
-                  <Form.ErrorList errors={errors} />
-                </Form.Item>
-              </>
-            )}
-          </Form.List>
-          <Form.Item label="Từ khoá loại trừ" name={"exclusion_keyword"}>
-            <Input placeholder="Các từ phân tách nhau bởi dấu phẩy" />
+          <Form.Item name="ttxvn" label="Lấy tin từ thông tấn xã" valuePropName="checked">
+            <Switch />
           </Form.Item>
+          {isTtxvn && (
+            <>
+              <Form.List name="required_keyword" rules={rulesRequiredListKeyword}>
+                {(fields, { add, remove }, { errors }) => (
+                  <>
+                    {fields.map((field, index) => (
+                      <Form.Item
+                        required
+                        key={field.key}
+                        {...(index === 0 ? "" : formItemLayoutWithOutLabel2)}
+                        label={index === 0 ? "Từ khoá bắt buộc:" : ""}
+                      >
+                        <Form.Item {...field} rules={rulesRequiredItemKeyword} noStyle>
+                          <Input
+                            placeholder="Các từ phân tách nhau bởi dấu phẩy"
+                            className={styles.formItem}
+                          />
+                        </Form.Item>
+
+                        {fields.length > 1 ? (
+                          <Button
+                            icon={<DeleteOutlined className={styles.deleteButton} />}
+                            onClick={() => remove(field.name)}
+                            type="text"
+                            title="Xoá từ khoá bắt buộc"
+                            danger
+                          />
+                        ) : null}
+                      </Form.Item>
+                    ))}
+                    <Form.Item
+                      {...(fields.length < 1 ? "" : formItemLayoutWithOutLabel2)}
+                      label={fields.length < 1 ? "Từ khoá bắt buộc:" : ""}
+                      required
+                    >
+                      <Button
+                        type="dashed"
+                        onClick={() => add()}
+                        icon={<PlusOutlined />}
+                        className={styles.formItem}
+                      >
+                        Thêm từ khoá bắt buộc
+                      </Button>
+                      <Form.ErrorList errors={errors} />
+                    </Form.Item>
+                  </>
+                )}
+              </Form.List>
+              <Form.Item label="Từ khoá loại trừ" name={"exclusion_keyword"}>
+                <Input placeholder="Các từ phân tách nhau bởi dấu phẩy" />
+              </Form.Item>
+            </>
+          )}
         </Form>
       </Modal>
     </div>
@@ -274,6 +294,7 @@ export function QuickReport(): JSX.Element {
             required_keyword: values.required_keyword,
             username: userProfile?.username ?? "",
             eventIds: [],
+            ttxvn: values.ttxvn ?? false,
           };
           if (selectedIndex !== null) {
             draft.splice(selectedIndex + 1, 0, temp);
@@ -286,6 +307,7 @@ export function QuickReport(): JSX.Element {
         if (mode === "update") {
           draft[selectedIndex!].title = values.title;
           draft[selectedIndex!].level = values.level;
+          draft[selectedIndex!].ttxvn = values.ttxvn;
           draft[selectedIndex!].required_keyword = values.required_keyword;
           draft[selectedIndex!].exclusion_keyword = values.exclusion_keyword;
           draft[selectedIndex!].username = userProfile?.username ?? "";
