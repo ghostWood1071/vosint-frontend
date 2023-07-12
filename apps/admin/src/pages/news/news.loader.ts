@@ -14,6 +14,7 @@ import {
   deleteNewsInBookmarkUser,
   deleteNewsInVitalUser,
   deleteNewsletter,
+  generateSystemEventNews,
   getAllEventNews,
   getEventByIdNews,
   getEventsByNewsletterWithApiJob,
@@ -339,5 +340,29 @@ export const useMutationChangeStatusSeenPost = () => {
 export const useNewsListForSearchingInEvent = (filter: any) => {
   return useQuery<any>([CACHE_KEYS.NewsListSearch, filter], () =>
     getNewsListWithApiJob({ page_number: 1, page_size: 50, ...filter }),
+  );
+};
+
+export const useMutationGenerateSystemEvent = () => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    ({ _id }: any) => {
+      return generateSystemEventNews(_id);
+    },
+    {
+      onSuccess: (data: any, variables) => {
+        queryClient.invalidateQueries([CACHE_KEYS.NewsEvent]);
+        message.success({
+          content: "Sinh sự kiện thành công",
+          key: CACHE_KEYS.NewsEvent,
+        });
+      },
+      onError: () => {
+        message.error({
+          content: "Không thể thực hiện. Hãy nhập lại!",
+          key: CACHE_KEYS.NewsEvent,
+        });
+      },
+    },
   );
 };

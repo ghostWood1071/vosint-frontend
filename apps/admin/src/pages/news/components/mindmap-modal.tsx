@@ -9,6 +9,7 @@ import {
   CaretRightOutlined,
   DeleteOutlined,
   EditOutlined,
+  ExportOutlined,
   FileTextOutlined,
   LoadingOutlined,
   PlusOutlined,
@@ -44,6 +45,7 @@ import {
   useEventByIdNewsList,
   useMutationAddManyEvent,
   useMutationEventNews,
+  useMutationGenerateSystemEvent,
   useNewsListForSearchingInEvent,
 } from "../news.loader";
 import { AddMindmap } from "./add-mindmap";
@@ -90,10 +92,11 @@ export const MindmapModal: React.FC<props> = ({
   const [typeModal, setTypeModal] = useState("edit");
   const { data: dataFilterByID } = useEventByIdNewsList(item._id);
   const [isAddingEvent, setIsAddingEvent] = useState<boolean>(false);
-  const [dataEventFromUser, setDataEventFromUser] = useState<any[]>();
-  const [dataEventFromSystem, setDataEventFromSystem] = useState<any[]>();
+  const [dataEventFromUser, setDataEventFromUser] = useState<any[]>([]);
+  const [dataEventFromSystem, setDataEventFromSystem] = useState<any[]>([]);
   const { mutate: mutateOneEvent } = useMutationEventNews();
   const { mutate: mutateManyEvent } = useMutationAddManyEvent();
+  const { mutate: mutateGenerateSystemEvent } = useMutationGenerateSystemEvent();
   const [form] = Form.useForm<Record<string, any>>();
   const [valueEventSelect, setValueEventSelect] = useState<SelectCustomProps>({
     value: "",
@@ -540,7 +543,11 @@ export const MindmapModal: React.FC<props> = ({
                   }
                   onClick={(event) => {
                     event.stopPropagation();
-                    handleClickTranslation();
+                    if (item.source_language !== "vi") {
+                      handleClickTranslation();
+                    } else {
+                      message.info("Nội dung đã ở dạng tiếng việt!");
+                    }
                   }}
                 />
               )}{" "}
@@ -604,7 +611,26 @@ export const MindmapModal: React.FC<props> = ({
                 </div>
               </div>
               <div className={styles.eventContainer} style={{ border: 0 }}>
-                <div className={styles.textHeader}>Sự kiện do hệ thống tạo</div>
+                <div className={styles.headerSystemEventContainer}>
+                  <div className={styles.textHeader}>Sự kiện do hệ thống tạo</div>
+
+                  <ExportOutlined
+                    style={{ marginLeft: 20 }}
+                    className={
+                      dataEventFromSystem?.length > 0
+                        ? styles.choosedIconFilterContent
+                        : styles.iconFilterContent
+                    }
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      if (dataEventFromSystem?.length === 0) {
+                        handleGenerateSystemEvent();
+                      } else {
+                        message.info("Đã sinh sự kiện!");
+                      }
+                    }}
+                  />
+                </div>
                 <div className={styles.detailAllEvent}>
                   {dataEventFromSystem?.map((element: any) => {
                     return (
@@ -635,6 +661,10 @@ export const MindmapModal: React.FC<props> = ({
       <QuickReportModal />
     </Modal>
   );
+
+  function handleGenerateSystemEvent() {
+    mutateGenerateSystemEvent({ _id: item._id });
+  }
 
   function addNewsFromServer() {
     const indexNewsInTable = listNewsFromServer.findIndex((e) => e._id === valueNewsSelect);
@@ -880,15 +910,19 @@ const Items: React.FC<ItemsProps> = ({ item, handleEdit, handleDelete }) => {
                     value={item.event_content}
                     readOnly={true}
                   /> */}
-                  <div
-                    dangerouslySetInnerHTML={{
-                      __html: generateHTMLFromJSON(item?.event_content, eventEditor),
-                    }}
-                  />
+                  {item.user_id === undefined ? (
+                    item.event_content
+                  ) : (
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: generateHTMLFromJSON(item?.event_content, eventEditor),
+                      }}
+                    />
+                  )}
                 </div>
               </div>
               <div className={styles.lineFieldContent}>
-                <div className={styles.titleField}>Chủ thể"</div>
+                <div className={styles.titleField}>Chủ thể</div>
                 <div className={styles.contentField}>: {item.chu_the}</div>
               </div>
               <div className={styles.lineFieldContent}>
@@ -906,26 +940,31 @@ const Items: React.FC<ItemsProps> = ({ item, handleEdit, handleDelete }) => {
         </Collapse>
       </div>
       <div className={styles.editContainer}>
-        <FileTextOutlined
-          onClick={handleOpenReport}
-          title="Thêm sự kiện vào báo cáo"
-          className={styles.reportIcon}
-        />
-        <BellOutlined onClick={handleOpenQuickReport} title="Thêm sự kiện vào báo cáo nhanh" />
-        <EditOutlined
-          onClick={() => {
-            handleEdit(item);
-          }}
-          title={"Sửa sự kiện"}
-          className={styles.edit}
-        />
-        <DeleteOutlined
-          onClick={() => {
-            handleDelete(item);
-          }}
-          title={"Xoá sự kiện"}
-          className={styles.delete}
-        />
+        {item.user_id !== undefined && (
+          <>
+            <FileTextOutlined
+              onClick={handleOpenReport}
+              title="Thêm sự kiện vào báo cáo"
+              className={styles.reportIcon}
+            />
+            <BellOutlined onClick={handleOpenQuickReport} title="Thêm sự kiện vào báo cáo nhanh" />
+
+            <EditOutlined
+              onClick={() => {
+                handleEdit(item);
+              }}
+              title={"Sửa sự kiện"}
+              className={styles.edit}
+            />
+            <DeleteOutlined
+              onClick={() => {
+                handleDelete(item);
+              }}
+              title={"Xoá sự kiện"}
+              className={styles.delete}
+            />
+          </>
+        )}
       </div>
     </div>
   );

@@ -1,8 +1,15 @@
 import { BASE_URL_PIPELINE } from "@/constants/config";
 import { BASE_URL_SUMM } from "@/constants/config";
 import { apiClient, filterEmptyString } from "@/utils/api";
+import axios from "axios";
 
 import type { INewsSummaryDto } from "./news.type";
+
+const apiGenerateSystemEvent = axios.create({
+  baseURL: "http://192.168.1.61:8003",
+  timeout: 1000 * 30,
+  withCredentials: true,
+});
 
 const apiNewsBaseV2Url = "";
 const apiSummBaseUrl = "/summ";
@@ -244,6 +251,19 @@ export const getContentTranslation = async (inputLanguage: string, data: any) =>
   const result = await apiClient.post(`/${apiNewsTranslationUrl}`, {
     lang: inputLanguage,
     content: data,
+  });
+  return result.data;
+};
+
+export const generateSystemEventNews = async (news_id: string) => {
+  const result = await apiGenerateSystemEvent.post(`/extract_event/`, "", {
+    params: {
+      Id_news: news_id,
+    },
+    headers: {
+      accept: "application/json",
+      "content-type": "application/x-www-form-urlencoded",
+    },
   });
   return result.data;
 };
