@@ -199,7 +199,7 @@ export const routers = createBrowserRouter([
         children: [
           {
             path: reportPath,
-            element: <Navigate to={reportQuickPath} />,
+            element: <Navigate to={reportQuickCreatePath} />,
           },
           {
             path: reportPeriodicPath,

@@ -25,9 +25,9 @@ pipeline {
       agent { label 'ds2' }
       steps {
         copyArtifacts filter: 'apps/admin/dist/**', fingerprintArtifacts: true, projectName: env.JOB_NAME, selector: specific ('${BUILD_NUMBER}')
-        sh 'rm -rf /var/www/vosint4'
-        sh 'mkdir -p /var/www/vosint4'
-        sh 'scp -r apps/admin/dist/. /var/www/vosint4'
+        sh 'rm -rf /var/www/vosint3'
+        sh 'mkdir -p /var/www/vosint3'
+        sh 'scp -r apps/admin/dist/. /var/www/vosint3'
       }
     }
   }
