@@ -53,14 +53,14 @@ export function QuickReport(): JSX.Element {
 
   const [headings, setHeadings] = useState<IQuickHeading[]>([]);
   const [form] = Form.useForm();
-  const [title, setTitle] = useState("Báo cáo nhanh");
+  const [title, setTitle] = useState("Tạo báo cáo nhanh");
   const [isOpen, setIsOpen] = useState(true);
 
   const { mutate } = useCreateQuickReport({
     onSuccess: (data) => {
       navigate(getReportQuickUrl(data));
-      message.success("Tạo báo cáo thành công");
-      queryClient.invalidateQueries(CACHE_KEYS.REPORTS);
+      message.success("Tạo báo cáo nhanh thành công");
+      queryClient.invalidateQueries(CACHE_KEYS.QUICK_REPORT);
     },
   });
 
