@@ -26,6 +26,7 @@ import {
   Row,
   Select,
   Space,
+  Spin,
   Switch,
   Typography,
   message,
@@ -78,7 +79,7 @@ function QuickReport(): JSX.Element {
   const [isNotRemove, setIsNotRemove] = useState(false);
 
   const { id } = useParams<{ id: string }>();
-  const { data } = useQuickReport(id!, {
+  const { data, isLoading } = useQuickReport(id!, {
     enabled: !!id,
   });
 
@@ -112,7 +113,7 @@ function QuickReport(): JSX.Element {
   const handleDeleteEvent = (headingId: string) => (eventId: string) => {
     const deletedEventsHeadings = produce(headings, (draft) => {
       const headingIndex = draft.findIndex((heading) => heading.id === headingId);
-      if (!headingIndex) return;
+      if (headingIndex === -1) return;
 
       const index = headings[headingIndex].eventIds.findIndex((id) => id === eventId);
       if (index === -1) return;
@@ -184,63 +185,64 @@ function QuickReport(): JSX.Element {
           </div>
         </Col>
         <Col md={isOpen ? 16 : 21} span={isOpen ? 16 : 22} className={styles.container}>
-          <Row justify={"space-between"} align={"middle"}>
-            <Col span={4}></Col>
-            <Col span={16} className={styles.title} pull={4}>
-              <Typography.Title
-                level={2}
-                editable={{
-                  icon: <EditOutlined />,
-                  tooltip: "Chỉnh sửa tên báo cáo",
-                  triggerType: ["text", "icon"],
-                  enterIcon: null,
-                  onChange: (value) => setTitle(value),
-                }}
-              >
-                {title}
-              </Typography.Title>
-            </Col>
-
-            <Col span={24} className={styles.center}>
-              <Space>
-                <Typography.Text>Từ ngày: </Typography.Text>
-                <DatePicker.RangePicker
-                  defaultValue={[moment().subtract(7, "days"), moment()]}
-                  format={"DD/MM/YYYY"}
-                  bordered={false}
-                  onChange={(_, formatString) => setDateTime(formatString)}
-                />
-              </Space>
-            </Col>
-          </Row>
-
-          <QuickHeadings headingsData={headings} onDeleteEvent={handleDeleteEvent} />
-        </Col>
-        <Col md={isOpen ? 4 : 2} span={isOpen ? 4 : 1} className={styles.action} pull={3}>
-          <Space>
-            <Button
-              title="Xuất file ra docx"
-              icon={<OutlineFileWordIcon />}
-              onClick={handleExportDocx}
-            />
-            <Button
-              className={styles.save}
-              icon={<SaveOutlined />}
-              type="primary"
-              title="Lưu báo cáo"
-              onClick={handleSave}
-            />
-            {!isNotRemove && (
+          <Spin size="large" spinning={isLoading}>
+            <Space className={styles.menu_action}>
               <Button
-                icon={<DeleteOutlined />}
-                danger
-                title="Xoá báo cáo"
-                onClick={handleDelete}
-                loading={isDeleting}
+                title="Xuất file ra docx"
+                icon={<OutlineFileWordIcon />}
+                onClick={handleExportDocx}
               />
-            )}
-          </Space>
+              <Button
+                className={styles.save}
+                icon={<SaveOutlined />}
+                type="primary"
+                title="Lưu báo cáo"
+                onClick={handleSave}
+              />
+              {!isNotRemove && (
+                <Button
+                  icon={<DeleteOutlined />}
+                  danger
+                  title="Xoá báo cáo"
+                  onClick={handleDelete}
+                  loading={isDeleting}
+                />
+              )}
+            </Space>
+            <Row justify={"space-between"} align={"middle"}>
+              <Col span={4}></Col>
+              <Col span={16} className={styles.title} pull={4}>
+                <Typography.Title
+                  level={2}
+                  editable={{
+                    icon: <EditOutlined />,
+                    tooltip: "Chỉnh sửa tên báo cáo",
+                    triggerType: ["text", "icon"],
+                    enterIcon: null,
+                    onChange: (value) => setTitle(value),
+                  }}
+                >
+                  {title}
+                </Typography.Title>
+              </Col>
+
+              <Col span={24} className={styles.center}>
+                <Space>
+                  <Typography.Text>Từ ngày: </Typography.Text>
+                  <DatePicker.RangePicker
+                    defaultValue={[moment().subtract(7, "days"), moment()]}
+                    format={"DD/MM/YYYY"}
+                    bordered={false}
+                    onChange={(_, formatString) => setDateTime(formatString)}
+                  />
+                </Space>
+              </Col>
+            </Row>
+            <QuickHeadings headingsData={headings} onDeleteEvent={handleDeleteEvent} />
+          </Spin>
         </Col>
+
+        <Col md={isOpen ? 4 : 2} span={isOpen ? 4 : 1} className={styles.action}></Col>
       </Row>
 
       <Modal

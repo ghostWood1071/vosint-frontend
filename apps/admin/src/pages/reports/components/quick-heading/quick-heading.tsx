@@ -113,6 +113,7 @@ export function QuickHeading({ headingsData, setHeadingsData }: Props): JSX.Elem
                 index={index}
                 id={heading.id}
                 onScroll={handleScrollToNode}
+                key={heading.id}
               />
             ))}
           </SortableContext>

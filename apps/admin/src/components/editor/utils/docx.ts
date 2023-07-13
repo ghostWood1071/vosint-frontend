@@ -182,49 +182,58 @@ export async function convertHeadingsToDocx({
       paragraph.addChildElement(time);
 
       // iterate over blocks in lexicalJSON
-      const lexicalJSON = JSON.parse(event.event_content ?? "{}");
-      for (const block of lexicalJSON.root?.children) {
-        // create a new Paragraph for each block
-        const paragraph = new Paragraph({
-          alignment: block.format,
-          children: [],
-          indent: block.indent,
-        });
-
-        if (block.type === "heading") {
-          const text = block?.children[0]?.text;
-          const heading = new Paragraph({
-            text,
-            heading: headingLevel[block.tag],
+      try {
+        const lexicalJSON = JSON.parse(event.event_content ?? "{}");
+        for (const block of lexicalJSON.root?.children) {
+          // create a new Paragraph for each block
+          const paragraph = new Paragraph({
+            alignment: block.format,
+            children: [],
+            indent: block.indent,
           });
-          section.children.push(heading);
-          continue;
-        } else if (block.type === "paragraph") {
-          // iterae over inline elements in block
-          for (const inline of block.children) {
-            // create a new TextRun for each inline element
-            const textRun = new TextRun({
-              text: inline.text,
-              bold: !!(inline.format & IS_BOLD),
-              italics: !!(inline.format & IS_ITALIC),
-              underline:
-                inline.format & IS_UNDERLINE
-                  ? {
-                      color: "#000000",
-                      type: UnderlineType.SINGLE,
-                    }
-                  : undefined,
+
+          if (block.type === "heading") {
+            const text = block?.children[0]?.text;
+            const heading = new Paragraph({
+              text,
+              heading: headingLevel[block.tag],
             });
+            section.children.push(heading);
+            continue;
+          } else if (block.type === "paragraph") {
+            // iterae over inline elements in block
+            for (const inline of block.children) {
+              // create a new TextRun for each inline element
+              const textRun = new TextRun({
+                text: inline.text,
+                bold: !!(inline.format & IS_BOLD),
+                italics: !!(inline.format & IS_ITALIC),
+                underline:
+                  inline.format & IS_UNDERLINE
+                    ? {
+                        color: "#000000",
+                        type: UnderlineType.SINGLE,
+                      }
+                    : undefined,
+              });
 
-            paragraph.addChildElement(textRun);
-          }
+              paragraph.addChildElement(textRun);
+            }
 
-          if (block.children.length === 0) {
-            const textRun = new TextRun({});
-            paragraph.addChildElement(textRun);
+            if (block.children.length === 0) {
+              const textRun = new TextRun({});
+              paragraph.addChildElement(textRun);
+            }
           }
+          section.children.push(paragraph);
         }
-        section.children.push(paragraph);
+      } catch {
+        const textRun = new TextRun({
+          text: event.event_content,
+          italics: true,
+          break: 1,
+        });
+        paragraph.addChildElement(textRun);
       }
 
       if (Array.isArray(event.new_list) && event.new_list.length > 0) {
