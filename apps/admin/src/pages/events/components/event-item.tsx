@@ -225,6 +225,7 @@ export const EventItem: React.FC<Props> = ({
 
               <div className={styles.detailContent} onClick={(event) => event.stopPropagation()}>
                 <div
+                  style={{ whiteSpace: "pre-wrap" }}
                   dangerouslySetInnerHTML={{
                     __html: generateHTMLFromJSON(item?.event_content, eventEditor),
                   }}
@@ -256,6 +257,7 @@ export const EventItem: React.FC<Props> = ({
       )}
     </div>
   );
+
   function onChangeCheckbox() {
     if (checkbox === false) {
       setEventChoosedList([...eventChoosedList, item]);
@@ -278,13 +280,17 @@ export const EventItem: React.FC<Props> = ({
 export const eventHTMLCache: Map<string, string> = new Map();
 
 export function generateHTMLFromJSON(editorStateJSON: string, eventEditor: LexicalEditor): string {
-  const editorState = eventEditor.parseEditorState(editorStateJSON);
-  let html = eventHTMLCache.get(editorStateJSON);
-  if (html === undefined) {
-    html = editorState.read(() => $generateHtmlFromNodes(eventEditor, null));
-    eventHTMLCache.set(editorStateJSON, html);
+  try {
+    const editorState = eventEditor.parseEditorState(editorStateJSON);
+    let html = eventHTMLCache.get(editorStateJSON);
+    if (html === undefined) {
+      html = editorState.read(() => $generateHtmlFromNodes(eventEditor, null));
+      eventHTMLCache.set(editorStateJSON, html);
+    }
+    return html;
+  } catch {
+    return editorStateJSON;
   }
-  return html;
 }
 
 const defaultContent = (text: string) =>

@@ -98,8 +98,8 @@ export function QuickReportModal(): JSX.Element {
           <Spin spinning={isLoading}>
             <Radio.Group onChange={handleChange}>
               <Space direction="vertical">
-                {dataQuickReport?.data.map((report, index) => (
-                  <Radio key={report._id} value={index}>
+                {dataQuickReport?.data.map((report) => (
+                  <Radio key={report._id} value={report._id}>
                     {report.title}
                   </Radio>
                 ))}
@@ -145,7 +145,8 @@ export function QuickReportModal(): JSX.Element {
 
   function handleChange(e: any) {
     if (!dataQuickReport?.data) return;
-    setSelectedReport(dataQuickReport?.data[e.target.value]);
+    const reportIndex = dataQuickReport?.data.findIndex((r) => r._id === e.target.value);
+    setSelectedReport(dataQuickReport?.data[reportIndex]);
   }
 
   function handleCancel() {

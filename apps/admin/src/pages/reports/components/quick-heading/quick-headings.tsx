@@ -1,5 +1,4 @@
 import { useEventContext } from "@/components/editor/plugins/event-plugin/event-context";
-import { EventEditorParagraph } from "@/components/editor/plugins/event-plugin/event-dialog";
 import { filterIsBetween } from "@/components/editor/plugins/events-plugin/events-components";
 import { useEventsState } from "@/components/editor/plugins/events-plugin/events-state";
 import { generateHTMLFromJSON } from "@/pages/events/components/event-item";
