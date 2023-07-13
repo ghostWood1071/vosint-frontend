@@ -140,8 +140,15 @@ export const useReport = (id: string, options?: UseQueryOptions<TReport, unknown
   return useQuery<TReport>([CACHE_KEYS.REPORT, id], () => getReport(id), options);
 };
 
-export const useQuickReport = (id: string, options?: UseQueryOptions<TQuickReport, unknown>) => {
-  return useQuery<TQuickReport>([CACHE_KEYS.QUICK_REPORT, id], () => getReport(id), options);
+export const useQuickReport = (
+  id: string,
+  options?: UseQueryOptions<TQuickReport & { is_not_remove: boolean }, unknown>,
+) => {
+  return useQuery<TQuickReport & { is_not_remove: boolean }>(
+    [CACHE_KEYS.QUICK_REPORT, id],
+    () => getReport(id),
+    options,
+  );
 };
 
 export const useCreateReport = (options?: UseMutationOptions<string, unknown, IReportDto>) => {

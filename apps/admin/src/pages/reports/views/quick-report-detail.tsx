@@ -75,6 +75,7 @@ function QuickReport(): JSX.Element {
   const [title, setTitle] = useState("Tên báo cáo");
   const [headings, setHeadings] = useState<IQuickHeading[]>([]);
   const [userProfile] = useLocalStorage<Record<string, string>>(LOCAL_USER_PROFILE);
+  const [isNotRemove, setIsNotRemove] = useState(false);
 
   const { id } = useParams<{ id: string }>();
   const { data } = useQuickReport(id!, {
@@ -86,6 +87,7 @@ function QuickReport(): JSX.Element {
 
     setTitle(data.title);
     setHeadings(data.headings);
+    setIsNotRemove(data.is_not_remove);
   }, [data]);
 
   const [form] = Form.useForm<any>();
@@ -228,13 +230,15 @@ function QuickReport(): JSX.Element {
               title="Lưu báo cáo"
               onClick={handleSave}
             />
-            <Button
-              icon={<DeleteOutlined />}
-              danger
-              title="Xoá báo cáo"
-              onClick={handleDelete}
-              loading={isDeleting}
-            />
+            {!isNotRemove && (
+              <Button
+                icon={<DeleteOutlined />}
+                danger
+                title="Xoá báo cáo"
+                onClick={handleDelete}
+                loading={isDeleting}
+              />
+            )}
           </Space>
         </Col>
       </Row>
