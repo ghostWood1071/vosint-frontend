@@ -897,12 +897,15 @@ const Items: React.FC<ItemsProps> = ({ item, handleEdit, handleDelete }) => {
             }
           }}
         >
-          <Collapse.Panel header={item.event_name} key="1">
+          <Collapse.Panel
+            header={<div className={styles.titleCollapse}>{item.event_name}</div>}
+            key="1"
+          >
             <div className={styles.itemContentContainer}>
               <div className={styles.lineFieldContent}>
                 <div className={styles.titleField}>Nội dung</div>
+                <span>:</span>
                 <div className={styles.contentField}>
-                  :{" "}
                   {/* <Input.TextArea
                     bordered={false}
                     className={styles.textContent}
@@ -911,7 +914,11 @@ const Items: React.FC<ItemsProps> = ({ item, handleEdit, handleDelete }) => {
                     readOnly={true}
                   /> */}
                   {item.user_id === undefined ? (
-                    item.event_content
+                    item.event_content ? (
+                      item.event_content
+                    ) : (
+                      <span className={styles.textEmpty}>(Chưa có nội dung)</span>
+                    )
                   ) : (
                     <div
                       dangerouslySetInnerHTML={{
@@ -923,16 +930,33 @@ const Items: React.FC<ItemsProps> = ({ item, handleEdit, handleDelete }) => {
               </div>
               <div className={styles.lineFieldContent}>
                 <div className={styles.titleField}>Chủ thể</div>
-                <div className={styles.contentField}>: {item.chu_the}</div>
+                <span>:</span>
+
+                <div className={styles.contentField}>
+                  {item.chu_the ? (
+                    item.chu_the
+                  ) : (
+                    <span className={styles.textEmpty}>(Chưa có chủ thể)</span>
+                  )}
+                </div>
               </div>
               <div className={styles.lineFieldContent}>
                 <div className={styles.titleField}>Khách thể</div>
-                <div className={styles.contentField}>: {item.khach_the}</div>
+                <span>:</span>
+
+                <div className={styles.contentField}>
+                  {item.khach_the ? (
+                    item.khach_the
+                  ) : (
+                    <span className={styles.textEmpty}>(Chưa có khách thể)</span>
+                  )}
+                </div>
               </div>
               <div className={styles.lineFieldContent}>
                 <div className={styles.titleField}>Ngày sự kiện</div>
+                <span>:</span>
                 <div className={styles.contentField}>
-                  : {convertTimeToShowInUI(item.date_created)}
+                  {convertTimeToShowInUI(item.date_created)}
                 </div>
               </div>
             </div>
