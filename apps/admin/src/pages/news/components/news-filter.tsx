@@ -10,12 +10,12 @@ import { buildTree } from "@/pages/news/news.utils";
 import {
   DeleteOutlined,
   ExclamationCircleOutlined,
-  ExportOutlined,
   MinusCircleTwoTone,
   PlusCircleTwoTone,
 } from "@ant-design/icons";
-import { Button, DatePicker, Form, Input, List, Modal, Select, Space, Typography } from "antd";
+import { Button, DatePicker, Form, Input, List, Modal, Select, Typography } from "antd";
 import produce from "immer";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { shallow } from "zustand/shallow";
 
@@ -27,6 +27,7 @@ export function NewsFilter(): JSX.Element {
     (state) => [state.newsSelection, state.setNewsSelection],
     shallow,
   );
+  const [internalTextSearch, setInternalTextSearch] = useState("");
   const pinned = useSidebar((state) => state.pinned);
 
   const newsSelectionIds: string[] = newsSelection.map((i) => i?._id);
@@ -46,7 +47,7 @@ export function NewsFilter(): JSX.Element {
       <Form
         onValuesChange={handleFinish}
         initialValues={{
-          sac_thai: "all",
+          sac_thai: "",
         }}
         style={{ width: "100%", display: "flex", flexDirection: "row", flexWrap: "wrap" }}
       >
@@ -75,7 +76,7 @@ export function NewsFilter(): JSX.Element {
         </Form.Item>
         <Form.Item className={styles.item} name="sac_thai">
           <Select placeholder="Điểm tin">
-            <Select.Option key="all">Sắc thái tin</Select.Option>
+            <Select.Option key="">Sắc thái tin</Select.Option>
             <Select.Option key="1">Tích cực</Select.Option>
             <Select.Option key="2">Tiêu cực</Select.Option>
             <Select.Option key="0">Trung tính</Select.Option>
@@ -85,6 +86,7 @@ export function NewsFilter(): JSX.Element {
           className={styles.item}
           style={{ borderColor: newsSelectionIds.length === 0 ? "rgb(230,230,230)" : "#1890ff" }}
           disabled={newsSelectionIds.length === 0}
+          onClick={handleNewsSummary}
         >
           Tóm tắt tin ({newsSelectionIds.length})
         </Button>
@@ -106,7 +108,13 @@ export function NewsFilter(): JSX.Element {
           />
         )}
         <div className={styles.input}>
-          <Input.Search className={styles.search} placeholder="Tìm kiếm" onSearch={handleSearch} />
+          <Input.Search
+            className={styles.search}
+            placeholder="Tìm kiếm"
+            onSearch={handleSearch}
+            value={internalTextSearch}
+            onChange={(e) => setInternalTextSearch(e.target.value)}
+          />
         </div>
       </Form>
 
@@ -123,7 +131,7 @@ export function NewsFilter(): JSX.Element {
     if ("language_source" in values) {
       values.language_source = values?.language_source?.join(",");
     }
-    setNewsFilter({ ...newsFilter, ...values });
+    setNewsFilter({ ...newsFilter, ...values, text_search: internalTextSearch.trim() });
   }
 
   function handleSearch(value: string) {
@@ -149,6 +157,8 @@ export function NewsFilter(): JSX.Element {
       },
     });
   }
+
+  function handleNewsSummary() {}
 }
 
 function NewsFilterModal(): JSX.Element {
