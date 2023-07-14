@@ -82,17 +82,20 @@ function Sidebar() {
           />
         )}
 
-        {dataSourceGroup && (
-          <Tree
-            title="NHÓM NGUỒN TIN"
-            treeData={dataSourceGroupFinal}
-            isSpinning={isLoading}
-            // isEditable
-            onClickTitle={handleClickTitleSource}
-            tag={ETreeTag.NGUON_TIN}
-            selectedKeys={newsletterId ? [newsletterId] : []}
-          />
-        )}
+        <div className={styles.source_group}>
+          {dataSourceGroup && (
+            <Tree
+              title="NHÓM NGUỒN TIN"
+              treeData={dataSourceGroupFinal}
+              isSpinning={isLoading}
+              // isEditable
+              onClickTitle={handleClickTitleSource}
+              tag={ETreeTag.NGUON_TIN}
+              selectedKeys={newsletterId ? [newsletterId] : []}
+            />
+          )}
+        </div>
+
         {chuDeTree && (
           <Tree
             title="DANH MỤC CHỦ ĐỀ"
