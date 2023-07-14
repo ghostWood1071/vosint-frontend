@@ -2,21 +2,29 @@ import { TNews } from "@/services/news.type";
 import { removeWhitespaceInStartAndEndOfString } from "@/utils/tool-validate-string";
 import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 import { Button, Form, Input, Switch, Table, TableColumnsType, Typography } from "antd";
-import { useState } from "react";
+import produce from "immer";
+import { Dispatch, SetStateAction, useState } from "react";
 
 import { useNewsSamplesTopicState } from "../news-state";
 import { rulesRequiredItemKeyword, rulesTitle } from "./form-rules";
 import styles from "./form.module.less";
 
+type IKeyword = Record<
+  string,
+  {
+    required_keyword: string[];
+    exclusion_keyword: string;
+  }
+>;
 interface Props {
   title: string;
-  keyword: any;
-  setKeyword: (value: any) => void;
+  keyword: IKeyword;
+  setKeyword: Dispatch<SetStateAction<IKeyword>>;
 }
 
 export function NewsletterFormChuDe({ title, keyword, setKeyword }: Props): JSX.Element {
   const form = Form.useFormInstance();
-  const [formNewsSample] = Form.useForm<Record<string, any>>();
+  const [formNewsSample] = Form.useForm<any>();
 
   const is_sample = Form.useWatch("is_sample", form);
   const [conditionValue, setConditionValue] = useState("keyword_vi");
@@ -24,9 +32,7 @@ export function NewsletterFormChuDe({ title, keyword, setKeyword }: Props): JSX.
   const [exclusionKeywordInput, setExclusionKeywordInput] = useState<string>(
     keyword?.["keyword_vi"].exclusion_keyword,
   );
-  const [requiredKeywordData, setRequiredKeywordData] = useState<any[]>(
-    keyword?.["keyword_vi"].required_keyword,
-  );
+  const requiredKeyword = keyword?.[conditionValue]?.required_keyword ?? [];
   const newsSamples = useNewsSamplesTopicState((state) => state.newsSamples);
   const setNewsSamples = useNewsSamplesTopicState((state) => state.setNewsSamples);
   const [isShowAddedNewsSample, setIsShowAddedNewsSample] = useState<boolean>(false);
@@ -264,6 +270,7 @@ export function NewsletterFormChuDe({ title, keyword, setKeyword }: Props): JSX.
                     onChange={(event) => {
                       setRequiredKeywordInput(event.target.value);
                     }}
+                    onPressEnter={handleAddRequiredKeyword}
                   />
                   <div className={styles.inputButtonBox}>
                     <Button
@@ -272,13 +279,14 @@ export function NewsletterFormChuDe({ title, keyword, setKeyword }: Props): JSX.
                     />
                   </div>
                 </div>
-                {requiredKeywordData?.length > 0 ? (
+                {requiredKeyword?.length > 0 ? (
                   <div className={styles.tableBox}>
                     <Table
                       columns={columnsRequiredKeyword}
                       pagination={false}
-                      dataSource={requiredKeywordData ?? []}
+                      dataSource={requiredKeyword ?? []}
                       size={"small"}
+                      rowKey={(record) => record}
                     />
                   </div>
                 ) : null}
@@ -292,13 +300,10 @@ export function NewsletterFormChuDe({ title, keyword, setKeyword }: Props): JSX.
                 value={exclusionKeywordInput}
                 onChange={(event) => {
                   setExclusionKeywordInput(event.target.value);
-                  setKeyword({
-                    ...keyword,
-                    [conditionValue]: {
-                      required_keyword: requiredKeywordData,
-                      exclusion_keyword: event.target.value,
-                    },
+                  const newKeyword = produce(keyword, (draft) => {
+                    draft[conditionValue].exclusion_keyword = event.target.value;
                   });
+                  setKeyword(newKeyword);
                 }}
                 placeholder="Các từ phân tách nhau bởi dấu phẩy"
               />
@@ -329,7 +334,6 @@ export function NewsletterFormChuDe({ title, keyword, setKeyword }: Props): JSX.
 
   function handleChangeKeyword(key: string) {
     setConditionValue(key);
-    setRequiredKeywordData(keyword[key].required_keyword);
     setRequiredKeywordInput("");
     setExclusionKeywordInput(keyword[key].exclusion_keyword);
   }
@@ -337,27 +341,21 @@ export function NewsletterFormChuDe({ title, keyword, setKeyword }: Props): JSX.
   function handleAddRequiredKeyword() {
     const text = requiredKeywordInput.trim();
     if (text !== "") {
-      setRequiredKeywordData([...requiredKeywordData, requiredKeywordInput]);
-      setKeyword({
-        ...keyword,
-        [conditionValue]: {
-          required_keyword: [...requiredKeywordData, requiredKeywordInput],
-          exclusion_keyword: exclusionKeywordInput,
-        },
+      const newKeyword = produce(keyword, (draft) => {
+        draft[conditionValue].required_keyword.push(requiredKeywordInput);
       });
+      setKeyword(newKeyword);
       setRequiredKeywordInput("");
     }
   }
 
   function handleDeleteItemList(value: string) {
-    const result = requiredKeywordData.filter((e: any) => e !== value);
-    setRequiredKeywordData(result);
-    setKeyword({
-      ...keyword,
-      [conditionValue]: {
-        required_keyword: result,
-        exclusion_keyword: exclusionKeywordInput,
-      },
+    const newKeyword = produce(keyword, (draft) => {
+      const index = draft[conditionValue].required_keyword.indexOf(value);
+      if (index > -1) {
+        draft[conditionValue].required_keyword.splice(index, 1);
+      }
     });
+    setKeyword(newKeyword);
   }
 }

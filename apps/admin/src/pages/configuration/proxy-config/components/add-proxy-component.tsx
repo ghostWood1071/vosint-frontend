@@ -134,13 +134,13 @@ export const AddProxyComponent: React.FC<Props> = ({
         </Form.Item>
         <Form.Item
           validateTrigger={["onChange", "onBlur"]}
-          rules={[
-            {
-              required: true,
-              message: "Hãy nhập vào tên đăng nhập!",
-              whitespace: true,
-            },
-          ]}
+          // rules={[
+          //   {
+          //     required: true,
+          //     message: "Hãy nhập vào tên đăng nhập!",
+          //     whitespace: true,
+          //   },
+          // ]}
           label="Tên đăng nhập"
           name={"username"}
         >
@@ -148,13 +148,13 @@ export const AddProxyComponent: React.FC<Props> = ({
         </Form.Item>
         <Form.Item
           validateTrigger={["onChange", "onBlur"]}
-          rules={[
-            {
-              required: true,
-              message: "Hãy nhập vào mật khẩu!",
-              whitespace: true,
-            },
-          ]}
+          // rules={[
+          //   {
+          //     required: true,
+          //     message: "Hãy nhập vào mật khẩu!",
+          //     whitespace: true,
+          //   },
+          // ]}
           label="Mật khẩu"
           name={"password"}
         >
