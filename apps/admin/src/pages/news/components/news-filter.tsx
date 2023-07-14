@@ -128,6 +128,9 @@ export function NewsFilter(): JSX.Element {
       values.end_date = values.datetime?.[1].format("DD/MM/YYYY");
       delete values.datetime;
     }
+    if ("sac_thai" in values && values.sac_thai === "all") {
+      values.sac_thai = "";
+    }
     if ("language_source" in values) {
       values.language_source = values?.language_source?.join(",");
     }

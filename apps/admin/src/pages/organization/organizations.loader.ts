@@ -1,15 +1,20 @@
 import { getNewsList } from "@/services/news.service";
 import {
+  getEventBaseOnKhachTheAndChuThe,
+  getKhachTheAndChuThe,
+  getNewsBasedOnObject,
   getNewsByObjectId,
   getObject,
   getOrganizationsSidebar,
 } from "@/services/organizations.service";
-import { useQuery } from "react-query";
+import { useInfiniteQuery, useQuery } from "react-query";
 
 export const CACHE_KEYS = {
   OrganizationsSidebar: "ORGANIZATIONS_SIDEBAR",
   NewsList: "NEWS_LIST",
   Object: "OBJECT",
+  ListKhachTheAndChuThe: "LIST_KHACHTHE_AND_CHUTHE",
+  ListEvent: "LIST_EVENT",
 };
 
 export const useOrganizationsSidebar = () => {
@@ -24,8 +29,32 @@ export const useObjectList = (type: string, filter: any) => {
   return useQuery([CACHE_KEYS.Object, type, filter], () => getObject(filter, type));
 };
 
-export const useNewsByObjectId = (id: string, filter: Record<string, any>) => {
-  return useQuery([CACHE_KEYS.NewsList, id, filter], () => getNewsByObjectId(id, filter));
+export const useNewsByObjectId = (filter: Record<string, any>) => {
+  return useQuery([CACHE_KEYS.NewsList, filter], () => getNewsBasedOnObject(filter));
+};
+
+export const useGetKhachTheAndChuThe = (filter: Record<string, string>) => {
+  return useQuery([CACHE_KEYS.ListKhachTheAndChuThe, filter], () => getKhachTheAndChuThe(filter));
+};
+
+export const useInfiniteuseGetEventBaseOnKTAndCT = (filter: Record<string, string>) => {
+  return useInfiniteQuery<any>([CACHE_KEYS.ListEvent], (data) =>
+    getEventBaseOnKhachTheAndChuThe(
+      data.pageParam !== undefined
+        ? { ...data.pageParam, ...filter }
+        : { skip: 1, limit: 50, ...filter },
+    ),
+  );
+};
+
+export const useInfiniteNewsByObject = (filter: Record<string, any>) => {
+  return useInfiniteQuery<any>([CACHE_KEYS.NewsList], (data) =>
+    getNewsBasedOnObject(
+      data.pageParam !== undefined
+        ? { ...data.pageParam, ...filter }
+        : { page_number: 1, page_size: 50, ...filter },
+    ),
+  );
 };
 
 export enum OBJECT_TYPE {

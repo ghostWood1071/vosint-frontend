@@ -85,7 +85,7 @@ export const AddMindmap: React.FC<ModalEditProps> = ({
   const [isShowedEnterFieldNews, setIsShowedEnterFieldNews] = useState(false);
 
   const [listNewsAddedByUser, setListNewsAddedByUser] = useState<any[]>(
-    choosedEvent.news_added_by_user,
+    choosedEvent?.news_added_by_user ?? [],
   );
   const [listNewsFromServer, setListNewsFromServer] = useState<any[]>(choosedEvent?.new_list ?? []);
   const processChange = debounce((value: string) => {
@@ -290,24 +290,26 @@ export const AddMindmap: React.FC<ModalEditProps> = ({
             </Button>
             {isShowedEnterFieldNews && <Tabs defaultActiveKey="1" items={itemsChildTabs} />}
           </div>
-          {listNewsAddedByUser?.length > 0 && (
-            <Table
-              columns={columnsNewsAddedByUser}
-              dataSource={listNewsAddedByUser}
-              rowKey="_id"
-              pagination={false}
-              size="small"
-            />
-          )}
-          {listNewsFromServer?.length > 0 && (
-            <Table
-              columns={columnsNewsFromServer}
-              dataSource={listNewsFromServer}
-              rowKey="_id"
-              pagination={false}
-              size="small"
-            />
-          )}
+          <div className={styles.tableNewsContainer}>
+            {listNewsAddedByUser?.length > 0 && (
+              <Table
+                columns={columnsNewsAddedByUser}
+                dataSource={listNewsAddedByUser}
+                rowKey="_id"
+                pagination={false}
+                size="small"
+              />
+            )}
+            {listNewsFromServer?.length > 0 && (
+              <Table
+                columns={columnsNewsFromServer}
+                dataSource={listNewsFromServer}
+                rowKey="_id"
+                pagination={false}
+                size="small"
+              />
+            )}
+          </div>
         </Form.Item>
       </Form>
     </Modal>

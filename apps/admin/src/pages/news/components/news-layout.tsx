@@ -7,10 +7,11 @@ import { getNewsDetailUrl } from "@/pages/router";
 import { useGroupSourceList } from "@/pages/source/source-group/source-group.loader";
 import { Space } from "antd";
 import classNames from "classnames";
+import { useQueryClient } from "react-query";
 import { NavLink, Outlet, useNavigate, useParams } from "react-router-dom";
 
 import { NewsFilterProvider } from "../news.context";
-import { useMutationNewsSidebar, useNewsSidebar } from "../news.loader";
+import { CACHE_KEYS, useMutationNewsSidebar, useNewsSidebar } from "../news.loader";
 import styles from "./news-layout.module.less";
 
 export const NewsLayout: React.FC = () => {
@@ -27,6 +28,7 @@ function Sidebar() {
   const { action } = useNewsState((state) => state.news);
   const { data, isLoading } = useNewsSidebar();
   const { newsletterId } = useParams();
+  const queryClient = useQueryClient();
   const { mutateAsync, isLoading: isMutateLoading } = useMutationNewsSidebar();
   const navigate = useNavigate();
   const resetNewsState = useNewsState((state) => state.reset);
@@ -136,7 +138,10 @@ function Sidebar() {
     }
 
     return mutateAsync(values, {
-      onSuccess: () => resetNewsState(),
+      onSuccess: () => {
+        resetNewsState();
+        queryClient.invalidateQueries([CACHE_KEYS.NewsList, newsletterId]);
+      },
     });
   }
 

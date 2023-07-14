@@ -20,3 +20,26 @@ export const getNewsByObjectId = async (objectId: string, filter: Record<string,
   });
   return result.data;
 };
+
+export const getKhachTheAndChuThe = async (filter: Record<string, string>) => {
+  const result = await apiClient.get(`${apiBaseUrlV2}/event/get-chu-the-khach-the/`, {
+    params: filterEmptyString(filter),
+  });
+  return result.data;
+};
+
+export const getEventBaseOnKhachTheAndChuThe = async (filter: Record<string, string>) => {
+  const result = await apiClient.get(`${apiBaseUrlV2}/event/search-based-chu-the-khach-the/`, {
+    params: filterEmptyString(filter),
+  });
+  return result.data;
+};
+
+const apiNewsBasedOnObject = "/pipeline/Job/api/elt_search";
+
+export const getNewsBasedOnObject = async (filter: Record<string, string>) => {
+  const result = await apiClient.post(`${apiNewsBasedOnObject}`, "", {
+    params: filterEmptyString(filter),
+  });
+  return result.data;
+};

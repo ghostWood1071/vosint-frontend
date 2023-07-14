@@ -144,7 +144,6 @@ export const useMutationProxy = () => {
         });
       },
       onError: (data: any) => {
-        console.log(data);
         message.error({
           content: "Địa chỉ IP đã tồn tại. Hãy nhập lại!",
           key: CACHE_KEYS.ProxyConfig,
