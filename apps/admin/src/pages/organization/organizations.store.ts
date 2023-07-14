@@ -5,6 +5,8 @@ interface NewsState {
   setSelected: (selected: string[]) => void;
   show: boolean;
   setShow: (show: boolean) => void;
+  keySearch: string;
+  setKeySearch: (keySearch: string) => void;
 }
 
 export const useOrganizationsStore = create<NewsState>((set) => ({
@@ -12,4 +14,6 @@ export const useOrganizationsStore = create<NewsState>((set) => ({
   setSelected: (selected) => set(() => ({ selected })),
   show: false,
   setShow: (show) => set(() => ({ show })),
+  keySearch: ``,
+  setKeySearch: (keySearch) => set(() => ({ keySearch })),
 }));

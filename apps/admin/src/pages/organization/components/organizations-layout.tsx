@@ -10,13 +10,14 @@ import { useState } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 
 import { OBJECT_TYPE, useObjectList } from "../organizations.loader";
+import { useOrganizationsStore } from "../organizations.store";
 import styles from "./organizations-layout.module.less";
 
 export const OrganizationsLayout: React.FC = () => {
   return (
     <NewsFilterProvider>
       <AppContainer sidebar={<Sidebar />}>
-        <NewsFilter />
+        {/* <NewsFilter /> */}
         <Outlet />
       </AppContainer>
     </NewsFilterProvider>
@@ -96,6 +97,7 @@ function Sidebar(): JSX.Element {
   const navigate = useNavigate();
   const [sidebarFilter, setSidebarFilter] = useState(defaultValue);
   const { pathname } = useLocation();
+  const setKeySearch = useOrganizationsStore((state) => state.setKeySearch);
 
   const { data: dataDoiTuong } = useObjectList(
     OBJECT_TYPE.DOI_TUONG,
@@ -155,7 +157,7 @@ function Sidebar(): JSX.Element {
 
   return <Menu mode="inline" items={items} onSelect={handleClickMenu} selectedKeys={[pathname]} />;
 
-  function handleClickMenu({ key }: { key: string }) {
+  function handleClickMenu({ key, keyPath }: { key: string; keyPath: string[] }) {
     if (key.includes("search") || key.includes("paginate")) {
       return;
     }
@@ -164,6 +166,39 @@ function Sidebar(): JSX.Element {
       navigate(organizationGraphPath);
     } else {
       navigate(key);
+    }
+    const listString = keyPath[0].split("/");
+    if (listString[listString.length - 1] !== "international-relationship-graph") {
+      let dataObject = (
+        keyPath[1] === OBJECT_TYPE.DOI_TUONG
+          ? dataDoiTuong.data
+          : keyPath[1] === OBJECT_TYPE.TO_CHUC
+          ? dataToChuc.data
+          : dataQuocGia.data
+      ).find((e: any) => e._id === listString[listString.length - 1]);
+
+      let keywordsString = "";
+      Object.keys(dataObject.keywords).forEach((e) => {
+        if (dataObject.keywords[e] !== "") {
+          let keyStringItem = "";
+          const listKey = dataObject.keywords[e].split(",");
+          for (let i = 0; i < listKey.length; i++) {
+            if (i === 0) {
+              keyStringItem = keyStringItem + `"${listKey[i]}"`;
+            } else {
+              keyStringItem = keyStringItem + `|"${listKey[i]}"`;
+            }
+          }
+          if (keyStringItem !== "") {
+            if (keywordsString.length === 0) {
+              keywordsString = keyStringItem;
+            } else {
+              keywordsString = keywordsString + `|` + keyStringItem;
+            }
+          }
+        }
+      });
+      setKeySearch(keywordsString);
     }
   }
 

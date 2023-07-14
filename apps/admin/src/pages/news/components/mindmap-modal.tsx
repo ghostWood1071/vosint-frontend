@@ -115,9 +115,7 @@ export const MindmapModal: React.FC<props> = ({
     text_search: searchParams.get("text_search_news") ?? "",
   });
 
-  const [listNewsFromServer, setListNewsFromServer] = useState<any[]>(
-    typeModal === "add" ? [] : choosedEvent?.new_list ?? [],
-  );
+  const [listNewsFromServer, setListNewsFromServer] = useState<any[]>([item]);
   const [listEvent, setListEvent] = useState<any[]>([]);
   const [keyTabs, setKeyTabs] = useState<string>("1");
   const [formNews] = Form.useForm<Record<string, any>>();
@@ -399,24 +397,28 @@ export const MindmapModal: React.FC<props> = ({
                 </Button>
                 {isShowedEnterFieldNews && <Tabs defaultActiveKey="1" items={itemsChildTabs} />}
               </div>
-              {listNewsAddedByUser?.length > 0 && (
-                <Table
-                  columns={columnsNewsAddedByUser}
-                  dataSource={listNewsAddedByUser}
-                  rowKey="_id"
-                  pagination={false}
-                  size="small"
-                />
-              )}
-              {listNewsFromServer?.length > 0 && (
-                <Table
-                  columns={columnsNewsFromServer}
-                  dataSource={listNewsFromServer}
-                  rowKey="_id"
-                  pagination={false}
-                  size="small"
-                />
-              )}
+              <div className={styles.tableNewsContainer}>
+                {listNewsAddedByUser?.length > 0 && (
+                  <Table
+                    columns={columnsNewsAddedByUser}
+                    dataSource={listNewsAddedByUser}
+                    rowKey="_id"
+                    pagination={false}
+                    showHeader={false}
+                    size="small"
+                  />
+                )}
+                {listNewsFromServer?.length > 0 && (
+                  <Table
+                    columns={columnsNewsFromServer}
+                    dataSource={listNewsFromServer}
+                    rowKey="_id"
+                    showHeader={false}
+                    pagination={false}
+                    size="small"
+                  />
+                )}
+              </div>
             </Form.Item>
             <div className={styles.addButtonContainer}>
               <Button type="primary" className={styles.addButton} onClick={addOneEvent}>
@@ -432,6 +434,7 @@ export const MindmapModal: React.FC<props> = ({
       label: `Thêm sự kiện đã tồn tại`,
       children: (
         <div className={styles.addExistEventContainer}>
+          <div className={styles.titleEnterEventName}>Nhập vào tên sự kiện:</div>
           <div className={styles.addExistEventHeader}>
             <div className={styles.leftAddExistNewsContainer}>
               <Select
@@ -501,7 +504,7 @@ export const MindmapModal: React.FC<props> = ({
   return (
     <Modal
       title={
-        <div style={{ textAlign: "center", fontSize: 18, fontWeight: "bold" }}>
+        <div className={styles.titleModal}>
           {isTranslation && item["data:title_translate"]?.length > 1
             ? item["data:title_translate"]
             : item["data:title"]}

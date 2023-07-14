@@ -293,26 +293,28 @@ export const EditEventModal: React.FC<ModalEditProps> = ({
             </Button>
             {isShowedEnterFieldNews && <Tabs defaultActiveKey="1" items={items} />}
           </div>
-          {listNewsAddedByUser.length > 0 && (
-            <Table
-              columns={columnsNewsTable}
-              dataSource={listNewsAddedByUser}
-              rowKey="id"
-              pagination={false}
-              showHeader={false}
-              size="small"
-            />
-          )}
-          {listNewsFromServer.length > 0 && (
-            <Table
-              columns={columnsNewsFromServer}
-              dataSource={listNewsFromServer}
-              rowKey="_id"
-              pagination={false}
-              size="small"
-              showHeader={false}
-            />
-          )}
+          <div className={styles.tableNewsContainer}>
+            {listNewsAddedByUser.length > 0 && (
+              <Table
+                columns={columnsNewsTable}
+                dataSource={listNewsAddedByUser}
+                rowKey="id"
+                pagination={false}
+                showHeader={false}
+                size="small"
+              />
+            )}
+            {listNewsFromServer.length > 0 && (
+              <Table
+                columns={columnsNewsFromServer}
+                dataSource={listNewsFromServer}
+                rowKey="_id"
+                pagination={false}
+                size="small"
+                showHeader={false}
+              />
+            )}
+          </div>
         </Form.Item>
       </Form>
     </Modal>
@@ -379,7 +381,6 @@ export const EditEventModal: React.FC<ModalEditProps> = ({
         }
 
         const data = removeWhitespaceInStartAndEndOfString(values);
-        console.log("hello", values);
         functionEdit({
           ...initialValues,
           ...data,
