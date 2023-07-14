@@ -1,4 +1,3 @@
-import { BASE_URL_PIPELINE } from "@/constants/config";
 import { BASE_URL_SUMM } from "@/constants/config";
 import { apiClient, filterEmptyString } from "@/utils/api";
 
@@ -8,7 +7,7 @@ const apiNewsBaseV2Url = "";
 const apiSummBaseUrl = "/summ";
 
 export const getNewsSidebar = async (title?: string) => {
-  const result = await apiClient.get<any>(`${apiNewsBaseV2Url}/newsletters`, {
+  const result = await apiClient.get<any>(`/newsletters/v2`, {
     params: filterEmptyString({ title }),
   });
   return result.data;

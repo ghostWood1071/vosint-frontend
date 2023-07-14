@@ -15,7 +15,15 @@ interface Props {
   confirmLoading?: boolean;
 }
 
-const defaultKeyword = {
+type IKeyword = Record<
+  string,
+  {
+    required_keyword: string[];
+    exclusion_keyword: string;
+  }
+>;
+
+const defaultKeyword: IKeyword = {
   keyword_vi: {
     required_keyword: [],
     exclusion_keyword: "",
@@ -45,7 +53,7 @@ export function NewsletterModal({ onFinish, confirmLoading }: Props): JSX.Elemen
   const newsSamples = useNewsSamplesTopicState((state) => state.newsSamples);
   const setNewsSamples = useNewsSamplesTopicState((state) => state.setNewsSamples);
   const [form] = Form.useForm<NewsletterDto & { is_sample?: boolean }>();
-  const [keyword, setKeyword] = useState<any>(null);
+  const [keyword, setKeyword] = useState<IKeyword>(defaultKeyword);
 
   useEffect(() => {
     if (action === ETreeAction.UPDATE && initialData) {
