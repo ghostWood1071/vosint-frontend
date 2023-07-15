@@ -12,7 +12,7 @@ import LexicalErrorBoundary from "@lexical/react/LexicalErrorBoundary";
 import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
 import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 import { TabIndentationPlugin } from "@lexical/react/LexicalTabIndentationPlugin";
-import { Button, DatePicker, Input, List, Modal, Space } from "antd";
+import { Button, DatePicker, Empty, Input, List, Modal, Space } from "antd";
 import { flatMap, unionBy } from "lodash";
 import React, { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
@@ -74,6 +74,7 @@ export const EventPage: React.FC<Props> = () => {
   // TODO: Fix later. This is a hack to make sure the editor is not re-rendered when the event is changed
   React.useEffect(() => {
     if (inView && skip * 50 <= data?.pages[0].total) {
+      fetchNextPage({ pageParam: { skip: skip + 1, limit: 50 } });
       setSkip(skip + 1);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -85,17 +86,6 @@ export const EventPage: React.FC<Props> = () => {
     setSkip(1);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filterEvent]);
-
-  useEffect(() => {
-    queryClient.removeQueries([EVENT_CACHE_KEYS.ListEvents]);
-    setSkip(1);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    fetchNextPage({ pageParam: { skip: skip, limit: 50 } });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [skip]);
 
   return (
     <div className={styles.mainContainer}>
@@ -140,24 +130,28 @@ export const EventPage: React.FC<Props> = () => {
                 />
                 <TabIndentationPlugin />
               </EventPlugin>
-              <List
-                itemLayout="vertical"
-                size="small"
-                dataSource={dataSource}
-                renderItem={(item) => {
-                  return (
-                    <EventItem
-                      item={item}
-                      onClickDelete={handleClickDelete}
-                      onClickEdit={handleClickEdit}
-                      eventChoosedList={eventChoosedList}
-                      lengthDataSource={dataSource?.length}
-                      setEventChoosedList={setEventChoosedList}
-                      onClickReport={handleClickReport}
-                    />
-                  );
-                }}
-              />
+              {dataSource[0] !== undefined ? (
+                <List
+                  itemLayout="vertical"
+                  size="small"
+                  dataSource={dataSource}
+                  renderItem={(item) => {
+                    return (
+                      <EventItem
+                        item={item}
+                        onClickDelete={handleClickDelete}
+                        onClickEdit={handleClickEdit}
+                        eventChoosedList={eventChoosedList}
+                        lengthDataSource={dataSource?.length}
+                        setEventChoosedList={setEventChoosedList}
+                        onClickReport={handleClickReport}
+                      />
+                    );
+                  }}
+                />
+              ) : (
+                <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={"Trống"} />
+              )}
             </EventProvider>
           </LexicalComposer>
           {skip >= 1 ? (
