@@ -1,5 +1,4 @@
-import { PlusOutlined } from "@ant-design/icons";
-import { Button, DatePicker, Input, List, Modal, Select, Space } from "antd";
+import { DatePicker, Input, List, Select, Space } from "antd";
 import { debounce, flatMap, unionBy } from "lodash";
 import React, { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
@@ -7,7 +6,7 @@ import { useQueryClient } from "react-query";
 
 import { useSidebar } from "../app/app.store";
 import { TTXVNNewsItem } from "./components/ttsvn-news-item";
-import { TTXVN_CACHE_KEYS, useInfiniteTTXVNList, useMutationTTXVN } from "./ttxvn.loader";
+import { TTXVN_CACHE_KEYS, useInfiniteTTXVNList } from "./ttxvn.loader";
 import styles from "./ttxvn.module.less";
 
 interface Props {}
@@ -16,7 +15,7 @@ interface FilterEventProps {
   start_date?: string;
   end_date?: string;
   text_search?: string;
-  check_crawl?: string;
+  crawling?: string;
 }
 
 export const TTXVNNewsPage: React.FC<Props> = () => {
@@ -25,14 +24,16 @@ export const TTXVNNewsPage: React.FC<Props> = () => {
   const [filterTTXVN, setFilterTTXVN] = useState<FilterEventProps>();
   const queryClient = useQueryClient();
   const { ref, inView } = useInView();
-  const { data, isFetchingNextPage, fetchNextPage, hasNextPage } =
-    useInfiniteTTXVNList(filterTTXVN);
-  const { mutate } = useMutationTTXVN();
-
-  const dataSource = unionBy(flatMap(data?.pages.map((a) => a?.data?.map((e: any) => e))), "_id");
+  const { data, isFetchingNextPage, fetchNextPage, hasNextPage } = useInfiniteTTXVNList({
+    ...filterTTXVN,
+    order: "PublishDate",
+    name: "ttxvn",
+  });
+  const dataSource = unionBy(flatMap(data?.pages.map((a) => a?.result?.map((e: any) => e))), "_id");
 
   useEffect(() => {
-    if (inView && skip * 50 <= data?.pages[0].total) {
+    if (inView && skip * 50 <= data?.pages[0].total_record) {
+      fetchNextPage({ pageParam: { page_number: skip + 1, page_size: 50 } });
       setSkip(skip + 1);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -40,21 +41,10 @@ export const TTXVNNewsPage: React.FC<Props> = () => {
 
   useEffect(() => {
     queryClient.removeQueries([TTXVN_CACHE_KEYS.ListTTXVN]);
-    fetchNextPage({ pageParam: { skip: 1, limit: 50 } });
+    fetchNextPage({ pageParam: { page_number: 1, page_size: 50 } });
     setSkip(1);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filterTTXVN]);
-
-  useEffect(() => {
-    queryClient.removeQueries([TTXVN_CACHE_KEYS.ListTTXVN]);
-    setSkip(1);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    fetchNextPage({ pageParam: { skip: skip, limit: 50 } });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [skip]);
 
   const ProcessSearch = debounce((value) => {
     setFilterTTXVN({ ...filterTTXVN, text_search: value.trim() });
@@ -73,10 +63,10 @@ export const TTXVNNewsPage: React.FC<Props> = () => {
           <Select
             style={{ width: 120 }}
             size="middle"
-            defaultValue={"all"}
+            defaultValue={""}
             onChange={handleChangeTypeCrawl}
           >
-            <Select.Option value={"all"}>Tất cả tin</Select.Option>
+            <Select.Option value={""}>Tất cả tin</Select.Option>
             <Select.Option value={"crawled"}>Tin đã lấy</Select.Option>
             <Select.Option value={"not_crawl"}>Tin chưa lấy</Select.Option>
           </Select>
@@ -108,39 +98,6 @@ export const TTXVNNewsPage: React.FC<Props> = () => {
     </div>
   );
 
-  function handleClickDelete(value: any) {
-    Modal.confirm({
-      title: "Bạn có chắc chắn muốn xoá sự kiện này?",
-      okText: "Xoá",
-      cancelText: "Huỷ",
-      onOk: () => {
-        handleDelete(value._id);
-      },
-    });
-  }
-
-  function handleDelete(value: string) {
-    mutate({ action: "delete", _id: value });
-  }
-
-  function handleEdit(value: any) {
-    mutate(
-      { action: "update", _id: value._id, data: value },
-      {
-        onSuccess: () => {},
-      },
-    );
-  }
-
-  function handleAdd(value: any) {
-    mutate(
-      { action: "add", data: value },
-      {
-        onSuccess: () => {},
-      },
-    );
-  }
-
   function handleChangeFilterTime(value: any) {
     const start_date = value?.[0].format("DD/MM/YYYY");
     const end_date = value?.[1].format("DD/MM/YYYY");
@@ -148,6 +105,6 @@ export const TTXVNNewsPage: React.FC<Props> = () => {
   }
 
   function handleChangeTypeCrawl(value: string) {
-    setFilterTTXVN({ ...filterTTXVN, check_crawl: value });
+    setFilterTTXVN({ ...filterTTXVN, crawling: value });
   }
 };
