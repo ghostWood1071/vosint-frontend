@@ -1,4 +1,4 @@
-import { Button, DatePicker, Input, List, Space } from "antd";
+import { Button, DatePicker, Empty, Input, List, Space } from "antd";
 import { flatMap, unionBy } from "lodash";
 import React, { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
@@ -32,17 +32,10 @@ export const SystemEventPage: React.FC<Props> = () => {
     system_created: true,
   });
   const setQuickEvent = useQuickReportModalState((state) => state.setEvent);
-
   const dataSource = unionBy(flatMap(data?.pages.map((a) => a?.data?.map((e: any) => e))), "_id");
-
-  useEffect(() => {
-    queryClient.removeQueries([EVENT_CACHE_KEYS.ListEvents]);
-    setSkip(1);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   useEffect(() => {
     if (inView && skip * 50 <= data?.pages[0].total) {
+      fetchNextPage({ pageParam: { skip: skip + 1, limit: 50 } });
       setSkip(skip + 1);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -54,11 +47,6 @@ export const SystemEventPage: React.FC<Props> = () => {
     setSkip(1);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filterEvent]);
-
-  useEffect(() => {
-    fetchNextPage({ pageParam: { skip: skip, limit: 50 } });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [skip]);
 
   return (
     <div className={styles.mainContainer}>
@@ -83,21 +71,24 @@ export const SystemEventPage: React.FC<Props> = () => {
       </div>
       <div className={styles.body}>
         <div className={styles.recordsContainer}>
-          <List
-            itemLayout="vertical"
-            size="small"
-            dataSource={dataSource}
-            renderItem={(item) => {
-              return (
-                <SystemEventItem
-                  item={item}
-                  eventChoosedList={eventChoosedList}
-                  setEventChoosedList={setEventChoosedList}
-                />
-              );
-            }}
-          />
-
+          {dataSource[0] !== undefined ? (
+            <List
+              itemLayout="vertical"
+              size="small"
+              dataSource={dataSource}
+              renderItem={(item) => {
+                return (
+                  <SystemEventItem
+                    item={item}
+                    eventChoosedList={eventChoosedList}
+                    setEventChoosedList={setEventChoosedList}
+                  />
+                );
+              }}
+            />
+          ) : (
+            <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={"Trống"} />
+          )}
           {skip >= 1 ? (
             <div>
               <button

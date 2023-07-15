@@ -52,24 +52,27 @@ export const InternationalRelationshipGraph = () => {
 
   function groupByDateCreated(array: any) {
     const grouped = array.reduce((prev: any, curr: any) => {
-      if (curr.date_created in prev) {
-        prev[curr.date_created].push(curr);
+      if (curr?.date_created in prev) {
+        prev[curr?.date_created].push(curr);
       } else {
-        prev[curr.date_created] = [curr];
+        prev[curr?.date_created] = [curr];
       }
       return prev;
     }, {});
     const result: any[] = [];
-    Object.keys(grouped).forEach((key) => {
-      result.push({ id: key, date: key, data: grouped[key] });
-    });
+    if (Object.keys(grouped)[0]) {
+      Object.keys(grouped).forEach((key) => {
+        result.push({ id: key, date: key, data: grouped[key] });
+      });
+    }
+
     return result;
   }
   React.useEffect(() => {
     const dataTime = groupByDateCreated(dataEvents);
     setTimelineData(dataTime);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data, skip]);
+  }, [data]);
 
   React.useEffect(() => {
     if (inView && skip * 50 <= data?.pages[0].total) {
