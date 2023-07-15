@@ -8,11 +8,11 @@ interface Props {
 }
 
 export function NewsFilterProvider({ children }: Props) {
-  const [state, setState] = useState<Record<string, any>>({});
+  const [filter, setFilter] = useState<Record<string, any>>({});
 
   return (
-    <NewsFilterContext.Provider value={state}>
-      <NewsFilterDispatchContext.Provider value={setState}>
+    <NewsFilterContext.Provider value={filter}>
+      <NewsFilterDispatchContext.Provider value={setFilter}>
         {children}
       </NewsFilterDispatchContext.Provider>
     </NewsFilterContext.Provider>

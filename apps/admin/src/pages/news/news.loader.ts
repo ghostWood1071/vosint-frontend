@@ -21,7 +21,7 @@ import {
   getNewsBookmarksWithApiJob,
   getNewsByNewsletterWithApiJob,
   getNewsDetail,
-  getNewsList,
+  getNewsFormElt,
   getNewsListWithApiJob,
   getNewsSidebar,
   getNewsSummary,
@@ -212,6 +212,24 @@ export const useInfiniteNewsList = (filter: any) => {
         : { page_number: 1, page_size: 50, ...filter },
     ),
   );
+};
+
+export const useInfiniteNewsFormElt = (id: string, filter: any, tag: string) => {
+  return useInfiniteQuery([CACHE_KEYS.NewsList, id], ({ pageParam }) => {
+    return getNewsFormElt({
+      page_number: 1,
+      page_size: 50,
+      groupType: id === ETreeTag.QUAN_TRONG ? "vital" : id === ETreeTag.DANH_DAU ? "bookmarks" : "",
+      search_Query: filter.text_search,
+      startDate: filter.startDate,
+      endDate: filter.endDate,
+      langs: filter?.langs ? filter.langs.join(",") : "",
+      sentiment: filter?.sentiment,
+      id_nguon_nhom_nguon: tag === "source" || tag === "source_group" ? id : "",
+      type: tag === "source" || tag === "source_group" ? tag : "",
+      news_letter_id: tag === "chu_de" || tag === "linh_vuc" ? id : "",
+    });
+  });
 };
 
 export const useInfiniteNewsByNewsletter = (id: string, filter: any, tag: string) => {

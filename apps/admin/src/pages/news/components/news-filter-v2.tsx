@@ -22,7 +22,7 @@ import { shallow } from "zustand/shallow";
 import { useNewsFilter, useNewsFilterDispatch } from "../news.context";
 import styles from "./news-filter.module.less";
 
-export function NewsFilter(): JSX.Element {
+export function NewsFilterV2(): JSX.Element {
   let { newsletterId: detailIds, tag } = useParams();
   const pinned = useSidebar((state) => state.pinned);
   const [newsSelection, setNewsSelection] = useNewsSelection(
@@ -58,7 +58,7 @@ export function NewsFilter(): JSX.Element {
             <Select.Option key="nguon">Hiển thị ngôn ngữ nguồn</Select.Option>
           </Select>
         </Form.Item>
-        <Form.Item className={styles.item} name="language_source">
+        <Form.Item className={styles.item} name="langs">
           <Select
             placeholder="Ngôn ngữ"
             mode="multiple"
@@ -72,7 +72,7 @@ export function NewsFilter(): JSX.Element {
             <Select.Option key="ru">Tiếng Nga</Select.Option>
           </Select>
         </Form.Item>
-        <Form.Item className={styles.item} name="sac_thai">
+        <Form.Item className={styles.item} name="sentiment">
           <Select placeholder="Điểm tin">
             <Select.Option key="">Sắc thái tin</Select.Option>
             <Select.Option key="1">Tích cực</Select.Option>
@@ -122,8 +122,8 @@ export function NewsFilter(): JSX.Element {
 
   function handleFinish(values: Record<string, any>) {
     if ("datetime" in values) {
-      values.start_date = values.datetime?.[0].format("DD/MM/YYYY");
-      values.end_date = values.datetime?.[1].format("DD/MM/YYYY");
+      values.startDate = values.datetime?.[0].format("DD/MM/YYYY");
+      values.endDate = values.datetime?.[1].format("DD/MM/YYYY");
       delete values.datetime;
     }
     if ("language_source" in values) {
