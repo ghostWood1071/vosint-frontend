@@ -1,4 +1,4 @@
-import { getTTXVNNews, updateTTXVNNews } from "@/services/ttxvn.service";
+import { getTTXVNNews, handleCrawlNews } from "@/services/ttxvn.service";
 import { message } from "antd";
 import { useInfiniteQuery, useMutation, useQueryClient } from "react-query";
 
@@ -11,7 +11,7 @@ export const useInfiniteTTXVNList = (filter: any) => {
     getTTXVNNews(
       data.pageParam !== undefined
         ? { ...data.pageParam, ...filter }
-        : { skip: 1, limit: 50, ...filter },
+        : { page_number: 1, page_size: 50, ...filter },
     ),
   );
 };
@@ -19,28 +19,19 @@ export const useInfiniteTTXVNList = (filter: any) => {
 export const useMutationTTXVN = () => {
   const queryClient = useQueryClient();
   return useMutation(
-    ({ action, _id, data }: any) => {
-      if (action === "update") {
-        return updateTTXVNNews(_id, data);
-      }
-
-      throw new Error("action invalid");
+    ({ id }: any) => {
+      return handleCrawlNews(id);
     },
     {
       onSuccess: (data: any, variables) => {
         queryClient.invalidateQueries([TTXVN_CACHE_KEYS.ListTTXVN]);
         message.success({
-          content:
-            (variables.action === "update"
-              ? "Sửa"
-              : variables.action === "add"
-              ? "Thêm mới"
-              : "Xoá") + " sự kiện thành công",
+          content: "Đã lấy tin thành công",
         });
       },
       onError: () => {
         message.error({
-          content: "Tên sự kiện đã tồn tại. Hãy nhập lại!",
+          content: "Đã xảy ra lỗi!",
         });
       },
     },

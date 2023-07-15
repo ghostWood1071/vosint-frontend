@@ -1,18 +1,17 @@
 import { apiClient, filterEmptyString } from "@/utils/api";
 
-const apiTTXVNNewsBaseV2Url = "";
+const apiTTXVNUrl = "pipeline/Job/api";
 
 export const getTTXVNNews = async (filter: any) => {
-  const result = await apiClient.get<any>(
-    `${apiTTXVNNewsBaseV2Url}/vnnew/get-craw-vnnew/${filter.check_crawl ?? "all"}`,
-    {
-      params: filterEmptyString(filter),
-    },
-  );
+  const result = await apiClient.post<any>(`${apiTTXVNUrl}/get_table_ttxvn`, "", {
+    params: filterEmptyString(filter),
+  });
   return result.data;
 };
 
-export const updateTTXVNNews = async (id: string, data: any) => {
-  const result = await apiClient.put(`${apiTTXVNNewsBaseV2Url}/${id}`, data);
-  return result.data;
+export const handleCrawlNews = async (id: string) => {
+  const result = await apiClient.post(`${apiTTXVNUrl}/crawling_ttxvn/`, "", {
+    params: filterEmptyString({ id: id }),
+  });
+  return result;
 };
