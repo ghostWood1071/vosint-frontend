@@ -1,4 +1,4 @@
-import { BASE_URL_SUMM } from "@/constants/config";
+import { BASE_URL_JOB, BASE_URL_SUMM } from "@/constants/config";
 import { apiClient, filterEmptyString } from "@/utils/api";
 
 import type { INewsSummaryDto } from "./news.type";
@@ -46,12 +46,15 @@ export const getNewsByNewsletterWithApiJob = async (
   newsletterId: string,
   filter: Record<string, string>,
 ) => {
-  const result = await apiClient.get(`${apiNewsBaseV2Url}/Job/api/get_news_from_newsletter_id`, {
-    params: filterEmptyString({
-      ...filter,
-      news_letter_id: newsletterId,
-    }),
-  });
+  const result = await apiClient.get(
+    `${BASE_URL_JOB}${apiNewsBaseV2Url}/Job/api/get_news_from_newsletter_id`,
+    {
+      params: filterEmptyString({
+        ...filter,
+        news_letter_id: newsletterId,
+      }),
+    },
+  );
   return result.data;
 };
 
@@ -124,12 +127,23 @@ export const getNewsBookmarks = async (filter: Record<string, string>) => {
 };
 
 export const getNewsBookmarksWithApiJob = async (filter: Record<string, string>) => {
-  const result = await apiClient.get(`${apiNewsBaseV2Url}/Job/api/get_news_from_newsletter_id`, {
-    params: filterEmptyString({
-      ...filter,
-      bookmarks: "1",
-    }),
-  });
+  const result = await apiClient.get(
+    `${BASE_URL_JOB}${apiNewsBaseV2Url}/Job/api/get_news_from_newsletter_id`,
+    {
+      params: filterEmptyString({
+        ...filter,
+        bookmarks: "1",
+      }),
+    },
+  );
+  return result.data;
+};
+
+export const getNewsFormElt = async (filter: Record<string, any>) => {
+  const result = await apiClient.post(
+    `${BASE_URL_JOB}/Job/api/get_news_from_elt`,
+    filterEmptyString(filter),
+  );
   return result.data;
 };
 
@@ -151,12 +165,15 @@ export const getNewsVitals = async (filter: Record<string, string>) => {
 };
 
 export const getNewsVitalsWithApiJob = async (filter: Record<string, string>) => {
-  const result = await apiClient.get(`${apiNewsBaseV2Url}/Job/api/get_news_from_newsletter_id`, {
-    params: filterEmptyString({
-      ...filter,
-      vital: "1",
-    }),
-  });
+  const result = await apiClient.get(
+    `${BASE_URL_JOB}${apiNewsBaseV2Url}/Job/api/get_news_from_newsletter_id`,
+    {
+      params: filterEmptyString({
+        ...filter,
+        vital: "1",
+      }),
+    },
+  );
   return result.data;
 };
 

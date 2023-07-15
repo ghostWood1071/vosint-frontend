@@ -155,6 +155,28 @@ export function SynthesisReport(): JSX.Element {
           </div>
         </Col>
         <Col md={isOpen ? 16 : 21} span={isOpen ? 16 : 22} className={styles.container}>
+          <Space className={styles.menu_action}>
+            <Button
+              title="Xuất file ra docx"
+              icon={<OutlineFileWordIcon />}
+              onClick={handleExportDocx}
+            />
+            <Button
+              className={styles.save}
+              icon={<SaveOutlined />}
+              type="primary"
+              title="Lưu báo cáo"
+              onClick={handleSave}
+            />
+            <Button
+              icon={<DeleteOutlined />}
+              danger
+              title="Xoá báo cáo"
+              onClick={handleDelete}
+              loading={isDeleting}
+            />
+          </Space>
+
           <Row justify={"space-between"} align={"middle"}>
             <Col span={4}></Col>
             <Col span={16} className={styles.title} pull={4}>
@@ -187,29 +209,7 @@ export function SynthesisReport(): JSX.Element {
 
           <Headings headingsData={headings} onDeleteEvent={handleDeleteEvent} />
         </Col>
-        <Col md={isOpen ? 4 : 2} span={isOpen ? 4 : 1} className={styles.action} pull={3}>
-          <Space>
-            <Button
-              title="Xuất file ra docx"
-              icon={<OutlineFileWordIcon />}
-              onClick={handleExportDocx}
-            />
-            <Button
-              className={styles.save}
-              icon={<SaveOutlined />}
-              type="primary"
-              title="Lưu báo cáo"
-              onClick={handleSave}
-            />
-            <Button
-              icon={<DeleteOutlined />}
-              danger
-              title="Xoá báo cáo"
-              onClick={handleDelete}
-              loading={isDeleting}
-            />
-          </Space>
-        </Col>
+        <Col md={isOpen ? 4 : 2} span={isOpen ? 4 : 1} className={styles.action}></Col>
       </Row>
 
       <Modal

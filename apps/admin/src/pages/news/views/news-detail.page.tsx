@@ -9,13 +9,13 @@ import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { shallow } from "zustand/shallow";
 
-import { NewsFilter } from "../components/news-filter";
+import { NewsFilterV2 } from "../components/news-filter-v2";
 import { NewsTableItem } from "../components/table-news";
 import { useNewsFilter } from "../news.context";
 import {
   CACHE_KEYS,
   useDeleteNewsInNewsletter,
-  useInfiniteNewsByNewsletter,
+  useInfiniteNewsFormElt,
   useMutationChangeStatusSeenPost,
   useNewsIdToNewsletter,
 } from "../news.loader";
@@ -29,7 +29,7 @@ export const NewsDetailPage = () => {
   const [skip, setSkip] = useState(1);
   const newsFilter = useNewsFilter();
   const { mutate: mutateChangeStatusSeenPost } = useMutationChangeStatusSeenPost();
-  const { data, isFetchingNextPage, fetchNextPage, hasNextPage } = useInfiniteNewsByNewsletter(
+  const { data, isFetchingNextPage, fetchNextPage, hasNextPage } = useInfiniteNewsFormElt(
     newsletterId!,
     newsFilter,
     tag ?? "",
@@ -60,19 +60,15 @@ export const NewsDetailPage = () => {
 
   useEffect(() => {
     if (inView && skip * 50 < data?.pages[data?.pages.length - 1].total_record) {
+      fetchNextPage({ pageParam: { page_number: skip + 1, page_size: 50 } });
       setSkip(skip + 1);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inView]);
 
-  useEffect(() => {
-    fetchNextPage({ pageParam: { page_number: skip, page_size: 50 } });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [skip]);
-
   return (
     <>
-      <NewsFilter />
+      <NewsFilterV2 />
       <div className={styles.mainContainer}>
         <div className={styles.bodyNews}>
           <table style={{ width: "100%" }}>
@@ -114,6 +110,10 @@ export const NewsDetailPage = () => {
 
   async function handleUpdateCache(value: string, attachedFunction: Function) {
     const dataCache: any = queryClient.getQueryData(CACHE_KEYS.NewsList);
+    // This loop iterates over the pages in the dataCache object and their results to find the index of the item with the given value.
+    // It uses two index variables, index1 and index2, to keep track of the current page and item indices.
+    // If the item is found, the loop breaks and the indices are stored in index1 and index2.
+    // If the item is not found, index1 and index2 remain 0.
     let index1 = 0;
     let index2 = 0;
     for (let i = 0; i < dataCache.pages.length; i++) {
