@@ -10,7 +10,7 @@ export const getTTXVNNews = async (filter: any) => {
 };
 
 export const handleCrawlNews = async (id: string) => {
-  const result = await apiClient.post(`${apiTTXVNUrl}/crawling_ttxvn/`, "", {
+  const result = await apiClient.post(`${apiTTXVNUrl}/crawling_ttxvn`, "", {
     params: filterEmptyString({ id: id }),
   });
   return result;
