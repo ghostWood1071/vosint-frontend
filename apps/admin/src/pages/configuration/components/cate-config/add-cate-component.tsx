@@ -104,11 +104,7 @@ export const AddCateComponent: React.FC<Props> = ({
           formDataa.append("file", newFile);
 
           const result = await uploadFile(formDataa);
-<<<<<<< HEAD
           url = `${BASE_URL}/${result.data[0].file_url}`;
-=======
-          url = BASE_URL + result.data[0].file_url;
->>>>>>> main
         }
         const result = {
           ...values,
@@ -136,11 +132,7 @@ export const AddCateComponent: React.FC<Props> = ({
           formDataa.append("file", newFile);
 
           const result = await uploadFile(formDataa);
-<<<<<<< HEAD
           url = `${BASE_URL}/${result.data[0].file_url}`;
-=======
-          url = BASE_URL + result.data[0].file_url;
->>>>>>> main
         } else {
           url = choosedCate.avatar_url;
         }
