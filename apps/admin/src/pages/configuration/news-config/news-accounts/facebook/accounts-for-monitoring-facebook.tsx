@@ -1,3 +1,4 @@
+import { BASE_URL } from "@/constants/config";
 import {
   CACHE_KEYS,
   useAdminMonitor,
@@ -5,6 +6,7 @@ import {
   usePostAccountMonitor,
   useProxyConfig,
 } from "@/pages/configuration/config.loader";
+import { uploadFile } from "@/services/cate-config.service";
 import { PlusOutlined } from "@ant-design/icons";
 import { Button, Form, Input, Modal, PageHeader, message } from "antd";
 import React, { useState } from "react";
@@ -32,6 +34,7 @@ export const AccountForMonitoringFacebook: React.FC = () => {
   const { data: listProxy } = useProxyConfig({
     text_search: searchParams.get("text_search") ?? "",
   });
+  const [fileList, setFileList] = React.useState<any[]>([]);
   const onSearch = (valueFilter: string) => {
     searchParams.set("username", valueFilter);
     setSearchParams(searchParams);
@@ -76,6 +79,8 @@ export const AccountForMonitoringFacebook: React.FC = () => {
           valueTarget
           valueActive={"add"}
           form={form ?? []}
+          fileList={fileList}
+          setFileList={setFileList}
           onFinish={handleFinishCreate}
         />
       </Modal>
@@ -94,7 +99,7 @@ export const AccountForMonitoringFacebook: React.FC = () => {
     form.submit();
   }
 
-  function handleFinishCreate(values: any) {
+  async function handleFinishCreate(values: any) {
     values.social = "Facebook";
     const values_by_id = values.list_proxy?.map((id: any) =>
       listProxy?.data.find((item: any) => item._id === id),
@@ -115,7 +120,16 @@ export const AccountForMonitoringFacebook: React.FC = () => {
         follow_id: item._id,
         social_name: item.social_name,
       })) ?? [];
+    values.cookie_url = "";
+    if (fileList[0] !== undefined) {
+      var newFile: any = fileList[0].originFileObj;
+      delete newFile["uid"];
+      const formDataa: any = new FormData();
+      formDataa.append("file", newFile);
 
+      const result = await uploadFile(formDataa);
+      values.cookie_url = `${BASE_URL}/${result.data[0].file_url}`;
+    }
     mutate(values, {
       onSuccess: () => {
         queryClient.invalidateQueries([CACHE_KEYS.InfoAccountMonitorFB]);

@@ -1,8 +1,8 @@
 import { useGetMe } from "@/pages/auth/auth.loader";
 import { useQuickReportModalState } from "@/pages/news/components/quick-report-modal/index.state";
 import { convertTimeToShowInUI } from "@/utils/tool-validate-string";
-import { BellOutlined, CloseOutlined, StarTwoTone } from "@ant-design/icons";
-import { Checkbox, Space, Tooltip, message } from "antd";
+import { BellOutlined, CloseOutlined, ShareAltOutlined, StarTwoTone } from "@ant-design/icons";
+import { Checkbox, Space, Tooltip, message, Empty, Typography } from "antd";
 import React, { useEffect, useRef, useState } from "react";
 
 import { useMutationSystemEvents } from "../event.loader";
@@ -177,6 +177,19 @@ export const SystemEventItem: React.FC<Props> = ({
                   }
                   return <p>{e + "."}</p>;
                 })}
+              </div>
+              <div className={styles.listNewsContainer}>
+                <div className={styles.titleText}>Danh sách các tin:</div>
+                {item.new_list?.length === 0 && item.news_added_by_user?.length === 0 && (
+                  <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={"Trống"} />
+                )}
+                {item.new_list?.map((e: any) => (
+                  <div key={e._id} className={styles.titleNews}>
+                    <Typography.Link href={e?.["data:url"]} target="_blank" rel="noreferrer">
+                      <ShareAltOutlined /> {e?.["data:title"]}
+                    </Typography.Link>
+                  </div>
+                ))}
               </div>
             </div>
           </div>

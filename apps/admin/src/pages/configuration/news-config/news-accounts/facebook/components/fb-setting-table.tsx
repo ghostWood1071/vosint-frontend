@@ -1,8 +1,10 @@
+import { BASE_URL } from "@/constants/config";
 import {
   CACHE_KEYS,
   useMutationDeleteAccountMonitor,
   useMutationUpdateAccountMonitor,
 } from "@/pages/configuration/config.loader";
+import { uploadFile } from "@/services/cate-config.service";
 import { DeleteOutlined, EditOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
 import { Form, Modal, Popover, Space, Table, TableColumnsType, Tag, Tooltip, message } from "antd";
 import React, { useState } from "react";
@@ -24,7 +26,7 @@ export const SettingTable: React.FC<Props> = ({ data, listProxy, accountMonitor,
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isIdTarget, setIsIdTarget] = useState("");
   const [isValueTarget, setIsValueTarget] = useState<any>();
-
+  const [fileList, setFileList] = React.useState<any[]>([]);
   const queryClient = useQueryClient();
   const [form] = Form.useForm();
   const { mutate: mutateUpdate } = useMutationUpdateAccountMonitor();
@@ -125,6 +127,8 @@ export const SettingTable: React.FC<Props> = ({ data, listProxy, accountMonitor,
           accountMonitor={accountMonitor}
           valueTarget={isValueTarget}
           valueActive={"edit"}
+          fileList={fileList}
+          setFileList={setFileList}
           form={form}
           onFinish={handleFinishEdit}
         />
@@ -146,7 +150,7 @@ export const SettingTable: React.FC<Props> = ({ data, listProxy, accountMonitor,
     form.submit();
   }
 
-  function handleFinishEdit(values: any) {
+  async function handleFinishEdit(values: any) {
     values.id = isIdTarget;
     const values_users_by_id = values.users_follow?.map((id: any) =>
       accountMonitor?.result.find((item: any) => item._id === id),
@@ -167,6 +171,16 @@ export const SettingTable: React.FC<Props> = ({ data, listProxy, accountMonitor,
         ip_address: item.ip_address,
         port: item.port,
       })) ?? [];
+
+    values.cookie_url = "";
+    if (fileList[0] !== undefined) {
+      var newFile: any = fileList[0].originFileObj;
+      delete newFile["uid"];
+      const formDataa: any = new FormData();
+      formDataa.append("file", newFile);
+      const result = await uploadFile(formDataa);
+      values.cookie_url = `${BASE_URL}/${result.data[0].file_url}`;
+    }
     mutateUpdate(values, {
       onSuccess: () => {
         queryClient.invalidateQueries([CACHE_KEYS.InfoAccountMonitorFB]);
