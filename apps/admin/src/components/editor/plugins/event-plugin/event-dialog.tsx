@@ -5,7 +5,13 @@ import { $generateHtmlFromNodes } from "@lexical/html";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
 import { DatePicker, DatePickerProps, Form, Modal, Switch, Table, TableProps } from "antd";
-import { LexicalEditor, createEditor } from "lexical";
+import {
+  $createParagraphNode,
+  $createTextNode,
+  $getRoot,
+  LexicalEditor,
+  createEditor,
+} from "lexical";
 import React, { useEffect, useMemo, useState } from "react";
 import { create } from "zustand";
 import { shallow } from "zustand/shallow";
@@ -298,8 +304,18 @@ export function EventEditorParagraph({ data }: { data: string }) {
     if (eventEditor === null) return;
 
     eventEditor.update(() => {
-      const editorState = eventEditor.parseEditorState(data);
-      eventEditor.setEditorState(editorState);
+      try {
+        const editorState = eventEditor.parseEditorState(data);
+        eventEditor.setEditorState(editorState);
+      } catch {
+        // const editorState = eventEditor.parseEditorState(defaultContentEvent);
+        // eventEditor.setEditorState(editorState);
+        const root = $getRoot();
+        const paragraphNode = $createParagraphNode();
+        const textNode = $createTextNode(data);
+        paragraphNode.append(textNode);
+        root.append(paragraphNode);
+      }
     });
   }, [data, eventEditor]);
 

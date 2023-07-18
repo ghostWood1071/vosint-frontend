@@ -22,8 +22,8 @@ const headingLevel: Record<number, HeadingLevel> = {
   6: HeadingLevel.HEADING_6,
 };
 export function PeriodicReportDetail(): JSX.Element {
-  const [title, setTitle] = useState("Tên báo cáo");
-  const [headings, setHeadings] = useState<any[]>([]);
+  // const [title, setTitle] = useState("Tên báo cáo");
+  // const [headings, setHeadings] = useState<any[]>([]);
   const { id } = useParams<{ id: string }>();
   const [dateTime, setDateTime] = useEventsState(
     (state) => [state.dateTimeFilter, state.setDateTimeFilter],
@@ -62,11 +62,11 @@ export function PeriodicReportDetail(): JSX.Element {
   datatest = datatest?.concat(dataWithDefaultParentId);
 
   const dataSelect = dataEventsById?.infor_tree?.filter((item: any) => item._id === id) ?? [];
-  useEffect(() => {
-    if (!dataSelect[0]) return;
-    setTitle(dataSelect[0].title);
-    setHeadings(datatest);
-  }, []);
+  // useEffect(() => {
+  //   if (!dataSelect[0]) return;
+  //   setTitle(dataSelect[0].title);
+  //   setHeadings(datatest);
+  // }, []);
   const [isOpen, setIsOpen] = useState(true);
 
   return (

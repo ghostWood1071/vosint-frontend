@@ -2,6 +2,7 @@ import { useEventContext } from "@/components/editor/plugins/event-plugin/event-
 import { filterIsBetween } from "@/components/editor/plugins/events-plugin/events-components";
 import { useEventsState } from "@/components/editor/plugins/events-plugin/events-state";
 import { generateHTMLFromJSON } from "@/pages/events/components/event-item";
+import { useGetNewsFromTTXVN } from "@/pages/news/news.loader";
 import { IEventDto } from "@/services/report-type";
 import { getEvent } from "@/services/report.service";
 import { useLexicalComposerContext } from "@aiacademy/editor";
@@ -10,9 +11,11 @@ import { Alert, Button, Col, Collapse, List, Row, Spin, Typography } from "antd"
 import { AxiosError } from "axios";
 import classNames from "classnames";
 import { createEditor } from "lexical";
+import moment from "moment";
 import { useMemo } from "react";
 import { UseQueryResult, useQueries } from "react-query";
 
+import { queryStringDslTTXVN } from "./quick-heading.utils";
 import styles from "./quick-headings.module.less";
 
 export const headingLevel: Record<number, string> = {
@@ -58,11 +61,18 @@ export function QuickHeadings({ headingsData, onDeleteEvent }: Props): JSX.Eleme
               {" " + heading?.username}
             </Typography.Paragraph>
           </Row>
-          <Events
-            headingId={heading.id}
-            eventIds={heading.eventIds}
-            onDeleteEvent={onDeleteEvent?.(heading.id)}
-          />
+          {heading.ttxvn ? (
+            <EventsTTXVN
+              required_keyword={heading.required_keyword}
+              exclusion_keyword={heading.exclusion_keyword}
+            />
+          ) : (
+            <Events
+              headingId={heading.id}
+              eventIds={heading.eventIds}
+              onDeleteEvent={onDeleteEvent?.(heading.id)}
+            />
+          )}
         </div>
       ))}
     </div>
@@ -74,6 +84,7 @@ interface EventsProps {
   eventIds: string[];
   onDeleteEvent?: (eventId: string) => void;
 }
+
 function Events({ eventIds, headingId, onDeleteEvent }: EventsProps): JSX.Element | null {
   const [editor] = useLexicalComposerContext();
   const { eventEditorConfig } = useEventContext();
@@ -143,7 +154,12 @@ function Events({ eventIds, headingId, onDeleteEvent }: EventsProps): JSX.Elemen
                 />
               </Col>
             </Row>
-            <Typography.Text italic>Thời gian: {event.data?.date_created}</Typography.Text>
+            <Typography.Text italic>
+              Thời gian:{" "}
+              {event.data?.date_created
+                ? moment(event.data?.date_created).format("DD/MM/YYYY")
+                : null}
+            </Typography.Text>
             <br />
             <div
               dangerouslySetInnerHTML={{
@@ -176,6 +192,48 @@ function Events({ eventIds, headingId, onDeleteEvent }: EventsProps): JSX.Elemen
           </div>
         );
       })}
+    </div>
+  );
+}
+
+function EventsTTXVN({
+  required_keyword,
+  exclusion_keyword,
+}: {
+  required_keyword: string[];
+  exclusion_keyword: string;
+}) {
+  const [startDate, endDate] = useEventsState((state) => state.dateTimeFilter);
+
+  const { data } = useGetNewsFromTTXVN({
+    from: startDate,
+    endDate: endDate,
+    text_search: queryStringDslTTXVN({
+      required_keyword: required_keyword,
+      exclusion_keyword: exclusion_keyword,
+    }),
+  });
+
+  const events = data?.result ?? [];
+
+  return (
+    <div className={styles.events}>
+      {events.map((event: any, index: number) => (
+        <div className={styles.event} key={index}>
+          <Row justify="space-between" align={"middle"}>
+            <Col span={21}>
+              <Typography.Text ellipsis className={styles.eventTitle} italic strong>
+                {event.Title}
+              </Typography.Text>
+            </Col>
+          </Row>
+          <Typography.Text italic>
+            Thời gian: {event.PublishDate ? moment(event.PublishDate).format("DD/MM/YYYY") : null}
+          </Typography.Text>
+          <br />
+          <div>{event.content}</div>
+        </div>
+      ))}
     </div>
   );
 }

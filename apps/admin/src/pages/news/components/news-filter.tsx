@@ -21,6 +21,7 @@ import { shallow } from "zustand/shallow";
 
 import { useNewsFilter, useNewsFilterDispatch } from "../news.context";
 import styles from "./news-filter.module.less";
+import { NewsSummaryModal } from "./news-summary-modal";
 
 export function NewsFilter(): JSX.Element {
   let { newsletterId: detailIds, tag } = useParams();
@@ -80,14 +81,7 @@ export function NewsFilter(): JSX.Element {
             <Select.Option key="0">Trung tính</Select.Option>
           </Select>
         </Form.Item>
-        <Button
-          className={styles.item}
-          style={{ borderColor: newsSelectionIds.length === 0 ? "rgb(230,230,230)" : "#1890ff" }}
-          disabled={newsSelectionIds.length === 0}
-          onClick={handleNewsSummary}
-        >
-          Tóm tắt tin ({newsSelectionIds.length})
-        </Button>
+        <NewsSummaryModal />
         <Button
           className={styles.item}
           icon={<PlusCircleTwoTone />}

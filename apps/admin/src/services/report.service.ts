@@ -15,6 +15,11 @@ export const getEvent = async (id: string) => {
   return result.data;
 };
 
+export const getEventTTXVN = async (queryString: string) => {
+  const result = await apiClient.get(`${apiEventBaseV2Url}/event/ttxvn?${queryString}`);
+  return result.data;
+};
+
 export const getEvents = async (filter: Record<string, any>) => {
   const result = await apiClient.get<TEvents>(`${apiEventBaseV2Url}/event`, {
     params: filter,

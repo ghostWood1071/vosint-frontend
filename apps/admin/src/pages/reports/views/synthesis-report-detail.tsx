@@ -39,6 +39,7 @@ import {
   useHeadingTocDispatchContext,
 } from "../components/heading-toc.context";
 import { Headings, HeadingsData } from "../components/headings";
+import { IQuickHeading } from "../components/quick-heading";
 import {
   CACHE_KEYS,
   useDeleteReport,
@@ -291,7 +292,7 @@ export function SynthesisReport(): JSX.Element {
   async function handleExportDocx() {
     const blobData = await convertHeadingsToDocx({
       title,
-      headings,
+      headings: headings as IQuickHeading[],
       dateTime,
     });
     Packer.toBlob(blobData).then((blob) => {

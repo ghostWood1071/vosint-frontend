@@ -124,8 +124,7 @@ export function EventsComponent({ className, eventsId, format, nodeKey }: Events
 
 export function filterIsBetween(date: string | null, start: string, end: string) {
   if (!date) return false;
-
-  const dateParse = moment(date, "DD/MM/YYYY").toDate();
+  const dateParse = moment(date).toDate();
   const startParse = moment(start, "DD/MM/YYYY").toDate();
   const endParse = moment(end, "DD/MM/YYYY").toDate();
 

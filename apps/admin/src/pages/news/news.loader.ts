@@ -22,6 +22,7 @@ import {
   getNewsByNewsletterWithApiJob,
   getNewsDetail,
   getNewsFormElt,
+  getNewsFromTTXVN,
   getNewsListWithApiJob,
   getNewsSidebar,
   getNewsSummary,
@@ -51,6 +52,7 @@ export const CACHE_KEYS = {
   NewsletterDetail: "NEWSLETTER_DETAIL",
   Summary: "SUMMARY",
   NewsEvent: "NEWS_EVENT",
+  NewsTTXVN: "NEWS_TTXVN",
 };
 
 export const useNewsSidebar = (title?: string) => {
@@ -217,8 +219,8 @@ export const useInfiniteNewsList = (filter: any) => {
 export const useInfiniteNewsFormElt = (id: string, filter: any, tag: string) => {
   return useInfiniteQuery([CACHE_KEYS.NewsList, id], ({ pageParam }) => {
     return getNewsFormElt({
-      page_number: 1,
-      page_size: 50,
+      page_number: pageParam?.page_number || 1,
+      page_size: pageParam?.page_size || 50,
       groupType: id === ETreeTag.QUAN_TRONG ? "vital" : id === ETreeTag.DANH_DAU ? "bookmarks" : "",
       search_Query: filter.text_search,
       startDate: filter.startDate,
@@ -227,7 +229,19 @@ export const useInfiniteNewsFormElt = (id: string, filter: any, tag: string) => 
       sentiment: filter?.sentiment,
       id_nguon_nhom_nguon: tag === "source" || tag === "source_group" ? id : "",
       type: tag === "source" || tag === "source_group" ? tag : "",
-      news_letter_id: tag === "chu_de" || tag === "linh_vuc" ? id : "",
+      news_letter_id: tag === "chu_de" || tag === "linh_vuc" || tag === "gio_tin" ? id : "",
+    });
+  });
+};
+
+export const useGetNewsFromTTXVNInfinite = (filter: Record<string, any>) => {
+  return useInfiniteQuery([CACHE_KEYS.NewsTTXVN, filter], ({ pageParam }) => {
+    return getNewsFromTTXVN({
+      page_number: pageParam?.page_number || 1,
+      page_size: pageParam?.page_size || 50,
+      text_search: filter.text_search,
+      startDate: filter.startDate,
+      endDate: filter.endDate,
     });
   });
 };
@@ -383,4 +397,14 @@ export const useMutationGenerateSystemEvent = () => {
       },
     },
   );
+};
+
+export const useGetNewsFromTTXVN = (filter: Record<string, any>) => {
+  return useQuery([CACHE_KEYS.NewsTTXVN, filter], () => {
+    return getNewsFromTTXVN({
+      text_search: filter.text_search,
+      startDate: filter.startDate,
+      endDate: filter.endDate,
+    });
+  });
 };

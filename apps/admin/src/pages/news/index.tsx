@@ -14,3 +14,8 @@ export const NewsDetailPage = lazyLoad(
   (module) => module.NewsDetailPage,
   { fallback: <SplashScreen /> },
 );
+
+export const NewsTTXVNPage = lazyLoad(
+  () => import("./views/news-ttxvn.page"),
+  (module) => module.NewsTTXVNPage,
+);
