@@ -1,9 +1,7 @@
 import { apiClient, filterEmptyString } from "@/utils/api";
 
-const apiUserBaseUrl = "";
-
 export const getUsers = async (filter: Record<string, string>) => {
-  const result = await apiClient.get<any>(`${apiUserBaseUrl}/user`, {
+  const result = await apiClient.get<any>(`/user`, {
     params: filterEmptyString(filter),
   });
 
@@ -11,28 +9,28 @@ export const getUsers = async (filter: Record<string, string>) => {
 };
 
 export const createUser = async (body: any) => {
-  const result = await apiClient.post(`${apiUserBaseUrl}/user`, body);
+  const result = await apiClient.post(`/user`, body);
   return result.data;
 };
 
 export const updateUser = async (id: string, body: any) => {
-  const result = await apiClient.put(`${apiUserBaseUrl}/user/${id}`, body);
+  const result = await apiClient.put(`/user/${id}`, body);
   return result.data;
 };
 
 export const updateProfile = async (body: any) => {
-  const result = await apiClient.put(`${apiUserBaseUrl}/user/profile`, body);
+  const result = await apiClient.put(`/user/profile`, body);
   return result.data;
 };
 
 export const deleteUser = async (id: string) => {
-  const result = await apiClient.delete(`${apiUserBaseUrl}/user/${id}`);
+  const result = await apiClient.delete(`/user/${id}`);
   return result.data;
 };
 
 export const uploadAvatar = async (data: FormData) => {
   return apiClient
-    .post<string>(`${apiUserBaseUrl}/user/avatar`, data, {
+    .post<string>(`/user/avatar`, data, {
       headers: {
         accept: "application/json",
         "Content-Type": "multipart/form-data",
