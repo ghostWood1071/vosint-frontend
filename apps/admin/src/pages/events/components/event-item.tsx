@@ -237,14 +237,14 @@ export const EventItem: React.FC<Props> = ({
                   <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={"Trống"} />
                 )}
                 {item.new_list?.map((e: any) => (
-                  <div className={styles.titleNews}>
+                  <div key={e._id} className={styles.titleNews}>
                     <Typography.Link href={e?.["data:url"]} target="_blank" rel="noreferrer">
                       <ShareAltOutlined /> {e?.["data:title"]}
                     </Typography.Link>
                   </div>
                 ))}
                 {item.news_added_by_user?.map((e: any) => (
-                  <div className={styles.titleNews}>
+                  <div key={e.id} className={styles.titleNews}>
                     <Typography.Link href={e?.["link"]} target="_blank" rel="noreferrer">
                       <ShareAltOutlined /> {e?.title}
                     </Typography.Link>

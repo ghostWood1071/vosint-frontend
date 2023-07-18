@@ -1,4 +1,6 @@
-import { Form, FormInstance, Input, Select } from "antd";
+import { UploadOutlined } from "@ant-design/icons";
+import { Button, Form, FormInstance, Input, Select, Upload } from "antd";
+import type { RcFile, UploadFile, UploadProps } from "antd/es/upload/interface";
 import React, { useEffect } from "react";
 
 interface Props {
@@ -6,6 +8,8 @@ interface Props {
   accountMonitor: any;
   valueTarget: any;
   valueActive: any;
+  fileList: any[];
+  setFileList: (value: any[]) => void;
   form: FormInstance<any>;
   onFinish: (values: any) => void;
 }
@@ -24,10 +28,16 @@ export const SettingCreateForm: React.FC<Props> = ({
   valueTarget,
   valueActive,
   form,
+  fileList,
+  setFileList,
   onFinish,
 }) => {
   const validateMessages = {
     required: "Nhập ${label}",
+  };
+
+  const onChange: UploadProps["onChange"] = async ({ fileList: newFileList }) => {
+    setFileList(newFileList);
   };
 
   const initialValues =
@@ -40,6 +50,20 @@ export const SettingCreateForm: React.FC<Props> = ({
       : null;
   useEffect(() => {
     form.setFieldsValue(initialValues);
+    const listItemCookieUrl = valueTarget?.cookie_url?.split("/");
+    setFileList(
+      valueActive === "edit"
+        ? [
+            {
+              uid: "-1",
+              name: listItemCookieUrl?.[listItemCookieUrl?.length - 1],
+              response: '{"status": "success"}',
+              status: "done",
+              url: valueTarget.cookie_url,
+            },
+          ]
+        : [],
+    );
   }, []);
   const initialaccountMonitor = accountMonitor?.result;
   const initialListProxy = listProxy?.data;
@@ -57,7 +81,7 @@ export const SettingCreateForm: React.FC<Props> = ({
           label="Tên"
           rules={[
             {
-              required: true,
+              required: fileList.length < 1,
             },
             {
               whitespace: true,
@@ -72,7 +96,7 @@ export const SettingCreateForm: React.FC<Props> = ({
           label="Password"
           rules={[
             {
-              required: true,
+              required: fileList.length < 1,
             },
             {
               whitespace: true,
@@ -85,15 +109,7 @@ export const SettingCreateForm: React.FC<Props> = ({
         <Form.Item name="social" label="Mạng xã hội">
           <Select defaultValue={"Facebook"} options={[{ value: "Facebook", label: "Facebook" }]} />
         </Form.Item>
-        <Form.Item
-          name="list_proxy"
-          label="Proxy: "
-          rules={[
-            {
-              required: true,
-            },
-          ]}
-        >
+        <Form.Item name="list_proxy" label="Proxy: ">
           <Select
             mode="multiple"
             placeholder="Chọn proxy"
@@ -104,6 +120,18 @@ export const SettingCreateForm: React.FC<Props> = ({
               })) ?? []
             }
           />
+        </Form.Item>
+        <Form.Item label={"Cookie"}>
+          <Upload
+            listType="text"
+            accept={".json"}
+            fileList={valueTarget?.cookie_url !== undefined ? fileList : undefined}
+            maxCount={1}
+            beforeUpload={() => false}
+            onChange={onChange}
+          >
+            <Button icon={<UploadOutlined />}>Upload</Button>
+          </Upload>
         </Form.Item>
         <Form.Item
           name="users_follow"

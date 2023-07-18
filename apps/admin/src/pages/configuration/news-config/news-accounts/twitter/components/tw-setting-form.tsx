@@ -89,11 +89,6 @@ export const SettingCreateForm: React.FC<Props> = ({
           labelCol={{
             span: 6.5,
           }}
-          rules={[
-            {
-              required: true,
-            },
-          ]}
         >
           <Select
             mode="multiple"
@@ -106,15 +101,7 @@ export const SettingCreateForm: React.FC<Props> = ({
             }
           />
         </Form.Item>
-        <Form.Item
-          name="list_proxy"
-          label="Proxy: "
-          rules={[
-            {
-              required: true,
-            },
-          ]}
-        >
+        <Form.Item name="list_proxy" label="Proxy: ">
           <Select
             mode="multiple"
             placeholder="Chọn proxy"

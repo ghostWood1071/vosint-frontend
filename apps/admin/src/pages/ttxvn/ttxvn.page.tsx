@@ -1,4 +1,4 @@
-import { DatePicker, Input, List, Select, Space } from "antd";
+import { DatePicker, Empty, Input, List, Select, Space } from "antd";
 import { debounce, flatMap, unionBy } from "lodash";
 import React, { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
@@ -21,7 +21,7 @@ interface FilterEventProps {
 export const TTXVNNewsPage: React.FC<Props> = () => {
   const [skip, setSkip] = useState<number>(1);
   const pinned = useSidebar((state) => state.pinned);
-  const [filterTTXVN, setFilterTTXVN] = useState<FilterEventProps>();
+  const [filterTTXVN, setFilterTTXVN] = useState<FilterEventProps>({});
   const queryClient = useQueryClient();
   const { ref, inView } = useInView();
   const { data, isFetchingNextPage, fetchNextPage, hasNextPage } = useInfiniteTTXVNList({
@@ -32,7 +32,7 @@ export const TTXVNNewsPage: React.FC<Props> = () => {
   const dataSource = unionBy(flatMap(data?.pages.map((a) => a?.result?.map((e: any) => e))), "_id");
 
   useEffect(() => {
-    if (inView && skip * 50 <= data?.pages[0].total_record) {
+    if (inView && skip * 50 <= data?.pages[0]?.total_record) {
       fetchNextPage({ pageParam: { page_number: skip + 1, page_size: 50 } });
       setSkip(skip + 1);
     }
@@ -74,14 +74,18 @@ export const TTXVNNewsPage: React.FC<Props> = () => {
       </div>
       <div className={styles.body}>
         <div className={styles.recordsContainer}>
-          <List
-            itemLayout="vertical"
-            size="small"
-            dataSource={dataSource}
-            renderItem={(item) => {
-              return <TTXVNNewsItem item={item} />;
-            }}
-          />
+          {dataSource[0] !== undefined ? (
+            <List
+              itemLayout="vertical"
+              size="small"
+              dataSource={dataSource}
+              renderItem={(item) => {
+                return <TTXVNNewsItem item={item} />;
+              }}
+            />
+          ) : (
+            <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={"Trống"} />
+          )}
           {skip >= 1 ? (
             <div>
               <button
