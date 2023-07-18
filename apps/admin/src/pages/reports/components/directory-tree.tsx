@@ -1,4 +1,9 @@
+import { useEventContext } from "@/components/editor/plugins/event-plugin/event-context";
+import { generateHTMLFromJSON } from "@/pages/events/components/event-item";
+import { useLexicalComposerContext } from "@aiacademy/editor";
 import { CaretDownOutlined } from "@ant-design/icons";
+import { createEditor } from "lexical";
+import { useMemo } from "react";
 
 import styles from "./report-layout.module.less";
 
@@ -25,6 +30,22 @@ const Tree = (props: any) => {
 };
 
 export const DirectoryTree: React.FC<Props> = ({ data, id }) => {
+  const [editor] = useLexicalComposerContext();
+  const { eventEditorConfig } = useEventContext();
+  const eventEditor = useMemo(() => {
+    if (eventEditorConfig === null) return null;
+
+    const _eventEditor = createEditor({
+      namespace: eventEditorConfig?.namespace,
+      nodes: eventEditorConfig?.nodes,
+      onError: (error) => eventEditorConfig?.onError(error, editor),
+      theme: eventEditorConfig?.theme,
+    });
+    return _eventEditor;
+  }, [eventEditorConfig]);
+
+  if (eventEditor === null) return null;
+
   // Tạo một hàm đệ quy để xử lý việc tạo cây
   const generateTree = (items: any, parentId: any, level = 0): Array<any> => {
     const parent = items.find((item: any) => item._id === id); // Tìm đối tượng cha có _id bằng 1
@@ -52,7 +73,13 @@ export const DirectoryTree: React.FC<Props> = ({ data, id }) => {
             ) : (
               <div>{title}</div>
             )}
-            {content && <div>{content}</div>}
+            {content && (
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: generateHTMLFromJSON(content, eventEditor),
+                }}
+              />
+            )}
             {list_news && (
               <div>
                 <CaretDownOutlined /> Nguồn tin
@@ -82,7 +109,9 @@ export const DirectoryTree: React.FC<Props> = ({ data, id }) => {
         };
       });
   };
+
   const treeData = generateTree(data, null);
+
   return (
     <div>
       <Tree data={treeData} />

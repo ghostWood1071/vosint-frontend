@@ -4,11 +4,8 @@ import { apiClient, filterEmptyString } from "@/utils/api";
 import { IActionInfos, ILogHistory, IPipeline, IPipelines } from "./pipeline.type";
 import { APIResponse } from "./service.types";
 
-const apiPipelineBaseUrl = "/pipeline/Pipeline/api";
-const apiJobBaseUrl = "/pipeline/Job/api";
-
 export const getPipelines = async (filter: any) => {
-  const url = `${BASE_URL_PIPELINE}${apiPipelineBaseUrl}/get_pipelines`;
+  const url = `${BASE_URL_PIPELINE}/Pipeline/api/get_pipelines`;
   const result = await apiClient.get<APIResponse<IPipelines[]>>(url, {
     params: filterEmptyString(filter),
   });
@@ -19,37 +16,37 @@ export const getPipelines = async (filter: any) => {
 };
 
 export const getPipelineDetail = async (id: string) => {
-  const url = `${BASE_URL_PIPELINE}${apiPipelineBaseUrl}/get_pipeline_by_id/${id}`;
+  const url = `${BASE_URL_PIPELINE}/Pipeline/api/get_pipeline_by_id/${id}`;
   const result = await apiClient.get<APIResponse<IPipeline>>(url);
   return result.data.payload;
 };
 
 export const getActionInfos = async () => {
-  const url = `${BASE_URL_PIPELINE}${apiPipelineBaseUrl}/get_action_infos`;
+  const url = `${BASE_URL_PIPELINE}/Pipeline/api/get_action_infos`;
   const result = await apiClient.get<APIResponse<IActionInfos[]>>(url);
   return result.data.payload;
 };
 
 export const putPipeline = async (data: any) => {
-  const url = `${BASE_URL_PIPELINE}${apiPipelineBaseUrl}/put_pipeline`;
+  const url = `${BASE_URL_PIPELINE}/Pipeline/api/put_pipeline`;
   const result = await apiClient.post<APIResponse<any>>(url, data);
   return result.data.payload;
 };
 
 export const clonePipeline = async (id: string) => {
-  const url = `${BASE_URL_PIPELINE}${apiPipelineBaseUrl}/clone_pipeline/${id}`;
+  const url = `${BASE_URL_PIPELINE}/Pipeline/api/clone_pipeline/${id}`;
   const result = await apiClient.post<APIResponse<any>>(url);
   return result.data.payload;
 };
 
 export const deletePipeline = async (id: string) => {
-  const url = `${BASE_URL_PIPELINE}${apiPipelineBaseUrl}/delete_pipeline/${id}`;
+  const url = `${BASE_URL_PIPELINE}/Pipeline/api/delete_pipeline/${id}`;
   const result = await apiClient.delete<APIResponse<any>>(url);
   return result.data.payload;
 };
 
 export const verifyPipeline = async (id: string) => {
-  const url = `${BASE_URL_JOB}${apiJobBaseUrl}/run_only_job/${id}`;
+  const url = `${BASE_URL_JOB}/Job/api/run_only_job/${id}`;
   const result = await apiClient.post(url, null, {
     timeout: 1_000 * 60 * 5,
   });
@@ -57,7 +54,7 @@ export const verifyPipeline = async (id: string) => {
 };
 
 export const getHistory = async (id: string, filter: Record<string, any>) => {
-  const url = `${BASE_URL_JOB}${apiJobBaseUrl}/get_log_history_error_or_getnews/${id}`;
+  const url = `${BASE_URL_JOB}/Job/api/get_log_history_error_or_getnews/${id}`;
   const result = await apiClient.get<APIResponse<IPipeline>>(url, {
     params: filterEmptyString(filter),
   });
@@ -65,31 +62,31 @@ export const getHistory = async (id: string, filter: Record<string, any>) => {
 };
 
 export const getLogHistoryLast = async (id: string) => {
-  const url = `${BASE_URL_JOB}${apiJobBaseUrl}/get_log_history_last/${id}`;
+  const url = `${BASE_URL_JOB}/Job/api/get_log_history_last/${id}`;
   const result = await apiClient.get<ILogHistory>(url);
   return result.data;
 };
 
 export const startJobById = async (id: string) => {
-  const url = `${BASE_URL_JOB}${apiJobBaseUrl}/start_job/${id}`;
+  const url = `${BASE_URL_JOB}/Job/api/start_job/${id}`;
   const result = await apiClient.post(url);
   return result.data;
 };
 
 export const stopJobById = async (id: string) => {
-  const url = `${BASE_URL_JOB}${apiJobBaseUrl}/stop_job/${id}`;
+  const url = `${BASE_URL_JOB}/Job/api/stop_job/${id}`;
   const result = await apiClient.post(url);
   return result.data;
 };
 
 export const startAllJob = async () => {
-  const url = `${BASE_URL_JOB}${apiJobBaseUrl}/start_all_jobs`;
+  const url = `${BASE_URL_JOB}/Job/api/start_all_jobs`;
   const result = await apiClient.post(url);
   return result.data;
 };
 
 export const stopAllJob = async () => {
-  const url = `${BASE_URL_JOB}${apiJobBaseUrl}/stop_all_jobs`;
+  const url = `${BASE_URL_JOB}/Job/api/stop_all_jobs`;
   const result = await apiClient.post(url);
   return result.data;
 };

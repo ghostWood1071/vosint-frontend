@@ -1,0 +1,40 @@
+.main-container {
+  height: calc(100vh - 180px);
+  border-top: 1px solid rgba(240, 240, 240, 1);
+  padding-top: 40px;
+  @media screen and (max-width: 1200px) {
+    padding-top: 70px;
+  }
+  .bodyNews {
+    padding: 10px;
+    height: calc(100vh - 95px);
+    @media screen and (max-width: 1200px) {
+      height: calc(100vh - 125px);
+    }
+    &:hover::-webkit-scrollbar-thumb {
+      background-color: #9da5b1;
+    }
+
+    &::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+
+    &::-webkit-scrollbar-corner {
+      background-color: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: transparent;
+      border: 2px solid transparent;
+      background-clip: padding-box;
+      border-radius: 6px;
+      transition: cubic-bezier(0.165, 0.84, 0.44, 1);
+    }
+    overflow-y: auto;
+  }
+}
+
+#container {
+  overflow-y: inherit;
+}

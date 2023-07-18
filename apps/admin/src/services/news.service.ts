@@ -1,13 +1,13 @@
-import { BASE_URL_JOB, BASE_URL_SUMM } from "@/constants/config";
+import { BASE_URL_JOB, BASE_URL_PIPELINE, BASE_URL_SUMM } from "@/constants/config";
 import { apiClient, filterEmptyString } from "@/utils/api";
 
 import type { INewsSummaryDto } from "./news.type";
 
 const apiNewsBaseV2Url = "";
-const apiSummBaseUrl = "/summ";
+const apiSummBaseUrl = "";
 
 export const getNewsSidebar = async (title?: string) => {
-  const result = await apiClient.get<any>(`/newsletters/v2`, {
+  const result = await apiClient.get<any>(`/newsletters/`, {
     params: filterEmptyString({ title }),
   });
   return result.data;
@@ -254,10 +254,8 @@ export const getNewsViaSourceAndApiJob = async (filter: Record<string, string>) 
   return result.data;
 };
 
-const apiNewsTranslationUrl = "pipeline/Job/api/translate";
-
 export const getContentTranslation = async (inputLanguage: string, data: any) => {
-  const result = await apiClient.post(`/${apiNewsTranslationUrl}`, {
+  const result = await apiClient.post(`${BASE_URL_PIPELINE}/Job/api/translate`, {
     lang: inputLanguage,
     content: data,
   });
@@ -274,5 +272,13 @@ export const generateSystemEventNews = async (news_id: string) => {
       "content-type": "application/x-www-form-urlencoded",
     },
   });
+  return result.data;
+};
+
+export const getNewsFromTTXVN = async (params: Record<string, any>) => {
+  const result = await apiClient.get("/Job/api/get_news_from_ttxvn", {
+    params: filterEmptyString(params),
+  });
+
   return result.data;
 };

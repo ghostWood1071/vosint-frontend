@@ -1,3 +1,4 @@
+import { BASE_URL_PIPELINE } from "@/constants/config";
 import { apiClient, filterEmptyString } from "@/utils/api";
 
 const apiBaseUrlV2 = "";
@@ -35,10 +36,8 @@ export const getEventBaseOnKhachTheAndChuThe = async (filter: Record<string, str
   return result.data;
 };
 
-const apiNewsBasedOnObject = "/pipeline/Job/api/elt_search";
-
 export const getNewsBasedOnObject = async (filter: Record<string, string>) => {
-  const result = await apiClient.post(`${apiNewsBasedOnObject}`, "", {
+  const result = await apiClient.post(`${BASE_URL_PIPELINE}/Job/api/elt_search`, "", {
     params: filterEmptyString(filter),
   });
   return result.data;
