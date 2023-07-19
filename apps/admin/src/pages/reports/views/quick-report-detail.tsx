@@ -367,7 +367,7 @@ function QuickReport(): JSX.Element {
       onOk: () => {
         deleteReport(id!, {
           onSuccess: () => {
-            queryClient.invalidateQueries([CACHE_KEYS.REPORTS]);
+            queryClient.invalidateQueries([CACHE_KEYS.QUICK_REPORT]);
             message.success({
               content: "Xoá báo cáo thành công",
             });
