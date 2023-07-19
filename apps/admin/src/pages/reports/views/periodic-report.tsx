@@ -1,11 +1,21 @@
 import { OutlineFileWordIcon } from "@/assets/icons";
+import { IS_BOLD, IS_ITALIC, IS_UNDERLINE } from "@/components/editor/constants/lexical-constant";
 import { useEventsState } from "@/components/editor/plugins/events-plugin/events-state";
 import { downloadFile } from "@/components/editor/utils";
 import { useEventsByIdNewsList } from "@/pages/news/news.loader";
-import { Button, Col, DatePicker, Input, PageHeader, Row, Space, Typography } from "antd";
-import { AlignmentType, Document, HeadingLevel, Packer, Paragraph, TextRun } from "docx";
+import { Button, Col, DatePicker, Input, Row, Space, Spin, Typography } from "antd";
+import {
+  AlignmentType,
+  Document,
+  ExternalHyperlink,
+  HeadingLevel,
+  Packer,
+  Paragraph,
+  TextRun,
+  UnderlineType,
+} from "docx";
 import moment from "moment";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { shallow } from "zustand/shallow";
 
@@ -21,6 +31,7 @@ const headingLevel: Record<number, HeadingLevel> = {
   5: HeadingLevel.HEADING_5,
   6: HeadingLevel.HEADING_6,
 };
+
 export function PeriodicReportDetail(): JSX.Element {
   // const [title, setTitle] = useState("Tên báo cáo");
   // const [headings, setHeadings] = useState<any[]>([]);
@@ -30,7 +41,7 @@ export function PeriodicReportDetail(): JSX.Element {
     shallow,
   );
   const [eventNumber, setEventNumber] = useState(5);
-  const { data: dataEventsById, isLoading: isLoadingEventsById } = useEventsByIdNewsList({
+  const { data: dataEventsById, isLoading } = useEventsByIdNewsList({
     newsletterId: id,
     startDate: dateTime[0],
     endDate: dateTime[1],
@@ -42,11 +53,12 @@ export function PeriodicReportDetail(): JSX.Element {
       parent_id: item.parent_id ?? null,
     })) ?? [];
   let datatest: any[] = [];
+  // eslint-disable-next-line array-callback-return
   dataEventsById?.result?.map((item: any) => {
     let listEvent = Object.values(item)[0] as any[];
-    listEvent?.map((obj: any) => {
+    listEvent?.forEach((obj: any) => {
       const b: any[] = [];
-      obj.new_list?.map((item2: any) => {
+      obj.new_list?.forEach((item2: any) => {
         if (item2 != null) b.push({ title: item2["data:title"], url: item2["data:url"] });
       });
       datatest.push({
@@ -62,73 +74,70 @@ export function PeriodicReportDetail(): JSX.Element {
   datatest = datatest?.concat(dataWithDefaultParentId);
 
   const dataSelect = dataEventsById?.infor_tree?.filter((item: any) => item._id === id) ?? [];
-  // useEffect(() => {
-  //   if (!dataSelect[0]) return;
-  //   setTitle(dataSelect[0].title);
-  //   setHeadings(datatest);
-  // }, []);
-  const [isOpen, setIsOpen] = useState(true);
 
   return (
     <div className={styles.root}>
       <Row>
-        <Col md={isOpen ? 4 : 1} lg={isOpen ? 4 : 1} className={styles.outline}>
+        <Col span={4} className={styles.outline}>
           <div className={styles.affix}>
-            <PageHeader title="Mục lục" />
+            <div className={styles.textHeader}>Mục lục</div>
             <DirectoryTree data={dataWithDefaultParentId} id={id} />
           </div>
         </Col>
-        <Col md={isOpen ? 16 : 19} span={isOpen ? 16 : 22} className={styles.container}>
-          <Row justify={"space-between"} align={"middle"}>
-            <Col span={4}></Col>
-            <Col span={16} className={styles.title} pull={4}>
-              <Typography.Title level={2}>
-                Báo cáo định kỳ về "{dataSelect[0]?.title}"
-              </Typography.Title>
-            </Col>
-            <Col span={24} className={styles.center}>
-              <Space>
-                <Typography.Text>Từ ngày: </Typography.Text>
-                <DatePicker.RangePicker
-                  defaultValue={[moment().subtract(30, "days"), moment()]}
-                  format={"DD/MM/YYYY"}
-                  bordered={false}
-                  onChange={(_, formatString) => handleSetDateTime(formatString)}
-                />
-                <Typography.Text>Số sự kiện: </Typography.Text>
-                <Input
-                  size="small"
-                  className={styles.inputFilter}
-                  defaultValue={5}
-                  onChange={handleInputChange}
-                />
-              </Space>
-            </Col>
+        <Col span={16} className={styles.container}>
+          <Spin spinning={isLoading} size={"large"}>
+            <div className={styles.menu_action}>
+              <Button
+                title="Xuất file ra docx"
+                icon={<OutlineFileWordIcon />}
+                onClick={handleExportDocx}
+              />
+            </div>
+            <Row justify={"space-between"} align={"middle"}>
+              <Col span={24} className={styles.title}>
+                <Typography.Title level={2}>
+                  Báo cáo định kỳ về "{dataSelect[0]?.title}"
+                </Typography.Title>
+              </Col>
+              <Col span={24} className={styles.center}>
+                <Space>
+                  <Typography.Text>Từ ngày: </Typography.Text>
+                  <DatePicker.RangePicker
+                    defaultValue={[moment().subtract(30, "days"), moment()]}
+                    format={"DD/MM/YYYY"}
+                    bordered={false}
+                    onChange={(_, formatString) => handleSetDateTime(formatString)}
+                  />
+                  <Typography.Text>Số sự kiện: </Typography.Text>
+                  <Input
+                    size="small"
+                    className={styles.inputFilter}
+                    defaultValue={5}
+                    onChange={handleInputChange}
+                  />
+                </Space>
+              </Col>
 
-            <DirectoryTree data={datatest} id={id} />
-          </Row>
+              <DirectoryTree data={datatest} id={id} />
+            </Row>
+          </Spin>
         </Col>
-        <Col md={isOpen ? 4 : 2} span={isOpen ? 4 : 1} className={styles.action} pull={2}>
-          <Space>
-            <Button
-              title="Xuất file ra docx"
-              icon={<OutlineFileWordIcon />}
-              onClick={handleExportDocx}
-            />
-          </Space>
-        </Col>
+        <Col span={4} className={styles.action}></Col>
       </Row>
     </div>
   );
+
   function handleInputChange(e: any) {
     const value = e.target.value;
     if (value !== "") {
       setEventNumber(value);
     }
   }
+
   function handleSetDateTime(formatString: any) {
     setDateTime(formatString);
   }
+
   function setNodeLevels(nodes: any, parentId = null, level = 0) {
     return nodes
       .filter((node: any) => node.parent_id === parentId)
@@ -138,6 +147,7 @@ export function PeriodicReportDetail(): JSX.Element {
         children: setNodeLevels(nodes, node._id, level + 1),
       }));
   }
+
   function convertHeadingsToDocxPeriodic(nodes: any, title: any) {
     const section: any = {
       properties: {},
@@ -161,42 +171,96 @@ export function PeriodicReportDetail(): JSX.Element {
       sections: [section],
     });
   }
+
   function generateTreeDocs(nodes: any, section: any) {
-    nodes?.map((node: any, index: any) => {
+    nodes?.forEach((node: any, index: any) => {
       const titleNode = new Paragraph({
-        text: node.time ? index + 1 + ". Ngày " + node.time + ", " + node.title : node.title,
+        text: node.time
+          ? `${index + 1}, Ngày ${moment(node.time).format("DD/MM/YYYY")}, ${node.title}`
+          : node.title,
         heading: headingLevel[node.level + 1],
         alignment: AlignmentType.LEFT,
       });
       section.children.push(titleNode);
-      const paragraph = new Paragraph({
-        children: [],
-      });
       if (node.time) {
-        const content = new TextRun({
-          text: node.content,
+        try {
+          const lexicalContent = JSON.parse(node.content);
+          for (const block of lexicalContent.root?.children) {
+            const paragraph = new Paragraph({
+              children: [],
+            });
+            if (block.type === "heading") {
+              const text = block?.children[0]?.text;
+              const heading = new Paragraph({
+                text,
+                heading: headingLevel[block.tag],
+              });
+              section.children.push(heading);
+            } else if (block.type === "paragraph") {
+              for (const inline of block.children) {
+                const textRun = new TextRun({
+                  text: block?.children[0]?.text,
+                  bold: !!(inline.format & IS_BOLD),
+                  italics: !!(inline.format & IS_ITALIC),
+                  underline:
+                    inline.format & IS_UNDERLINE
+                      ? {
+                          color: "#000000",
+                          type: UnderlineType.SINGLE,
+                        }
+                      : undefined,
+                });
+                paragraph.addChildElement(textRun);
+              }
+
+              if (block.children.length === 0) {
+                const textRun = new TextRun({});
+                paragraph.addChildElement(textRun);
+              }
+            }
+            section.children.push(paragraph);
+          }
+        } catch {
+          const paragraph = new Paragraph({
+            children: [],
+          });
+          const content = new TextRun({
+            text: node.content,
+          });
+          paragraph.addChildElement(content);
+          section.children.push(paragraph);
+        }
+
+        const paragraph = new Paragraph({
+          children: [],
         });
-        paragraph.addChildElement(content);
         const sourceNew = new TextRun({
           text: "Nguồn tin",
           italics: true,
-          break: 1,
         });
         paragraph.addChildElement(sourceNew);
         for (const source of node.list_news) {
-          const sourceNew = new TextRun({
-            text: "- " + source.title,
-            break: 1,
+          const sourceNew = new ExternalHyperlink({
+            children: [
+              new TextRun({
+                text: `- ${source.title}`,
+                break: 1,
+                style: "Hyperlink",
+              }),
+            ],
+            link: source.url,
           });
           paragraph.addChildElement(sourceNew);
         }
         section.children.push(paragraph);
       }
+
       if (node.children && node.children.length > 0) {
         generateTreeDocs(node.children, section);
       }
     });
   }
+
   async function handleExportDocx() {
     const nodesWithLevels = setNodeLevels(datatest);
     const blobData = await convertHeadingsToDocxPeriodic(nodesWithLevels, dataSelect[0]?.title);
@@ -206,6 +270,7 @@ export function PeriodicReportDetail(): JSX.Element {
     });
   }
 }
+
 export function PeriodicReport(): JSX.Element {
   return (
     <HeadingTocProvider>

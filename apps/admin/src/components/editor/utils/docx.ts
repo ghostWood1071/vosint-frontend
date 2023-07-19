@@ -12,6 +12,7 @@ import {
   TextRun,
   UnderlineType,
 } from "docx";
+import moment from "moment";
 import { QueryClient, useQueryClient } from "react-query";
 
 import { IS_BOLD, IS_ITALIC, IS_UNDERLINE } from "../constants/lexical-constant";
@@ -70,7 +71,7 @@ export async function convertLexicalToDocx(
       section.children.push(heading);
       continue;
     } else if (block.type === "paragraph") {
-      // iterae over inline elements in block
+      // iterate over inline elements in block
       for (const inline of block.children) {
         // create a new TextRun for each inline element
         const textRun = new TextRun({
@@ -149,11 +150,10 @@ export async function convertHeadingsToDocx({
     });
     section.children.push(headingDocx);
 
-    const paragraph = new Paragraph({
-      children: [],
-    });
-    console.log(heading.ttxvn);
     if (heading.ttxvn) {
+      const paragraph = new Paragraph({
+        children: [],
+      });
       const params = {
         text_search: queryStringDslTTXVN({
           required_keyword: heading.required_keyword,
@@ -163,14 +163,14 @@ export async function convertHeadingsToDocx({
         endDate: dateTime[1],
       };
       var events = queryClient.getQueryData<any>(["NEWS_TTXVN", params]);
-
       if (!events) {
-        events = await queryClient.fetchQuery<IEventDto>({
-          queryKey: ["NEWS_TTXVN", params],
-          queryFn: () => getNewsFromTTXVN(params),
-        });
+        try {
+          events = await queryClient.fetchQuery<IEventDto>({
+            queryKey: ["NEWS_TTXVN", params],
+            queryFn: () => getNewsFromTTXVN(params),
+          });
+        } catch {}
       }
-
       events?.result?.forEach((event: any) => {
         const name = new TextRun({
           text: event.Title,
@@ -178,7 +178,9 @@ export async function convertHeadingsToDocx({
         });
 
         const time = new TextRun({
-          text: `Thời gian: ${event.PublishDate}`,
+          text: `Thời gian: ${
+            event.PublishDate ? moment(event.PublishDate).format("DD/MM/YYYY") : ""
+          }`,
           break: 1,
         });
         const content = new TextRun({
@@ -190,14 +192,19 @@ export async function convertHeadingsToDocx({
         paragraph.addChildElement(time);
         paragraph.addChildElement(content);
       });
+      // section.children.push(paragraph);
     } else {
-      heading?.eventIds?.forEach(async (event_id) => {
+      for (const event_id of heading?.eventIds) {
         var event = queryClient.getQueryData<IEventDto>(["event", event_id]);
         if (!event) {
-          event = await queryClient.fetchQuery<IEventDto>({
-            queryKey: ["event", event_id],
-            queryFn: () => getEvent(event_id),
-          });
+          try {
+            event = await queryClient.fetchQuery<IEventDto>({
+              queryKey: ["event", event_id],
+              queryFn: () => getEvent(event_id),
+            });
+          } catch {
+            event = {};
+          }
         }
 
         if (
@@ -205,7 +212,7 @@ export async function convertHeadingsToDocx({
           dateTime[1] &&
           !filterIsBetween(event?.date_created ?? null, dateTime[0], dateTime[1])
         ) {
-          return;
+          continue;
         }
 
         const name = new TextRun({
@@ -214,24 +221,26 @@ export async function convertHeadingsToDocx({
         });
 
         const time = new TextRun({
-          text: `Thời gian: ${event.date_created}`,
+          text: `Thời gian: ${
+            event.date_created ? moment(event.date_created).format("DD/MM/YYYY") : ""
+          }`,
           break: 1,
         });
 
+        const paragraph = new Paragraph({
+          children: [],
+        });
         paragraph.addChildElement(name);
         paragraph.addChildElement(time);
+        section.children.push(paragraph);
 
         // iterate over blocks in lexicalJSON
         try {
-          const lexicalJSON = JSON.parse(event.event_content ?? "{}");
-          for (const block of lexicalJSON.root?.children) {
-            // create a new Paragraph for each block
+          const lexicalContent = JSON.parse(event?.event_content ?? "{}");
+          for (const block of lexicalContent.root?.children) {
             const paragraph = new Paragraph({
-              alignment: block.format,
               children: [],
-              indent: block.indent,
             });
-
             if (block.type === "heading") {
               const text = block?.children[0]?.text;
               const heading = new Paragraph({
@@ -239,13 +248,10 @@ export async function convertHeadingsToDocx({
                 heading: headingLevel[block.tag],
               });
               section.children.push(heading);
-              continue;
             } else if (block.type === "paragraph") {
-              // iterae over inline elements in block
               for (const inline of block.children) {
-                // create a new TextRun for each inline element
                 const textRun = new TextRun({
-                  text: inline.text,
+                  text: block?.children[0]?.text,
                   bold: !!(inline.format & IS_BOLD),
                   italics: !!(inline.format & IS_ITALIC),
                   underline:
@@ -256,7 +262,6 @@ export async function convertHeadingsToDocx({
                         }
                       : undefined,
                 });
-
                 paragraph.addChildElement(textRun);
               }
 
@@ -268,15 +273,20 @@ export async function convertHeadingsToDocx({
             section.children.push(paragraph);
           }
         } catch {
-          const textRun = new TextRun({
-            text: event.event_content,
-            italics: true,
-            break: 1,
+          const paragraph = new Paragraph({
+            children: [],
           });
-          paragraph.addChildElement(textRun);
+          const content = new TextRun({
+            text: event.event_content,
+          });
+          paragraph.addChildElement(content);
+          section.children.push(paragraph);
         }
 
         if (Array.isArray(event.new_list) && event.new_list.length > 0) {
+          const paragraph = new Paragraph({
+            children: [],
+          });
           const title = new TextRun({
             text: "Danh sách tin nói về sự kiện:",
             break: 1,
@@ -297,12 +307,17 @@ export async function convertHeadingsToDocx({
             });
             paragraph.addChildElement(newTitle);
           });
-        }
-        paragraph.addChildElement(new TextRun({ break: 1 }));
-      });
-    }
 
-    section.children.push(paragraph);
+          section.children.push(paragraph);
+        }
+
+        const newLine = new Paragraph({
+          children: [],
+        });
+        newLine.addChildElement(new TextRun({ break: 1 }));
+        section.children.push(newLine);
+      }
+    }
   }
 
   return new Document({
