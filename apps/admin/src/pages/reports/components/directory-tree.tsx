@@ -2,8 +2,11 @@ import { useEventContext } from "@/components/editor/plugins/event-plugin/event-
 import { generateHTMLFromJSON } from "@/pages/events/components/event-item";
 import { useLexicalComposerContext } from "@aiacademy/editor";
 import { CaretDownOutlined } from "@ant-design/icons";
+import { Space, Typography } from "antd";
+import cn from "classnames";
 import { createEditor } from "lexical";
-import { useMemo } from "react";
+import moment from "moment";
+import { FC, useMemo } from "react";
 
 import styles from "./report-layout.module.less";
 
@@ -11,38 +14,38 @@ interface Props {
   data: any;
   id: any;
 }
+
 const Tree = (props: any) => {
   const { data } = props;
   const renderTree = (nodes: any) => {
     return (
-      <ul style={{ listStyle: "none" }}>
+      <Space direction={"vertical"} style={{ paddingLeft: 20 }}>
         {nodes?.map((node: any) => (
-          <li key={node._id}>
+          <div key={node._id}>
             {node.title}
             {node.children && node.children.length > 0 && renderTree(node.children)}
-          </li>
+          </div>
         ))}
-      </ul>
+      </Space>
     );
   };
 
   return <div className={styles.font_standart}>{renderTree(data)}</div>;
 };
 
-export const DirectoryTree: React.FC<Props> = ({ data, id }) => {
+export const DirectoryTree: FC<Props> = ({ data, id }) => {
   const [editor] = useLexicalComposerContext();
   const { eventEditorConfig } = useEventContext();
   const eventEditor = useMemo(() => {
     if (eventEditorConfig === null) return null;
 
-    const _eventEditor = createEditor({
+    return createEditor({
       namespace: eventEditorConfig?.namespace,
       nodes: eventEditorConfig?.nodes,
       onError: (error) => eventEditorConfig?.onError(error, editor),
       theme: eventEditorConfig?.theme,
     });
-    return _eventEditor;
-  }, [eventEditorConfig]);
+  }, [editor, eventEditorConfig]);
 
   if (eventEditor === null) return null;
 
@@ -54,7 +57,7 @@ export const DirectoryTree: React.FC<Props> = ({ data, id }) => {
         {
           key: parent?._id,
           level: 0,
-          title: <b>{parent?.title}</b>,
+          title: <div style={{ fontWeight: "bold" }}>{parent?.title}</div>,
           children: generateTree(items, parent?._id, 1),
         },
       ];
@@ -66,13 +69,15 @@ export const DirectoryTree: React.FC<Props> = ({ data, id }) => {
         const children = generateTree(items, _id, level + 1); // Đệ quy để tạo cây con
         let titleElement = (
           <div>
-            {time ? (
-              <div>
-                {index + 1}. Ngày {time}, {title}
-              </div>
-            ) : (
-              <div>{title}</div>
-            )}
+            <div
+              className={cn({
+                [styles.italicBold]: level === 1,
+                [styles.italic]: level === 2,
+              })}
+            >
+              {time ? `${index + 1}, Ngày ${moment(time).format("DD/MM/YYYY")}, ` : ``}
+              {title}
+            </div>
             {content && (
               <div
                 dangerouslySetInnerHTML={{
@@ -85,22 +90,17 @@ export const DirectoryTree: React.FC<Props> = ({ data, id }) => {
                 <CaretDownOutlined /> Nguồn tin
               </div>
             )}
-            {list_news?.map((itemNews: any) => {
-              return (
-                <li>
+            <Space style={{ paddingLeft: 20 }}>
+              {list_news?.map((itemNews: any) => {
+                return (
                   <a href={itemNews.url} target="_blank" rel="noreferrer">
                     - {itemNews.title}
                   </a>
-                </li>
-              );
-            })}
+                );
+              })}
+            </Space>
           </div>
         );
-        if (level === 1) {
-          titleElement = <i className={styles["italicBold"]}>{titleElement}</i>; // Node con của node cha, nghiêng đậm
-        } else if (level === 2) {
-          titleElement = <i className={styles.italic}>{titleElement}</i>; // Node con của node con của node cha, nghiêng
-        }
         return {
           key: _id,
           level: level,

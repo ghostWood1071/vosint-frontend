@@ -165,7 +165,7 @@ function SortableItem({
 }
 
 const animateLayoutChanges: AnimateLayoutChanges = ({ isSorting, wasDragging }) =>
-  isSorting || wasDragging ? false : true;
+  !(isSorting || wasDragging);
 
 const Item = forwardRef<HTMLDivElement, any>(
   (
