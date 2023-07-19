@@ -36,6 +36,7 @@ export const AccountForMonitoringTwitter: React.FC = () => {
   const { data: listProxy } = useProxyConfig({
     text_search: searchParams.get("text_search") ?? "",
   });
+  const [cronExpr, setCronExpr] = React.useState("* * * * *");
 
   const queryClient = useQueryClient();
   return (
@@ -66,13 +67,15 @@ export const AccountForMonitoringTwitter: React.FC = () => {
         destroyOnClose
         maskClosable={false}
         closeIcon={true}
-        width={800}
+        width={900}
       >
         <SettingCreateForm
           listProxy={listProxy}
           accountMonitor={accountMonitor}
           valueTarget
           valueActive={"add"}
+          cronExpr={cronExpr}
+          setCronExpr={setCronExpr}
           form={form ?? []}
           onFinish={handleFinishCreate}
         />
@@ -113,6 +116,8 @@ export const AccountForMonitoringTwitter: React.FC = () => {
         follow_id: item._id,
         social_name: item.social_name,
       })) ?? [];
+    values.cron_expr = cronExpr;
+    values.enabled = false;
     mutate(values, {
       onSuccess: () => {
         queryClient.invalidateQueries([CACHE_KEYS.InfoAccountMonitorTW]);

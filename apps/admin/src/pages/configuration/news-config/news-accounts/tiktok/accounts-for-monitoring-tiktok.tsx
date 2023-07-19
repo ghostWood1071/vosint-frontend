@@ -19,6 +19,7 @@ export const AccountForMonitoringTiktok: React.FC = () => {
   const { mutate, isLoading } = usePostAccountMonitor();
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [form] = Form.useForm();
+  const [cronExpr, setCronExpr] = React.useState("* * * * *");
   let titleFilter = searchParams.get("username") ?? "";
   const { data: tiktokData } = useAdminMonitor({
     type_data: "Tiktok",
@@ -65,13 +66,15 @@ export const AccountForMonitoringTiktok: React.FC = () => {
         destroyOnClose
         maskClosable={false}
         closeIcon={true}
-        width={800}
+        width={900}
       >
         <SettingCreateForm
           listProxy={listProxy}
           accountMonitor={accountMonitor}
           valueTarget
           valueActive={"add"}
+          cronExpr={cronExpr}
+          setCronExpr={setCronExpr}
           form={form ?? []}
           onFinish={handleFinishCreate}
         />
@@ -112,6 +115,8 @@ export const AccountForMonitoringTiktok: React.FC = () => {
         follow_id: item._id,
         social_name: item.social_name,
       })) ?? [];
+    values.cron_expr = cronExpr;
+    values.enabled = false;
     mutate(values, {
       onSuccess: () => {
         queryClient.invalidateQueries([CACHE_KEYS.InfoAccountMonitorTT]);

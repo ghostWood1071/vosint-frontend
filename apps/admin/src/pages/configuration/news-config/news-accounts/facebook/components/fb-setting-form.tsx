@@ -1,15 +1,16 @@
-import { UploadOutlined } from "@ant-design/icons";
-import { Button, Form, FormInstance, Input, Select, Upload } from "antd";
-import type { RcFile, UploadFile, UploadProps } from "antd/es/upload/interface";
+import { VI_LOCALE } from "@/locales/cron";
+import { Form, FormInstance, Input, Select } from "antd";
 import React, { useEffect } from "react";
+import { Cron } from "react-js-cron";
+import "react-js-cron/dist/styles.css";
 
 interface Props {
   listProxy: any;
   accountMonitor: any;
   valueTarget: any;
   valueActive: any;
-  fileList: any[];
-  setFileList: (value: any[]) => void;
+  cronExpr: string;
+  setCronExpr: (value: string) => void;
   form: FormInstance<any>;
   onFinish: (values: any) => void;
 }
@@ -28,18 +29,13 @@ export const SettingCreateForm: React.FC<Props> = ({
   valueTarget,
   valueActive,
   form,
-  fileList,
-  setFileList,
   onFinish,
+  cronExpr,
+  setCronExpr,
 }) => {
   const validateMessages = {
     required: "Nhập ${label}",
   };
-
-  const onChange: UploadProps["onChange"] = async ({ fileList: newFileList }) => {
-    setFileList(newFileList);
-  };
-
   const initialValues =
     valueActive === "edit"
       ? {
@@ -50,20 +46,7 @@ export const SettingCreateForm: React.FC<Props> = ({
       : null;
   useEffect(() => {
     form.setFieldsValue(initialValues);
-    const listItemCookieUrl = valueTarget?.cookie_url?.split("/");
-    setFileList(
-      valueActive === "edit"
-        ? [
-            {
-              uid: "-1",
-              name: listItemCookieUrl?.[listItemCookieUrl?.length - 1],
-              response: '{"status": "success"}',
-              status: "done",
-              url: valueTarget.cookie_url,
-            },
-          ]
-        : [],
-    );
+    setCronExpr(valueActive === "edit" ? valueTarget?.cron_expr ?? "* * * * *" : "* * * * *");
   }, []);
   const initialaccountMonitor = accountMonitor?.result;
   const initialListProxy = listProxy?.data;
@@ -81,7 +64,7 @@ export const SettingCreateForm: React.FC<Props> = ({
           label="Tên"
           rules={[
             {
-              required: fileList.length < 1,
+              required: true,
             },
             {
               whitespace: true,
@@ -91,12 +74,21 @@ export const SettingCreateForm: React.FC<Props> = ({
         >
           <Input />
         </Form.Item>
+
         <Form.Item
           name="password"
           label="Password"
+          dependencies={["cookie"]}
           rules={[
-            {
-              required: fileList.length < 1,
+            ({ getFieldValue }) => {
+              if (getFieldValue("cookie")?.trim() === "" || getFieldValue("cookie") === undefined) {
+                return {
+                  required: true,
+                };
+              }
+              return {
+                required: false,
+              };
             },
             {
               whitespace: true,
@@ -106,6 +98,7 @@ export const SettingCreateForm: React.FC<Props> = ({
         >
           <Input />
         </Form.Item>
+
         <Form.Item name="social" label="Mạng xã hội">
           <Select defaultValue={"Facebook"} options={[{ value: "Facebook", label: "Facebook" }]} />
         </Form.Item>
@@ -121,17 +114,17 @@ export const SettingCreateForm: React.FC<Props> = ({
             }
           />
         </Form.Item>
-        <Form.Item label={"Cookie"}>
-          <Upload
-            listType="text"
-            accept={".json"}
-            fileList={valueTarget?.cookie_url !== undefined ? fileList : undefined}
-            maxCount={1}
-            beforeUpload={() => false}
-            onChange={onChange}
-          >
-            <Button icon={<UploadOutlined />}>Upload</Button>
-          </Upload>
+        <Form.Item name={"cookie"} label={"Cookie"}>
+          <Input.TextArea />
+        </Form.Item>
+        <Form.Item label="Lịch chạy">
+          <Cron
+            allowedPeriods={["week", "day", "hour", "minute", "reboot"]}
+            value={cronExpr}
+            setValue={setCronExpr}
+            locale={VI_LOCALE}
+            clearButtonProps={{ type: "default" }}
+          />
         </Form.Item>
         <Form.Item
           name="users_follow"

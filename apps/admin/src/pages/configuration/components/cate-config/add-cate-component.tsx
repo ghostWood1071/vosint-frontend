@@ -211,6 +211,7 @@ export const AddCateComponent: React.FC<Props> = ({
               onChange={onChange}
               onPreview={onPreview}
               onRemove={onRemove}
+              beforeUpload={() => false}
               accept={"image/*"}
             >
               {fileList.length < 1 && "+ Upload"}

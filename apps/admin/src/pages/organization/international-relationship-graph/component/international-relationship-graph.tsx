@@ -107,7 +107,7 @@ export const InternationalRelationshipGraph = () => {
       <Col span={24}>
         <div className={styles.titleContainer}>
           <div className={styles.container1}>
-            Đối tượng 1{"  "}
+            <span className={styles.titleSelect}>Đối tượng 1:</span>
             <Select
               showSearch
               className={styles.newsEventSelect}
@@ -123,7 +123,7 @@ export const InternationalRelationshipGraph = () => {
             />
           </div>
           <div className={styles.container1}>
-            <span>Đối tượng 2 </span>
+            <span className={styles.titleSelect}>Đối tượng 2:</span>
             <Select
               showSearch
               className={styles.newsEventSelect}
@@ -224,8 +224,16 @@ interface ItemProps {
 }
 
 const Items: React.FC<ItemProps> = ({ item, object1, object2 }) => {
-  const data1 = item.data.filter((e: any) => e.chu_the === object1 && e.khach_the === object2);
-  const data2 = item.data.filter((e: any) => e.chu_the === object2 && e.khach_the === object1);
+  let data1 = item.data.filter((e: any) => e.chu_the === object1 && e.khach_the === object2);
+  let data2 = item.data.filter((e: any) => e.chu_the === object2 && e.khach_the === object1);
+  if (object1 === "") {
+    data1 = item.data.filter((e: any) => e.khach_the === object2);
+    data2 = item.data.filter((e: any) => e.chu_the === object2);
+  }
+  if (object2 === "") {
+    data1 = item.data.filter((e: any) => e.chu_the === object1);
+    data2 = item.data.filter((e: any) => e.khach_the === object1);
+  }
   const Ref = useRef<any>();
   return (
     <div className={styles.mainItemContainer}>
