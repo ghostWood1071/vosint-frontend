@@ -1,4 +1,3 @@
-import { BASE_URL } from "@/constants/config";
 import {
   CACHE_KEYS,
   useAdminMonitor,
@@ -6,7 +5,6 @@ import {
   usePostAccountMonitor,
   useProxyConfig,
 } from "@/pages/configuration/config.loader";
-import { uploadFile } from "@/services/cate-config.service";
 import { PlusOutlined } from "@ant-design/icons";
 import { Button, Form, Input, Modal, PageHeader, message } from "antd";
 import React, { useState } from "react";
@@ -34,7 +32,7 @@ export const AccountForMonitoringFacebook: React.FC = () => {
   const { data: listProxy } = useProxyConfig({
     text_search: searchParams.get("text_search") ?? "",
   });
-  const [fileList, setFileList] = React.useState<any[]>([]);
+  const [cronExpr, setCronExpr] = React.useState("* * * * *");
   const onSearch = (valueFilter: string) => {
     searchParams.set("username", valueFilter);
     setSearchParams(searchParams);
@@ -71,7 +69,7 @@ export const AccountForMonitoringFacebook: React.FC = () => {
         destroyOnClose
         maskClosable={false}
         closeIcon={true}
-        width={800}
+        width={900}
       >
         <SettingCreateForm
           listProxy={listProxy}
@@ -79,8 +77,8 @@ export const AccountForMonitoringFacebook: React.FC = () => {
           valueTarget
           valueActive={"add"}
           form={form ?? []}
-          fileList={fileList}
-          setFileList={setFileList}
+          cronExpr={cronExpr}
+          setCronExpr={setCronExpr}
           onFinish={handleFinishCreate}
         />
       </Modal>
@@ -120,16 +118,8 @@ export const AccountForMonitoringFacebook: React.FC = () => {
         follow_id: item._id,
         social_name: item.social_name,
       })) ?? [];
-    values.cookie_url = "";
-    if (fileList[0] !== undefined) {
-      var newFile: any = fileList[0].originFileObj;
-      delete newFile["uid"];
-      const formDataa: any = new FormData();
-      formDataa.append("file", newFile);
-
-      const result = await uploadFile(formDataa);
-      values.cookie_url = `${BASE_URL}/${result.data[0].file_url}`;
-    }
+    values.cron_expr = cronExpr;
+    values.enabled = false;
     mutate(values, {
       onSuccess: () => {
         queryClient.invalidateQueries([CACHE_KEYS.InfoAccountMonitorFB]);
@@ -137,6 +127,8 @@ export const AccountForMonitoringFacebook: React.FC = () => {
           content: "Thành công!",
           key: CACHE_KEYS.InfoAccountMonitorFB,
         });
+        setIsCreateOpen(false);
+        form.resetFields();
       },
       onError: () => {
         message.error({
@@ -145,7 +137,5 @@ export const AccountForMonitoringFacebook: React.FC = () => {
         });
       },
     });
-    setIsCreateOpen(false);
-    form.resetFields();
   }
 };

@@ -2,7 +2,7 @@ import { useGetMe } from "@/pages/auth/auth.loader";
 import { useQuickReportModalState } from "@/pages/news/components/quick-report-modal/index.state";
 import { convertTimeToShowInUI } from "@/utils/tool-validate-string";
 import { BellOutlined, CloseOutlined, ShareAltOutlined, StarTwoTone } from "@ant-design/icons";
-import { Checkbox, Space, Tooltip, message, Empty, Typography } from "antd";
+import { Checkbox, Empty, Space, Tooltip, Typography, message } from "antd";
 import React, { useEffect, useRef, useState } from "react";
 
 import { useMutationSystemEvents } from "../event.loader";
@@ -179,7 +179,7 @@ export const SystemEventItem: React.FC<Props> = ({
                 })}
               </div>
               <div className={styles.listNewsContainer}>
-                <div className={styles.titleText}>Danh sách các tin:</div>
+                <div className={styles.titleText}>Nguồn tin ({item.new_list?.length}):</div>
                 {item.new_list?.length === 0 && item.news_added_by_user?.length === 0 && (
                   <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={"Trống"} />
                 )}

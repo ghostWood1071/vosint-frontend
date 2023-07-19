@@ -1,10 +1,9 @@
-import { BASE_URL } from "@/constants/config";
+import { SwitchCustom } from "@/components";
 import {
   CACHE_KEYS,
   useMutationDeleteAccountMonitor,
   useMutationUpdateAccountMonitor,
 } from "@/pages/configuration/config.loader";
-import { uploadFile } from "@/services/cate-config.service";
 import { DeleteOutlined, EditOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
 import { Form, Modal, Popover, Space, Table, TableColumnsType, Tag, Tooltip, message } from "antd";
 import React, { useState } from "react";
@@ -26,7 +25,7 @@ export const SettingTable: React.FC<Props> = ({ data, listProxy, accountMonitor,
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isIdTarget, setIsIdTarget] = useState("");
   const [isValueTarget, setIsValueTarget] = useState<any>();
-  const [fileList, setFileList] = React.useState<any[]>([]);
+  const [cronExpr, setCronExpr] = React.useState("* * * * *");
   const queryClient = useQueryClient();
   const [form] = Form.useForm();
   const { mutate: mutateUpdate } = useMutationUpdateAccountMonitor();
@@ -76,7 +75,26 @@ export const SettingTable: React.FC<Props> = ({ data, listProxy, accountMonitor,
         ));
       },
     },
+    {
+      title: "Kích hoạt",
+      dataIndex: "enabled",
+      align: "center",
+      render: (enabled: boolean, item) => {
+        return (
+          <SwitchCustom
+            checkedChildren="Enabled"
+            unCheckedChildren="Disabled"
+            defaultChecked={enabled}
+            isSquare
+            onChange={handleChange}
+          />
+        );
 
+        function handleChange(checked: boolean) {
+          handleChangeEnabled(checked, item);
+        }
+      },
+    },
     {
       title: "",
       align: "center",
@@ -120,21 +138,41 @@ export const SettingTable: React.FC<Props> = ({ data, listProxy, accountMonitor,
         destroyOnClose
         maskClosable={false}
         closeIcon={true}
-        width={800}
+        width={900}
       >
         <SettingCreateForm
           listProxy={listProxy}
           accountMonitor={accountMonitor}
           valueTarget={isValueTarget}
           valueActive={"edit"}
-          fileList={fileList}
-          setFileList={setFileList}
+          cronExpr={cronExpr}
+          setCronExpr={setCronExpr}
           form={form}
           onFinish={handleFinishEdit}
         />
       </Modal>
     </>
   );
+
+  function handleChangeEnabled(checked: boolean, item: any) {
+    const changedValue = { ...item, id: item._id, enabled: checked };
+    mutateUpdate(changedValue, {
+      onSuccess: () => {
+        queryClient.invalidateQueries([CACHE_KEYS.InfoAccountMonitorFB]);
+        message.success({
+          content: "Cập nhật thành công!",
+          key: CACHE_KEYS.InfoAccountMonitorFB,
+        });
+        setIsEditOpen(false);
+        form.resetFields();
+      },
+      onError: () => {
+        message.error({
+          content: "Kiểm tra đường truyền!",
+        });
+      },
+    });
+  }
   function handleShowEdit(value: any, values: any) {
     setIsEditOpen(true);
     setIsValueTarget(values);
@@ -171,16 +209,8 @@ export const SettingTable: React.FC<Props> = ({ data, listProxy, accountMonitor,
         ip_address: item.ip_address,
         port: item.port,
       })) ?? [];
+    values.cron_expr = cronExpr;
 
-    values.cookie_url = "";
-    if (fileList[0] !== undefined) {
-      var newFile: any = fileList[0].originFileObj;
-      delete newFile["uid"];
-      const formDataa: any = new FormData();
-      formDataa.append("file", newFile);
-      const result = await uploadFile(formDataa);
-      values.cookie_url = `${BASE_URL}/${result.data[0].file_url}`;
-    }
     mutateUpdate(values, {
       onSuccess: () => {
         queryClient.invalidateQueries([CACHE_KEYS.InfoAccountMonitorFB]);
@@ -188,6 +218,8 @@ export const SettingTable: React.FC<Props> = ({ data, listProxy, accountMonitor,
           content: "Cập nhật thành công!",
           key: CACHE_KEYS.InfoAccountMonitorFB,
         });
+        setIsEditOpen(false);
+        form.resetFields();
       },
       onError: () => {
         message.error({
@@ -196,8 +228,6 @@ export const SettingTable: React.FC<Props> = ({ data, listProxy, accountMonitor,
         });
       },
     });
-    setIsEditOpen(false);
-    form.resetFields();
   }
 
   function handleShowDelete(value: any, values: any) {

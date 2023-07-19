@@ -1,3 +1,4 @@
+import { SwitchCustom } from "@/components";
 import {
   CACHE_KEYS,
   useMutationDeleteAccountMonitor,
@@ -24,6 +25,7 @@ export const SettingTable: React.FC<Props> = ({ data, listProxy, accountMonitor,
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isIdTarget, setIsIdTarget] = useState("");
   const [isValueTarget, setIsValueTarget] = useState<any>();
+  const [cronExpr, setCronExpr] = React.useState("* * * * *");
   const queryClient = useQueryClient();
   const [form] = Form.useForm();
   const { mutate: mutateUpdate } = useMutationUpdateAccountMonitor();
@@ -75,6 +77,26 @@ export const SettingTable: React.FC<Props> = ({ data, listProxy, accountMonitor,
       },
     },
     {
+      title: "Kích hoạt",
+      dataIndex: "enabled",
+      align: "center",
+      render: (enabled: boolean, item) => {
+        return (
+          <SwitchCustom
+            checkedChildren="Enabled"
+            unCheckedChildren="Disabled"
+            defaultChecked={enabled}
+            isSquare
+            onChange={handleChange}
+          />
+        );
+
+        function handleChange(checked: boolean) {
+          handleChangeEnabled(checked, item);
+        }
+      },
+    },
+    {
       title: "",
       align: "center",
       dataIndex: "_id",
@@ -117,19 +139,41 @@ export const SettingTable: React.FC<Props> = ({ data, listProxy, accountMonitor,
         destroyOnClose
         maskClosable={false}
         closeIcon={true}
-        width={800}
+        width={900}
       >
         <SettingCreateForm
           listProxy={listProxy}
           accountMonitor={accountMonitor}
           valueTarget={isValueTarget}
           valueActive={"edit"}
+          cronExpr={cronExpr}
+          setCronExpr={setCronExpr}
           form={form}
           onFinish={handleFinishEdit}
         />
       </Modal>
     </>
   );
+
+  function handleChangeEnabled(checked: boolean, item: any) {
+    const changedValue = { ...item, id: item._id, enabled: checked };
+    mutateUpdate(changedValue, {
+      onSuccess: () => {
+        queryClient.invalidateQueries([CACHE_KEYS.InfoAccountMonitorFB]);
+        message.success({
+          content: "Cập nhật thành công!",
+          key: CACHE_KEYS.InfoAccountMonitorFB,
+        });
+        setIsEditOpen(false);
+        form.resetFields();
+      },
+      onError: () => {
+        message.error({
+          content: "Kiểm tra đường truyền!",
+        });
+      },
+    });
+  }
   function handleShowEdit(value: any, values: any) {
     setIsEditOpen(true);
     setIsValueTarget(values);
@@ -166,6 +210,7 @@ export const SettingTable: React.FC<Props> = ({ data, listProxy, accountMonitor,
         ip_address: item.ip_address,
         port: item.port,
       })) ?? [];
+    values.cron_expr = cronExpr;
     mutateUpdate(values, {
       onSuccess: () => {
         queryClient.invalidateQueries([CACHE_KEYS.InfoAccountMonitorFB]);

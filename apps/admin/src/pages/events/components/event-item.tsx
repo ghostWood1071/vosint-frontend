@@ -232,7 +232,9 @@ export const EventItem: React.FC<Props> = ({
                 />
               </div>
               <div className={styles.listNewsContainer}>
-                <div className={styles.titleText}>Danh sách các tin:</div>
+                <div className={styles.titleText}>
+                  Nguồn tin ({item.new_list?.length + item.news_added_by_user?.length}):
+                </div>
                 {item.new_list?.length === 0 && item.news_added_by_user?.length === 0 && (
                   <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={"Trống"} />
                 )}
