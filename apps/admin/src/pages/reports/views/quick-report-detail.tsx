@@ -299,12 +299,11 @@ function QuickReport(): JSX.Element {
                   <>
                     {fields.map((field, index) => (
                       <Form.Item
-                        required
                         key={field.key}
                         {...(index === 0 ? "" : formItemLayoutWithOutLabel2)}
                         label={index === 0 ? "Từ khoá bắt buộc:" : ""}
                       >
-                        <Form.Item {...field} rules={rulesRequiredItemKeyword} noStyle>
+                        <Form.Item {...field} noStyle>
                           <Input
                             placeholder="Các từ phân tách nhau bởi dấu phẩy"
                             className={styles.formItem}
@@ -325,7 +324,6 @@ function QuickReport(): JSX.Element {
                     <Form.Item
                       {...(fields.length < 1 ? "" : formItemLayoutWithOutLabel2)}
                       label={fields.length < 1 ? "Từ khoá bắt buộc:" : ""}
-                      required
                     >
                       <Button
                         type="dashed"
