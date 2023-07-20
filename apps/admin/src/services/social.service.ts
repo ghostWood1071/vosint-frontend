@@ -1,3 +1,4 @@
+import { BASE_URL_PIPELINE } from "@/constants/config";
 import { apiClient, filterEmptyString } from "@/utils/api";
 
 export const gePriorityObject = async (filter: any) => {
@@ -32,7 +33,7 @@ export interface DataFilterSocialPage {
 }
 
 export const getSocialPage = async (filter: DataFilterSocialPage) => {
-  const result = await apiClient.get(`/Job/api/get_table`, {
+  const result = await apiClient.get(`${BASE_URL_PIPELINE}/Job/api/get_table`, {
     params: filterEmptyString(filter),
   });
   return result.data;
