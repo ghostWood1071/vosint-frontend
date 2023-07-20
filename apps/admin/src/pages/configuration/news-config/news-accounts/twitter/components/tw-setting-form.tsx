@@ -81,11 +81,11 @@ export const SettingCreateForm: React.FC<Props> = ({
             ({ getFieldValue }) => {
               if (getFieldValue("cookie")?.trim() === "" || getFieldValue("cookie") === undefined) {
                 return {
-                  required: false,
+                  required: true,
                 };
               }
               return {
-                required: true,
+                required: false,
               };
             },
             {

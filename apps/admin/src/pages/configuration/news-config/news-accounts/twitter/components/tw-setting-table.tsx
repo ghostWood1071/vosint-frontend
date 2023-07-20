@@ -164,8 +164,6 @@ export const SettingTable: React.FC<Props> = ({ data, listProxy, accountMonitor,
           content: "Cập nhật thành công!",
           key: CACHE_KEYS.InfoAccountMonitorFB,
         });
-        setIsEditOpen(false);
-        form.resetFields();
       },
       onError: () => {
         message.error({
