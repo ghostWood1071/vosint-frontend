@@ -46,7 +46,7 @@ export const getNewsByNewsletterWithApiJob = async (
   const result = await apiClient.get(`/Job/api/get_news_from_newsletter_id`, {
     params: filterEmptyString({
       ...filter,
-      news_letter_id: newsletterId,
+      newsletter_id: newsletterId,
     }),
   });
   return result.data;
@@ -59,7 +59,7 @@ export const getEventsByNewsletterWithApiJob = async (
   const result = await apiClient.get(`/Job/api/get_event_from_newsletter_list_id`, {
     params: filterEmptyString({
       // ...filter,
-      news_letter_id: filter.newsletterId,
+      newsletter_id: filter.newsletterId,
       start_date: filter.startDate,
       end_date: filter.endDate,
       event_number: filter.eventNumber,

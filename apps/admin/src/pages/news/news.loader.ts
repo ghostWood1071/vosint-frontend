@@ -229,7 +229,7 @@ export const useInfiniteNewsFormElt = (id: string, filter: any, tag: string) => 
       sentiment: filter?.sentiment,
       id_nguon_nhom_nguon: tag === "source" || tag === "source_group" ? id : "",
       type: tag === "source" || tag === "source_group" ? tag : "",
-      news_letter_id: tag === "chu_de" || tag === "linh_vuc" || tag === "gio_tin" ? id : "",
+      newsletter_id: tag === "chu_de" || tag === "linh_vuc" || tag === "gio_tin" ? id : "",
     });
   });
 };
