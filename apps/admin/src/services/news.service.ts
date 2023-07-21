@@ -19,7 +19,7 @@ export const getNewsList = async (filter: any) => {
 };
 
 export const getNewsListWithApiJob = async (filter: any) => {
-  const result = await apiClient.get<any>(`${BASE_URL_PIPELINE}/Job/api/get_result_job/News`, {
+  const result = await apiClient.get<any>(`/Job/api/get_result_job/News`, {
     params: filterEmptyString(filter),
   });
 
@@ -43,7 +43,7 @@ export const getNewsByNewsletterWithApiJob = async (
   newsletterId: string,
   filter: Record<string, string>,
 ) => {
-  const result = await apiClient.get(`${BASE_URL_PIPELINE}/Job/api/get_news_from_newsletter_id`, {
+  const result = await apiClient.get(`/Job/api/get_news_from_newsletter_id`, {
     params: filterEmptyString({
       ...filter,
       newsletter_id: newsletterId,
@@ -56,18 +56,15 @@ export const getEventsByNewsletterWithApiJob = async (
   // newsletterId: string,
   filter: Record<string, string>,
 ) => {
-  const result = await apiClient.get(
-    `${BASE_URL_PIPELINE}/Job/api/get_event_from_newsletter_list_id`,
-    {
-      params: filterEmptyString({
-        // ...filter,
-        newsletter_id: filter.newsletterId,
-        start_date: filter.startDate,
-        end_date: filter.endDate,
-        event_number: filter.eventNumber,
-      }),
-    },
-  );
+  const result = await apiClient.get(`/Job/api/get_event_from_newsletter_list_id`, {
+    params: filterEmptyString({
+      // ...filter,
+      newsletter_id: filter.newsletterId,
+      start_date: filter.startDate,
+      end_date: filter.endDate,
+      event_number: filter.eventNumber,
+    }),
+  });
   return result.data;
 };
 
@@ -115,7 +112,7 @@ export const getNewsBookmarks = async (filter: Record<string, string>) => {
 };
 
 export const getNewsBookmarksWithApiJob = async (filter: Record<string, string>) => {
-  const result = await apiClient.get(`${BASE_URL_PIPELINE}/Job/api/get_news_from_newsletter_id`, {
+  const result = await apiClient.get(`/Job/api/get_news_from_newsletter_id`, {
     params: filterEmptyString({
       ...filter,
       bookmarks: "1",
@@ -125,10 +122,7 @@ export const getNewsBookmarksWithApiJob = async (filter: Record<string, string>)
 };
 
 export const getNewsFormElt = async (filter: Record<string, any>) => {
-  const result = await apiClient.post(
-    `${BASE_URL_PIPELINE}/Job/api/get_news_from_elt`,
-    filterEmptyString(filter),
-  );
+  const result = await apiClient.post(`/Job/api/get_news_from_elt`, filterEmptyString(filter));
   return result.data;
 };
 
@@ -150,7 +144,7 @@ export const getNewsVitals = async (filter: Record<string, string>) => {
 };
 
 export const getNewsVitalsWithApiJob = async (filter: Record<string, string>) => {
-  const result = await apiClient.get(`${BASE_URL_PIPELINE}/Job/api/get_news_from_newsletter_id`, {
+  const result = await apiClient.get(`/Job/api/get_news_from_newsletter_id`, {
     params: filterEmptyString({
       ...filter,
       vital: "1",
@@ -225,7 +219,7 @@ export const SetNotSeenPost = async (newsId: string) => {
 };
 
 export const getNewsViaSourceAndApiJob = async (filter: Record<string, string>) => {
-  const result = await apiClient.get(`${BASE_URL_PIPELINE}/Job/api/get_news_from_id_source`, {
+  const result = await apiClient.get(`/Job/api/get_news_from_id_source`, {
     params: filterEmptyString({
       ...filter,
     }),
@@ -255,7 +249,7 @@ export const generateSystemEventNews = async (news_id: string) => {
 };
 
 export const getNewsFromTTXVN = async (params: Record<string, any>) => {
-  const result = await apiClient.post(`${BASE_URL_PIPELINE}/Job/api/get_news_from_ttxvn`, {
+  const result = await apiClient.post(`/Job/api/get_news_from_ttxvn`, {
     params: filterEmptyString(params),
   });
 
