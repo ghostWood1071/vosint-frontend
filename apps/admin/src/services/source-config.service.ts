@@ -7,9 +7,9 @@ export const getPipelineSource = async () => {
 };
 
 export const getSourceConfig = async (filter: any) => {
-  const result = await apiClient.get<any>(`/Source/${filter.text_search}`, {
-    params: filterEmptyString(filter),
-  });
+  const endpoint = `/Source` + filter.text_search ? `/${filter.text_search}` : "";
+  const params = filterEmptyString(filter);
+  const result = await apiClient.get<any>(endpoint, { params });
   return result.data;
 };
 
