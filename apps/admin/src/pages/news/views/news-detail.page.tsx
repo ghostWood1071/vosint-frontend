@@ -109,7 +109,12 @@ export const NewsDetailPage = () => {
   );
 
   async function handleUpdateCache(value: string, attachedFunction: Function) {
-    const dataCache: any = queryClient.getQueryData(CACHE_KEYS.NewsList);
+    const dataCache: any = queryClient.getQueriesData([
+      CACHE_KEYS.NewsList,
+      newsletterId,
+    ])?.[0]?.[1] ?? {
+      pages: [],
+    };
     // This loop iterates over the pages in the dataCache object and their results to find the index of the item with the given value.
     // It uses two index variables, index1 and index2, to keep track of the current page and item indices.
     // If the item is found, the loop breaks and the indices are stored in index1 and index2.
