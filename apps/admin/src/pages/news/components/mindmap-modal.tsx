@@ -37,6 +37,7 @@ import {
 } from "antd";
 import { LexicalEditor, createEditor } from "lexical";
 import { debounce } from "lodash";
+import moment from "moment";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
@@ -78,6 +79,7 @@ const formItemLayoutWithOutLabel = {
 };
 
 const defaultContent = `{"root":{"children":[{"children":[],"direction":null,"format":"","indent":0,"type":"paragraph","version":1}],"direction":null,"format":"","indent":0,"type":"root","version":1}}`;
+const dateFormat = "DD/MM/YYYY";
 
 export const MindmapModal: React.FC<props> = ({
   item,
@@ -333,10 +335,10 @@ export const MindmapModal: React.FC<props> = ({
         <div className={styles.addNewEventContainer}>
           <Form
             initialValues={{
-              event_name: "",
-              // event_content: "",
+              event_name: item["data:title"],
               khach_the: "",
               chu_the: "",
+              date_created: moment(convertTimeToShowInUI(item.pub_date), dateFormat),
             }}
             form={form}
             {...formItemLayoutWithOutLabel}
@@ -617,7 +619,7 @@ export const MindmapModal: React.FC<props> = ({
                 <div className={styles.headerSystemEventContainer}>
                   <div className={styles.textHeader}>Sự kiện do hệ thống tạo</div>
 
-                  <ExportOutlined
+                  {/* <ExportOutlined
                     style={{ marginLeft: 20 }}
                     className={
                       dataEventFromSystem?.length > 0
@@ -632,7 +634,7 @@ export const MindmapModal: React.FC<props> = ({
                         message.info("Đã sinh sự kiện!");
                       }
                     }}
-                  />
+                  /> */}
                 </div>
                 <div className={styles.detailAllEvent}>
                   {dataEventFromSystem?.map((element: any) => {
