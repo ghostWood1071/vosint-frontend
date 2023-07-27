@@ -249,7 +249,7 @@ export const generateSystemEventNews = async (news_id: string) => {
 };
 
 export const getNewsFromTTXVN = async (params: Record<string, any>) => {
-  const searchParams = new URLSearchParams(params);
+  const searchParams = new URLSearchParams(filterEmptyString(params));
 
   const result = await apiClient.post(`/Job/api/get_news_from_ttxvn?${searchParams.toString()}`);
 
