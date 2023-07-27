@@ -1,9 +1,15 @@
-import { getTTXVNNews, handleCrawlNews } from "@/services/ttxvn.service";
+import {
+  getAccountTTXVNConfig,
+  getTTXVNNews,
+  handleCrawlNews,
+  updateAccountTTXVNConfig,
+} from "@/services/ttxvn.service";
 import { message } from "antd";
-import { useInfiniteQuery, useMutation, useQueryClient } from "react-query";
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "react-query";
 
 export const TTXVN_CACHE_KEYS = {
   ListTTXVN: "LIST_TTXVN",
+  AccountConfig: "ACCOUNT_CONFIG",
 };
 
 export const useInfiniteTTXVNList = (filter: any) => {
@@ -30,6 +36,34 @@ export const useMutationTTXVN = () => {
         });
       },
       onError: () => {
+        message.error({
+          content: "Đã xảy ra lỗi!",
+        });
+      },
+    },
+  );
+};
+
+export const useAccountTTXVNConfig = () => {
+  return useQuery([TTXVN_CACHE_KEYS.AccountConfig], () => {
+    return getAccountTTXVNConfig();
+  });
+};
+
+export const useMutationAccountTTXVNConfig = () => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    ({ id, data }: any) => {
+      return updateAccountTTXVNConfig(id, data);
+    },
+    {
+      onSuccess: (data: any, variables) => {
+        queryClient.invalidateQueries([TTXVN_CACHE_KEYS.AccountConfig]);
+        message.success({
+          content: "Cập nhật tài khoản thành công!",
+        });
+      },
+      onError: (data: any) => {
         message.error({
           content: "Đã xảy ra lỗi!",
         });

@@ -14,3 +14,13 @@ export const handleCrawlNews = async (id: string) => {
   });
   return result;
 };
+
+export const getAccountTTXVNConfig = async () => {
+  const result = await apiClient.get(`/account-ttxvn-config`);
+  return result.data;
+};
+
+export const updateAccountTTXVNConfig = async (id: string, data: Record<string, string>) => {
+  const result = await apiClient.put(`/account-ttxvn-config/${id}`, data);
+  return result.data;
+};
