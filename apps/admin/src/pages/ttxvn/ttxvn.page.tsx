@@ -1,4 +1,5 @@
-import { DatePicker, Empty, Input, List, Select, Space } from "antd";
+import { removeWhitespaceInStartAndEndOfString } from "@/utils/tool-validate-string";
+import { Button, DatePicker, Empty, Form, Input, List, Modal, Select, Space } from "antd";
 import { debounce, flatMap, unionBy } from "lodash";
 import React, { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
@@ -6,7 +7,12 @@ import { useQueryClient } from "react-query";
 
 import { useSidebar } from "../app/app.store";
 import { TTXVNNewsItem } from "./components/ttsvn-news-item";
-import { TTXVN_CACHE_KEYS, useInfiniteTTXVNList } from "./ttxvn.loader";
+import {
+  TTXVN_CACHE_KEYS,
+  useAccountTTXVNConfig,
+  useInfiniteTTXVNList,
+  useMutationAccountTTXVNConfig,
+} from "./ttxvn.loader";
 import styles from "./ttxvn.module.less";
 
 interface Props {}
@@ -18,17 +24,29 @@ interface FilterEventProps {
   crawling?: string;
 }
 
+const formItemLayoutWithOutLabel = {
+  labelCol: { span: 4 },
+  wrapperCol: {
+    xs: { span: 24, offset: 0 },
+    sm: { span: 24, offset: 0 },
+  },
+};
+
 export const TTXVNNewsPage: React.FC<Props> = () => {
   const [skip, setSkip] = useState<number>(1);
   const pinned = useSidebar((state) => state.pinned);
   const [filterTTXVN, setFilterTTXVN] = useState<FilterEventProps>({});
   const queryClient = useQueryClient();
+  const [isVisibleModalAccountConfig, setIsVisibleModalAccountConfig] = useState<boolean>(false);
   const { ref, inView } = useInView();
   const { data, isFetchingNextPage, fetchNextPage, hasNextPage } = useInfiniteTTXVNList({
     ...filterTTXVN,
     order: "PublishDate",
     name: "ttxvn",
   });
+
+  const { data: accountConfigData } = useAccountTTXVNConfig();
+  const { mutate } = useMutationAccountTTXVNConfig();
   const dataSource = unionBy(flatMap(data?.pages.map((a) => a?.result?.map((e: any) => e))), "_id");
 
   useEffect(() => {
@@ -46,9 +64,23 @@ export const TTXVNNewsPage: React.FC<Props> = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filterTTXVN]);
 
+  useEffect(() => {
+    if (accountConfigData) {
+      setInitialValues(accountConfigData[0]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [accountConfigData]);
+
   const ProcessSearch = debounce((value) => {
     setFilterTTXVN({ ...filterTTXVN, text_search: value.trim() });
   }, 500);
+
+  const [initialValues, setInitialValues] = useState({
+    _id: "",
+    username: "",
+    password: "",
+  });
+  const [form] = Form.useForm<Record<string, any>>();
 
   return (
     <div className={styles.mainContainer}>
@@ -70,6 +102,9 @@ export const TTXVNNewsPage: React.FC<Props> = () => {
             <Select.Option value={"crawled"}>Tin đã lấy</Select.Option>
             <Select.Option value={"not_crawl"}>Tin chưa lấy</Select.Option>
           </Select>
+          <Button type="default" onClick={handleClickChangeAccount}>
+            Cấu hình tài khoản
+          </Button>
         </Space>
       </div>
       <div className={styles.body}>
@@ -99,6 +134,54 @@ export const TTXVNNewsPage: React.FC<Props> = () => {
           ) : null}
         </div>
       </div>
+      {isVisibleModalAccountConfig && (
+        <Modal
+          title={"Cấu hình tài khoản lấy tin Thông tấn xã Việt Nam "}
+          open={isVisibleModalAccountConfig}
+          destroyOnClose
+          onOk={handleFinish}
+          onCancel={handleCancel}
+          width={800}
+          closable={false}
+          maskClosable={false}
+        >
+          <Form
+            initialValues={initialValues ?? {}}
+            form={form}
+            {...formItemLayoutWithOutLabel}
+            preserve={false}
+          >
+            <Form.Item
+              validateTrigger={["onChange", "onBlur"]}
+              rules={[
+                {
+                  required: true,
+                  message: "Hãy nhập vào tên tài khoản!",
+                  whitespace: true,
+                },
+              ]}
+              label="Tên tài khoản"
+              name={"username"}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              validateTrigger={["onChange", "onBlur"]}
+              rules={[
+                {
+                  required: true,
+                  message: "Hãy nhập vào mật khẩu!",
+                  whitespace: true,
+                },
+              ]}
+              label="Mật khẩu"
+              name={"password"}
+            >
+              <Input />
+            </Form.Item>
+          </Form>
+        </Modal>
+      )}
     </div>
   );
 
@@ -110,5 +193,30 @@ export const TTXVNNewsPage: React.FC<Props> = () => {
 
   function handleChangeTypeCrawl(value: string) {
     setFilterTTXVN({ ...filterTTXVN, crawling: value });
+  }
+
+  function handleClickChangeAccount() {
+    setIsVisibleModalAccountConfig(true);
+  }
+
+  function handleFinish() {
+    form
+      .validateFields()
+      .then((values) => {
+        const data = removeWhitespaceInStartAndEndOfString(values);
+        mutate(
+          { id: initialValues._id, data: data },
+          {
+            onSuccess: () => {
+              setIsVisibleModalAccountConfig(false);
+            },
+          },
+        );
+      })
+      .catch();
+  }
+
+  function handleCancel() {
+    setIsVisibleModalAccountConfig(false);
   }
 };
