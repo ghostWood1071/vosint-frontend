@@ -9,7 +9,7 @@ interface EventsState {
 
 export const useEventsState = create<EventsState>((set) => ({
   dateTimeFilter: [
-    moment().subtract(30, "days").format("DD/MM/YYYY"),
+    moment().subtract(7, "days").format("DD/MM/YYYY"),
     moment().format("DD/MM/YYYY"),
   ],
   setDateTimeFilter: (dateTimeFilter) => set({ dateTimeFilter }),

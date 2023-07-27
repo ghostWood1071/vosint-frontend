@@ -403,8 +403,8 @@ export const useGetNewsFromTTXVN = (filter: Record<string, any>) => {
   return useQuery([CACHE_KEYS.NewsTTXVN, filter], () => {
     return getNewsFromTTXVN({
       text_search: filter.text_search,
-      startDate: filter.startDate,
-      endDate: filter.endDate,
+      start_date: filter.start_date,
+      end_date: filter.end_date,
     });
   });
 };

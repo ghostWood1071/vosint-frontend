@@ -206,8 +206,8 @@ function EventsTTXVN({
   const [startDate, endDate] = useEventsState((state) => state.dateTimeFilter);
 
   const { data } = useGetNewsFromTTXVN({
-    from: startDate,
-    endDate: endDate,
+    start_date: startDate,
+    end_date: endDate,
     text_search: queryStringDslTTXVN({
       required_keyword: required_keyword,
       exclusion_keyword: exclusion_keyword,
