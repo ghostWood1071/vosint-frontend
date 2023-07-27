@@ -59,7 +59,7 @@ export const getEventsByNewsletterWithApiJob = async (
   const result = await apiClient.get(`/Job/api/get_event_from_newsletter_list_id`, {
     params: filterEmptyString({
       // ...filter,
-      newsletter_id: filter.newsletterId,
+      news_letter_id: filter.newsletterId,
       start_date: filter.startDate,
       end_date: filter.endDate,
       event_number: filter.eventNumber,
