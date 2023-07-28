@@ -265,8 +265,7 @@ export function PeriodicReportDetail(): JSX.Element {
     const nodesWithLevels = setNodeLevels(datatest);
     const blobData = await convertHeadingsToDocxPeriodic(nodesWithLevels, dataSelect[0]?.title);
     Packer.toBlob(blobData).then((blob) => {
-      downloadFile(blob, "bao-cao-dinh-ky.docx");
-      console.log("Tree docs exported successfully!");
+      downloadFile(blob, `${dataSelect[0]?.title}.docx`);
     });
   }
 }
