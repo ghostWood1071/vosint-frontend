@@ -3,7 +3,7 @@ import { VI_LOCALE } from "@/locales/cron";
 import { useSidebar } from "@/pages/app/app.store";
 import { pipelineListPath } from "@/pages/router";
 import { IActionInfos, IPipelineSchema } from "@/services/pipeline.type";
-import { ArrowLeftOutlined, DeleteOutlined, EditOutlined, SaveOutlined } from "@ant-design/icons";
+import { ArrowLeftOutlined, EditOutlined, SaveOutlined } from "@ant-design/icons";
 import { Button, Modal, Typography, message } from "antd";
 import { pick } from "lodash";
 import { nanoid } from "nanoid";
@@ -241,7 +241,10 @@ export const PipelineDetail: React.FC = () => {
   }
 
   function handleVerifyPipeline() {
-    id && verifyPipeline(id);
+    id &&
+      verifyPipeline({
+        id,
+      });
   }
 };
 

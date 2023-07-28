@@ -1,5 +1,4 @@
 import {
-  ActionRunIcon,
   PipelineCloneIcon,
   PipelineHistoryIcon,
   PipelineRunIcon,
@@ -20,11 +19,12 @@ interface Props {
   totalRecord?: number;
 
   onHistory?(id: string): void;
+
   onChangeEnabled: (_id: string, enabled: boolean) => void;
   onClonePipeline: (_id: string) => void;
   onDeletePipeline: (_id: string) => Promise<any>;
   onChangeActive: (_id: string, enabled: boolean) => void;
-  onVerifyPipeline: (_id: string) => void;
+  onVerifyPipeline: (data: { id: string; mode_test?: boolean }) => void;
 }
 
 export const PipelineTable: React.FC<Props> = ({
@@ -139,7 +139,12 @@ export const PipelineTable: React.FC<Props> = ({
               title={`Chạy pipeline "${record.name}"`}
               icon={<PlayCircleTwoTone twoToneColor="#52c41a" />}
               type="text"
-              onClick={() => onVerifyPipeline(_id)}
+              onClick={() =>
+                onVerifyPipeline({
+                  id: _id,
+                  mode_test: false,
+                })
+              }
             />
 
             <Icon

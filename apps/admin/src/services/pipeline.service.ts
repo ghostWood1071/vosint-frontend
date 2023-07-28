@@ -45,10 +45,15 @@ export const deletePipeline = async (id: string) => {
   return result.data.payload;
 };
 
-export const verifyPipeline = async (id: string) => {
-  const url = `${BASE_URL_PIPELINE}/Job/api/run_only_job/${id}`;
+export const verifyPipeline = async (id: string, mode_test = true) => {
+  const searchParams = new URLSearchParams();
+  if (!mode_test) {
+    searchParams.append("mode_test", "False");
+  }
+
+  const url = `${BASE_URL_PIPELINE}/Job/api/run_only_job/${id}?${searchParams.toString()}`;
   const result = await apiClient.post(url, null, {
-    timeout: 1_000 * 60 * 5,
+    timeout: 1_000 * 60 * 60,
   });
   return result.data;
 };

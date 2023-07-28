@@ -59,9 +59,16 @@ export const usePutPipeline = (options?: UseMutationOptions<unknown, unknown, an
 };
 
 export const useVerifyPipeline = (
-  options?: UseMutationOptions<IPipelineVerify, unknown, string>,
+  options?: UseMutationOptions<
+    IPipelineVerify,
+    unknown,
+    {
+      id: string;
+      mode_test?: boolean;
+    }
+  >,
 ) => {
-  return useMutation((id) => verifyPipeline(id), options);
+  return useMutation(({ id, mode_test }) => verifyPipeline(id, mode_test), options);
 };
 
 export const usePipelineSource = (options?: UseQueryOptions<IPipelineSource[]>) => {
