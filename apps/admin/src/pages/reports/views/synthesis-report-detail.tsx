@@ -296,7 +296,7 @@ export function SynthesisReport(): JSX.Element {
       dateTime,
     });
     Packer.toBlob(blobData).then((blob) => {
-      downloadFile(blob, "bao-cao-tong-hop.docx");
+      downloadFile(blob, `${title}.docx`);
     });
   }
 

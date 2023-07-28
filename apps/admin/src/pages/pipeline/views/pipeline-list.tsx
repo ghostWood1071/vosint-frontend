@@ -244,6 +244,7 @@ export const PipelineList: React.FC = () => {
         {
           onSuccess: () => {
             setIsOpenCreate(false);
+            form.resetFields();
             queryClient.invalidateQueries([CACHE_KEYS.Pipelines]);
           },
         },
@@ -253,5 +254,6 @@ export const PipelineList: React.FC = () => {
 
   function handleCancelCreate() {
     setIsOpenCreate(false);
+    form.resetFields();
   }
 };
