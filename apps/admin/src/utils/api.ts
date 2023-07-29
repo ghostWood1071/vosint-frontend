@@ -1,6 +1,7 @@
 import { BASE_URL } from "@/constants/config";
 import { HttpStatusCode } from "@/constants/http-status";
 import axios from "axios";
+import { identity, pickBy } from "lodash";
 
 export const apiClient = axios.create({
   baseURL: BASE_URL,
@@ -38,7 +39,7 @@ apiClient.interceptors.response.use(
 export const filterEmptyString = (params: Record<string, any>) => {
   const result: Record<string, any> = {};
 
-  Object.entries(params).forEach(([key, value]) => {
+  Object.entries(pickBy(params, identity)).forEach(([key, value]) => {
     if (value !== "") {
       if (typeof value === "string") {
         result[key] = value.trim();
