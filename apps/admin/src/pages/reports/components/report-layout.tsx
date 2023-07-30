@@ -103,36 +103,6 @@ const Sidebar = () => {
   const { id } = useParams();
   const linhVucTree = dataNewsLetter?.linh_vuc && buildTree(dataNewsLetter.linh_vuc);
 
-  const _generateTree = (items: any, parentId = null) => {
-    return (
-      items?.length > 0 &&
-      items
-        .filter((item: any) => item.parent_id === parentId || item._id === null)
-        .map((item: any, index: any) => {
-          const { _id, title } = item;
-          const children = _generateTree(items, _id); // Đệ quy để tạo cây con
-          const hasChildren = children.length > 0;
-          return {
-            key: getPeriodicReportUrl(_id),
-            label: (
-              <div className={styles.title} onClick={handleClickMenu}>
-                {title}
-              </div>
-            ), // Thay đổi thành hiển thị title của mục con
-            children: hasChildren ? children : null,
-            selectable: false, // Ẩn chọn cho nút có con
-          };
-          function handleClickMenu() {
-            // if (children.length > 0) {
-            //   // Nếu có con, thì không cho phép mở rộng/collapse node khi click vào label
-            //   return;
-            // }
-            navigate(getPeriodicReportUrl(_id));
-          }
-        })
-    );
-  };
-
   const items: MenuProps["items"] = [
     {
       label: "BÁO CÁO NHANH",
@@ -311,7 +281,7 @@ const Sidebar = () => {
     navigate(reportSyntheticCreatePath);
   }
 
-  function handleClickTitle(newsletterId: string, tag: ETreeTag) {
+  function handleClickTitle(newsletterId: string, _tag: ETreeTag) {
     navigate(getPeriodicReportUrl(newsletterId));
   }
 

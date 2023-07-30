@@ -54,7 +54,7 @@ export function PeriodicReportDetail(): JSX.Element {
     })) ?? [];
   let datatest: any[] = [];
   // eslint-disable-next-line array-callback-return
-  dataEventsById?.result?.map((item: any) => {
+  dataEventsById?.result?.forEach((item: any) => {
     let listEvent = Object.values(item)[0] as any[];
     listEvent?.forEach((obj: any) => {
       const b: any[] = [];

@@ -44,7 +44,7 @@ export const PipelineList: React.FC = () => {
 
   const [idPipeline, setIdPipeline] = useState("");
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
-  const { data, isLoading: isLoadingHistory } = usePipelineHistory(idPipeline, {
+  const { data: histories, isLoading: isLoadingHistory } = usePipelineHistory(idPipeline, {
     page_number: searchParams.get("page_number_history") ?? 1,
     page_size: searchParams.get("page_size_history") ?? 10,
   });
@@ -138,10 +138,10 @@ export const PipelineList: React.FC = () => {
         open={isHistoryOpen}
         onCancel={handleCancelHistory}
         getContainer="#pipeline-gathering"
-        width={1300}
+        width={"80%"}
         footer={null}
       >
-        <PipelineHistory isLoading={isLoadingHistory} data={data} />
+        <PipelineHistory isLoading={isLoadingHistory} data={histories} />
       </Modal>
       <Modal
         title={t("create_new_pipeline")}

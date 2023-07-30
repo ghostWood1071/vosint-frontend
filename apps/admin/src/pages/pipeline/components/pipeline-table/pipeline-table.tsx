@@ -40,6 +40,7 @@ export const PipelineTable: React.FC<Props> = ({
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const page = searchParams.get("page_number");
+  const pageSize = searchParams.get("page_size");
   const { t } = useTranslation("translation", { keyPrefix: "pipeline" });
   const columns: TableColumnsType<IPipelines> = [
     {
@@ -122,6 +123,7 @@ export const PipelineTable: React.FC<Props> = ({
             title="Lịch sử thu thập"
           />
         );
+
         function handleSetId() {
           onHistory && onHistory(record._id);
         }
@@ -194,6 +196,7 @@ export const PipelineTable: React.FC<Props> = ({
         current: page ? +page : 1,
         total: totalRecord,
         showSizeChanger: true,
+        defaultPageSize: pageSize ? +pageSize : 10,
       }}
     />
   );
