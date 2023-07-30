@@ -34,7 +34,7 @@ export const ChartLayout: React.FC<ChartLayoutProps> = ({
       <Row className={styles.row2}>
         <Col className={styles.columnRow2} span={24}>
           <div className={styles.swiperContainer}>
-            <HotNews dataSwiper={dataSwiper} numberItemSwiper={4} />
+            <HotNews />
           </div>
         </Col>
       </Row>

@@ -68,75 +68,6 @@ export const LeaderLayout: React.FC = () => {
     },
   ];
 
-  const dataSwiper = [
-    {
-      id: "s001",
-      title: "Galaxy",
-      imageUrl:
-        "https://image.shutterstock.com/image-photo/sunrise-near-pond-birches-on-600w-1912241467.jpg",
-    },
-    {
-      id: "s001",
-      title: "Galaxy",
-      imageUrl:
-        "https://image.shutterstock.com/image-photo/sunrise-near-pond-birches-on-600w-1912241467.jpg",
-    },
-    {
-      id: "s002",
-      title: "Galaxy",
-      imageUrl:
-        "https://image.shutterstock.com/image-photo/sunrise-near-pond-birches-on-600w-1912241467.jpg",
-    },
-    {
-      id: "s003",
-      title: "Galaxy",
-      imageUrl:
-        "https://image.shutterstock.com/image-photo/sunrise-near-pond-birches-on-600w-1912241467.jpg",
-    },
-    {
-      id: "s004",
-      title: "Galaxy",
-      imageUrl:
-        "https://image.shutterstock.com/image-photo/sunrise-near-pond-birches-on-600w-1912241467.jpg",
-    },
-    {
-      id: "s005",
-      title: "Galaxy",
-      imageUrl:
-        "https://image.shutterstock.com/image-photo/sunrise-near-pond-birches-on-600w-1912241467.jpg",
-    },
-    {
-      id: "s006",
-      title: "Galaxy",
-      imageUrl:
-        "https://image.shutterstock.com/image-photo/sunrise-near-pond-birches-on-600w-1912241467.jpg",
-    },
-    {
-      id: "s007",
-      title: "Galaxy",
-      imageUrl:
-        "https://image.shutterstock.com/image-photo/sunrise-near-pond-birches-on-600w-1912241467.jpg",
-    },
-    {
-      id: "s008",
-      title: "Galaxy",
-      imageUrl:
-        "https://image.shutterstock.com/image-photo/sunrise-near-pond-birches-on-600w-1912241467.jpg",
-    },
-    {
-      id: "s009",
-      title: "Galaxy",
-      imageUrl:
-        "https://image.shutterstock.com/image-photo/sunrise-near-pond-birches-on-600w-1912241467.jpg",
-    },
-    {
-      id: "s010",
-      title: "Galaxy",
-      imageUrl:
-        "https://image.shutterstock.com/image-photo/sunrise-near-pond-birches-on-600w-1912241467.jpg",
-    },
-  ];
-
   const dataTopColumn = [
     {
       type: "10/06/2022",
@@ -231,7 +162,7 @@ export const LeaderLayout: React.FC = () => {
         </Col>
         <Col className={styles.column2Row1} xs={24} xl={15}>
           <div className={styles.columnRow1Level1Body}>
-            <HotNews dataSwiper={dataSwiper} numberItemSwiper={3} />
+            <HotNews />
           </div>
         </Col>
         <Col className={styles.column1Row2} xs={24} xl={9}>
