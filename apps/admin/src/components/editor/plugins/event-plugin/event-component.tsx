@@ -199,7 +199,7 @@ export function EventEditorParagraph({
       const editorState = eventEditor.parseEditorState(data);
       eventEditor.setEditorState(editorState);
     });
-  }, [data, eventEditor]);
+  }, []);
 
   useEffect(() => {
     if (eventEditor === null) return;
