@@ -1,3 +1,4 @@
+import { useNewsCountryToday } from "@/services/dashboard.loader";
 import { Col, Row } from "antd";
 import React from "react";
 
@@ -9,6 +10,8 @@ import { SuperviseUser } from "./component/supervise-user/supervise-user";
 import styles from "./leader.module.less";
 
 export const LeaderLayout: React.FC = () => {
+  const { data: dataCountryToday } = useNewsCountryToday();
+
   //fake data supervise user
   const mostNewsReader = [
     {
@@ -65,37 +68,6 @@ export const LeaderLayout: React.FC = () => {
       address: "Indonesia",
       online: false,
       numberOfReadedNews: 3,
-    },
-  ];
-
-  const dataTopColumn = [
-    {
-      type: "10/06/2022",
-      value: 700,
-    },
-    {
-      type: "11/06/2022",
-      value: 1000,
-    },
-    {
-      type: "12/06/2022",
-      value: 300,
-    },
-    {
-      type: "13/06/2022",
-      value: 500,
-    },
-    {
-      type: "14/06/2022",
-      value: 1100,
-    },
-    {
-      type: "15/06/2022",
-      value: 150,
-    },
-    {
-      type: "16/06/2022",
-      value: 300,
     },
   ];
 
@@ -157,7 +129,7 @@ export const LeaderLayout: React.FC = () => {
       <Row gutter={[16, 16]} className={styles.row1}>
         <Col className={styles.column1Row1} xs={24} xl={9}>
           <div className={styles.columnRow1Level1Body}>
-            <ColumnTopChart data={dataTopColumn} />
+            <ColumnTopChart data={dataCountryToday ?? []} />
           </div>
         </Col>
         <Col className={styles.column2Row1} xs={24} xl={15}>

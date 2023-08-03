@@ -1,5 +1,5 @@
 import { Col, Row } from "antd";
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 import { Card } from "./components/card/card";
 import { ChartLayout } from "./components/chart/chart-layout";
@@ -8,7 +8,6 @@ import styles from "./expert.module.less";
 interface ExpertPageProps {}
 
 export const ExpertPage: React.FC<ExpertPageProps> = () => {
-  const [dataLineChart, setDataLineChart] = useState([]);
   const dataSwiper = [
     {
       id: "s001",
@@ -78,19 +77,6 @@ export const ExpertPage: React.FC<ExpertPageProps> = () => {
     },
   ];
 
-  useEffect(() => {
-    asyncFetch();
-  }, []);
-
-  const asyncFetch = () => {
-    fetch("https://gw.alipayobjects.com/os/bmw-prod/1d565782-dde4-4bb6-8946-ea6a38ccf184.json")
-      .then((response) => response.json())
-      .then((json) => setDataLineChart(json))
-      .catch((error) => {
-        console.log("fetch data failed", error);
-      });
-  };
-
   const dataColumn = [
     {
       type: "10/06/2022",
@@ -124,16 +110,12 @@ export const ExpertPage: React.FC<ExpertPageProps> = () => {
 
   return (
     <div className={styles.mainComponent}>
-      <Row>
+      <Row className={styles.row}>
         <Col xs={24} xl={6}>
           <Card />
         </Col>
         <Col xs={24} xl={18}>
-          <ChartLayout
-            dataSwiper={dataSwiper}
-            dataLineChart={dataLineChart}
-            dataColumnChart={dataColumn}
-          />
+          <ChartLayout dataSwiper={dataSwiper} dataColumnChart={dataColumn} />
         </Col>
       </Row>
     </div>

@@ -9,7 +9,7 @@ interface ColumnBottomChartProps {
 }
 
 export const ColumnBottomChart: React.FC<ColumnBottomChartProps> = ({ data }) => {
-  const itemMax: any = data.reduce((a: any, b: any) => (a.value > b.value ? a : b));
+  const itemMax: any = data?.reduce((a: any, b: any) => (a.value > b.value ? a : b), 0);
   const brandColor = "#BDC4D0";
   const config: ColumnConfig = {
     data,
@@ -44,6 +44,7 @@ export const ColumnBottomChart: React.FC<ColumnBottomChartProps> = ({ data }) =>
       },
     },
   };
+
   return (
     <div className={styles.mainBody}>
       <div className={styles.header}>

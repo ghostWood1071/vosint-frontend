@@ -11,8 +11,8 @@ export const LineChart: React.FC<LineChartProps> = ({ data }) => {
   const config: LineConfig = {
     data,
     padding: "auto",
-    xField: "Date",
-    yField: "scales",
+    xField: "date",
+    yField: "value",
     xAxis: {
       tickCount: 5,
     },

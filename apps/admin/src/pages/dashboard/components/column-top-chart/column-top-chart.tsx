@@ -10,7 +10,7 @@ interface ColumnTopChartProps {
 export const ColumnTopChart: React.FC<ColumnTopChartProps> = ({ data }) => {
   const config: ColumnConfig = {
     data,
-    xField: "type",
+    xField: "date",
     yField: "value",
     seriesField: "",
 
@@ -27,6 +27,7 @@ export const ColumnTopChart: React.FC<ColumnTopChartProps> = ({ data }) => {
       },
     },
   };
+
   return (
     <div className={styles.mainBody}>
       <div className={styles.header}>
