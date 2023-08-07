@@ -2,6 +2,7 @@ import { ColumnTopChart } from "@/pages/dashboard/components/column-top-chart/co
 import { HotNews } from "@/pages/dashboard/components/hot-news/hot-news";
 import { useNewsCountryToday, useNewsHoursToday } from "@/services/dashboard.loader";
 import { Col, Row } from "antd";
+import dayjs from "dayjs";
 import React from "react";
 
 import styles from "./chart-layout.module.less";
@@ -21,12 +22,28 @@ export const ChartLayout: React.FC<ChartLayoutProps> = ({ dataSwiper, dataColumn
       <Row className={styles.row1}>
         <Col className={styles.column1Row1} xs={24} xl={13}>
           <div className={styles.columnChartContainer}>
-            <ColumnTopChart data={dataCountryToday ?? []} />
+            <ColumnTopChart
+              data={
+                dataCountryToday
+                  ?.map(({ date, value }: { date: string; value: number }) => ({
+                    date: dayjs(date).format("DD/MM/YYYY"),
+                    value,
+                  }))
+                  .reverse() ?? []
+              }
+            />
           </div>
         </Col>
         <Col className={styles.column2Row1} xs={24} xl={11}>
           <div className={styles.lineChartContainer}>
-            <LineChart data={dataHoursToday ?? []} />
+            <LineChart
+              data={
+                dataHoursToday?.map(({ date, value }: { date: string; value: number }) => ({
+                  date: dayjs(date).format("HH:mm"),
+                  value,
+                })) ?? []
+              }
+            />
           </div>
         </Col>
       </Row>

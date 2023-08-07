@@ -1,5 +1,6 @@
 import { useNewsCountryToday } from "@/services/dashboard.loader";
 import { Col, Row } from "antd";
+import dayjs from "dayjs";
 import React from "react";
 
 import { ColumnTopChart } from "../components/column-top-chart/column-top-chart";
@@ -129,7 +130,16 @@ export const LeaderLayout: React.FC = () => {
       <Row gutter={[16, 16]} className={styles.row1}>
         <Col className={styles.column1Row1} xs={24} xl={9}>
           <div className={styles.columnRow1Level1Body}>
-            <ColumnTopChart data={dataCountryToday ?? []} />
+            <ColumnTopChart
+              data={
+                dataCountryToday
+                  ?.map(({ date, value }: { date: string; value: string }) => ({
+                    date: dayjs(date).format("DD/MM/YYYY"),
+                    value,
+                  }))
+                  .reverse() ?? []
+              }
+            />
           </div>
         </Col>
         <Col className={styles.column2Row1} xs={24} xl={15}>
