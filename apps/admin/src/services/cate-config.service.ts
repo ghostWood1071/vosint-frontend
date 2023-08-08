@@ -11,7 +11,7 @@ export const getObjectCateConfig = async (filter: any) => {
 };
 
 export const getProxyConfig = async (filter: any) => {
-  const result = await apiClient.get<any>(`/Proxy/${filter.text_search}`, {
+  const result = await apiClient.get<any>(`/Proxy/search`, {
     params: filterEmptyString(filter),
   });
   return result.data;
