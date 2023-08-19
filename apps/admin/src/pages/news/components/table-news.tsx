@@ -5,6 +5,7 @@ import {
 } from "@/components/editor/plugins/event-plugin/event-context";
 import { EventFilterNode } from "@/components/editor/plugins/event-plugin/event-filter-node";
 import { EventNode } from "@/components/editor/plugins/event-plugin/event-node";
+import ImportantButton from "@/components/important-button/important-button";
 import { ETreeTag, useNewsSelection } from "@/components/news/news-state";
 import { convertTimeToShowInUI } from "@/utils/tool-validate-string";
 import { ContentEditable, EditorNodes, editorTheme } from "@aiacademy/editor";
@@ -139,15 +140,9 @@ export const NewsTableItem: React.FC<Props> = ({
                   className={styles.taskIcon}
                 />
               </Tooltip>
+
               <Tooltip title={item.isBell ? "Xoá khỏi tin quan trọng" : "Thêm vào tin quan trọng"}>
-                <BellTwoTone
-                  twoToneColor={item.isBell ? "#00A94E" : "#A6A6A6"}
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    handleClickBell();
-                  }}
-                  className={styles.taskIcon}
-                />
+                <ImportantButton item={item} handleClickImportant={handleClickImportant} />
               </Tooltip>
               <Tooltip
                 title={item.isStar ? "Xoá khỏi tin được đánh dấu" : "Thêm vào tin được đánh dấu"}
@@ -308,13 +303,10 @@ export const NewsTableItem: React.FC<Props> = ({
                             item.isBell ? "Xoá khỏi tin quan trọng" : "Thêm vào tin quan trọng"
                           }
                         >
-                          <BellTwoTone
-                            className={styles.iconContent}
-                            twoToneColor={item.isBell ? "#00A94E" : "#A6A6A6"}
-                            onClick={(event) => {
-                              event.stopPropagation();
-                              handleClickBell();
-                            }}
+                          <ImportantButton
+                            item={item}
+                            handleClickImportant={handleClickImportant}
+                            style={{ backgroundSize: "20px", top: "1px", left: "-2px" }}
                           />
                         </Tooltip>
                         <Tooltip
@@ -501,7 +493,7 @@ export const NewsTableItem: React.FC<Props> = ({
     setOpenSelection(true);
   }
 
-  function handleClickBell() {
+  function handleClickImportant() {
     item.isBell
       ? onDelete?.(item._id, ETreeTag.QUAN_TRONG)
       : onAdd?.(item._id, ETreeTag.QUAN_TRONG);

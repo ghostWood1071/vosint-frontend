@@ -1,4 +1,5 @@
 import { DownNewsIcon, UpNewsIcon } from "@/assets/svg";
+import ImportantButton from "@/components/important-button/important-button";
 import {
   BellTwoTone,
   MinusCircleTwoTone,
@@ -39,7 +40,7 @@ export const OrganizationsTable: React.FC<Props> = ({ dataSource }) => {
         function handleClickShop() {
           setShow(true);
         }
-        function handleClickBell() {
+        function handleClickImportant() {
           record.isBell ? message.warning("Xoá thành công") : message.success("Thêm thành công");
         }
         function handleClickStar() {
@@ -52,10 +53,11 @@ export const OrganizationsTable: React.FC<Props> = ({ dataSource }) => {
               <ShoppingCartOutlined onClick={handleClickShop} />
             </Tooltip>
             <Tooltip title={record.isBell ? "Xoá khỏi tin quan trọng" : "Thêm vào tin quan trọng"}>
-              <BellTwoTone
+              {/* <BellTwoTone
                 twoToneColor={record.isBell ? "#00A94E" : "#A6A6A6"}
-                onClick={handleClickBell}
-              />
+                onClick={handleClickImportant}
+              /> */}
+              <ImportantButton item={record} handleClickImportant={handleClickImportant} />
             </Tooltip>
             <Tooltip
               title={record.isStar ? "Xoá khỏi tin được đánh dấu" : "Thêm vào tin được đánh dấu"}

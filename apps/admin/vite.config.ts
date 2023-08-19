@@ -47,10 +47,11 @@ export default defineConfig({
       localsConvention: "camelCase",
     },
   },
-  // server: {
-  //   proxy: {
-  //     "/api": "http://vosint.aiacademy.edu.vn",
-  //     "/api/pipeline": "http://vosint.aiacademy.edu.vn/api",
-  //   },
-  // },
+  /// 
+  server: {
+    proxy: {
+      "/api": "http://vosint.aiacademy.edu.vn",
+      "/api/pipeline": "http://vosint.aiacademy.edu.vn/api",
+    },
+  },
 });

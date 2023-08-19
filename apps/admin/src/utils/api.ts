@@ -7,6 +7,12 @@ export const apiClient = axios.create({
   baseURL: BASE_URL,
   timeout: 1000 * 30,
   withCredentials: true,
+  // long
+  // headers: {
+  //   "Content-Type": "application/json",
+  //   "Access-control-Allow-Origin": "*"
+  // },
+
 });
 
 apiClient.interceptors.request.use(
