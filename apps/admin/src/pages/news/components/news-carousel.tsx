@@ -1,3 +1,4 @@
+import ImportantButton from "@/components/important-button/important-button";
 import { BellTwoTone, ShoppingTwoTone, StarTwoTone } from "@ant-design/icons";
 import { Col, Image, Row, Space, Typography } from "antd";
 import React from "react";
@@ -58,7 +59,8 @@ const NewsCard: React.FC<PropsCard> = ({ title, description, url }) => {
               <Col>
                 <Space>
                   <ShoppingTwoTone twoToneColor="gray" />
-                  <BellTwoTone twoToneColor="gray" />
+                  {/* <BellTwoTone twoToneColor="gray" /> */}
+                  <ImportantButton item={{ isBell: false }} />
                   <StarTwoTone twoToneColor="gray" />
                 </Space>
               </Col>
@@ -99,7 +101,8 @@ const NewsCardTiny: React.FC<PropsCard> = ({ title, description, url }) => {
           <Col>
             <Space>
               <ShoppingTwoTone twoToneColor="gray" />
-              <BellTwoTone twoToneColor="gray" />
+              {/* <BellTwoTone twoToneColor="gray" /> */}
+              <ImportantButton item={{ isBell: false }} />
               <StarTwoTone twoToneColor="gray" />
             </Space>
           </Col>

@@ -74,6 +74,7 @@ export const NewsListPage: React.FC<Props> = () => {
     fetchNextPage({ pageParam: { page_number: skip, page_size: 50 } });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [skip]);
+
   return (
     <>
       <NewsFilter />

@@ -1,3 +1,4 @@
+import ImportantButton from "@/components/important-button/important-button";
 import { ETreeTag, useNewsSelection } from "@/components/news/news-state";
 import { BellTwoTone, ShoppingCartOutlined, StarTwoTone } from "@ant-design/icons";
 import { Col, Modal, Row, Space, Tabs, TabsProps, Tooltip, Typography } from "antd";
@@ -63,9 +64,9 @@ export const NewsDetail: React.FC<Props> = ({ onDelete, onAdd }) => {
               <Tooltip
                 title={data?.["is_bell"] ? "Xoá khỏi tin quan trọng" : "Thêm vào tin quan trọng"}
               >
-                <BellTwoTone
-                  twoToneColor={data?.["is_bell"] ? "#00A94E" : "#A6A6A6"}
-                  onClick={handleClickBell}
+                <ImportantButton
+                  item={{ isBell: data?.["is_bell"] }}
+                  handleClickImportant={handleClickImportant}
                 />
               </Tooltip>
               <Tooltip
@@ -109,7 +110,7 @@ export const NewsDetail: React.FC<Props> = ({ onDelete, onAdd }) => {
     setOpenSelection(true);
   }
 
-  function handleClickBell() {
+  function handleClickImportant() {
     data?.["is_bell"]
       ? onDelete?.(newsId!, ETreeTag.QUAN_TRONG)
       : onAdd?.(newsId!, ETreeTag.QUAN_TRONG);
