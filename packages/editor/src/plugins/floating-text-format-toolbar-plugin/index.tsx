@@ -379,7 +379,6 @@ function BlockFormatDropDown({
       value={blockType}
       onChange={(e) => {
         const value = e.target.value;
-        console.log("value", value);
         if (value === "paragraph") {
           formatParagraph();
         } else {

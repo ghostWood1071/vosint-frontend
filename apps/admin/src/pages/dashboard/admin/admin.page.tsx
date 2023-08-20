@@ -9,6 +9,7 @@ import { StatisticSystem } from "./components/statistic-system/statistic-system"
 interface AdminPageProps {}
 
 export const AdminPage: React.FC<AdminPageProps> = () => {
+
   const dataBadSource = [
     {
       type: "Nguồn hỏng",

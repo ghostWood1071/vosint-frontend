@@ -1,4 +1,5 @@
 // import { DownNewsIcon, UpNewsIcon } from "@/assets/svg";
+import ImportantButton from "@/components/important-button/important-button";
 import { ETreeTag, useNewsSelection } from "@/components/news/news-state";
 import { TNews } from "@/services/news.type";
 import {
@@ -82,7 +83,7 @@ export const NewsTable: React.FC<Props> = ({
           setOpenSelection(true);
         }
 
-        function handleClickBell() {
+        function handleClickImportant() {
           record.isBell
             ? onDelete?.(record._id, ETreeTag.QUAN_TRONG)
             : onAdd?.(record._id, ETreeTag.QUAN_TRONG);
@@ -100,10 +101,11 @@ export const NewsTable: React.FC<Props> = ({
               <ShoppingCartOutlined onClick={handleClickShop} />
             </Tooltip>
             <Tooltip title={record.isBell ? "Xoá khỏi tin quan trọng" : "Thêm vào tin quan trọng"}>
-              <BellTwoTone
+              {/* <BellTwoTone
                 twoToneColor={record.isBell ? "#00A94E" : "#A6A6A6"}
-                onClick={handleClickBell}
-              />
+                onClick={handleClickImportant}
+              /> */}
+              <ImportantButton item={record} handleClickImportant={handleClickImportant} />
             </Tooltip>
             <Tooltip
               title={record.isStar ? "Xoá khỏi tin được đánh dấu" : "Thêm vào tin được đánh dấu"}
