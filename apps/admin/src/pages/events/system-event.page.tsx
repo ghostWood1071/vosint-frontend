@@ -41,8 +41,6 @@ export const SystemEventPage: React.FC<Props> = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inView]);
 
-  console.log(dataSource);
-
   useEffect(() => {
     queryClient.removeQueries([EVENT_CACHE_KEYS.ListEvents]);
     fetchNextPage({ pageParam: { skip: 1, limit: 50 } });
