@@ -1,7 +1,24 @@
 import { BASE_URL_PIPELINE, BASE_URL_SUMM } from "@/constants/config";
 import { apiClient, filterEmptyString } from "@/utils/api";
-
 import type { INewsSummaryDto } from "./news.type";
+import { useEventByIdNewsList } from "@/pages/news/news.loader";
+
+// toggle between news and event
+export const switchNewsAndEvents = async (newsLetterId?: any, listId?: any) => {
+  // return data;
+  // const result = await apiClient.post<any>(`/`, newsLetterId);
+  // return result.data;
+  // const events: any = [];
+
+  // console.log(newsLetterId, listId);
+
+  // listId?.forEach(async (item: any) => {
+  //   const data  = await getEventByIdNews(item);
+  //   if (data) events.push(...data);
+  // });
+
+  // return events;
+};
 
 export const getNewsSidebar = async (title?: string) => {
   const result = await apiClient.get<any>(`/newsletters`, {
@@ -56,15 +73,17 @@ export const getEventsByNewsletterWithApiJob = async (
   // newsletterId: string,
   filter: Record<string, string>,
 ) => {
+
   const result = await apiClient.get(`/Job/api/get_event_from_newsletter_list_id`, {
     params: filterEmptyString({
       // ...filter,
-      news_letter_id: filter.newsletterId,
-      start_date: filter.startDate,
-      end_date: filter.endDate,
+      news_letter_id: filter.news_letter_id,
+      start_date: filter.start_date,
+      end_date: filter.end_date,
       event_number: filter.eventNumber,
     }),
   });
+  
   return result.data;
 };
 

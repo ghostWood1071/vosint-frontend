@@ -1,3 +1,4 @@
+import { ReactComponent as ToggleIcon } from "@/assets/svg/toggles.svg";
 import { Tree } from "@/components";
 import { ETreeTag, useNewsSelection, useNewsState } from "@/components/news/news-state";
 import { useSidebar } from "@/pages/app/app.store";
@@ -7,24 +8,27 @@ import {
   useNewsSidebar,
 } from "@/pages/news/news.loader";
 import { buildTree } from "@/pages/news/news.utils";
+import { getEventDetailUrl } from "@/pages/router";
 import {
   DeleteOutlined,
   ExclamationCircleOutlined,
   MinusCircleTwoTone,
   PlusCircleTwoTone,
+  ReloadOutlined,
 } from "@ant-design/icons";
 import { Button, DatePicker, Form, Input, List, Modal, Select, Typography } from "antd";
 import produce from "immer";
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { shallow } from "zustand/shallow";
 
 import { useNewsFilter, useNewsFilterDispatch } from "../news.context";
 import styles from "./news-filter.module.less";
 import { NewsSummaryModal } from "./news-summary-modal";
 
-export function NewsFilterV2(): JSX.Element {
+export function NewsFilterV2({ handleConvert }: { handleConvert: any }): JSX.Element {
   let { newsletterId: detailIds, tag } = useParams();
+  const navigate = useNavigate();
   const pinned = useSidebar((state) => state.pinned);
   const [newsSelection, setNewsSelection] = useNewsSelection(
     (state) => [state.newsSelection, state.setNewsSelection],
@@ -40,6 +44,7 @@ export function NewsFilterV2(): JSX.Element {
   const { mutateAsync: mutateDelete } = useDeleteNewsInNewsletter();
 
   const [internalTextSearch, setInternalTextSearch] = useState("");
+  const [status, setStatus] = useState(true);
 
   return (
     <div className={pinned ? styles.filterWithSidebar : styles.filter}>
@@ -99,6 +104,18 @@ export function NewsFilterV2(): JSX.Element {
             title="Xoá tin"
           />
         )}
+
+        <Button
+          className={styles.item}
+          icon={<ReloadOutlined />}
+          onClick={() => {
+            // setStatus(!status);
+            // handleConvert(status);
+            navigate(getEventDetailUrl(detailIds, tag));
+          }}
+          title={status ? "Hiển thị dòng sự kiện" : "Hiển thị danh sách tin"}
+        />
+
         <div className={styles.input}>
           <Input.Search
             className={styles.search}
@@ -172,21 +189,21 @@ function NewsFilterModal(): JSX.Element {
   const gioTinTree =
     data?.gio_tin &&
     buildTree([
-      {
-        _id: ETreeTag.QUAN_TRONG,
-        title: "Tin Quan Trọng",
-        tag: ETreeTag.QUAN_TRONG,
-      },
-      {
-        _id: ETreeTag.DANH_DAU,
-        title: "Tin đánh dấu",
-        tag: ETreeTag.DANH_DAU,
-      },
-      {
-        _id: ETreeTag.GIO_TIN,
-        title: "Giỏ tin",
-        tag: ETreeTag.GIO_TIN,
-      },
+      // {
+      //   _id: ETreeTag.QUAN_TRONG,
+      //   title: "Tin Quan Trọng",
+      //   tag: ETreeTag.QUAN_TRONG,
+      // },
+      // {
+      //   _id: ETreeTag.DANH_DAU,
+      //   title: "Tin đánh dấu",
+      //   tag: ETreeTag.DANH_DAU,
+      // },
+      // {
+      //   _id: ETreeTag.GIO_TIN,
+      //   title: "Giỏ tin",
+      //   tag: ETreeTag.GIO_TIN,
+      // },
       ...data.gio_tin.map((i: any) => ({ ...i, parent_id: i?.parent_id ?? ETreeTag.GIO_TIN })),
     ]);
 

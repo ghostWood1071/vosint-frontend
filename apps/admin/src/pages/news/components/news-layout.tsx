@@ -1,3 +1,6 @@
+import { ReactComponent as BookmarkIcon } from "@/assets/svg/bookmarks.svg";
+import { ReactComponent as CheckboxIcon } from "@/assets/svg/check-square.svg";
+import { ReactComponent as StarIcon } from "@/assets/svg/star.svg";
 import { Tree } from "@/components";
 import { NewsletterModal } from "@/components/news/news-modal";
 import { ETreeAction, ETreeTag, useNewsState } from "@/components/news/news-state";
@@ -64,12 +67,14 @@ function Sidebar() {
   const chuDeTree = data?.chu_de && buildTree(data.chu_de);
   return (
     <>
-      <Space direction="vertical" className={styles.sidebar} size={16}>
+      <Space direction="vertical" className={styles.sidebar} size={18}>
         <NavLink to={getNewsDetailUrl(ETreeTag.QUAN_TRONG)} className={handleActive}>
+          <BookmarkIcon className={styles.sidebarIcon} />
           TIN QUAN TRỌNG
         </NavLink>
 
         <NavLink to={getNewsDetailUrl(ETreeTag.DANH_DAU)} className={handleActive}>
+          <CheckboxIcon className={styles.sidebarIcon} />
           TIN ĐƯỢC ĐÁNH DẤU
         </NavLink>
         {gioTinTree && (
@@ -110,6 +115,7 @@ function Sidebar() {
           />
         )}
         <NavLink to={"/news-ttxvn"} className={handleActive}>
+          <StarIcon className={styles.sidebarIcon} />
           TIN TTXVN
         </NavLink>
         {linhVucTree && (

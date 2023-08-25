@@ -52,6 +52,7 @@ export default defineConfig({
   //   proxy: {
   //     "/api": "http://vosint.aiacademy.edu.vn",
   //     "/api/pipeline": "http://vosint.aiacademy.edu.vn/api",
+  //     // "/api/summ": "http://vosint.aiacademy.edu.vn/api",
   //   },
   // },
 });

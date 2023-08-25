@@ -1,5 +1,6 @@
 import { useNewsSelection } from "@/components/news/news-state";
-import { Alert, Button, Col, Modal, Row, Spin } from "antd";
+import { ControlOutlined } from "@ant-design/icons";
+import { Alert, Button, Col, Modal, Row, Spin, Tooltip } from "antd";
 import { useState } from "react";
 
 import { useGetNewsSummaryLazy } from "../news.loader";
@@ -29,6 +30,7 @@ export function NewsSummaryModal(): JSX.Element {
       >
         Tóm tắt tin ({newsSelectionIds.length})
       </Button>
+
       <Modal
         title="Tóm tắt đa tin"
         open={open}

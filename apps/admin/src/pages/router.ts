@@ -15,7 +15,9 @@ export const systemEventPath = "/sytstem-event";
 export const newsPath = "/news";
 export const newsTTXVNPath = "/news-ttxvn";
 
-export const getNewsDetailUrl = (id: string | number, tag?: ETreeTag) => `/news/${id}/${tag ?? ""}`;
+// export const getNewsDetailUrl = (id: string | number, tag?: ETreeTag) => `/news/${id}/${tag ?? ""}`;
+export const getNewsDetailUrl = (id: any, tag?: any) => `/news/${id}/${tag ?? ""}`;
+export const getEventDetailUrl = (id: any, tag?: any) => `/event/${id}/${tag ?? ""}`;
 
 export const organizationPath = "/organization";
 export const organizationDetailPath = "/organization/:id";

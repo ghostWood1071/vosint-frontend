@@ -47,6 +47,7 @@ export function PeriodicReportDetail(): JSX.Element {
     endDate: dateTime[1],
     eventNumber: eventNumber,
   });
+
   const dataWithDefaultParentId =
     dataEventsById?.infor_tree?.map((item: any) => ({
       ...item,
