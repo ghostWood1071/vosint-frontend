@@ -98,7 +98,7 @@ export const NewsTableItem: React.FC<Props> = ({
   };
 
   useEffect(() => {
-    newsSelection.forEach((item) => "is_read" in item && delete item.is_read);
+    // newsSelection.forEach((item) => "is_read" in item && delete item.is_read);
     const a = newsSelection.findIndex((e) => e._id === item._id);
     if (a !== -1) {
       setCheckbox(true);
