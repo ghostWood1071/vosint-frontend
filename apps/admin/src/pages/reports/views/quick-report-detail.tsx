@@ -83,6 +83,8 @@ function QuickReport(): JSX.Element {
     enabled: !!id,
   });
 
+  console.log("data", data);
+
   useEffect(() => {
     if (!data) return;
 

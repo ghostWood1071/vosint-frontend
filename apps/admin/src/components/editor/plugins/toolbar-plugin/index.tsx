@@ -189,6 +189,7 @@ export function ToolbarPlugin(): JSX.Element {
     setExporting(true);
     const editorState = activeEditor.getEditorState();
     const blobData = await convertLexicalToDocx(editorState.toJSON(), dateTime, "");
+
     Packer.toBlob(blobData)
       .then((blob) => {
         downloadFile(blob, "bao-cao-nhanh.docx");

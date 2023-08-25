@@ -28,7 +28,6 @@ const getEventByNews = (listId: any) => {
 
   listId.forEach((item: any) => {
     const { data } = useEventByIdNewsList(item);
-    console.log(data);
     if (data) events.push(...data);
   });
 
