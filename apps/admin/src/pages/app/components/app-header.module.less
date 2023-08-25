@@ -6,16 +6,28 @@
   .logo {
     width: 100%;
     height: auto;
-    max-width: 200px;
+    // max-width: 200px;
+    max-width: 150px;
     padding-right: 10px;
   }
 
   .navbar {
+    left: 26px;
+    
     .link {
       display: flex;
-      padding: 8px;
-      border-radius: var(--p-border-radius-1);
+      line-height: 48px;
+      padding: 0 20px;
+      // border-radius: var(--p-border-radius-1);
       color: white;
+      font-weight: 600;
+      // font-style: italic;
+      text-transform: capitalize;
+      transition: all .3s ease;
+
+      &:hover {
+        background-color: var(--p-background-navbar-active);
+      }
     }
 
     .active {
@@ -23,12 +35,17 @@
     }
   }
 
+  .ant-avatar-lg {
+    left: 6px !important;
+  }
+
   .user-setting > * + * {
     margin-left: var(--p-space-5);
   }
 
   .icon {
-    font-size: 28px;
+    // font-size: 28px;
+    font-size: 20px;
   }
 }
 
@@ -36,6 +53,7 @@
   position: relative;
   width: 30px;
   height: 30px;
+  left: 15px;
 
   & > * {
     top: 50%;
@@ -76,7 +94,7 @@
   align-items: center;
 
   .title {
-    padding-left: 3px;
+    padding-left: 5px;
     @media screen and (max-width: 1350px) {
       display: none;
     }

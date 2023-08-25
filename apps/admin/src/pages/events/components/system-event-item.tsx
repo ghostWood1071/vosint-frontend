@@ -1,11 +1,25 @@
+import { getKeywords } from "@/common/Functions";
+import { useEventContext } from "@/components/editor/plugins/event-plugin/event-context";
 import { useGetMe } from "@/pages/auth/auth.loader";
+import NewsEventSummaryModal from "@/pages/news/components/news-event-summary-modal";
+import { NewsSummaryModal } from "@/pages/news/components/news-summary-modal";
 import { useQuickReportModalState } from "@/pages/news/components/quick-report-modal/index.state";
+import { useNewsDetail } from "@/pages/news/news.loader";
 import { convertTimeToShowInUI } from "@/utils/tool-validate-string";
-import { BellOutlined, CloseOutlined, ShareAltOutlined, StarTwoTone } from "@ant-design/icons";
-import { Checkbox, Empty, Space, Tooltip, Typography, message } from "antd";
-import React, { useEffect, useRef, useState } from "react";
+import {
+  BellOutlined,
+  CloseOutlined,
+  ControlOutlined,
+  ShareAltOutlined,
+  StarTwoTone,
+} from "@ant-design/icons";
+import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
+import { Checkbox, Empty, Space, Tag, Tooltip, Typography, message } from "antd";
+import { createEditor } from "lexical";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 
 import { useMutationSystemEvents } from "../event.loader";
+import EventKeyword from "./event-keywords";
 import styles from "./system-event-item.module.less";
 
 interface Props {
@@ -21,11 +35,11 @@ export const SystemEventItem: React.FC<Props> = ({
 }) => {
   const setQuickEvent = useQuickReportModalState((state) => state.setEvent);
   const [checkbox, setCheckbox] = useState<boolean>(false);
-
   const [typeShow, setTypeShow] = useState<boolean>(true);
-  const Ref = useRef<any>();
+  const [typeDetail, setTypeDetail] = useState<any>("content");
   const { mutate } = useMutationSystemEvents();
   const { data: dataIAm } = useGetMe();
+  const Ref = useRef<any>();
 
   useEffect(() => {
     const a = eventChoosedList.findIndex((e) => e._id === item._id);
@@ -36,6 +50,7 @@ export const SystemEventItem: React.FC<Props> = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [eventChoosedList]);
+
   const checkoutClone = item?.list_user_clone?.includes(dataIAm?._id);
 
   return (
@@ -67,7 +82,7 @@ export const SystemEventItem: React.FC<Props> = ({
             >
               <div className={styles.contentHeader}>
                 {item?.event_name}.{" "}
-                <span className={styles.detailContentHeader}>{item?.event_content}</span>
+                {<span className={styles.detailContentHeader}>{item?.event_content}</span>}
               </div>
             </div>
             <div className={styles.allButtonContainer}>
@@ -154,6 +169,21 @@ export const SystemEventItem: React.FC<Props> = ({
                     >
                       <BellOutlined className={styles.ringIcon} onClick={handleOpenQuickReport} />
                     </Tooltip>
+                    {/* <Tooltip title={"Tóm tắt"}>
+                      <ControlOutlined
+                        className={
+                          typeDetail === "summary"
+                            ? styles.choosedIconFilterContent
+                            : styles.iconFilterContent
+                        }
+                        onClick={(event) => {
+                          // event.stopPropagation();
+                          // setTypeDetail("summary");
+                        }}
+                      />
+                    </Tooltip> */}
+
+                    {/* <NewsEventSummaryModal item={item} /> */}
                   </Space>
                 </div>
               </div>
@@ -168,6 +198,18 @@ export const SystemEventItem: React.FC<Props> = ({
                     Khách thể: <span>{item.khach_the}</span>
                   </div>
                 ) : null}
+              </div>
+              <div className={styles.container2}>
+                {/* {keywords
+                  ? keywords.map((item: any, index: any) => {
+                      return (
+                        <Tag key={index} className={styles.tag}>
+                          {item}
+                        </Tag>
+                      );
+                    })
+                  : null} */}
+                <EventKeyword item={item} />
               </div>
 
               <div className={styles.detailContent} onClick={(event) => event.stopPropagation()}>
@@ -212,5 +254,32 @@ export const SystemEventItem: React.FC<Props> = ({
   function handleOpenQuickReport() {
     setEventChoosedList([item]);
     setQuickEvent([item]);
+  }
+
+  const defaultContent = (text: string) =>
+    `{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":${text},"type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1}],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}`;
+
+  function render(plainText: string) {
+    return function extractTextFromObject(obj: any): string {
+      if (obj.children) {
+        for (const child of obj.children) {
+          if (child.text) {
+            plainText += child.text + " ";
+          }
+          extractTextFromObject(child);
+        }
+      }
+      return plainText;
+    };
+  }
+
+  function returnTextFromRichText(richText: any) {
+    let plainText = render("");
+    try {
+      var obj = JSON.parse(richText);
+    } catch {
+      obj = JSON.parse(defaultContent(JSON.stringify(richText)));
+    }
+    return plainText(obj).trim();
   }
 };

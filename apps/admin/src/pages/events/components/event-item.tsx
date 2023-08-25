@@ -1,9 +1,12 @@
+import { getKeywords } from "@/common/Functions";
 import { useEventContext } from "@/components/editor/plugins/event-plugin/event-context";
+import NewsEventSummaryModal from "@/pages/news/components/news-event-summary-modal";
 import { useQuickReportModalState } from "@/pages/news/components/quick-report-modal/index.state";
 import { convertTimeToShowInUI } from "@/utils/tool-validate-string";
 import {
   BellOutlined,
   CloseOutlined,
+  ControlOutlined,
   DeleteOutlined,
   EditOutlined,
   FileTextOutlined,
@@ -16,6 +19,7 @@ import { LexicalEditor, createEditor } from "lexical";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 
 import styles from "./event-item.module.less";
+import EventKeyword from "./event-keywords";
 
 interface Props {
   item: any;
@@ -38,8 +42,8 @@ export const EventItem: React.FC<Props> = ({
 }) => {
   const setQuickEvent = useQuickReportModalState((state) => state.setEvent);
   const [checkbox, setCheckbox] = useState<boolean>(false);
-
   const [typeShow, setTypeShow] = useState<boolean>(true);
+  const [typeDetail, setTypeDetail] = useState<any>("content");
   const Ref = useRef<any>();
 
   useEffect(() => {
@@ -49,6 +53,7 @@ export const EventItem: React.FC<Props> = ({
     } else {
       setCheckbox(false);
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [eventChoosedList]);
 
@@ -67,6 +72,7 @@ export const EventItem: React.FC<Props> = ({
   }, [eventEditorConfig]);
 
   if (eventEditor === null) return null;
+
   return (
     <div className={styles.mainContainer} key={item._id}>
       {typeShow ? (
@@ -184,6 +190,7 @@ export const EventItem: React.FC<Props> = ({
                         }}
                       />
                     </Tooltip>
+                    {/* <NewsEventSummaryModal item={item} /> */}
                     {item.system_created ? null : (
                       <Tooltip title={"Xoá sự kiện"} placement="topRight" arrowPointAtCenter={true}>
                         <DeleteOutlined
@@ -222,6 +229,10 @@ export const EventItem: React.FC<Props> = ({
                   })}
                 </div>
               )}
+
+              <div className={styles.container2}>
+                <EventKeyword item={item} />
+              </div>
 
               <div className={styles.detailContent} onClick={(event) => event.stopPropagation()}>
                 <div

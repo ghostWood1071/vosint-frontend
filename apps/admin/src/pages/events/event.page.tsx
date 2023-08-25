@@ -1,3 +1,4 @@
+import { getKeywords } from "@/common/Functions";
 import { EventNodes, EventPlugin } from "@/components/editor/plugins/event-plugin";
 import {
   EventEditorConfig,
@@ -23,6 +24,7 @@ import { ReportModal } from "../news/components/report-modal";
 import { useReportModalState } from "../news/components/report-modal/index.state";
 import { EditEventModal } from "./components/edit-event-modal";
 import { EventItem } from "./components/event-item";
+import EventSummaryModal from "./components/event-summary-modal";
 import { EVENT_CACHE_KEYS, useInfiniteEventsList, useMutationEvents } from "./event.loader";
 import styles from "./event.module.less";
 
@@ -97,6 +99,8 @@ export const EventPage: React.FC<Props> = () => {
               setFilterEvent({ ...filterEvent, event_name: value });
             }}
           />
+          {/* summary */}
+          <EventSummaryModal eventChoosedList={eventChoosedList} isUserEvent={true} />
           <Button
             style={{
               borderColor: eventChoosedList.length === 0 ? "rgb(230,230,230)" : "#1890ff",

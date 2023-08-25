@@ -85,7 +85,10 @@ export const AppHeader: React.FC = () => {
         </Link>
       </Col>
       <Col span={17} push={1} className={styles.navbar}>
-        <Row justify="space-between" align="middle">
+        <Row
+          // justify="space-between"
+          align="middle"
+        >
           {(role === "admin" ? NAVBAR_HEADER_ADMIN : NAVBAR_HEADER).map(({ title, to, icon }) => (
             <Col key={to}>
               <NavLink to={to} className={handleActive}>

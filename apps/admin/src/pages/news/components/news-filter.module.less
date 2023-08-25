@@ -1,3 +1,22 @@
+.icon-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid #d6d6d6;
+  cursor: pointer;
+
+  &:last-child {
+    margin-left: 5px;
+  }
+}
+
+.icon-wrap-last {
+  margin-left: 5px;
+
+}
+
 .filter {
   width: 100%;
   padding-inline: 5px;
@@ -10,7 +29,8 @@
 }
 
 .filter-with-sidebar {
-  width: calc(100% - 270px);
+  // width: calc(100% - 270px);
+  width: 100%;
   padding-inline: 5px;
   padding-top: 5px;
   position: fixed;
