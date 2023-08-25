@@ -98,6 +98,7 @@ export const NewsTableItem: React.FC<Props> = ({
   };
 
   useEffect(() => {
+    newsSelection.forEach((item) => "is_read" in item && delete item.is_read);
     const a = newsSelection.findIndex((e) => e._id === item._id);
     if (a !== -1) {
       setCheckbox(true);
@@ -106,13 +107,14 @@ export const NewsTableItem: React.FC<Props> = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [newsSelection, lengthDataSource]);
+
   return (
     <>
       {typeShow ? (
         <tr ref={Ref} className={styles.header}>
           <td width={135}>
             <Space>
-              <div className={styles.statusContainer}>
+              {/* <div className={styles.statusContainer}>
                 <button
                   className={styles.seenButton}
                   onClick={(event) => {
@@ -122,7 +124,7 @@ export const NewsTableItem: React.FC<Props> = ({
                 >
                   <div className={checkSeen !== -1 ? styles.seen : styles.notSeen} />
                 </button>
-              </div>
+              </div> */}
               <Checkbox
                 checked={checkbox}
                 onClick={(event) => {
@@ -175,6 +177,8 @@ export const NewsTableItem: React.FC<Props> = ({
             <Tooltip title={item["source_name"].length >= 14 ? item["source_name"] : null}>
               <div
                 className={checkSeen !== -1 ? styles.seenSourceNameHeader : styles.sourceNameHeader}
+                // className={item.is_read ? styles.seenSourceNameHeader : styles.sourceNameHeader}
+                // style={{ color: item.is_read ? "#c0c0c0" : "black" }}
               >
                 {item["source_name"]}
               </div>
@@ -190,7 +194,10 @@ export const NewsTableItem: React.FC<Props> = ({
               Ref?.current?.scrollIntoView();
             }}
           >
-            <div className={checkSeen !== -1 ? styles.seenContentHeader : styles.contentHeader}>
+            <div
+              className={checkSeen !== -1 ? styles.seenContentHeader : styles.contentHeader}
+              // className={item.is_read ? styles.seenContentHeader : styles.contentHeader}
+            >
               {item.source_language !== "vi" && typeTranslate === "nuoc-ngoai"
                 ? item["data:title_translate"]
                 : item["data:title"]}
@@ -471,6 +478,7 @@ export const NewsTableItem: React.FC<Props> = ({
     } else {
       setNewsSelection([...newsSelection].filter((e) => e._id !== item._id));
     }
+
     setCheckbox(!checkbox);
   }
 

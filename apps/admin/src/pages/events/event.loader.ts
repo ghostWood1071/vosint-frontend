@@ -3,13 +3,27 @@ import {
   createEventFromUser,
   deleteEventCreatedByUser,
   getAllEventCreatedByUser,
+  getEventSummary,
   updateEventCreatedByUser,
 } from "@/services/event.service";
+import { IEventSummaryDTO, TEventSummary } from "@/services/event.type";
+import { getEventsByNewsletterWithApiJob } from "@/services/news.service";
 import { message } from "antd";
-import { useInfiniteQuery, useMutation, useQueryClient } from "react-query";
+import { UseMutationOptions, useInfiniteQuery, useMutation, useQueryClient } from "react-query";
 
 export const EVENT_CACHE_KEYS = {
   ListEvents: "LIST_EVENT",
+  Summary: "SUMMARY",
+};
+
+export const useGetEventSummaryLazy = (
+  options?: UseMutationOptions<TEventSummary, unknown, IEventSummaryDTO>,
+) => {
+  return useMutation(
+    [EVENT_CACHE_KEYS.Summary],
+    (data: IEventSummaryDTO) => getEventSummary(data),
+    options,
+  );
 };
 
 export const useInfiniteEventsList = (filter: any) => {
@@ -20,6 +34,18 @@ export const useInfiniteEventsList = (filter: any) => {
         : { skip: 1, limit: 50, ...filter },
     ),
   );
+};
+
+export const useInfiniteEventFormElt = (id: string, filter: any, tag: string) => {
+  return useInfiniteQuery([EVENT_CACHE_KEYS.ListEvents, id], ({ pageParam }) => {
+    return getEventsByNewsletterWithApiJob({
+      page_number: pageParam?.page_number || 1,
+      page_size: pageParam?.page_size || 50,
+      start_date: filter?.start_date || "01/01/2021",
+      end_date: filter?.end_date || "24/08/2023",
+      news_letter_id: tag === "chu_de" || tag === "linh_vuc" || tag === "gio_tin" ? id : "",
+    });
+  });
 };
 
 export const useMutationEvents = () => {
@@ -82,3 +108,4 @@ export const useMutationSystemEvents = () => {
     },
   );
 };
+

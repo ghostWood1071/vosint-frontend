@@ -8,6 +8,7 @@ import { useSidebar } from "../app/app.store";
 import { QuickReportModal } from "../news/components/quick-report-modal";
 import { useQuickReportModalState } from "../news/components/quick-report-modal/index.state";
 import { ReportModal } from "../news/components/report-modal";
+import EventSummaryModal from "./components/event-summary-modal";
 import { SystemEventItem } from "./components/system-event-item";
 import { EVENT_CACHE_KEYS, useInfiniteEventsList } from "./event.loader";
 import styles from "./event.module.less";
@@ -58,6 +59,8 @@ export const SystemEventPage: React.FC<Props> = () => {
               setFilterEvent({ ...filterEvent, event_name: value });
             }}
           />
+          {/* summary */}
+          <EventSummaryModal eventChoosedList={eventChoosedList} isUserEvent={false} />
           <Button
             style={{
               borderColor: eventChoosedList.length === 0 ? "rgb(230,230,230)" : "#1890ff",

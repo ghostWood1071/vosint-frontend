@@ -29,6 +29,7 @@ import { ExpertPage } from "./pages/dashboard/expert/expert.page";
 import { LeaderLayout } from "./pages/dashboard/leader/leader.page";
 import { ErrorBoundary } from "./pages/errors/error-boundary";
 import { EventLayout, EventPage, SystemEventPage } from "./pages/events";
+import { EventDetailPage } from "./pages/events/components/event-detail.page";
 import { NewsDetailPage, NewsLayout, NewsListPage, NewsTTXVNPage } from "./pages/news";
 import { OrganizationsDetailPage, OrganizationsLayout } from "./pages/organization";
 import { InternationalRelationshipGraph } from "./pages/organization/international-relationship-graph/component/international-relationship-graph";
@@ -137,6 +138,10 @@ export const routers = createBrowserRouter([
             path: "/news/:newsletterId/:tag",
             element: <NewsDetailPage />,
           },
+          {
+            path: "/event/:newsletterId/:tag",
+            element: <EventDetailPage />,
+          },
         ],
       },
       {
@@ -192,6 +197,10 @@ export const routers = createBrowserRouter([
             path: eventPath,
             element: <EventPage />,
           },
+          // {
+          //   path: "/event/:newsletterId/:tag",
+          //   element: <EventDetailPage />,
+          // },
         ],
       },
       {

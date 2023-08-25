@@ -29,6 +29,7 @@ import {
   getNewsViaSourceAndApiJob,
   getNewsVitalsWithApiJob,
   getNewsletterDetail,
+  switchNewsAndEvents,
   updateEventNews,
   updateNewsletter,
 } from "@/services/news.service";
@@ -53,6 +54,7 @@ export const CACHE_KEYS = {
   Summary: "SUMMARY",
   NewsEvent: "NEWS_EVENT",
   NewsTTXVN: "NEWS_TTXVN",
+  SWITCH: "SWITCH"
 };
 
 export const useNewsSidebar = (title?: string) => {
@@ -89,6 +91,28 @@ export const useEventsByIdNewsList = (filter: any) => {
     getEventsByNewsletterWithApiJob(filter),
   );
 };
+
+export const useMutationSwitch = () => {
+  const queryClient = useQueryClient();
+  
+  return useMutation((newsLetterId?: any) => switchNewsAndEvents(newsLetterId),{
+    onSuccess: () => {
+      queryClient.invalidateQueries(CACHE_KEYS.SWITCH);
+      
+      message.success({
+        content: "Chuyển đổi thành công!",
+        key: CACHE_KEYS.SWITCH,
+      });
+    },
+    onError: (err) => {
+      message.error({
+        content: err || "Lỗi",
+        key: CACHE_KEYS.SWITCH,
+      });
+    },
+  }, 
+  )
+}
 
 export const useMutationNewsSidebar = () => {
   const queryClient = useQueryClient();

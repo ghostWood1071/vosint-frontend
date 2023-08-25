@@ -1,7 +1,9 @@
+import { getEventByNews } from "@/common/Functions";
 import { useNewsSelection } from "@/components/news/news-state";
 import { useGetMe } from "@/pages/auth/auth.loader";
+import { SystemEventItem } from "@/pages/events/components/system-event-item";
 import { getContentTranslation } from "@/services/news.service";
-import { Empty } from "antd";
+import { Empty, List } from "antd";
 import { flatMap, unionBy } from "lodash";
 import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
@@ -9,14 +11,17 @@ import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { shallow } from "zustand/shallow";
 
+import EventsByNews from "../components/EventsByNews";
 import { NewsFilterV2 } from "../components/news-filter-v2";
 import { NewsTableItem } from "../components/table-news";
 import { useNewsFilter } from "../news.context";
 import {
   CACHE_KEYS,
   useDeleteNewsInNewsletter,
+  useEventsByIdNewsList,
   useInfiniteNewsFormElt,
   useMutationChangeStatusSeenPost,
+  useMutationSwitch,
   useNewsIdToNewsletter,
 } from "../news.loader";
 import styles from "./news-detail.module.less";
@@ -29,14 +34,22 @@ export const NewsDetailPage = () => {
   const [skip, setSkip] = useState(1);
   const newsFilter = useNewsFilter();
   const { mutate: mutateChangeStatusSeenPost } = useMutationChangeStatusSeenPost();
+
   const { data, isFetchingNextPage, fetchNextPage, hasNextPage } = useInfiniteNewsFormElt(
     newsletterId!,
     newsFilter,
     tag ?? "",
   );
+
   const { data: dataIAm } = useGetMe();
   const { mutateAsync: mutateDelete } = useDeleteNewsInNewsletter();
   const { mutate: mutateAdd } = useNewsIdToNewsletter();
+
+  const [eventChoosedList, setEventChoosedList] = useState<any[]>([]);
+  const { mutate } = useMutationSwitch();
+  const [dataEvents, setDataEvents] = useState([]);
+  const [status, setStatus] = useState(false);
+
   const dataSource = unionBy(
     flatMap(
       data?.pages.map((a) =>
@@ -49,6 +62,12 @@ export const NewsDetailPage = () => {
     ),
     "_id",
   );
+
+  // const data1 =data?.pages.map((a) =>
+  //   a?.result?.map((e: any) => ({
+  //     ...e,
+  //   })),
+  // ),
 
   useEffect(() => {
     queryClient.removeQueries([CACHE_KEYS.NewsList, newsletterId]);
@@ -66,14 +85,35 @@ export const NewsDetailPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inView]);
 
+  const handleConvert = (status: any) => {
+    // status: true => convert news to event, false => convert event to news
+    setStatus(status);
+
+    // const data = dataSource.map((item) => item._id);
+    // setDataEvents(getEventByNews(data));
+
+    // execute api, post data
+    // console.log(data);
+    // mutate(
+    //   { newsletterId },
+    //   {
+    //     onSuccess: (res: any) => {
+    //       console.log("res", res);
+    //       setDataEvents(res);
+    //     },
+    //   },
+    // );
+  };
+
   return (
     <>
-      <NewsFilterV2 />
+      <NewsFilterV2 handleConvert={handleConvert} />
       <div className={styles.mainContainer}>
         <div className={styles.bodyNews}>
           <table style={{ width: "100%" }}>
             <tbody>
-              {dataSource[0] !== undefined ? (
+              {dataSource[0] !== undefined &&
+                !status &&
                 dataSource?.map((item) => (
                   <NewsTableItem
                     userId={dataIAm._id}
@@ -86,10 +126,21 @@ export const NewsDetailPage = () => {
                     setSeen={handleSetSeen}
                     handleUpdateCache={handleUpdateCache}
                   />
-                ))
-              ) : (
-                <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={"Trống"} />
-              )}
+                ))}
+              {/* <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={"Trống"} /> */}
+
+              {/* {dataEvents[0] !== undefined &&
+                status &&
+                dataEvents?.map((item) => (
+                  <>
+                    <SystemEventItem
+                      item={item}
+                      eventChoosedList={eventChoosedList}
+                      setEventChoosedList={setEventChoosedList}
+                    />
+                  </>
+                ))} */}
+              {status && <EventsByNews newsletterId={newsletterId} dataSource={dataSource} />}
             </tbody>
           </table>
           <div>
