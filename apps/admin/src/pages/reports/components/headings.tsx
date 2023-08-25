@@ -34,25 +34,26 @@ export interface HeadingsData {
 export function Headings({ headingsData, onDeleteEvent }: Props): JSX.Element {
   return (
     <div className={styles.headings}>
-      {headingsData.map((heading) => (
-        <div
-          key={heading.id}
-          id={heading.id}
-          className={classNames({
-            [styles.heading]: true,
-            [headingLevel[heading.level]]: !!heading.level,
-          })}
-        >
-          <Row justify={"space-between"} align={"middle"}>
-            <Typography.Title level={heading.level}>{heading.title}</Typography.Title>
-          </Row>
-          <Events
-            headingId={heading.id}
-            eventIds={heading.eventIds}
-            onDeleteEvent={onDeleteEvent?.(heading.id)}
-          />
-        </div>
-      ))}
+      {headingsData &&
+        headingsData.map((heading) => (
+          <div
+            key={heading.id}
+            id={heading.id}
+            className={classNames({
+              [styles.heading]: true,
+              [headingLevel[heading.level]]: !!heading.level,
+            })}
+          >
+            <Row justify={"space-between"} align={"middle"}>
+              <Typography.Title level={heading.level}>{heading.title}</Typography.Title>
+            </Row>
+            <Events
+              headingId={heading.id}
+              eventIds={heading.eventIds}
+              onDeleteEvent={onDeleteEvent?.(heading.id)}
+            />
+          </div>
+        ))}
     </div>
   );
 }
@@ -78,22 +79,22 @@ function Events({ eventIds, headingId, onDeleteEvent }: EventsProps): JSX.Elemen
   return (
     <div className={styles.events}>
       {events.map((event: UseQueryResult<IEventDto, any>, index) => {
-        if (event.isLoading) return <Spin key={index} />;
-        if (event.isError) {
-          if (event.error as AxiosError) {
-            const error = event.error as AxiosError;
-            if (error.response?.status === 404) return null;
-          }
+        // if (event.isLoading) return <Spin key={index} />;
+        // if (event.isError) {
+        //   if (event.error as AxiosError) {
+        //     const error = event.error as AxiosError;
+        //     if (error.response?.status === 404) return null;
+        //   }
 
-          return <Alert key={index} type="warning" message="Error" />;
-        }
+        //   return <Alert key={index} type="warning" message="Error" />;
+        // }
 
-        if (
-          startDate &&
-          endDate &&
-          !filterIsBetween(event?.data?.date_created ?? null, startDate, endDate)
-        )
-          return null;
+        // if (
+        //   startDate &&
+        //   endDate &&
+        //   !filterIsBetween(event?.data?.date_created ?? null, startDate, endDate)
+        // )
+        //   return null;
 
         return (
           <div key={event.data?._id + `headingId` + headingId} className={styles.event}>
@@ -110,6 +111,7 @@ function Events({ eventIds, headingId, onDeleteEvent }: EventsProps): JSX.Elemen
                   title={`Xoá ${event.data?.event_name}`}
                   icon={<DeleteOutlined />}
                   onClick={() => {
+                    console.log(event.data?._id);
                     onDeleteEvent?.(event.data?._id ?? "");
                   }}
                 />

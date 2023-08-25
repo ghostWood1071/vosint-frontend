@@ -89,13 +89,15 @@ export function SynthesisReport(): JSX.Element {
   const handleDeleteEvent = (headingId: string) => (eventId: string) => {
     const deletedEventsHeadings = produce(headings, (draft) => {
       const headingIndex = draft.findIndex((heading) => heading.id === headingId);
-      if (!headingIndex) return;
+      if (!headingIndex && headingIndex != 0) return;
 
       const index = headings[headingIndex].eventIds.findIndex((id) => id === eventId);
+
       if (index === -1) return;
 
       draft[headingIndex].eventIds.splice(index, 1);
     });
+
     setHeadings(deletedEventsHeadings);
   };
 

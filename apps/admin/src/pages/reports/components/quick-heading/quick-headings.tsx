@@ -101,7 +101,7 @@ function Events({ eventIds, headingId, onDeleteEvent }: EventsProps): JSX.Elemen
   }, [eventEditorConfig]);
 
   const [startDate, endDate] = useEventsState((state) => state.dateTimeFilter);
-  const events = useQueries(
+  let events = useQueries(
     eventIds.map((id) => ({
       queryKey: ["event", id],
       queryFn: () => getEvent(id) as Promise<IEventDto>,
@@ -114,84 +114,96 @@ function Events({ eventIds, headingId, onDeleteEvent }: EventsProps): JSX.Elemen
 
   if (eventEditor === null) return null;
 
+  events = events.filter((event: any) => event.isSuccess);
+
+  console.log("events", events);
+
   return (
     <div className={styles.events}>
-      {events.map((event: UseQueryResult<IEventDto, any>, index) => {
-        if (event.isLoading) return <Spin key={index} />;
-        if (event.isError) {
-          if (event.error as AxiosError) {
-            const error = event.error as AxiosError;
-            if (error.response?.status === 404) return null;
-          }
+      {events.length > 0 &&
+        events.map((event: UseQueryResult<IEventDto, any>, index) => {
+          // if (event.isLoading) return <Spin key={index} />;
 
-          return <Alert key={index} type="warning" message="Error" />;
-        }
+          // pass event not exist database
+          // if (event.isError) {
+          //   if (event.error as AxiosError) {
+          //     const error = event.error as AxiosError;
+          //     if (error.response?.status === 404) return null;
+          //   }
 
-        if (
-          startDate &&
-          endDate &&
-          !filterIsBetween(event?.data?.date_created ?? null, startDate, endDate)
-        )
-          return null;
+          //   return <Alert key={index} type="warning" message="Error" />;
+          // }
 
-        return (
-          <div key={event.data?._id + `headingId` + headingId} className={styles.event}>
-            <Row justify="space-between" align={"middle"}>
-              <Col span={21}>
-                <Typography.Text ellipsis className={styles.eventTitle} italic strong>
-                  {event.data?.event_name}
+          // if (
+          //   startDate &&
+          //   endDate &&
+          //   !filterIsBetween(event?.data?.date_created ?? null, startDate, endDate)
+          // )
+          //   return null;
+
+          return (
+            event.data && (
+              <div key={event.data?._id + `headingId` + headingId} className={styles.event}>
+                <Row justify="space-between" align={"middle"}>
+                  <Col span={21}>
+                    <Typography.Text ellipsis className={styles.eventTitle} italic strong>
+                      {event.data?.event_name}
+                    </Typography.Text>
+                  </Col>
+                  <Col>
+                    <Button
+                      danger
+                      type="text"
+                      title={`Xoá ${event.data?.event_name}`}
+                      icon={<DeleteOutlined />}
+                      onClick={() => {
+                        onDeleteEvent?.(event.data?._id ?? "");
+                      }}
+                    />
+                  </Col>
+                </Row>
+                <Typography.Text italic>
+                  Thời gian:{" "}
+                  {event.data?.date_created
+                    ? moment(event.data?.date_created).format("DD/MM/YYYY")
+                    : null}
                 </Typography.Text>
-              </Col>
-              <Col>
-                <Button
-                  danger
-                  type="text"
-                  title={`Xoá ${event.data?.event_name}`}
-                  icon={<DeleteOutlined />}
-                  onClick={() => {
-                    onDeleteEvent?.(event.data?._id ?? "");
+                <br />
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: generateHTMLFromJSON(
+                      event.data?.event_content ?? defaultContent,
+                      eventEditor,
+                    ),
                   }}
                 />
-              </Col>
-            </Row>
-            <Typography.Text italic>
-              Thời gian:{" "}
-              {event.data?.date_created
-                ? moment(event.data?.date_created).format("DD/MM/YYYY")
-                : null}
-            </Typography.Text>
-            <br />
-            <div
-              dangerouslySetInnerHTML={{
-                __html: generateHTMLFromJSON(
-                  event.data?.event_content ?? defaultContent,
-                  eventEditor,
-                ),
-              }}
-            />
-            <Collapse ghost>
-              <Collapse.Panel key={event.data?._id ?? index} header="Danh sách tin nói về sự kiện">
-                <List
-                  dataSource={event.data?.new_list ?? []}
-                  renderItem={(item) => {
-                    return (
-                      <List.Item>
-                        <Typography.Link
-                          target="_blank"
-                          href={item?.["data:url"]}
-                          rel="noopener noreferrer"
-                        >
-                          {item?.["data:title"]}
-                        </Typography.Link>
-                      </List.Item>
-                    );
-                  }}
-                />
-              </Collapse.Panel>
-            </Collapse>
-          </div>
-        );
-      })}
+                <Collapse ghost>
+                  <Collapse.Panel
+                    key={event.data?._id ?? index}
+                    header="Danh sách tin nói về sự kiện"
+                  >
+                    <List
+                      dataSource={event.data?.new_list ?? []}
+                      renderItem={(item) => {
+                        return (
+                          <List.Item>
+                            <Typography.Link
+                              target="_blank"
+                              href={item?.["data:url"]}
+                              rel="noopener noreferrer"
+                            >
+                              {item?.["data:title"]}
+                            </Typography.Link>
+                          </List.Item>
+                        );
+                      }}
+                    />
+                  </Collapse.Panel>
+                </Collapse>
+              </div>
+            )
+          );
+        })}
     </div>
   );
 }
