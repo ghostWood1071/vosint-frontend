@@ -111,7 +111,6 @@ function Events({ eventIds, headingId, onDeleteEvent }: EventsProps): JSX.Elemen
                   title={`Xoá ${event.data?.event_name}`}
                   icon={<DeleteOutlined />}
                   onClick={() => {
-                    console.log(event.data?._id);
                     onDeleteEvent?.(event.data?._id ?? "");
                   }}
                 />

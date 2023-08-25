@@ -43,7 +43,7 @@ export const useInfiniteEventFormElt = (id: string, filter: any, tag: string) =>
       page_size: pageParam?.page_size || 50,
       start_date: filter?.start_date || "01/01/2021",
       end_date: filter?.end_date || "24/08/2023",
-      news_letter_id: tag === "chu_de" || tag === "linh_vuc" || tag === "gio_tin" ? id : "",
+      news_letter_id: tag === "chu_de" || tag === "linh_vuc" || tag === "gio_tin" || tag === "source_group" ? id : "",
     });
   });
 };

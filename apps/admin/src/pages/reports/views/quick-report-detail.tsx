@@ -111,8 +111,6 @@ function QuickReport(): JSX.Element {
 
   const convertHeadingsToDocx = useConvertHeadingsToDocx();
   const handleDeleteEvent = (headingId: string) => (eventId: string) => {
-    console.log(headings);
-
     const deletedEventsHeadings = produce(headings, (draft) => {
       const headingIndex = draft.findIndex((heading) => heading.id === headingId);
       if (headingIndex === -1) return;
