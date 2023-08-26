@@ -1,4 +1,8 @@
+import { downloadFile } from "@/components/editor/utils";
+import { FileWordOutlined } from "@ant-design/icons";
 import { Button, DatePicker, Empty, Input, List, Space } from "antd";
+import axios from "axios";
+import { Packer } from "docx";
 import { flatMap, unionBy } from "lodash";
 import React, { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
@@ -10,7 +14,7 @@ import { useQuickReportModalState } from "../news/components/quick-report-modal/
 import { ReportModal } from "../news/components/report-modal";
 import EventSummaryModal from "./components/event-summary-modal";
 import { SystemEventItem } from "./components/system-event-item";
-import { EVENT_CACHE_KEYS, useInfiniteEventsList } from "./event.loader";
+import { EVENT_CACHE_KEYS, useInfiniteEventsList, useMutationExportEvents } from "./event.loader";
 import styles from "./event.module.less";
 
 interface Props {}
@@ -33,6 +37,8 @@ export const SystemEventPage: React.FC<Props> = () => {
     system_created: true,
   });
   const setQuickEvent = useQuickReportModalState((state) => state.setEvent);
+  const { mutate } = useMutationExportEvents();
+
   const dataSource = unionBy(flatMap(data?.pages.map((a) => a?.data?.map((e: any) => e))), "_id");
   useEffect(() => {
     if (inView && skip * 50 <= data?.pages[0].total) {
@@ -49,10 +55,46 @@ export const SystemEventPage: React.FC<Props> = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filterEvent]);
 
+  const handleExportWord = () => {
+    const newArr = eventChoosedList.map((event) => event._id);
+    // console.log(newArr);
+    mutate(
+      { data: newArr },
+      {
+        onSuccess: (res: any) => {
+          const url = window.URL.createObjectURL(new Blob([res]));
+          const link = document.createElement("a");
+          link.href = url;
+
+          // get date dd/MM/yyyy
+          const today = new Date();
+          const yyyy = today.getFullYear();
+          let mm: any = today.getMonth() + 1; // Months start at 0!
+          let dd: any = today.getDate();
+
+          if (dd < 10) dd = "0" + dd;
+          if (mm < 10) mm = "0" + mm;
+
+          const formattedToday = dd + "/" + mm + "/" + yyyy;
+          link.setAttribute("download", `su_kien(${formattedToday}).docx`);
+
+          document.body.appendChild(link);
+          link.click();
+        },
+      },
+    );
+  };
+
   return (
     <div className={styles.mainContainer}>
       <div className={pinned ? styles.filterContainerWithSidebar : styles.filterContainer}>
         <Space wrap>
+          <Button
+            className={styles.item}
+            icon={<FileWordOutlined />}
+            onClick={handleExportWord}
+            title="Tải file word"
+          />
           <DatePicker.RangePicker format={"DD/MM/YYYY"} onChange={handleChangeFilterTime} />
           <Input.Search
             onSearch={(value) => {

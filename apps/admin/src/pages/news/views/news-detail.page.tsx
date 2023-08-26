@@ -104,6 +104,7 @@ export const NewsDetailPage = () => {
     //   },
     // );
   };
+  console.log(dataSource);
 
   return (
     <>
@@ -140,6 +141,7 @@ export const NewsDetailPage = () => {
                     />
                   </>
                 ))} */}
+
               {status && <EventsByNews newsletterId={newsletterId} dataSource={dataSource} />}
             </tbody>
           </table>

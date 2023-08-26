@@ -1,7 +1,9 @@
 import { ReactComponent as BookmarkIcon } from "@/assets/svg/bookmarks.svg";
+import { ReactComponent as CartIcon } from "@/assets/svg/cart.svg";
 import { ReactComponent as CheckboxIcon } from "@/assets/svg/check-square.svg";
 import { ReactComponent as StarIcon } from "@/assets/svg/star.svg";
 import { Tree } from "@/components";
+import ImportantButton from "@/components/important-button/important-button";
 import { NewsletterModal } from "@/components/news/news-modal";
 import { ETreeAction, ETreeTag, useNewsState } from "@/components/news/news-state";
 import { AppContainer } from "@/pages/app";
@@ -69,12 +71,15 @@ function Sidebar() {
     <>
       <Space direction="vertical" className={styles.sidebar} size={18}>
         <NavLink to={getNewsDetailUrl(ETreeTag.QUAN_TRONG)} className={handleActive}>
-          <BookmarkIcon className={styles.sidebarIcon} />
-          TIN QUAN TRỌNG
+          {/* <BookmarkIcon className={styles.sidebarIcon} /> */}
+          {/* <ImportantButton /> */}
+          <ImportantButton item={{ isBell: false }} style={{ backgroundSize: "20px" }} />
+          <div style={{ paddingLeft: "10px" }}>TIN QUAN TRỌNG</div>
         </NavLink>
 
         <NavLink to={getNewsDetailUrl(ETreeTag.DANH_DAU)} className={handleActive}>
-          <CheckboxIcon className={styles.sidebarIcon} />
+          {/* <CheckboxIcon className={styles.sidebarIcon} /> */}
+          <StarIcon className={styles.sidebarIcon} />
           TIN ĐƯỢC ĐÁNH DẤU
         </NavLink>
         {gioTinTree && (
@@ -115,7 +120,7 @@ function Sidebar() {
           />
         )}
         <NavLink to={"/news-ttxvn"} className={handleActive}>
-          <StarIcon className={styles.sidebarIcon} />
+          <CheckboxIcon className={styles.sidebarIcon} />
           TIN TTXVN
         </NavLink>
         {linhVucTree && (

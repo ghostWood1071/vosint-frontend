@@ -141,7 +141,9 @@ export const getNewsBookmarksWithApiJob = async (filter: Record<string, string>)
 };
 
 export const getNewsFormElt = async (filter: Record<string, any>) => {
+  console.log(filter);
   const result = await apiClient.post(`/Job/api/get_news_from_elt`, filterEmptyString(filter));
+  console.log(result);
   return result.data;
 };
 
@@ -272,5 +274,12 @@ export const getNewsFromTTXVN = async (params: Record<string, any>) => {
 
   const result = await apiClient.post(`/Job/api/get_news_from_ttxvn?${searchParams.toString()}`);
 
+  return result.data;
+};
+
+export const exportNews = async (data: any) => {
+  const result = await apiClient.post<any>(`/news/export-to-word`, data, {
+    responseType: 'blob'
+  });
   return result.data;
 };
