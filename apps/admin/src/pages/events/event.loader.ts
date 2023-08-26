@@ -2,6 +2,7 @@ import {
   cloneSystemEventToUserEvent,
   createEventFromUser,
   deleteEventCreatedByUser,
+  exportEvents,
   getAllEventCreatedByUser,
   getEventSummary,
   updateEventCreatedByUser,
@@ -48,6 +49,28 @@ export const useInfiniteEventFormElt = (id: string, filter: any, tag: string) =>
   });
 };
 
+export const useMutationExportEvents = () => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    ({ data }: any) => {
+        return exportEvents(data);
+    },
+    {
+      onSuccess: (data: any, variables) => {
+        queryClient.invalidateQueries([EVENT_CACHE_KEYS.ListEvents]);
+        message.success({
+          content: "Xuất file thành công",
+        });
+      },
+      onError: () => {
+        message.error({
+          content: "lỗi!",
+        });
+      },
+    },
+  );
+};
+
 export const useMutationEvents = () => {
   const queryClient = useQueryClient();
   return useMutation(
@@ -64,6 +87,10 @@ export const useMutationEvents = () => {
         return deleteEventCreatedByUser(_id);
       }
 
+      if (action === "export") {
+        return exportEvents(data);
+      }
+
       throw new Error("action invalid");
     },
     {
@@ -71,16 +98,18 @@ export const useMutationEvents = () => {
         queryClient.invalidateQueries([EVENT_CACHE_KEYS.ListEvents]);
         message.success({
           content:
-            (variables.action === "update"
+          (variables.action == "export") ? "Xuất file thành công" : 
+            ((variables.action === "update"
               ? "Sửa"
               : variables.action === "add"
               ? "Thêm mới"
-              : "Xoá") + " sự kiện thành công",
+              : "Xoá") + " sự kiện thành công"),
         });
       },
       onError: () => {
         message.error({
-          content: "Tên sự kiện đã tồn tại. Hãy nhập lại!",
+          // content: "Tên sự kiện đã tồn tại. Hãy nhập lại!",
+          content: "Lỗi",
         });
       },
     },

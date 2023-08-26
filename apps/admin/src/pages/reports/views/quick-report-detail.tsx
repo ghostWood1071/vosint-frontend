@@ -382,6 +382,7 @@ function QuickReport(): JSX.Element {
       headings,
       dateTime,
     });
+
     Packer.toBlob(blobData).then((blob) => {
       downloadFile(blob, `${title}.docx`);
     });

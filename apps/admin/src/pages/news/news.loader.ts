@@ -14,6 +14,7 @@ import {
   deleteNewsInBookmarkUser,
   deleteNewsInVitalUser,
   deleteNewsletter,
+  exportNews,
   generateSystemEventNews,
   getAllEventNews,
   getEventByIdNews,
@@ -237,6 +238,29 @@ export const useInfiniteNewsList = (filter: any) => {
         ? { ...data.pageParam, ...filter }
         : { page_number: 1, page_size: 50, ...filter },
     ),
+  );
+};
+
+
+export const useMutationExportNews = () => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    ({ data }: any) => {
+        return exportNews(data);
+    },
+    {
+      onSuccess: (data: any, variables) => {
+        queryClient.invalidateQueries([CACHE_KEYS.NewsList]);
+        message.success({
+          content: "Xuất file thành công",
+        });
+      },
+      onError: () => {
+        message.error({
+          content: "lỗi!",
+        });
+      },
+    },
   );
 };
 

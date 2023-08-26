@@ -225,6 +225,7 @@ function NewsFilterModal(): JSX.Element {
         treeData={gioTinTree}
         tag={ETreeTag.GIO_TIN}
         selectedKeys={[newsSelectId!]}
+        isModal={true}
       />
       <br />
       <Typography.Text>Danh sách tin:</Typography.Text>

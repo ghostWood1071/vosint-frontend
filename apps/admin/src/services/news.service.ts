@@ -276,3 +276,10 @@ export const getNewsFromTTXVN = async (params: Record<string, any>) => {
 
   return result.data;
 };
+
+export const exportNews = async (data: any) => {
+  const result = await apiClient.post<any>(`/news/export-to-word`, data, {
+    responseType: 'blob'
+  });
+  return result.data;
+};

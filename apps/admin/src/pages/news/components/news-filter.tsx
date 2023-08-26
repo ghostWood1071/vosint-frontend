@@ -7,6 +7,7 @@ import { useGetMe } from "@/pages/auth/auth.loader";
 import {
   useDeleteNewsInNewsletter,
   useMutationChangeStatusSeenPost,
+  useMutationExportNews,
   useNewsIdToNewsletter,
   useNewsSidebar,
 } from "@/pages/news/news.loader";
@@ -14,6 +15,7 @@ import { buildTree } from "@/pages/news/news.utils";
 import {
   DeleteOutlined,
   ExclamationCircleOutlined,
+  FileWordOutlined,
   MailOutlined,
   MailTwoTone,
   MinusCircleTwoTone,
@@ -49,6 +51,7 @@ export function NewsFilter(): JSX.Element {
   const { mutateAsync: mutateDelete } = useDeleteNewsInNewsletter();
 
   const [internalTextSearch, setInternalTextSearch] = useState("");
+  const { mutate } = useMutationExportNews();
 
   function handleSetSeen(checkedSeen: boolean, idNews: string) {
     if (checkedSeen) {
@@ -57,6 +60,34 @@ export function NewsFilter(): JSX.Element {
       mutateChangeStatusSeenPost({ action: "set-unseen", newsId: idNews });
     }
   }
+
+  const handleExportWord = () => {
+    const newArr = newsSelection.map((news) => news._id);
+    mutate(
+      { data: newArr },
+      {
+        onSuccess: (res) => {
+          const url = window.URL.createObjectURL(new Blob([res]));
+          const link = document.createElement("a");
+          link.href = url;
+
+          // get date dd/MM/yyyy
+          const today = new Date();
+          const yyyy = today.getFullYear();
+          let mm: any = today.getMonth() + 1; // Months start at 0!
+          let dd: any = today.getDate();
+
+          if (dd < 10) dd = "0" + dd;
+          if (mm < 10) mm = "0" + mm;
+
+          const formattedToday = dd + "/" + mm + "/" + yyyy;
+          link.setAttribute("download", `tin_tuc(${formattedToday}).docx`);
+          document.body.appendChild(link);
+          link.click();
+        },
+      },
+    );
+  };
 
   const seen = newsSelection.find((item: any) => item.list_user_read?.length > 0);
   const unseen = newsSelection.find(
@@ -72,39 +103,47 @@ export function NewsFilter(): JSX.Element {
         }}
         style={{ width: "100%", display: "flex", flexDirection: "row", flexWrap: "wrap" }}
       >
-        {seen && unseen && (
-          <>
-            <div
-              className={styles.iconWrap}
-              onClick={() => {
-                newsSelection.forEach((item) => {
-                  handleSetSeen(true, item._id);
-                });
-                // setNewsSelection([]);
-                setNewsSelection(
-                  newsSelection.map((item) => ({ ...item, list_user_read: [dataIAm] })),
-                );
-              }}
-              title="Đánh dấu đã đọc tin"
-            >
-              <UnreadIcon className={styles.unreadIcon} />
-            </div>
+        {/* {seen && unseen && ( */}
+        <>
+          <div
+            className={styles.iconWrap}
+            onClick={() => {
+              newsSelection.forEach((item) => {
+                handleSetSeen(true, item._id);
+              });
+              // setNewsSelection([]);
+              setNewsSelection(
+                newsSelection.map((item) => ({ ...item, list_user_read: [dataIAm] })),
+              );
+            }}
+            title="Đánh dấu đã đọc tin"
+          >
+            <Button
+              icon={<UnreadIcon className={styles.unreadIcon} />}
+              className={styles.iconWrapBtn}
+              disabled={!(!seen && unseen) && !(seen && unseen)}
+            />
+          </div>
 
-            <div
-              className={styles.iconWrap + " " + styles.iconWrapLast}
-              onClick={() => {
-                newsSelection.forEach((item) => {
-                  handleSetSeen(false, item._id);
-                });
-                setNewsSelection(newsSelection.map((item) => ({ ...item, list_user_read: [] })));
-              }}
-              title="Đánh dấu chưa đọc tin"
-            >
-              <ReadIcon className={styles.readIcon} />
-            </div>
-          </>
-        )}
-
+          <div
+            className={styles.iconWrap + " " + styles.iconWrapLast}
+            onClick={() => {
+              newsSelection.forEach((item) => {
+                handleSetSeen(false, item._id);
+              });
+              setNewsSelection(newsSelection.map((item) => ({ ...item, list_user_read: [] })));
+            }}
+            title="Đánh dấu chưa đọc tin"
+          >
+            <Button
+              icon={<ReadIcon className={styles.readIcon} />}
+              disabled={!(seen && !unseen) && !(seen && unseen)}
+              className={styles.iconWrapBtn}
+            />
+          </div>
+        </>
+        {/* )} */}
+        {/* 
         {seen && !unseen && (
           <div
             className={styles.iconWrap}
@@ -139,7 +178,13 @@ export function NewsFilter(): JSX.Element {
           >
             <UnreadIcon className={styles.unreadIcon} />
           </div>
-        )}
+        )} */}
+        <Button
+          className={styles.item}
+          icon={<FileWordOutlined />}
+          onClick={handleExportWord}
+          title="Thêm tin"
+        />
 
         <Form.Item className={styles.item} name="datetime">
           <DatePicker.RangePicker format={"DD/MM/YYYY"} />
@@ -302,6 +347,7 @@ function NewsFilterModal(): JSX.Element {
         treeData={gioTinTree}
         tag={ETreeTag.GIO_TIN}
         selectedKeys={[newsSelectId!]}
+        isModal={true}
       />
       <br />
       <Typography.Text>Danh sách tin:</Typography.Text>

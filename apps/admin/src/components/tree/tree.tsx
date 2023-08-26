@@ -1,4 +1,5 @@
 import { ReactComponent as BagIcon } from "@/assets/svg/bag.svg";
+import { ReactComponent as CartIcon } from "@/assets/svg/cart.svg";
 import { ReactComponent as CollectionIcon } from "@/assets/svg/collection.svg";
 import { ReactComponent as LayerHalfIcon } from "@/assets/svg/layers-half.svg";
 import { ReactComponent as SlashIcon } from "@/assets/svg/slash-square.svg";
@@ -13,6 +14,7 @@ import { TreeTitleGioTin } from "../news/tree-title/tree-title-gio-tin";
 import styles from "./tree.module.less";
 
 interface Props {
+  isModal?: boolean;
   treeData: DataNode[];
   title: string;
   isSpinning?: boolean;
@@ -29,6 +31,7 @@ export const Tree: React.FC<Props> = ({
   treeData,
   title,
   tag,
+  isModal,
   isEditable = false,
   selectedKeys,
   onClickTitle,
@@ -40,7 +43,7 @@ export const Tree: React.FC<Props> = ({
     <div className={styles.tree}>
       <Row className={styles.title}>
         <Col span={18} className={styles.text + " " + styles.sidebarIcon}>
-          {tag === "gio_tin" && <BagIcon className={styles.sidebarIcon} />}
+          {tag === "gio_tin" && !isModal && <CartIcon className={styles.sidebarIcon} />}
           {tag === "linh_vuc" && <LayerHalfIcon className={styles.sidebarIcon} />}
           {tag === "source_group" && <StackIcon className={styles.sidebarIcon} />}
           {tag === "chu_de" && <CollectionIcon className={styles.sidebarIcon} />}

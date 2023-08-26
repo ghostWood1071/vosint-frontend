@@ -42,3 +42,12 @@ export const cloneSystemEventToUserEvent = async (event_id: string) => {
   const result = await apiClient.put(`/event/clone-event/${event_id}`, "");
   return result;
 };
+
+export const exportEvents = async (data: any) => {
+  const result = await apiClient.post<any>(`/event/export-to-word`, data, {
+    headers: {"Access-Control-Expose-Headers": "Content-Disposition" },
+    responseType: 'blob'
+  });
+  return result.data;
+};
+
