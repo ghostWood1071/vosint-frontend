@@ -1,5 +1,5 @@
 import { BASE_URL_SUM } from "@/constants/config";
-import { IEventDTO, IEventSummaryDTO, TEvents } from "@/models/event.type";
+import { IEventDTO, TEvents } from "@/models/event.type";
 import { apiClient, filterEmptyString } from "@/utils/api";
 
 const getEvent = async (id: string) => {
