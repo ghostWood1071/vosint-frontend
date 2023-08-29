@@ -8,7 +8,7 @@ import {
   useMutationChangeStatusSeenPost,
   useNewsIdToNewsletter,
 } from "@/pages/news/news.loader";
-import { getContentTranslation } from "@/services/news.service";
+import { getContentTranslation } from "@/services/job.service";
 import { Empty } from "antd";
 import { flatMap, unionBy } from "lodash";
 import React, { useEffect, useState } from "react";
@@ -17,7 +17,7 @@ import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { shallow } from "zustand/shallow";
 
-import { CACHE_KEYS, useInfiniteNewsByObject } from "../organizations.loader";
+import { CACHE_KEYS, useInfiniteNewsByObject, useNewsByObject } from "../organizations.loader";
 import { useOrganizationsStore } from "../organizations.store";
 import styles from "./organizations-detail.module.less";
 
@@ -32,6 +32,7 @@ export const OrganizationsDetailPage: React.FC<Props> = () => {
   const newsFilter = useNewsFilter();
   const { mutate: mutateChangeStatusSeenPost } = useMutationChangeStatusSeenPost();
 
+  // useInfiniteNewsByObject
   const { data, isFetchingNextPage, fetchNextPage, hasNextPage } = useInfiniteNewsByObject({
     ...newsFilter,
     text_search:
@@ -93,6 +94,7 @@ export const OrganizationsDetailPage: React.FC<Props> = () => {
     fetchNextPage({ pageParam: { page_number: skip, page_size: 50 } });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [skip]);
+
   return (
     <>
       <NewsFilter />

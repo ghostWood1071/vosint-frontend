@@ -1,5 +1,5 @@
 import { ActionFallbackIcon } from "@/assets/svg";
-import { IActionInfos } from "@/services/pipeline.type";
+import { IActionInfos } from "@/models/pipeline.type";
 import { UniqueIdentifier, useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
 import { Col, Row } from "antd";

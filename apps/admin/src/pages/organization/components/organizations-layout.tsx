@@ -155,7 +155,15 @@ function Sidebar(): JSX.Element {
     },
   ];
 
-  return <Menu mode="inline" items={items} onSelect={handleClickMenu} selectedKeys={[pathname]} />;
+  return (
+    <Menu
+      mode="inline"
+      items={items}
+      onSelect={handleClickMenu}
+      selectedKeys={[pathname]}
+      className={styles.menuStyle}
+    />
+  );
 
   function handleClickMenu({ key, keyPath }: { key: string; keyPath: string[] }) {
     if (key.includes("search") || key.includes("paginate")) {

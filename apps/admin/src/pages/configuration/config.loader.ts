@@ -1,28 +1,35 @@
+import { IProxyPipelineOptions } from "@/models/cate-config.type";
+import {
+  deleteAccountMonitor,
+  getAdminMonitor,
+  postAccountMonitor,
+  updateAccountMonitor,
+} from "@/services/account-monitor.service";
 import {
   addNewObjectCateConfig,
-  addNewProxyConfig,
-  deleteAccountMonitor,
   deleteObjectCateConfig,
-  deleteProxyConfig,
-  deleteSocialConfig,
-  getAccountMonitorSocialMedia,
-  getAdminMonitor,
-  getFacebookSetting,
   getObjectCateConfig,
+  updateObjectCateConfig,
+} from "@/services/object.service";
+import {
+  addNewProxyConfig,
+  deleteProxyConfig,
   getProxyConfig,
   getProxyPipelineOptions,
+  updateProxyConfig,
+} from "@/services/proxy.service";
+import {
+  deleteSocialConfig,
+  getAccountMonitorSocialMedia,
+  getFacebookSetting,
   getSettingFilter,
   getSocialObjectList,
   getTiktokSetting,
   getTwitterSetting,
-  postAccountMonitor,
   postSetting,
-  updateAccountMonitor,
-  updateObjectCateConfig,
-  updateProxyConfig,
   updateSocialConfig,
-} from "@/services/cate-config.service";
-import { IProxyPipelineOptions } from "@/services/cate-config.type";
+} from "@/services/social-media.service";
+import "@/services/upload.service";
 import { message } from "antd";
 import { AxiosError } from "axios";
 import {

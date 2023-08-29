@@ -22,7 +22,7 @@ export const BodySearch: React.FC<BodySearchProps> = () => {
   return (
     <div className={styles.mainContainer}>
       <div className={styles.logo}>
-        <img className={styles.logoIcon} src="/logo-header-blue.jpg" alt="logo-auth" />
+        <img className={styles.logoIcon} src="/images/logo-header-blue.jpg" alt="logo-auth" />
       </div>
       <div className={styles.searchContainer}>
         <Input
@@ -34,7 +34,7 @@ export const BodySearch: React.FC<BodySearchProps> = () => {
         />
 
         <button className={styles.iconSearchContainer} onClick={clickSearch}>
-          <img className={styles.iconSearch} src="/search-icon.png" alt="icon-search" />
+          <img className={styles.iconSearch} src="/images/search-icon.png" alt="icon-search" />
         </button>
       </div>
       <div className={styles.barContainer}>

@@ -1,4 +1,4 @@
-import { getKeywords } from "@/common/Functions";
+import { downloadFileWord, getKeywords } from "@/common/_helper";
 import { EventNodes, EventPlugin } from "@/components/editor/plugins/event-plugin";
 import {
   EventEditorConfig,
@@ -92,29 +92,12 @@ export const EventPage: React.FC<Props> = () => {
 
   const handleExportWord = () => {
     const newArr = eventChoosedList.map((event) => event._id);
-    // console.log(newArr);
 
     mutate(
       { action: "export", _id: "", data: newArr },
       {
         onSuccess: (res) => {
-          // let fileName = res.headers["Content-Disposition"].split("filename=")[1];
-          const url = window.URL.createObjectURL(new Blob([res]));
-          const link = document.createElement("a");
-          link.href = url;
-          // get date dd/MM/yyyy
-          const today = new Date();
-          const yyyy = today.getFullYear();
-          let mm: any = today.getMonth() + 1; // Months start at 0!
-          let dd: any = today.getDate();
-
-          if (dd < 10) dd = "0" + dd;
-          if (mm < 10) mm = "0" + mm;
-
-          const formattedToday = dd + "/" + mm + "/" + yyyy;
-          link.setAttribute("download", `su_kien(${formattedToday}).docx`);
-          document.body.appendChild(link);
-          link.click();
+          downloadFileWord(new Blob([res]));
         },
       },
     );
@@ -128,7 +111,7 @@ export const EventPage: React.FC<Props> = () => {
             className={styles.item}
             icon={<FileWordOutlined />}
             onClick={handleExportWord}
-            title="Thêm tin"
+            title="Tải file word"
           />
           <DatePicker.RangePicker format={"DD/MM/YYYY"} onChange={handleChangeFilterTime} />
           <Input.Search

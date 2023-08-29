@@ -19,8 +19,8 @@ const EventSummaryModal = ({
   const eventIds: string[] = eventChoosedList.map((event: any) => event?._id);
 
   const { mutate, isLoading } = useGetEventSummaryLazy({
-    onSuccess: (data: any) => {
-      setData(data);
+    onSuccess: (data) => {
+      setData(Object.values(data)[0]);
     },
   });
   // close modal
@@ -33,7 +33,7 @@ const EventSummaryModal = ({
     setOpen(true);
     mutate({
       k: value + "",
-      description: "",
+      lang: "",
       paras: !isUserEvent
         ? eventChoosedList
             .map((event: any) => event?.["event_content"].replaceAll("..", ".\n") ?? "")
@@ -55,7 +55,7 @@ const EventSummaryModal = ({
     setOpen(true);
     mutate({
       k: "0.2",
-      description: "",
+      lang: "",
       paras: !isUserEvent
         ? eventChoosedList
             .map((event: any) => event?.["event_content"].replaceAll("..", ".\n") ?? "")

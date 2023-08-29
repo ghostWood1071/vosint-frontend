@@ -1,20 +1,13 @@
+import { IChangePasswordDTO } from "@/models/auth.type";
 import { apiClient } from "@/utils/api";
 
-import { IChangePasswordDto } from "./auth.type";
-
-export const loginAuth = async (data: any) => {
-  const url = `/login`;
-  const result = await apiClient.post(url, data);
+const loginAuth = async (data: any) => {
+  const result = await apiClient.post(`/login`, data);
   return result.data;
 };
 
-export const getMe = async () => {
-  const url = `/user/me`;
-  const result = await apiClient.get(url);
-  return result.data;
+const changePassword = async (data: IChangePasswordDTO) => {
+  return apiClient.put(`/change-password`, data).then((res) => res.data);
 };
 
-export const changePassword = async (data: IChangePasswordDto) => {
-  const url = `/change-password`;
-  return apiClient.put(url, data).then((res) => res.data);
-};
+export { loginAuth, changePassword };

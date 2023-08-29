@@ -1,5 +1,5 @@
+import { NewsletterDTO } from "@/models/newsletter.type";
 import { useNewsletterDetail } from "@/pages/news/news.loader";
-import { NewsletterDto } from "@/services/news.type";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
 import { Form, Modal } from "antd";
 import { useEffect, useState } from "react";
@@ -8,10 +8,11 @@ import { useLocation } from "react-router-dom";
 
 import { NewsletterFormGioTin } from "./form/form-ban-tin";
 import { NewsletterFormChuDe } from "./form/form-chu-de";
+import "./news-modal.less";
 import { ETreeAction, ETreeTag, useNewsSamplesTopicState, useNewsState } from "./news-state";
 
 interface Props {
-  onFinish: (values: NewsletterDto) => Promise<any>;
+  onFinish: (values: NewsletterDTO) => Promise<any>;
   confirmLoading?: boolean;
 }
 
@@ -52,7 +53,7 @@ export function NewsletterModal({ onFinish, confirmLoading }: Props): JSX.Elemen
   const setNews = useNewsState((state) => state.setNews);
   const newsSamples = useNewsSamplesTopicState((state) => state.newsSamples);
   const setNewsSamples = useNewsSamplesTopicState((state) => state.setNewsSamples);
-  const [form] = Form.useForm<NewsletterDto & { is_sample?: boolean }>();
+  const [form] = Form.useForm<NewsletterDTO & { is_sample?: boolean }>();
   const [keyword, setKeyword] = useState<IKeyword>(defaultKeyword);
 
   useEffect(() => {
@@ -102,6 +103,8 @@ export function NewsletterModal({ onFinish, confirmLoading }: Props): JSX.Elemen
       onCancel={handleCancel}
       closable={false}
       width={800}
+      okText="Cập nhật"
+      cancelText="Thoát"
     >
       {action !== ETreeAction.SELECT && action !== ETreeAction.DELETE && (
         <Form form={form}>

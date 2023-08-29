@@ -1,6 +1,6 @@
 import { useQuery } from "react-query";
 
-import { getHotNewsToday, getNewsCountryToday, getNewsHoursToday } from "./dashboard.service";
+import { getHotNewsToday, getNewsCountryToday, getNewsHoursToday } from "@/services/dashboard.service";
 
 export const CACHE_KEYS = {
   HOT_NEWS_TODAY: "HOT_NEWS_TODAY",

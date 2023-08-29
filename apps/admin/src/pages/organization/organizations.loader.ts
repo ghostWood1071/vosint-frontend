@@ -1,12 +1,8 @@
+import { getEventBaseOnKhachTheAndChuThe, getKhachTheAndChuThe } from "@/services/event.service";
+import { getNewsBasedOnObject } from "@/services/job.service";
 import { getNewsList } from "@/services/news.service";
-import {
-  getEventBaseOnKhachTheAndChuThe,
-  getKhachTheAndChuThe,
-  getNewsBasedOnObject,
-  getNewsByObjectId,
-  getObject,
-  getOrganizationsSidebar,
-} from "@/services/organizations.service";
+import { getNewsByObjectId, getObject } from "@/services/object.service";
+import { getOrganizationsSidebar } from "@/services/organizations.service";
 import { useInfiniteQuery, useQuery } from "react-query";
 
 export const CACHE_KEYS = {
@@ -55,6 +51,10 @@ export const useInfiniteNewsByObject = (filter: Record<string, any>) => {
         : { page_number: 1, page_size: 50, ...filter },
     ),
   );
+};
+
+export const useNewsByObject = (id: any, filter: Record<string, any>) => {
+  return useInfiniteQuery<any>([CACHE_KEYS.NewsList], (data) => getNewsByObjectId(id, filter));
 };
 
 export enum OBJECT_TYPE {

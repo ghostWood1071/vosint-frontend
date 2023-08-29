@@ -81,7 +81,13 @@ export const AppHeader: React.FC = () => {
       </Col>
       <Col span={3}>
         <Link to={dashboardPathWithRole(role ?? "admin")}>
-          <img className={styles.logo} src="/logo-header.jpg" alt="Logo" width={200} height={30} />
+          <img
+            className={styles.logo}
+            src="/images/logo-header.jpg"
+            alt="Logo"
+            width={200}
+            height={30}
+          />
         </Link>
       </Col>
       <Col span={17} push={1} className={styles.navbar}>

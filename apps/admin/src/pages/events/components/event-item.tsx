@@ -1,4 +1,4 @@
-import { getKeywords } from "@/common/Functions";
+import { getKeywords } from "@/common/_helper";
 import { useEventContext } from "@/components/editor/plugins/event-plugin/event-context";
 import NewsEventSummaryModal from "@/pages/news/components/news-event-summary-modal";
 import { useQuickReportModalState } from "@/pages/news/components/quick-report-modal/index.state";
@@ -18,6 +18,7 @@ import { Checkbox, Empty, Space, Tag, Tooltip, Typography } from "antd";
 import { LexicalEditor, createEditor } from "lexical";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 
+import "./event-detail.less";
 import styles from "./event-item.module.less";
 import EventKeyword from "./event-keywords";
 
@@ -156,15 +157,18 @@ export const EventItem: React.FC<Props> = ({
             }}
             className={styles.scrollContainer}
           >
-            <button className={styles.hideDetailButton} onClick={() => setTypeShow(!typeShow)}>
+            <button
+              className={`${styles.hideDetailButton} btn__close`}
+              onClick={() => setTypeShow(!typeShow)}
+            >
               <CloseOutlined title="Đóng chi tiết sự kiện" className={styles.closeIcon} />
             </button>
           </div>
-          <div className={styles.detailContainer}>
+          <div className={`${styles.detailContainer} news__detail`}>
             <div className={styles.detailHeader}>
-              <div className={styles.title}>{item.event_name}</div>
+              <div className={`${styles.title} news__title`}>{item.event_name}</div>
 
-              <div className={styles.comtainer3}>
+              <div className={`${styles.comtainer3} news__datetime`}>
                 <div className={styles.leftContainer3}>
                   <div className={styles.time}>{convertTimeToShowInUI(item.date_created)}</div>
                 </div>
@@ -219,7 +223,7 @@ export const EventItem: React.FC<Props> = ({
               </div>
 
               {item.list_report?.[0] !== undefined && (
-                <div className={styles.container2}>
+                <div className={`${styles.container2} news__keywords`}>
                   {item.list_report?.map((element: any, index: any) => {
                     return (
                       <Tag key={index} className={styles.tag}>
@@ -230,11 +234,14 @@ export const EventItem: React.FC<Props> = ({
                 </div>
               )}
 
-              <div className={styles.container2}>
+              <div className={`${styles.container2} news__keywords`}>
                 <EventKeyword item={item} />
               </div>
 
-              <div className={styles.detailContent} onClick={(event) => event.stopPropagation()}>
+              <div
+                className={`${styles.detailContent} news__content`}
+                onClick={(event) => event.stopPropagation()}
+              >
                 <div
                   style={{ whiteSpace: "pre-wrap" }}
                   dangerouslySetInnerHTML={{

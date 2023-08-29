@@ -1,5 +1,6 @@
-import { changePassword, getMe, loginAuth } from "@/services/auth.service";
-import { IChangePasswordDto } from "@/services/auth.type";
+import { IChangePasswordDTO } from "@/models/auth.type";
+import { changePassword, loginAuth } from "@/services/auth.service";
+import { getMe } from "@/services/user.service";
 import { AxiosError } from "axios";
 import { UseMutationOptions, useMutation, useQuery } from "react-query";
 
@@ -23,7 +24,7 @@ export const useGetMe = () => {
 };
 
 export const useChangePassword = (
-  options?: UseMutationOptions<unknown, AxiosError<{ detail: string }>, IChangePasswordDto>,
+  options?: UseMutationOptions<unknown, AxiosError<{ detail: string }>, IChangePasswordDTO>,
 ) => {
   return useMutation((data) => changePassword(data), options);
 };

@@ -1,12 +1,12 @@
 import { NewsletterModal } from "@/components/news/news-modal";
 import { ETreeAction, ETreeTag, useNewsState } from "@/components/news/news-state";
+import { NewsletterDTO } from "@/models/newsletter.type";
 import {
   useMutationNewsSidebar,
   useNewsSidebar,
   useNewsletterDetail,
 } from "@/pages/news/news.loader";
 import { buildTree, getAllChildIds } from "@/pages/news/news.utils";
-import { NewsletterDto } from "@/services/news.type";
 import { PlusOutlined } from "@ant-design/icons";
 import { Button, Card, Col, Input, List, PageHeader, Row, Typography } from "antd";
 import { Descriptions } from "antd";
@@ -190,7 +190,7 @@ export const CategoryNewsConfig = () => {
     });
   }
 
-  function handleFinish(values: NewsletterDto) {
+  function handleFinish(values: NewsletterDTO) {
     if (action === ETreeAction.DELETE) {
       const ids = getAllChildIds(data?.linh_vuc, values._id!) ?? [];
       values.newsletter_ids = ids;

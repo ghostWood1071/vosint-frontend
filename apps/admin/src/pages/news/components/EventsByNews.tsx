@@ -1,4 +1,4 @@
-import { getEventByNews } from "@/common/Functions";
+import { getEventByNews } from "@/common/_helper";
 import { useEventsState } from "@/components/editor/plugins/events-plugin/events-state";
 import { EventItem } from "@/pages/events/components/event-item";
 import { SystemEventItem } from "@/pages/events/components/system-event-item";

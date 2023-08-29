@@ -1,6 +1,10 @@
+import { CreateIcon } from "@/assets/icons";
+import { RemoveNewsIcon } from "@/assets/icons";
 import { ReactComponent as UnreadIcon } from "@/assets/svg/envelope-open.svg";
 import { ReactComponent as ReadIcon } from "@/assets/svg/envelope.svg";
+import { downloadFileWord } from "@/common/_helper";
 import { Tree } from "@/components";
+import { downloadFile } from "@/components/editor/utils";
 import { ETreeTag, useNewsSelection, useNewsState } from "@/components/news/news-state";
 import { useSidebar } from "@/pages/app/app.store";
 import { useGetMe } from "@/pages/auth/auth.loader";
@@ -8,6 +12,7 @@ import {
   useDeleteNewsInNewsletter,
   useMutationChangeStatusSeenPost,
   useMutationExportNews,
+  useMutationNewsToCategory,
   useNewsIdToNewsletter,
   useNewsSidebar,
 } from "@/pages/news/news.loader";
@@ -24,17 +29,19 @@ import {
 import { Button, DatePicker, Form, Input, List, Modal, Select, Typography } from "antd";
 import produce from "immer";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { shallow } from "zustand/shallow";
 
 import { useNewsFilter, useNewsFilterDispatch } from "../news.context";
+import NewsCategoryModal from "./news-category/news-category-modal";
+import "./news-filter.less";
 import styles from "./news-filter.module.less";
 import { NewsSummaryModal } from "./news-summary-modal";
 
 export function NewsFilter(): JSX.Element {
   const { data: dataIAm } = useGetMe();
   let { newsletterId: detailIds, tag } = useParams();
-
+  const { pathname } = useLocation();
   const pinned = useSidebar((state) => state.pinned);
   const { mutate: mutateChangeStatusSeenPost } = useMutationChangeStatusSeenPost();
   const [newsSelection, setNewsSelection] = useNewsSelection(
@@ -46,12 +53,19 @@ export function NewsFilter(): JSX.Element {
     (state) => [state.open, state.setOpen],
     shallow,
   );
+
+  const [openNewsCategory, setOpenNewsCategory] = useNewsSelection(
+    (state) => [state.openNewsCategory, state.setOpenNewsCategory],
+    shallow,
+  );
+
   const newsFilter = useNewsFilter();
   const setNewsFilter = useNewsFilterDispatch();
   const { mutateAsync: mutateDelete } = useDeleteNewsInNewsletter();
 
   const [internalTextSearch, setInternalTextSearch] = useState("");
   const { mutate } = useMutationExportNews();
+  const { mutate: mutateNewsToCategory } = useMutationNewsToCategory();
 
   function handleSetSeen(checkedSeen: boolean, idNews: string) {
     if (checkedSeen) {
@@ -67,27 +81,28 @@ export function NewsFilter(): JSX.Element {
       { data: newArr },
       {
         onSuccess: (res) => {
-          const url = window.URL.createObjectURL(new Blob([res]));
-          const link = document.createElement("a");
-          link.href = url;
-
-          // get date dd/MM/yyyy
-          const today = new Date();
-          const yyyy = today.getFullYear();
-          let mm: any = today.getMonth() + 1; // Months start at 0!
-          let dd: any = today.getDate();
-
-          if (dd < 10) dd = "0" + dd;
-          if (mm < 10) mm = "0" + mm;
-
-          const formattedToday = dd + "/" + mm + "/" + yyyy;
-          link.setAttribute("download", `tin_tuc(${formattedToday}).docx`);
-          document.body.appendChild(link);
-          link.click();
+          downloadFileWord(new Blob([res]));
         },
       },
     );
   };
+
+  const handleRemoveNewsFromCategory = () => {
+    const post = newsSelection.map((news) => news._id);
+
+    mutateNewsToCategory(
+      { post, action: "delete" },
+      {
+        onSuccess: (res) => {
+          // console.log(res);
+        },
+        onError: (err) => {},
+      },
+    );
+  };
+
+  // const seen = newsSelection.find((item: any) => item.is_read);
+  // const unseen = newsSelection.find((item: any) => !item.is_read);
 
   const seen = newsSelection.find((item: any) => item.list_user_read?.length > 0);
   const unseen = newsSelection.find(
@@ -106,15 +121,16 @@ export function NewsFilter(): JSX.Element {
         {/* {seen && unseen && ( */}
         <>
           <div
-            className={styles.iconWrap}
+            className={`${styles.iconWrap} newsFilter__btn`}
             onClick={() => {
               newsSelection.forEach((item) => {
                 handleSetSeen(true, item._id);
               });
-              // setNewsSelection([]);
+              setNewsSelection([]);
               setNewsSelection(
                 newsSelection.map((item) => ({ ...item, list_user_read: [dataIAm] })),
               );
+              // setNewsSelection(newsSelection.map((item) => ({ ...item, is_read: true })));
             }}
             title="Đánh dấu đã đọc tin"
           >
@@ -122,6 +138,7 @@ export function NewsFilter(): JSX.Element {
               icon={<UnreadIcon className={styles.unreadIcon} />}
               className={styles.iconWrapBtn}
               disabled={!(!seen && unseen) && !(seen && unseen)}
+              // disabled={!!(seen && unseen)}
             />
           </div>
 
@@ -132,59 +149,43 @@ export function NewsFilter(): JSX.Element {
                 handleSetSeen(false, item._id);
               });
               setNewsSelection(newsSelection.map((item) => ({ ...item, list_user_read: [] })));
+              // setNewsSelection(newsSelection.map((item) => ({ ...item, is_read: false })));
             }}
             title="Đánh dấu chưa đọc tin"
           >
             <Button
               icon={<ReadIcon className={styles.readIcon} />}
+              // disabled={!(seen && !unseen) && !(seen && unseen)}
               disabled={!(seen && !unseen) && !(seen && unseen)}
               className={styles.iconWrapBtn}
             />
           </div>
         </>
-        {/* )} */}
-        {/* 
-        {seen && !unseen && (
-          <div
-            className={styles.iconWrap}
-            onClick={() => {
-              newsSelection.forEach((item) => {
-                handleSetSeen(false, item._id);
-              });
 
-              setNewsSelection(newsSelection.map((item) => ({ ...item, list_user_read: [] })));
-            }}
-            title="Đánh dấu chưa đọc tin"
-          >
-            <ReadIcon className={styles.readIcon} />
-          </div>
-        )}
-
-        {!seen && unseen && (
-          <div
-            className={styles.iconWrap}
-            onClick={() => {
-              // setNewsSelection(newsSelection.map((item) => ({ ...item, is_read: true })));
-
-              newsSelection.forEach((item) => {
-                handleSetSeen(true, item._id);
-              });
-
-              setNewsSelection(
-                newsSelection.map((item) => ({ ...item, list_user_read: [dataIAm] })),
-              );
-            }}
-            title="Đánh dấu đã đọc tin"
-          >
-            <UnreadIcon className={styles.unreadIcon} />
-          </div>
-        )} */}
         <Button
           className={styles.item}
           icon={<FileWordOutlined />}
           onClick={handleExportWord}
-          title="Thêm tin"
+          title="Tải file word"
         />
+
+        {pathname === "/organization" ? (
+          <Button
+            icon={<CreateIcon />}
+            className={styles.createIcon}
+            disabled={newsSelection.length == 0}
+            onClick={() => setOpenNewsCategory(true)}
+            title={"Thêm Tin Vào Danh Mục"}
+          />
+        ) : (
+          <Button
+            icon={<RemoveNewsIcon />}
+            className={styles.createIcon}
+            disabled={newsSelection.length == 0}
+            onClick={() => {}}
+            title={"Xoá Tin Khỏi Danh Mục"}
+          />
+        )}
 
         <Form.Item className={styles.item} name="datetime">
           <DatePicker.RangePicker format={"DD/MM/YYYY"} />
@@ -218,6 +219,7 @@ export function NewsFilter(): JSX.Element {
           </Select>
         </Form.Item>
         <NewsSummaryModal />
+
         <Button
           className={styles.item}
           icon={<PlusCircleTwoTone />}
@@ -225,6 +227,7 @@ export function NewsFilter(): JSX.Element {
           disabled={newsSelectionIds.length === 0}
           title="Thêm tin"
         />
+
         {detailIds && ![ETreeTag.LINH_VUC, ETreeTag.CHU_DE].includes((tag ?? "") as ETreeTag) && (
           <Button
             className={styles.item}
@@ -247,6 +250,7 @@ export function NewsFilter(): JSX.Element {
       </Form>
 
       {openSelection && <NewsFilterModal />}
+      {openNewsCategory && <NewsCategoryModal />}
     </div>
   );
 

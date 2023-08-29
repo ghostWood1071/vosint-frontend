@@ -9,7 +9,7 @@ export const AuthLayout = () => {
       <div className={styles.contentContainer}>
         <div className={styles.boxContent}>
           <div className={styles.logoContainer}>
-            <img className={styles.logoIcon} src="/logo-header-blue.jpg" alt="logo-auth" />
+            <img className={styles.logoIcon} src="/images/logo-header-blue.jpg" alt="logo-auth" />
           </div>
           <div className={styles.textinputContainer}>
             <Outlet />

@@ -20,11 +20,11 @@ const DetailUser: React.FC<DetailObjectProps> = ({ type, index, fullName }) => {
     <div key={index} className={styles.containerItem}>
       <div className={styles.typeUser}>
         {type === "top1" ? (
-          <img className={styles.iconLevel} src="/gold_medal.png" alt="gold" />
+          <img className={styles.iconLevel} src="/images/gold_medal.png" alt="gold" />
         ) : type === "top2" ? (
-          <img className={styles.iconLevel} src="/silver_medal.png" alt="gold" />
+          <img className={styles.iconLevel} src="/images/silver_medal.png" alt="gold" />
         ) : type === "top3" ? (
-          <img className={styles.iconLevel} src="/bronze_medal.png" alt="gold" />
+          <img className={styles.iconLevel} src="/images/bronze_medal.png" alt="gold" />
         ) : (
           ""
         )}

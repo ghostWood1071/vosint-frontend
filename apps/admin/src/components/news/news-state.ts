@@ -1,4 +1,4 @@
-import { TNews } from "@/services/news.type";
+import { TNews } from "@/models/news.type";
 import { compact } from "lodash";
 import React, { Dispatch } from "react";
 import { create } from "zustand";
@@ -51,12 +51,17 @@ export const useNewsSamplesTopicState = create<NewsSamplesTopicState>((set) => (
 interface NewsSelectionState {
   open: boolean;
   setOpen: Dispatch<boolean>;
+  openNewsCategory: boolean;
+  setOpenNewsCategory: Dispatch<boolean>;
   newsSelection: TNews[];
   setNewsSelection: Dispatch<TNews[]>;
 }
 export const useNewsSelection = create<NewsSelectionState>((set) => ({
   open: false,
   setOpen: (open) => set({ open }),
+
+  openNewsCategory: false,
+  setOpenNewsCategory: (openNewsCategory) => set({ openNewsCategory }),
 
   newsSelection: [],
   setNewsSelection: (newsSelection) => set({ newsSelection: compact(newsSelection) }),
@@ -99,7 +104,8 @@ export enum ETreeAction {
 
 export const MTreeAction: Record<ETreeAction, string> = {
   [ETreeAction.CREATE]: "Thêm",
-  [ETreeAction.UPDATE]: "Sửa",
+  // [ETreeAction.UPDATE]: "Sửa",
+  [ETreeAction.UPDATE]: "Cập nhật",
   [ETreeAction.DELETE]: "Xóa",
   [ETreeAction.SELECT]: "Chọn",
 };

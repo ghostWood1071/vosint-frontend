@@ -139,9 +139,17 @@ export const routers = createBrowserRouter([
             element: <NewsDetailPage />,
           },
           {
+            path: "/event/:newsletterId",
+            element: <EventDetailPage />,
+          },
+          {
             path: "/event/:newsletterId/:tag",
             element: <EventDetailPage />,
           },
+          // {
+          //   path: "/event-list",
+          //   element: <EventDetailPage />,
+          // },
         ],
       },
       {

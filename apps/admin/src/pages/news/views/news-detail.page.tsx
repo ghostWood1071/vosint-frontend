@@ -1,8 +1,8 @@
-import { getEventByNews } from "@/common/Functions";
+import { getEventByNews } from "@/common/_helper";
 import { useNewsSelection } from "@/components/news/news-state";
 import { useGetMe } from "@/pages/auth/auth.loader";
 import { SystemEventItem } from "@/pages/events/components/system-event-item";
-import { getContentTranslation } from "@/services/news.service";
+import { getContentTranslation } from "@/services/job.service";
 import { Empty, List } from "antd";
 import { flatMap, unionBy } from "lodash";
 import { useEffect, useState } from "react";
@@ -40,7 +40,6 @@ export const NewsDetailPage = () => {
     newsFilter,
     tag ?? "",
   );
-
   const { data: dataIAm } = useGetMe();
   const { mutateAsync: mutateDelete } = useDeleteNewsInNewsletter();
   const { mutate: mutateAdd } = useNewsIdToNewsletter();
@@ -88,23 +87,7 @@ export const NewsDetailPage = () => {
   const handleConvert = (status: any) => {
     // status: true => convert news to event, false => convert event to news
     setStatus(status);
-
-    // const data = dataSource.map((item) => item._id);
-    // setDataEvents(getEventByNews(data));
-
-    // execute api, post data
-    // console.log(data);
-    // mutate(
-    //   { newsletterId },
-    //   {
-    //     onSuccess: (res: any) => {
-    //       console.log("res", res);
-    //       setDataEvents(res);
-    //     },
-    //   },
-    // );
   };
-  console.log(dataSource);
 
   return (
     <>
@@ -113,8 +96,7 @@ export const NewsDetailPage = () => {
         <div className={styles.bodyNews}>
           <table style={{ width: "100%" }}>
             <tbody>
-              {dataSource[0] !== undefined &&
-                !status &&
+              {dataSource[0] !== undefined ? (
                 dataSource?.map((item) => (
                   <NewsTableItem
                     userId={dataIAm._id}
@@ -127,22 +109,10 @@ export const NewsDetailPage = () => {
                     setSeen={handleSetSeen}
                     handleUpdateCache={handleUpdateCache}
                   />
-                ))}
-              {/* <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={"Trống"} /> */}
-
-              {/* {dataEvents[0] !== undefined &&
-                status &&
-                dataEvents?.map((item) => (
-                  <>
-                    <SystemEventItem
-                      item={item}
-                      eventChoosedList={eventChoosedList}
-                      setEventChoosedList={setEventChoosedList}
-                    />
-                  </>
-                ))} */}
-
-              {status && <EventsByNews newsletterId={newsletterId} dataSource={dataSource} />}
+                ))
+              ) : (
+                <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={"Trống"} />
+              )}
             </tbody>
           </table>
           <div>

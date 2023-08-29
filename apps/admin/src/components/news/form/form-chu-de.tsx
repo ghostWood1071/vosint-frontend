@@ -1,4 +1,4 @@
-import { TNews } from "@/services/news.type";
+import { TNews } from "@/models/news.type";
 import { removeWhitespaceInStartAndEndOfString } from "@/utils/tool-validate-string";
 import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 import { Button, Form, Input, Switch, Table, TableColumnsType, Typography } from "antd";

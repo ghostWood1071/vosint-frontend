@@ -17,7 +17,13 @@ export const SearchHeader: React.FC<SearchHeaderProps> = () => {
     <Row className={styles.header} align="middle">
       <Col span={4}>
         <Link to={dashboardPathWithRole(value ?? "admin")}>
-          <img className={styles.logo} src="/logo-header.jpg" alt="Logo" width={200} height={30} />
+          <img
+            className={styles.logo}
+            src="/images/logo-header.jpg"
+            alt="Logo"
+            width={200}
+            height={30}
+          />
         </Link>
       </Col>
       <Col span={16} className={styles.navbar}></Col>

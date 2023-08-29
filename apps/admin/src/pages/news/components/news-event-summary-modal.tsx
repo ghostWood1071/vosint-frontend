@@ -1,4 +1,4 @@
-import { getNewsList } from "@/common/Functions";
+import { getNewsList } from "@/common/_helper";
 import { useNewsSelection } from "@/components/news/news-state";
 import { ControlOutlined } from "@ant-design/icons";
 import { Alert, Button, Col, Modal, Row, Spin, Tooltip, message } from "antd";

@@ -1,5 +1,5 @@
+import type { IActionParamInfo } from "@/models/pipeline.type";
 import { useProxyPipelineOptions } from "@/pages/configuration/config.loader";
-import type { IActionParamInfo } from "@/services/pipeline.type";
 import { CloseCircleOutlined, MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { Button, Card, Form, Input, Select, Space, Typography } from "antd";
 import classNames from "classnames";

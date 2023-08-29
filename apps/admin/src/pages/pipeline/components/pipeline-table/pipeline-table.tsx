@@ -5,8 +5,8 @@ import {
   PipelineSleepIcon,
 } from "@/assets/svg";
 import { SwitchCustom } from "@/components/";
+import { IPipelines } from "@/models/pipeline.type";
 import { getPipelineDetailPath } from "@/pages/router";
-import { IPipelines } from "@/services/pipeline.type";
 import Icon, { DeleteOutlined, PlayCircleTwoTone } from "@ant-design/icons";
 import { Button, Modal, Space, Table, TableColumnsType } from "antd";
 import React from "react";

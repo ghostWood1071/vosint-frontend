@@ -38,7 +38,7 @@ const NewsCard: React.FC<PropsCard> = ({ title, description, url }) => {
     <div className={styles.card}>
       <Row>
         <Col span={24}>
-          <Image src="/placeholder.jpg" alt={title} />
+          <Image src="/images/placeholder.jpg" alt={title} />
         </Col>
         <Col span={24} className={styles.description}>
           <Space direction="vertical">
@@ -78,7 +78,7 @@ const NewsCardTiny: React.FC<PropsCard> = ({ title, description, url }) => {
       <Col>
         <Row align="middle" gutter={8}>
           <Col span={10}>
-            <Image src="/placeholder.jpg" />
+            <Image src="/images/placeholder.jpg" />
           </Col>
           <Col span={14}>
             <Space direction="vertical">

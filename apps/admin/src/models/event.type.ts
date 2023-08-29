@@ -1,10 +1,9 @@
-
-export type TEvents = {
+type TEvents = {
   data: TEvent[];
   total: number;
 };
 
-export type TEvent = {
+type TEvent = {
   event_name: string;
   event_content: string;
   date_created: string;
@@ -14,7 +13,9 @@ export type TEvent = {
   khach_the: string;
 };
 
-export interface IEventDTO {
+// type TEventSummary = string;
+
+interface IEventDTO {
   _id?: string;
   event_name?: string;
   event_content?: string;
@@ -25,15 +26,11 @@ export interface IEventDTO {
   khach_the?: string;
 }
 
-export type TEventSummary = string;
+// interface IEventSummaryDTO {
+//   k: string;
+//   title: string;
+//   description: string;
+//   paras: string;
+// }
 
-export interface IEventSummaryDTO {
-  // k: string;
-  // event_name: string;
-  // // description: string;
-  // event_content: string;
-  k: string;
-  title: string;
-  description: string;
-  paras: string;
-}
+export type { TEvents, TEvent, IEventDTO };

@@ -1,8 +1,8 @@
 import { ReactComponent as CollapsedIcon } from "@/assets/svg/collapsed-icon.svg";
 import { ModalAddNewsSamples } from "@/components/news/form/form-linh-vuc";
+import { TNews } from "@/models/news.type";
 import { useEvent, useRemoveNewsInEvent } from "@/pages/reports/report.loader";
 import { useUpdateEvent } from "@/pages/reports/report.loader";
-import { TNews } from "@/services/news.type";
 import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { Button, Collapse, DatePicker, DatePickerProps, List, Space, Typography } from "antd";

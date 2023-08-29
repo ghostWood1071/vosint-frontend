@@ -1,8 +1,8 @@
+import { IEventDTO } from "@/models/event.type";
 import { IQuickHeading } from "@/pages/reports/components/quick-heading";
 import { queryStringDslTTXVN } from "@/pages/reports/components/quick-heading/quick-heading.utils";
-import { getNewsFromTTXVN } from "@/services/news.service";
-import { IEventDto } from "@/services/report-type";
-import { getEvent } from "@/services/report.service";
+import { getEvent } from "@/services/event.service";
+import { getNewsFromTTXVN } from "@/services/job.service";
 import {
   AlignmentType,
   Document,
@@ -165,7 +165,7 @@ export async function convertHeadingsToDocx({
       var events = queryClient.getQueryData<any>(["NEWS_TTXVN", params]);
       if (!events) {
         try {
-          events = await queryClient.fetchQuery<IEventDto>({
+          events = await queryClient.fetchQuery<IEventDTO>({
             queryKey: ["NEWS_TTXVN", params],
             queryFn: () => getNewsFromTTXVN(params),
           });
@@ -195,10 +195,10 @@ export async function convertHeadingsToDocx({
       // section.children.push(paragraph);
     } else {
       for (const event_id of heading?.eventIds) {
-        var event = queryClient.getQueryData<IEventDto>(["event", event_id]);
+        var event = queryClient.getQueryData<IEventDTO>(["event", event_id]);
         if (!event) {
           try {
-            event = await queryClient.fetchQuery<IEventDto>({
+            event = await queryClient.fetchQuery<IEventDTO>({
               queryKey: ["event", event_id],
               queryFn: () => getEvent(event_id),
             });
@@ -328,7 +328,6 @@ export async function convertHeadingsToDocx({
 }
 
 export function useConvertHeadingsToDocx() {
-  
   const queryClient = useQueryClient();
   return ({
     headings,

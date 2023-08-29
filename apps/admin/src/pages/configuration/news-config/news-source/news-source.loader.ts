@@ -3,7 +3,7 @@ import {
   deleteNewsSource,
   getSourceConfig,
   updateNewsSource,
-} from "@/services/source-config.service";
+} from "@/services/source.service";
 import { message } from "antd";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 
