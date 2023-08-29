@@ -71,7 +71,7 @@ export const NewDetailSummary: React.FC<Props> = ({ content, title }) => {
   function handleSummChange(value: number) {
     mutate({
       k: value + "",
-      description: "",
+      lang: "",
       paras: content ?? "",
       title: title ?? "",
     });

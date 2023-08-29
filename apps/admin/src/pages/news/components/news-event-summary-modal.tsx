@@ -26,7 +26,7 @@ const NewsEventSummaryModal = ({ item }: { item: any }) => {
     setOpen(true);
     mutate({
       k: value + "",
-      description: "",
+      lang: "",
       paras: newList.map((n: any) => n?.["data:content"] ?? "").join("\n"),
       title: newList.map((n: any) => n["data:title"] ?? "").join("\n"),
     });
@@ -43,7 +43,7 @@ const NewsEventSummaryModal = ({ item }: { item: any }) => {
     setOpen(true);
     mutate({
       k: "0.2",
-      description: "",
+      lang: "",
       paras: newList.map((n: any) => n?.["data:content"] ?? "").join("\n"),
       title: newList.map((n: any) => n?.["data:title"] ?? "").join("\n"),
     });

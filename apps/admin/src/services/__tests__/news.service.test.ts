@@ -1,5 +1,7 @@
 import { MOCK_NEWS_SIDEBAR_REQUEST } from "../mocks/news.service.mock";
-import { getNewsSidebar } from "../news.service";
+import { getNewsSidebar } from "../newsletter.service";
+
+// import { getNewsSidebar } from "../news.service";
 
 describe("defined functions", () => {
   test("should defined functions", () => {
