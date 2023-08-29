@@ -1,6 +1,6 @@
 import { ETreeTag, useNewsSelection } from "@/components/news/news-state";
 import { useGetMe } from "@/pages/auth/auth.loader";
-import { getContentTranslation } from "@/services/news.service";
+import { getContentTranslation } from "@/services/job.service";
 import { Empty } from "antd";
 import { flatMap, unionBy } from "lodash";
 import React, { useEffect, useState } from "react";
@@ -31,6 +31,7 @@ export const NewsListPage: React.FC<Props> = () => {
     ...newsFilter,
     order: "pub_date",
   });
+
   const { data: dataIAm } = useGetMe();
   const { mutate: mutateChangeStatusSeenPost } = useMutationChangeStatusSeenPost();
   const { mutateAsync: mutateDelete } = useDeleteNewsInNewsletter();
@@ -85,7 +86,8 @@ export const NewsListPage: React.FC<Props> = () => {
               {dataSource[0] !== undefined ? (
                 dataSource.map((item) => (
                   <NewsTableItem
-                    userId={dataIAm._id}
+                    // userId={dataIAm._id}
+                    userId="64aae3b628920312b13905de"
                     key={item._id}
                     item={item}
                     onDelete={handleDelete}

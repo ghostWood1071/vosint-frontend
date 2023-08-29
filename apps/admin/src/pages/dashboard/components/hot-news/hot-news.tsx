@@ -1,5 +1,4 @@
 import { StatusNewsLoad } from "@/assets/svg";
-import { useHotNewsToday } from "@/services/dashboard.loader";
 import { Spin } from "antd";
 import React from "react";
 import { Autoplay, Navigation, Pagination } from "swiper";
@@ -8,6 +7,7 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { Swiper, SwiperSlide } from "swiper/react";
 
+import { useHotNewsToday } from "../../dashboard.loader";
 import { SwiperItem } from "./component/swiper-item";
 import styles from "./hot-news.module.less";
 

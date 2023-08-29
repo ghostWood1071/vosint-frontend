@@ -1,8 +1,9 @@
+import { IEventDTO } from "@/models/event.type";
+import { TReport } from "@/models/report.type";
 import { EVENT_CACHE_KEYS } from "@/pages/events/event.loader";
 import { navigationItemLevel } from "@/pages/reports/components/heading-toc";
 import { HeadingsData } from "@/pages/reports/components/headings";
 import { CACHE_KEYS, useQuickReports, useUpdateReport } from "@/pages/reports/report.loader";
-import { IEventDto, TReport } from "@/services/report-type";
 import { convertTimeToShowInUI } from "@/utils/tool-validate-string";
 import {
   Col,
@@ -61,7 +62,7 @@ export function QuickReportModal(): JSX.Element {
       },
     },
   );
-  const columnsEventTable: TableColumnsType<IEventDto> = [
+  const columnsEventTable: TableColumnsType<IEventDTO> = [
     {
       title: "Tên sự kiện",
       align: "left",

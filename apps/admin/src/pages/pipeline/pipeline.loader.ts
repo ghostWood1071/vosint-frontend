@@ -1,26 +1,28 @@
 import {
-  clonePipeline,
-  deletePipeline,
-  getActionInfos,
+  ILogHistory,
+  IPipelineRunAllJob,
+  IPipelineRunJob,
+  IPipelineVerify,
+} from "@/models/pipeline.type";
+import type { IPipelineSource } from "@/models/source-config.type";
+import {
   getHistory,
   getLogHistoryLast,
-  getPipelineDetail,
-  getPipelines,
-  putPipeline,
   startAllJob,
   startJobById,
   stopAllJob,
   stopJobById,
   verifyPipeline,
-} from "@/services/pipeline.service";
+} from "@/services/job.service";
 import {
-  ILogHistory,
-  IPipelineRunAllJob,
-  IPipelineRunJob,
-  IPipelineVerify,
-} from "@/services/pipeline.type";
-import { getPipelineSource } from "@/services/source-config.service";
-import type { IPipelineSource } from "@/services/source-config.type";
+  clonePipeline,
+  deletePipeline,
+  getActionInfos,
+  getPipelineDetail,
+  getPipelines,
+  putPipeline,
+} from "@/services/pipeline.service";
+import { getPipelineSource } from "@/services/source.service";
 import { message } from "antd";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import type { UseMutationOptions, UseQueryOptions } from "react-query";

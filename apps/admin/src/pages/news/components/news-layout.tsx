@@ -1,3 +1,4 @@
+import { ImportantIcon } from "@/assets/icons";
 import { ReactComponent as BookmarkIcon } from "@/assets/svg/bookmarks.svg";
 import { ReactComponent as CartIcon } from "@/assets/svg/cart.svg";
 import { ReactComponent as CheckboxIcon } from "@/assets/svg/check-square.svg";
@@ -10,7 +11,7 @@ import { AppContainer } from "@/pages/app";
 import { buildTree, getAllChildIds } from "@/pages/news/news.utils";
 import { getNewsDetailUrl } from "@/pages/router";
 import { useGroupSourceList } from "@/pages/source/source-group/source-group.loader";
-import { Space } from "antd";
+import { Button, Space } from "antd";
 import classNames from "classnames";
 import { useQueryClient } from "react-query";
 import { NavLink, Outlet, useNavigate, useParams } from "react-router-dom";
@@ -42,6 +43,7 @@ function Sidebar() {
     limit: 100,
     text_search: "",
   });
+
   const dataFirst: any[] = [];
   dataSourceGroup?.data?.forEach((e: any) => {
     if (e.is_hide === false) {
@@ -67,14 +69,19 @@ function Sidebar() {
   const gioTinTree = data?.gio_tin && buildTree(data.gio_tin);
   const linhVucTree = data?.linh_vuc && buildTree(data.linh_vuc);
   const chuDeTree = data?.chu_de && buildTree(data.chu_de);
+
   return (
     <>
       <Space direction="vertical" className={styles.sidebar} size={18}>
         <NavLink to={getNewsDetailUrl(ETreeTag.QUAN_TRONG)} className={handleActive}>
           {/* <BookmarkIcon className={styles.sidebarIcon} /> */}
           {/* <ImportantButton /> */}
-          <ImportantButton item={{ isBell: false }} style={{ backgroundSize: "20px" }} />
-          <div style={{ paddingLeft: "10px" }}>TIN QUAN TRỌNG</div>
+          {/* <Button icon={<ImportantIcon />} /> */}
+          <div className={styles.sidebarIcon} style={{ fontSize: "18px" }}>
+            <ImportantIcon />
+          </div>
+          {/* <ImportantButton item={{ isBell: false }} style={{ backgroundSize: "20px" }} /> */}
+          <div>TIN QUAN TRỌNG</div>
         </NavLink>
 
         <NavLink to={getNewsDetailUrl(ETreeTag.DANH_DAU)} className={handleActive}>

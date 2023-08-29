@@ -1,9 +1,9 @@
-import { IEventDto } from "@/services/report-type";
+import { IEventDTO } from "@/models/event.type";
 import { create } from "zustand";
 
 interface QuickReportModalState {
-  events: Array<IEventDto> | null;
-  setEvent: (event: Array<IEventDto> | null) => void;
+  events: Array<IEventDTO> | null;
+  setEvent: (event: Array<IEventDTO> | null) => void;
   selectedHeading: string | null;
   setSelectedHeading: (selectedHeading: string | null) => void;
 }

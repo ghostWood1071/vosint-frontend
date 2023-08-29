@@ -1,5 +1,5 @@
 import { BASE_URL } from "@/constants/config";
-import { uploadFile } from "@/services/cate-config.service";
+import { uploadFile } from "@/services/upload.service";
 import { removeWhitespaceInStartAndEndOfString } from "@/utils/tool-validate-string";
 import { Form, Input, Modal, Upload } from "antd";
 import type { RcFile, UploadFile, UploadProps } from "antd/es/upload/interface";

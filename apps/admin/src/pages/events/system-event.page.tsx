@@ -1,3 +1,6 @@
+import { ReactComponent as UnreadIcon } from "@/assets/svg/envelope-open.svg";
+import { ReactComponent as ReadIcon } from "@/assets/svg/envelope.svg";
+import { downloadFileWord } from "@/common/_helper";
 import { downloadFile } from "@/components/editor/utils";
 import { FileWordOutlined } from "@ant-design/icons";
 import { Button, DatePicker, Empty, Input, List, Space } from "antd";
@@ -57,29 +60,11 @@ export const SystemEventPage: React.FC<Props> = () => {
 
   const handleExportWord = () => {
     const newArr = eventChoosedList.map((event) => event._id);
-    // console.log(newArr);
     mutate(
       { data: newArr },
       {
         onSuccess: (res: any) => {
-          const url = window.URL.createObjectURL(new Blob([res]));
-          const link = document.createElement("a");
-          link.href = url;
-
-          // get date dd/MM/yyyy
-          const today = new Date();
-          const yyyy = today.getFullYear();
-          let mm: any = today.getMonth() + 1; // Months start at 0!
-          let dd: any = today.getDate();
-
-          if (dd < 10) dd = "0" + dd;
-          if (mm < 10) mm = "0" + mm;
-
-          const formattedToday = dd + "/" + mm + "/" + yyyy;
-          link.setAttribute("download", `su_kien(${formattedToday}).docx`);
-
-          document.body.appendChild(link);
-          link.click();
+          downloadFileWord(new Blob([res]));
         },
       },
     );

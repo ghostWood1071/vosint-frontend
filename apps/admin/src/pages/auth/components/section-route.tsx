@@ -1,6 +1,6 @@
 import { LOCAL_USER_PROFILE } from "@/constants/config";
+import { IUserProfile } from "@/models/auth.type";
 import { dashboardPathWithRole } from "@/pages/router";
-import { IUserProfile } from "@/services/auth.type";
 import { Result } from "antd";
 import { Link } from "react-router-dom";
 import { useLocalStorage } from "react-use";

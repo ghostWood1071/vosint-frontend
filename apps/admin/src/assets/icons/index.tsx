@@ -1,4 +1,5 @@
 import { AiOutlineFileWord, AiOutlinePlus, AiOutlineSave } from "react-icons/ai";
+import { BiMessageSquareAdd } from "react-icons/bi";
 import {
   MdDragIndicator,
   MdFormatAlignCenter,
@@ -7,64 +8,108 @@ import {
   MdFormatBold,
   MdFormatItalic,
   MdFormatUnderlined,
+  MdLabelImportantOutline,
+  MdOutlineEventNote,
 } from "react-icons/md";
+import { RiDeleteBack2Line } from "react-icons/ri";
 
-export const OutlinePlusIcon = () => (
+const CreateIcon = () => (
+  <span className="anticon">
+    <BiMessageSquareAdd />
+  </span>
+);
+
+const RemoveNewsIcon = () => (
+  <span className="anticon">
+    <RiDeleteBack2Line />
+  </span>
+);
+
+const OutlineEventIcon = () => (
+  <span className="anticon">
+    <MdOutlineEventNote />
+  </span>
+);
+
+const ImportantIcon = () => (
+  <span className="anticon">
+    <MdLabelImportantOutline />
+  </span>
+);
+
+const OutlinePlusIcon = () => (
   <span className="anticon">
     <AiOutlinePlus />
   </span>
 );
 
-export const DragIndicator = () => (
+const DragIndicator = () => (
   <span className="anticon">
     <MdDragIndicator />
   </span>
 );
 
-export const FormatBoldIcon = () => (
+const FormatBoldIcon = () => (
   <span className="anticon">
     <MdFormatBold />
   </span>
 );
 
-export const FormatItalicIcon = () => (
+const FormatItalicIcon = () => (
   <span className="anticon">
     <MdFormatItalic />
   </span>
 );
 
-export const FormatUnderlinedIcon = () => (
+const FormatUnderlinedIcon = () => (
   <span className="anticon">
     <MdFormatUnderlined />
   </span>
 );
 
-export const FormatAlignCenterIcon = () => (
+const FormatAlignCenterIcon = () => (
   <span className="anticon">
     <MdFormatAlignCenter />
   </span>
 );
 
-export const FormatAlignLeftIcon = () => (
+const FormatAlignLeftIcon = () => (
   <span className="anticon">
     <MdFormatAlignLeft />
   </span>
 );
 
-export const FormatAlignRightIcon = () => (
+const FormatAlignRightIcon = () => (
   <span className="anticon">
     <MdFormatAlignRight />
   </span>
 );
 
-export const OutlineSaveIcon = () => (
+const OutlineSaveIcon = () => (
   <span className="anticon">
     <AiOutlineSave />
   </span>
 );
 
-export const OutlineFileWordIcon = () => (
+const OutlineFileWordIcon = () => (
   <span className="anticon">
     <AiOutlineFileWord />
   </span>
 );
+
+export {
+  OutlineEventIcon,
+  ImportantIcon,
+  OutlinePlusIcon,
+  DragIndicator,
+  FormatBoldIcon,
+  FormatItalicIcon,
+  FormatUnderlinedIcon,
+  FormatAlignCenterIcon,
+  FormatAlignLeftIcon,
+  FormatAlignRightIcon,
+  OutlineSaveIcon,
+  OutlineFileWordIcon,
+  CreateIcon,
+  RemoveNewsIcon,
+};

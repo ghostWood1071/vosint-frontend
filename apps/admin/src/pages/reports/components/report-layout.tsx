@@ -231,7 +231,13 @@ const Sidebar = () => {
     <>
       <Col className={styles.listReport}>
         <Row>
-          <Menu mode="inline" items={items} selectedKeys={[pathname]} onClick={handleClickMenu} />
+          <Menu
+            mode="inline"
+            items={items}
+            selectedKeys={[pathname]}
+            onClick={handleClickMenu}
+            className={styles.menuStyle}
+          />
         </Row>
         <div className={styles.report_periodic}>
           {showComponent && linhVucTree && (

@@ -1,4 +1,4 @@
-import { getKeywords } from "@/common/Functions";
+import { getKeywords } from "@/common/_helper";
 import { useEventContext } from "@/components/editor/plugins/event-plugin/event-context";
 import { useGetMe } from "@/pages/auth/auth.loader";
 import NewsEventSummaryModal from "@/pages/news/components/news-event-summary-modal";
@@ -19,6 +19,7 @@ import { createEditor } from "lexical";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 
 import { useMutationSystemEvents } from "../event.loader";
+import "./event-detail.less";
 import EventKeyword from "./event-keywords";
 import styles from "./system-event-item.module.less";
 
@@ -127,15 +128,18 @@ export const SystemEventItem: React.FC<Props> = ({
             }}
             className={styles.scrollContainer}
           >
-            <button className={styles.hideDetailButton} onClick={() => setTypeShow(!typeShow)}>
+            <button
+              className={`${styles.hideDetailButton} btn__close`}
+              onClick={() => setTypeShow(!typeShow)}
+            >
               <CloseOutlined title="Đóng chi tiết sự kiện" className={styles.closeIcon} />
             </button>
           </div>
-          <div className={styles.detailContainer}>
+          <div className={`${styles.detailContainer} news__detail`}>
             <div className={styles.detailHeader}>
-              <div className={styles.title}>{item.event_name}</div>
+              <div className={`${styles.title} news__title`}>{item.event_name}</div>
 
-              <div className={styles.comtainer3}>
+              <div className={`${styles.comtainer3} news__datetime`}>
                 <div className={styles.leftContainer3}>
                   <div className={styles.time}>{convertTimeToShowInUI(item.date_created)}</div>
                 </div>
@@ -199,7 +203,7 @@ export const SystemEventItem: React.FC<Props> = ({
                   </div>
                 ) : null}
               </div>
-              <div className={styles.container2}>
+              <div className={`${styles.container2} news__keywords`}>
                 {/* {keywords
                   ? keywords.map((item: any, index: any) => {
                       return (
@@ -212,7 +216,10 @@ export const SystemEventItem: React.FC<Props> = ({
                 <EventKeyword item={item} />
               </div>
 
-              <div className={styles.detailContent} onClick={(event) => event.stopPropagation()}>
+              <div
+                className={`${styles.detailContent} news__content`}
+                onClick={(event) => event.stopPropagation()}
+              >
                 {item?.event_content?.split(".").map((e: string) => {
                   if (e === "") {
                     return null;

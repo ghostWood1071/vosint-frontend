@@ -1,7 +1,7 @@
+import { IEventDTO } from "@/models/event.type";
 import { useGetReportEvents } from "@/pages/reports/report.loader";
 import { CACHE_KEYS, useRemoveEventIdsToReport } from "@/pages/reports/report.loader";
-import { IEventDto } from "@/services/report-type";
-import { getEvent } from "@/services/report.service";
+import { getEvent } from "@/services/event.service";
 import { DeleteOutlined } from "@ant-design/icons";
 import { BlockWithAlignableContents } from "@lexical/react/LexicalBlockWithAlignableContents";
 import { Button, Col, Collapse, List, Row, Spin, Typography } from "antd";
@@ -33,7 +33,7 @@ export function EventsComponent({ className, eventsId, format, nodeKey }: Events
   const results = useQueries(
     (data?.event_ids ?? []).map((id) => ({
       queryKey: ["event", id],
-      queryFn: () => getEvent(id) as Promise<IEventDto>,
+      queryFn: () => getEvent(id) as Promise<IEventDTO>,
     })) ?? [],
   );
   const {

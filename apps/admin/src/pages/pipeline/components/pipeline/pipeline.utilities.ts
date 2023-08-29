@@ -1,4 +1,4 @@
-import { IActionInfos } from "@/services/pipeline.type";
+import { IActionInfos } from "@/models/pipeline.type";
 import { UniqueIdentifier } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
 import { nanoid } from "nanoid";

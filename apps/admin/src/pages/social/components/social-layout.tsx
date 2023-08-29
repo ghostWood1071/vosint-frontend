@@ -11,6 +11,8 @@ import { Menu, MenuProps } from "antd";
 import React from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 
+import styles from "./social-filter.module.less";
+
 export const SocialLayout: React.FC = () => {
   return (
     <NewsFilterProvider>
@@ -36,5 +38,13 @@ const Sidebar = () => {
     navigate(key);
   }
 
-  return <Menu mode="inline" items={items} selectedKeys={[pathname]} onClick={handleClickMenu} />;
+  return (
+    <Menu
+      mode="inline"
+      items={items}
+      selectedKeys={[pathname]}
+      onClick={handleClickMenu}
+      className={styles.menuStyle}
+    />
+  );
 };

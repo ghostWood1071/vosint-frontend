@@ -1,8 +1,7 @@
 import { UniqueIdentifier } from "@dnd-kit/core";
-
 import { TNews } from "./news.type";
 
-export type IPipelines = {
+type IPipelines = {
   _id: string;
   actived: boolean;
   created_at: string;
@@ -11,7 +10,7 @@ export type IPipelines = {
   name: string;
 };
 
-export type IPipeline = {
+type IPipeline = {
   _id: string;
   actived: boolean;
   created_at: string;
@@ -23,7 +22,7 @@ export type IPipeline = {
   schema: IPipelineSchema[];
 };
 
-export type IPipelineSchema = {
+type IPipelineSchema = {
   id: UniqueIdentifier;
   name: string;
   params:
@@ -33,7 +32,7 @@ export type IPipelineSchema = {
       };
 };
 
-export type IActionInfos = {
+type IActionInfos = {
   action_type: string;
   display_name: string;
   is_ctrl_flow: boolean;
@@ -44,7 +43,7 @@ export type IActionInfos = {
   id: UniqueIdentifier;
 };
 
-export interface IActionParamInfo {
+interface IActionParamInfo {
   default_val: any;
   display_name: string;
   name: string;
@@ -54,16 +53,16 @@ export interface IActionParamInfo {
   options?: string[];
 }
 
-export interface IPipelineRunJob {
+interface IPipelineRunJob {
   _id: string;
   activated: boolean;
 }
 
-export interface IPipelineRunAllJob {
+interface IPipelineRunAllJob {
   status: "start" | "stop";
 }
 
-export interface ILogHistory {
+interface ILogHistory {
   actione: string;
   log: string;
   link: string;
@@ -73,7 +72,19 @@ export interface ILogHistory {
   modified_at: string;
 }
 
-export interface IPipelineVerify {
+interface IPipelineVerify {
   success: boolean;
   result: TNews | string;
+}
+
+export type {
+  IPipelines,
+  IPipeline,
+  IPipelineSchema,
+  IActionInfos,
+  IActionParamInfo,
+  IPipelineRunJob,
+  IPipelineRunAllJob,
+  ILogHistory,
+  IPipelineVerify,
 }

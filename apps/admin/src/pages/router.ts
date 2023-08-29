@@ -1,5 +1,3 @@
-import { ETreeTag } from "@/components/news/news-state";
-
 export const homePath = "/";
 
 export const authLoginPath = "/login";
@@ -18,6 +16,7 @@ export const newsTTXVNPath = "/news-ttxvn";
 // export const getNewsDetailUrl = (id: string | number, tag?: ETreeTag) => `/news/${id}/${tag ?? ""}`;
 export const getNewsDetailUrl = (id: any, tag?: any) => `/news/${id}/${tag ?? ""}`;
 export const getEventDetailUrl = (id: any, tag?: any) => `/event/${id}/${tag ?? ""}`;
+// export const eventListPath = "/event-list";
 
 export const organizationPath = "/organization";
 export const organizationDetailPath = "/organization/:id";

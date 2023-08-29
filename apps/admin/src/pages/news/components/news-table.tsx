@@ -1,7 +1,7 @@
 // import { DownNewsIcon, UpNewsIcon } from "@/assets/svg";
 import ImportantButton from "@/components/important-button/important-button";
 import { ETreeTag, useNewsSelection } from "@/components/news/news-state";
-import { TNews } from "@/services/news.type";
+import { TNews } from "@/models/news.type";
 import {
   BellTwoTone,
   ExclamationCircleOutlined,

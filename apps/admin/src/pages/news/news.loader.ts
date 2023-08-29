@@ -1,40 +1,51 @@
 import { ETreeAction, ETreeTag, MTreeAction, MTreeTag } from "@/components/news/news-state";
+import { INewsSummaryDTO, TNewsSummary } from "@/models/news.type";
+import { NewsletterDTO } from "@/models/newsletter.type";
+import { ISummary, ISummaryDTO } from "@/models/summary.type";
 import {
   AddManyEventToNews,
-  SetNotSeenPost,
-  SetSeenPost,
-  addNewsIdsToBookmarkUser,
-  addNewsIdsToNewsletter,
-  addNewsIdsToVitalUser,
-  addNewsletter,
   createEventNews,
   deleteEventNews,
-  deleteMultipleNewsletter,
-  deleteNewsIdInNewsletter,
-  deleteNewsInBookmarkUser,
-  deleteNewsInVitalUser,
-  deleteNewsletter,
-  exportNews,
   generateSystemEventNews,
   getAllEventNews,
   getEventByIdNews,
+  updateEventNews,
+} from "@/services/event.service";
+import {
   getEventsByNewsletterWithApiJob,
   getNewsBookmarksWithApiJob,
   getNewsByNewsletterWithApiJob,
-  getNewsDetail,
   getNewsFormElt,
   getNewsFromTTXVN,
   getNewsListWithApiJob,
-  getNewsSidebar,
-  getNewsSummary,
   getNewsViaSourceAndApiJob,
   getNewsVitalsWithApiJob,
-  getNewsletterDetail,
-  switchNewsAndEvents,
-  updateEventNews,
-  updateNewsletter,
+} from "@/services/job.service";
+import {
+  SetNotSeenPost,
+  SetSeenPost,
+  addNewsToCategory,
+  deleteNewsFromCategory,
+  exportNews,
+  getNewsDetail,
 } from "@/services/news.service";
-import { INewsSummaryDto, NewsletterDto, TNewsSummary } from "@/services/news.type";
+import {
+  addNewsIdsToNewsletter,
+  addNewsletter,
+  deleteMultipleNewsletter,
+  deleteNewsIdInNewsletter,
+  deleteNewsletter,
+  getNewsSidebar,
+  getNewsletterDetail,
+  updateNewsletter,
+} from "@/services/newsletter.service";
+import { getSummary } from "@/services/summary.service";
+import {
+  addNewsIdsToBookmarkUser,
+  addNewsIdsToVitalUser,
+  deleteNewsInBookmarkUser,
+  deleteNewsInVitalUser,
+} from "@/services/user.service";
 import { message } from "antd";
 import {
   UseMutationOptions,
@@ -55,7 +66,7 @@ export const CACHE_KEYS = {
   Summary: "SUMMARY",
   NewsEvent: "NEWS_EVENT",
   NewsTTXVN: "NEWS_TTXVN",
-  SWITCH: "SWITCH"
+  SWITCH: "SWITCH",
 };
 
 export const useNewsSidebar = (title?: string) => {
@@ -95,11 +106,11 @@ export const useEventsByIdNewsList = (filter: any) => {
 
 export const useMutationSwitch = () => {
   const queryClient = useQueryClient();
-  
-  return useMutation((newsLetterId?: any) => switchNewsAndEvents(newsLetterId),{
+
+  return useMutation((newsLetterId?: any) => switchNewsAndEvents(newsLetterId), {
     onSuccess: () => {
       queryClient.invalidateQueries(CACHE_KEYS.SWITCH);
-      
+
       message.success({
         content: "Chuyển đổi thành công!",
         key: CACHE_KEYS.SWITCH,
@@ -111,13 +122,12 @@ export const useMutationSwitch = () => {
         key: CACHE_KEYS.SWITCH,
       });
     },
-  }, 
-  )
-}
+  });
+};
 
 export const useMutationNewsSidebar = () => {
   const queryClient = useQueryClient();
-  return useMutation<any, any, NewsletterDto>(
+  return useMutation<any, any, NewsletterDTO>(
     ({ action, _id, newsletter_ids, ...data }: any) => {
       if (action === ETreeAction.DELETE) {
         return deleteMultipleNewsletter({ newsletter_ids });
@@ -222,13 +232,9 @@ export const useDeleteNewsInNewsletter = () => {
 };
 
 export const useGetNewsSummaryLazy = (
-  options?: UseMutationOptions<TNewsSummary, unknown, INewsSummaryDto>,
+  options?: UseMutationOptions<ISummary, unknown, ISummaryDTO>,
 ) => {
-  return useMutation(
-    [CACHE_KEYS.Summary],
-    (data: INewsSummaryDto) => getNewsSummary(data),
-    options,
-  );
+  return useMutation([CACHE_KEYS.Summary], (data: ISummaryDTO) => getSummary(data), options);
 };
 
 export const useInfiniteNewsList = (filter: any) => {
@@ -241,12 +247,11 @@ export const useInfiniteNewsList = (filter: any) => {
   );
 };
 
-
 export const useMutationExportNews = () => {
   const queryClient = useQueryClient();
   return useMutation(
     ({ data }: any) => {
-        return exportNews(data);
+      return exportNews(data);
     },
     {
       onSuccess: (data: any, variables) => {
@@ -327,6 +332,31 @@ export const useInfiniteNewsByNewsletter = (id: string, filter: any, tag: string
         : { page_number: 1, page_size: 50, ...filter },
     );
   });
+};
+
+export const useMutationNewsToCategory = () => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    ({ action, data }: any) => {
+      if (action === "add") return addNewsToCategory(data);
+      else return deleteNewsFromCategory(data);
+    },
+    {
+      onSuccess: (data: any, variables) => {
+        queryClient.invalidateQueries([CACHE_KEYS.NewsList]);
+        message.success({
+          content: variables.action === "add" ? "Thêm" : "Xoá" + " thành công",
+          key: CACHE_KEYS.NewsList,
+        });
+      },
+      onError: (err: any, variables) => {
+        message.success({
+          content: variables.action === "add" ? "Thêm" : "Xoá" + "không thành công",
+          key: CACHE_KEYS.NewsList,
+        });
+      },
+    },
+  );
 };
 
 export const useMutationEventNews = () => {
@@ -456,3 +486,6 @@ export const useGetNewsFromTTXVN = (filter: Record<string, any>) => {
     });
   });
 };
+function switchNewsAndEvents(newsLetterId: any): Promise<unknown> {
+  throw new Error("Function not implemented.");
+}

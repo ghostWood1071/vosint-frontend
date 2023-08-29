@@ -3,7 +3,7 @@ import {
   deleteGroupSource,
   getGroupSource,
   updateGroupSource,
-} from "@/services/group-source.service";
+} from "@/services/source-group.service";
 import { message } from "antd";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 

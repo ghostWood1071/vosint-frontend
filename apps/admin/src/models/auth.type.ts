@@ -1,10 +1,10 @@
-export interface IChangePasswordDto {
+interface IChangePasswordDTO {
   username: string;
   password: string;
   new_password: string;
 }
 
-export interface IUserProfile {
+interface IUserProfile {
   role: string;
   username: string;
   full_name: string;
@@ -13,3 +13,5 @@ export interface IUserProfile {
   vital_list: string[];
   interested_list: string[];
 }
+
+export type { IChangePasswordDTO, IUserProfile}

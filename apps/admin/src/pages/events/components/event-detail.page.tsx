@@ -1,3 +1,4 @@
+import { OutlineEventIcon } from "@/assets/icons";
 import { useSidebar } from "@/pages/app/app.store";
 import { QuickReportModal } from "@/pages/news/components/quick-report-modal";
 import { useQuickReportModalState } from "@/pages/news/components/quick-report-modal/index.state";
@@ -13,7 +14,7 @@ import { useInView } from "react-intersection-observer";
 import { useQueryClient } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { EVENT_CACHE_KEYS, useInfiniteEventFormElt, useInfiniteEventsList } from "../event.loader";
+import { EVENT_CACHE_KEYS, useInfiniteEventFormElt } from "../event.loader";
 import styles from "../event.module.less";
 import EventSummaryModal from "./event-summary-modal";
 import { SystemEventItem } from "./system-event-item";
@@ -39,20 +40,19 @@ export const EventDetailPage: React.FC<Props> = () => {
 
   const { data, isFetchingNextPage, fetchNextPage, hasNextPage } = useInfiniteEventFormElt(
     detailIds!,
-    filterEvent,
+    newsFilter,
     tag ?? "",
   );
-
   const setQuickEvent = useQuickReportModalState((state) => state.setEvent);
   // const dataSource = unionBy(flatMap(data?.pages.map((a) => a?.data?.map((e: any) => e))), "_id");
   const dataSource = unionBy(flatMap(data?.pages.map((a) => a?.result?.map((e: any) => e))), "_id");
 
-  let listEvent: any = [];
-  if (dataSource[0]) {
-    for (const [key, value] of Object.entries(dataSource[0])) {
-      listEvent = [value, ...listEvent];
-    }
-  }
+  // let listEvent: any = [];
+  // if (dataSource[0]) {
+  //   for (const [key, value] of Object.entries(dataSource[0])) {
+  //     listEvent = [value, ...listEvent];
+  //   }
+  // }
   useEffect(() => {
     if (inView && skip * 50 <= data?.pages[0].total) {
       fetchNextPage({ pageParam: { skip: skip + 1, limit: 50 } });
@@ -91,24 +91,24 @@ export const EventDetailPage: React.FC<Props> = () => {
           </Button>
           <Button
             className={styles.item}
-            icon={<ReloadOutlined />}
+            icon={<OutlineEventIcon />}
             onClick={() => {
               // setStatus(!status);
               // handleConvert(status);
               navigate(getNewsDetailUrl(detailIds, tag));
             }}
-            title={status ? "Hiển thị dòng sự kiện" : "Hiển thị danh sách tin"}
+            title={"Hiển thị danh sách tin"}
           />
         </Space>
       </div>
       <div className={styles.body}>
         <div className={styles.recordsContainer}>
           {/* {data?.pages[0].tree && dataSource[0][data?.pages[0].tree][0] !== undefined ? ( */}
-          {listEvent[0] && listEvent[0].length > 0 ? (
+          {dataSource && dataSource.length > 0 ? (
             <List
               itemLayout="vertical"
               size="small"
-              dataSource={listEvent[0]}
+              dataSource={dataSource}
               renderItem={(item) => {
                 return (
                   <SystemEventItem

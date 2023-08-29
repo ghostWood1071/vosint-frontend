@@ -16,7 +16,7 @@ export function NewsSummaryModal(): JSX.Element {
 
   const { mutate, isLoading } = useGetNewsSummaryLazy({
     onSuccess: (data) => {
-      setDataSumms(data);
+      setDataSumms(Object.values(data)[0]);
     },
   });
 
@@ -73,7 +73,7 @@ export function NewsSummaryModal(): JSX.Element {
     setOpen(true);
     mutate({
       k: value + "",
-      description: "",
+      lang: "",
       paras: newsSelection.map((n) => n?.["data:content"] ?? "").join("\n"),
       title: newsSelection.map((n) => n["data:title"] ?? "").join("\n"),
     });
@@ -83,7 +83,7 @@ export function NewsSummaryModal(): JSX.Element {
     setOpen(true);
     mutate({
       k: "0.2",
-      description: "",
+      lang: "",
       paras: newsSelection.map((n) => n?.["data:content"] ?? "").join("\n"),
       title: newsSelection.map((n) => n?.["data:title"] ?? "").join("\n"),
     });

@@ -1,10 +1,10 @@
-import { useNewsCountryToday } from "@/services/dashboard.loader";
 import { Col, Row } from "antd";
 import dayjs from "dayjs";
 import React from "react";
 
 import { ColumnTopChart } from "../components/column-top-chart/column-top-chart";
 import { HotNews } from "../components/hot-news/hot-news";
+import { useNewsCountryToday } from "../dashboard.loader";
 import { CircleBottomChart } from "./component/circle-bottom-chart/circle-bottom-chart";
 import { ColumnBottomChart } from "./component/column-bottom-chart/column-bottom-chart";
 import { SuperviseUser } from "./component/supervise-user/supervise-user";

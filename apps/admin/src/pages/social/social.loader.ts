@@ -1,9 +1,9 @@
+import { getSocialPage } from "@/services/job.service";
 import {
   addPriorityObject,
   deletePriorityObject,
-  gePriorityObject,
-  getSocialPage, //   updatePriorityObject,
-} from "@/services/social.service";
+  gePriorityObject, //   updatePriorityObject,
+} from "@/services/user.service";
 import { message } from "antd";
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "react-query";
 

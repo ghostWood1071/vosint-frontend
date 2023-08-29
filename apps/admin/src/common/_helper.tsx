@@ -34,4 +34,25 @@ const getEventByNews = (listId: any) => {
   return events;
 };
 
-export { getKeywords, getNewsList, getEventByNews };
+const downloadFileWord = (file: any) => {
+  // const url = window.URL.createObjectURL(new Blob([res]));
+  const url = window.URL.createObjectURL(file);
+  const link = document.createElement("a");
+  link.href = url;
+
+  // get date dd/MM/yyyy
+  const today = new Date();
+  const yyyy = today.getFullYear();
+  let mm: any = today.getMonth() + 1; // Months start at 0!
+  let dd: any = today.getDate();
+
+  if (dd < 10) dd = "0" + dd;
+  if (mm < 10) mm = "0" + mm;
+
+  const formattedToday = dd + "/" + mm + "/" + yyyy;
+  link.setAttribute("download", `tin_tuc(${formattedToday}).docx`);
+  document.body.appendChild(link);
+  link.click();
+};
+
+export { getKeywords, getNewsList, getEventByNews, downloadFileWord };

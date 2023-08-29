@@ -1,4 +1,4 @@
-import { IActionInfos, IPipelineSchema } from "@/services/pipeline.type";
+import { IActionInfos, IPipelineSchema } from "@/models/pipeline.type";
 import {
   DndContext,
   DragEndEvent,

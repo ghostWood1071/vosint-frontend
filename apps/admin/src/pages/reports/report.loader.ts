@@ -1,17 +1,22 @@
+import { IEventDTO, TEvent, TEvents } from "@/models/event.type";
 import {
-  IEventDto,
-  IQuickReportDto,
-  IReportDto,
-  TEvent,
-  TEvents,
+  IQuickReportDTO,
+  IReportDTO,
   TQuickReport,
   TReport,
-  TReportEventsDto,
+  TReportEventsDTO,
   TReports,
-} from "@/services/report-type";
+  UpdateReportAndEventType,
+} from "@/models/report.type";
+import {
+  createEvent,
+  getEvent,
+  getEvents,
+  removeNewsInEvent,
+  updateEvent,
+} from "@/services/event.service";
 import {
   UpdateReportAndEvent,
-  UpdateReportAndEventType,
   addEventIdsToReport,
   createQuickReport,
   createReport,
@@ -19,17 +24,10 @@ import {
   getQuickReports,
   getReport,
   getReportEvents,
+  getReports,
   removeEventIdsToReport,
   removeReport,
   updateReport,
-} from "@/services/report.service";
-import {
-  createEvent,
-  getEvent,
-  getEvents,
-  getReports,
-  removeNewsInEvent,
-  updateEvent,
 } from "@/services/report.service";
 import {
   UseMutationOptions,
@@ -56,8 +54,8 @@ export const useEvents = (filter: Record<string, any>, options?: UseQueryOptions
   return useQuery<TEvents>([CACHE_KEYS.EVENTS, filter], () => getEvents(filter), options);
 };
 
-export const useCreateEvent = (options?: UseMutationOptions<string, unknown, IEventDto>) => {
-  return useMutation((data: IEventDto) => createEvent(data), options);
+export const useCreateEvent = (options?: UseMutationOptions<string, unknown, IEventDTO>) => {
+  return useMutation((data: IEventDTO) => createEvent(data), options);
 };
 
 export const useUpdateEvent = (
@@ -65,18 +63,18 @@ export const useUpdateEvent = (
   options?: UseMutationOptions<
     string,
     unknown,
-    IEventDto,
-    { previousData?: IEventDto; newData?: IEventDto }
+    IEventDTO,
+    { previousData?: IEventDTO; newData?: IEventDTO }
   >,
 ) => {
   const queryClient = useQueryClient();
 
-  return useMutation<string, unknown, IEventDto, { previousData?: IEventDto; newData?: IEventDto }>(
-    (data: IEventDto) => updateEvent(id, data),
+  return useMutation<string, unknown, IEventDTO, { previousData?: IEventDTO; newData?: IEventDTO }>(
+    (data: IEventDTO) => updateEvent(id, data),
     {
       onMutate: async (newData) => {
         await queryClient.cancelQueries({ queryKey: [CACHE_KEYS.EVENT, id] });
-        const previousData = queryClient.getQueryData<IEventDto>([CACHE_KEYS.EVENT, id]);
+        const previousData = queryClient.getQueryData<IEventDTO>([CACHE_KEYS.EVENT, id]);
 
         queryClient.setQueryData([CACHE_KEYS.EVENT, id], newData);
         return { previousData, newData };
@@ -100,15 +98,15 @@ export const useRemoveNewsInEvent = (
     string[],
     unknown,
     string[],
-    { previousData?: IEventDto; newData?: IEventDto }
+    { previousData?: IEventDTO; newData?: IEventDTO }
   >,
 ) => {
   const queryClient = useQueryClient();
   return useMutation((data) => removeNewsInEvent(id, data), {
     onMutate: async (removedNews) => {
       await queryClient.cancelQueries({ queryKey: [CACHE_KEYS.EVENT, id] });
-      const previousData = queryClient.getQueryData<IEventDto>([CACHE_KEYS.EVENT, id]);
-      queryClient.setQueriesData<IEventDto | undefined>([CACHE_KEYS.EVENT, id], (oldData) => {
+      const previousData = queryClient.getQueryData<IEventDTO>([CACHE_KEYS.EVENT, id]);
+      queryClient.setQueriesData<IEventDTO | undefined>([CACHE_KEYS.EVENT, id], (oldData) => {
         if (!oldData) return oldData;
         if (oldData.new_list) {
           oldData.new_list = oldData.new_list.filter((item) => !removedNews.includes(item._id));
@@ -151,14 +149,14 @@ export const useQuickReport = (
   );
 };
 
-export const useCreateReport = (options?: UseMutationOptions<string, unknown, IReportDto>) => {
-  return useMutation((data: IReportDto) => createReport(data), options);
+export const useCreateReport = (options?: UseMutationOptions<string, unknown, IReportDTO>) => {
+  return useMutation((data: IReportDTO) => createReport(data), options);
 };
 
 export const useCreateQuickReport = (
-  options?: UseMutationOptions<string, unknown, IQuickReportDto>,
+  options?: UseMutationOptions<string, unknown, IQuickReportDTO>,
 ) => {
-  return useMutation((data: IQuickReportDto) => createQuickReport(data), options);
+  return useMutation((data: IQuickReportDTO) => createQuickReport(data), options);
 };
 
 export const useUpdateReport = (
@@ -166,11 +164,11 @@ export const useUpdateReport = (
   options?: UseMutationOptions<
     string,
     unknown,
-    IReportDto | IQuickReportDto,
-    { previousData?: IReportDto; newData?: IReportDto }
+    IReportDTO | IQuickReportDTO,
+    { previousData?: IReportDTO; newData?: IReportDTO }
   >,
 ) => {
-  return useMutation((data: IReportDto) => updateReport(id, data), options);
+  return useMutation((data: IReportDTO) => updateReport(id, data), options);
 };
 
 export const useUpdateReportAndEvent = () => {
@@ -179,9 +177,9 @@ export const useUpdateReportAndEvent = () => {
 
 export const useGetReportEvents = (
   id: string,
-  options?: UseQueryOptions<TReportEventsDto, unknown>,
+  options?: UseQueryOptions<TReportEventsDTO, unknown>,
 ) => {
-  return useQuery<TReportEventsDto>(
+  return useQuery<TReportEventsDTO>(
     [CACHE_KEYS.REPORT_EVENT, id],
     () => getReportEvents(id),
     options,
@@ -189,9 +187,9 @@ export const useGetReportEvents = (
 };
 
 export const useCreateReportEvents = (
-  options?: UseMutationOptions<string, unknown, TReportEventsDto>,
+  options?: UseMutationOptions<string, unknown, TReportEventsDTO>,
 ) => {
-  return useMutation((data: TReportEventsDto) => createReportEvents(data), options);
+  return useMutation((data: TReportEventsDTO) => createReportEvents(data), options);
 };
 
 export const useAddEventIdsToReport = (

@@ -1,5 +1,5 @@
+import { TNews } from "@/models/news.type";
 import { CACHE_KEYS, useNewsList } from "@/pages/news/news.loader";
-import { TNews } from "@/services/news.type";
 import { DeleteOutlined, MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import {
   Button,

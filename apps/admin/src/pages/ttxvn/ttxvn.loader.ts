@@ -1,9 +1,8 @@
 import {
   getAccountTTXVNConfig,
-  getTTXVNNews,
-  handleCrawlNews,
   updateAccountTTXVNConfig,
-} from "@/services/ttxvn.service";
+} from "@/services/account-ttxvn-config.service";
+import { getTTXVNNews, handleCrawlNews } from "@/services/job.service";
 import { message } from "antd";
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "react-query";
 

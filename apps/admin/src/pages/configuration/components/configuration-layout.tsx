@@ -21,6 +21,8 @@ import { Menu, MenuProps, Modal } from "antd";
 import React from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 
+import styles from "./cate-config/body-cate.module.less";
+
 export const ConfigurationLayout: React.FC = () => {
   return (
     <AppContainer sidebar={<Sidebar />}>
@@ -71,7 +73,15 @@ const Sidebar = () => {
     { label: "QUẢN LÝ NGƯỜI DÙNG", key: userManagementPath },
   ];
 
-  return <Menu mode="inline" items={items} selectedKeys={[pathname]} onClick={handleClickMenu} />;
+  return (
+    <Menu
+      mode="inline"
+      items={items}
+      selectedKeys={[pathname]}
+      onClick={handleClickMenu}
+      className={styles.menuStyle}
+    />
+  );
 
   function handleClickMenu({ key }: { key: string }) {
     navigate(key);

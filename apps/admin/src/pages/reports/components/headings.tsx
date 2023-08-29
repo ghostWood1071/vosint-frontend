@@ -1,8 +1,8 @@
 import { EventEditorParagraph } from "@/components/editor/plugins/event-plugin/event-dialog";
 import { filterIsBetween } from "@/components/editor/plugins/events-plugin/events-components";
 import { useEventsState } from "@/components/editor/plugins/events-plugin/events-state";
-import { IEventDto } from "@/services/report-type";
-import { getEvent } from "@/services/report.service";
+import { IEventDTO } from "@/models/event.type";
+import { getEvent } from "@/services/event.service";
 import { DeleteOutlined } from "@ant-design/icons";
 import { Alert, Button, Col, Collapse, List, Row, Spin, Typography } from "antd";
 import { AxiosError } from "axios";
@@ -68,7 +68,7 @@ function Events({ eventIds, headingId, onDeleteEvent }: EventsProps): JSX.Elemen
   const events = useQueries(
     eventIds.map((id) => ({
       queryKey: ["event", id],
-      queryFn: () => getEvent(id) as Promise<IEventDto>,
+      queryFn: () => getEvent(id) as Promise<IEventDTO>,
       retry: function (failureCount: number, error: unknown) {
         if ((error as AxiosError)?.response?.status === 404) return false;
         return failureCount < 3;
@@ -78,7 +78,7 @@ function Events({ eventIds, headingId, onDeleteEvent }: EventsProps): JSX.Elemen
 
   return (
     <div className={styles.events}>
-      {events.map((event: UseQueryResult<IEventDto, any>, index) => {
+      {events.map((event: UseQueryResult<IEventDTO, any>, index) => {
         // if (event.isLoading) return <Spin key={index} />;
         // if (event.isError) {
         //   if (event.error as AxiosError) {

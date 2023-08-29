@@ -1,9 +1,16 @@
+import { OutlineEventIcon, OutlineFileWordIcon } from "@/assets/icons";
+import { ReactComponent as UnreadIcon } from "@/assets/svg/envelope-open.svg";
+import { ReactComponent as ReadIcon } from "@/assets/svg/envelope.svg";
 import { ReactComponent as ToggleIcon } from "@/assets/svg/toggles.svg";
+import { downloadFileWord } from "@/common/_helper";
 import { Tree } from "@/components";
 import { ETreeTag, useNewsSelection, useNewsState } from "@/components/news/news-state";
 import { useSidebar } from "@/pages/app/app.store";
+import { useGetMe } from "@/pages/auth/auth.loader";
 import {
   useDeleteNewsInNewsletter,
+  useMutationChangeStatusSeenPost,
+  useMutationExportNews,
   useNewsIdToNewsletter,
   useNewsSidebar,
 } from "@/pages/news/news.loader";
@@ -12,6 +19,7 @@ import { getEventDetailUrl } from "@/pages/router";
 import {
   DeleteOutlined,
   ExclamationCircleOutlined,
+  FileWordOutlined,
   MinusCircleTwoTone,
   PlusCircleTwoTone,
   ReloadOutlined,
@@ -28,6 +36,8 @@ import { NewsSummaryModal } from "./news-summary-modal";
 
 export function NewsFilterV2({ handleConvert }: { handleConvert: any }): JSX.Element {
   let { newsletterId: detailIds, tag } = useParams();
+
+  const { data: dataIAm } = useGetMe();
   const navigate = useNavigate();
   const pinned = useSidebar((state) => state.pinned);
   const [newsSelection, setNewsSelection] = useNewsSelection(
@@ -42,9 +52,38 @@ export function NewsFilterV2({ handleConvert }: { handleConvert: any }): JSX.Ele
   const newsFilter = useNewsFilter();
   const setNewsFilter = useNewsFilterDispatch();
   const { mutateAsync: mutateDelete } = useDeleteNewsInNewsletter();
-
+  const { mutate: mutateChangeStatusSeenPost } = useMutationChangeStatusSeenPost();
+  const { mutate } = useMutationExportNews();
   const [internalTextSearch, setInternalTextSearch] = useState("");
   const [status, setStatus] = useState(true);
+
+  const handleSetSeen = (checkedSeen: boolean, idNews: string) => {
+    if (checkedSeen) {
+      mutateChangeStatusSeenPost({ action: "set-seen", newsId: idNews });
+    } else {
+      mutateChangeStatusSeenPost({ action: "set-unseen", newsId: idNews });
+    }
+  };
+
+  const handleExportWord = () => {
+    const newsArr = newsSelection.map((news) => news._id);
+
+    mutate(
+      { data: newsArr },
+      {
+        onSuccess: (res) => {
+          downloadFileWord(new Blob([res]));
+        },
+      },
+    );
+  };
+
+  // const seen = newsSelection.find((item: any) => item.list_user_read?.length > 0);
+  // const unseen = newsSelection.find(
+  //   (item: any) => item.list_user_read?.length == 0 || !("list_user_read" in item),
+  // );
+  const seen = newsSelection.find((item: any) => item.is_read);
+  const unseen = newsSelection.find((item: any) => !item.is_read);
 
   return (
     <div className={pinned ? styles.filterWithSidebar : styles.filter}>
@@ -55,6 +94,48 @@ export function NewsFilterV2({ handleConvert }: { handleConvert: any }): JSX.Ele
         }}
         style={{ width: "100%", display: "flex", flexDirection: "row", flexWrap: "wrap" }}
       >
+        <div
+          className={styles.iconWrap}
+          onClick={() => {
+            newsSelection.forEach((item) => {
+              handleSetSeen(true, item._id);
+            });
+            // setNewsSelection(newsSelection.map((item) => ({ ...item, list_user_read: [dataIAm] })));
+            setNewsSelection(newsSelection.map((item) => ({ ...item, is_read: true })));
+          }}
+          title="Đánh dấu đã đọc tin"
+        >
+          <Button
+            icon={<UnreadIcon className={styles.unreadIcon} />}
+            disabled={!(!seen && unseen) && !(seen && unseen)}
+            className={styles.iconWrapBtn}
+          />
+        </div>
+
+        <div
+          className={styles.iconWrap + " " + styles.iconWrapLast}
+          onClick={() => {
+            newsSelection.forEach((item) => {
+              handleSetSeen(false, item._id);
+            });
+            // setNewsSelection(newsSelection.map((item) => ({ ...item, list_user_read: [] })));
+            setNewsSelection(newsSelection.map((item) => ({ ...item, is_read: false })));
+          }}
+          title="Đánh dấu chưa đọc tin"
+        >
+          <Button
+            icon={<ReadIcon className={styles.readIcon} />}
+            disabled={!(seen && !unseen) && !(seen && unseen)}
+            className={styles.iconWrapBtn}
+          />
+        </div>
+
+        <Button
+          className={styles.item}
+          icon={<FileWordOutlined />}
+          onClick={handleExportWord}
+          title="Tải file word"
+        />
         <Form.Item className={styles.item} name="datetime">
           <DatePicker.RangePicker format={"DD/MM/YYYY"} />
         </Form.Item>
@@ -107,13 +188,14 @@ export function NewsFilterV2({ handleConvert }: { handleConvert: any }): JSX.Ele
 
         <Button
           className={styles.item}
-          icon={<ReloadOutlined />}
+          // icon={<ReloadOutlined />}
+          icon={<OutlineEventIcon />}
           onClick={() => {
             // setStatus(!status);
             // handleConvert(status);
             navigate(getEventDetailUrl(detailIds, tag));
           }}
-          title={status ? "Hiển thị dòng sự kiện" : "Hiển thị danh sách tin"}
+          title={"Hiển thị dòng sự kiện"}
         />
 
         <div className={styles.input}>

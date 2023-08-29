@@ -1,30 +1,28 @@
+import { ETreeTag } from "@/components/news/news-state";
+import { ISummary, ISummaryDTO } from "@/models/summary.type";
 import {
   cloneSystemEventToUserEvent,
   createEventFromUser,
   deleteEventCreatedByUser,
   exportEvents,
   getAllEventCreatedByUser,
-  getEventSummary,
   updateEventCreatedByUser,
 } from "@/services/event.service";
-import { IEventSummaryDTO, TEventSummary } from "@/services/event.type";
-import { getEventsByNewsletterWithApiJob } from "@/services/news.service";
+import { getEventFormElt, getEventsByNewsletterWithApiJob } from "@/services/job.service";
+import { getSummary } from "@/services/summary.service";
 import { message } from "antd";
 import { UseMutationOptions, useInfiniteQuery, useMutation, useQueryClient } from "react-query";
 
 export const EVENT_CACHE_KEYS = {
   ListEvents: "LIST_EVENT",
+  NewsListEvents: "NEW_LIST_EVENT",
   Summary: "SUMMARY",
 };
 
 export const useGetEventSummaryLazy = (
-  options?: UseMutationOptions<TEventSummary, unknown, IEventSummaryDTO>,
+  options?: UseMutationOptions<ISummary, unknown, ISummaryDTO>,
 ) => {
-  return useMutation(
-    [EVENT_CACHE_KEYS.Summary],
-    (data: IEventSummaryDTO) => getEventSummary(data),
-    options,
-  );
+  return useMutation([EVENT_CACHE_KEYS.Summary], (data: ISummaryDTO) => getSummary(data), options);
 };
 
 export const useInfiniteEventsList = (filter: any) => {
@@ -37,14 +35,45 @@ export const useInfiniteEventsList = (filter: any) => {
   );
 };
 
+// export const useInfiniteEventsByTimeline = (filter: any) => {
+//   return useInfiniteQuery<any>([EVENT_CACHE_KEYS.ListEvents], (data) =>
+//     getEventByTimeline(
+//       data.pageParam !== undefined
+//         ? { ...data.pageParam, ...filter }
+//         : { skip: 1, limit: 50, ...filter },
+//     ),
+//   );
+// };
+
+// export const useInfiniteEventFormElt = (id: string, filter: any, tag: string) => {
+//   return useInfiniteQuery([EVENT_CACHE_KEYS.ListEvents, id], ({ pageParam }) => {
+//     return getEventsByNewsletterWithApiJob({
+//       page_number: pageParam?.page_number || 1,
+//       page_size: pageParam?.page_size || 50,
+//       start_date: filter?.start_date || "01/01/2021",
+//       end_date: filter?.end_date || "24/08/2023",
+//       news_letter_id:
+//         tag === "chu_de" || tag === "linh_vuc" || tag === "gio_tin" || tag === "source_group"
+//           ? id
+//           : "",
+//     });
+//   });
+// };
+
 export const useInfiniteEventFormElt = (id: string, filter: any, tag: string) => {
-  return useInfiniteQuery([EVENT_CACHE_KEYS.ListEvents, id], ({ pageParam }) => {
-    return getEventsByNewsletterWithApiJob({
+  return useInfiniteQuery([EVENT_CACHE_KEYS.NewsListEvents, id], ({ pageParam }) => {
+    return getEventFormElt({
       page_number: pageParam?.page_number || 1,
       page_size: pageParam?.page_size || 50,
-      start_date: filter?.start_date || "01/01/2021",
-      end_date: filter?.end_date || "24/08/2023",
-      news_letter_id: tag === "chu_de" || tag === "linh_vuc" || tag === "gio_tin" || tag === "source_group" ? id : "",
+      groupType: id === ETreeTag.QUAN_TRONG ? "vital" : id === ETreeTag.DANH_DAU ? "bookmarks" : "",
+      search_Query: filter.text_search,
+      startDate: filter.startDate,
+      endDate: filter.endDate,
+      langs: filter?.langs ? filter.langs.join(",") : "",
+      sentiment: filter?.sentiment,
+      id_nguon_nhom_nguon: tag === "source" || tag === "source_group" ? id : "",
+      type: tag === "source" || tag === "source_group" ? tag : "",
+      newsletter_id: tag === "chu_de" || tag === "linh_vuc" || tag === "gio_tin" ? id : "",
     });
   });
 };
@@ -53,7 +82,7 @@ export const useMutationExportEvents = () => {
   const queryClient = useQueryClient();
   return useMutation(
     ({ data }: any) => {
-        return exportEvents(data);
+      return exportEvents(data);
     },
     {
       onSuccess: (data: any, variables) => {
@@ -98,12 +127,13 @@ export const useMutationEvents = () => {
         queryClient.invalidateQueries([EVENT_CACHE_KEYS.ListEvents]);
         message.success({
           content:
-          (variables.action == "export") ? "Xuất file thành công" : 
-            ((variables.action === "update"
-              ? "Sửa"
-              : variables.action === "add"
-              ? "Thêm mới"
-              : "Xoá") + " sự kiện thành công"),
+            variables.action == "export"
+              ? "Xuất file thành công"
+              : (variables.action === "update"
+                  ? "Sửa"
+                  : variables.action === "add"
+                  ? "Thêm mới"
+                  : "Xoá") + " sự kiện thành công",
         });
       },
       onError: () => {
@@ -137,4 +167,3 @@ export const useMutationSystemEvents = () => {
     },
   );
 };
-

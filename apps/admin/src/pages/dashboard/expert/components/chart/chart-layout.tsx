@@ -1,6 +1,6 @@
 import { ColumnTopChart } from "@/pages/dashboard/components/column-top-chart/column-top-chart";
 import { HotNews } from "@/pages/dashboard/components/hot-news/hot-news";
-import { useNewsCountryToday, useNewsHoursToday } from "@/services/dashboard.loader";
+import { useNewsCountryToday, useNewsHoursToday } from "@/pages/dashboard/dashboard.loader";
 import { Col, Row } from "antd";
 import dayjs from "dayjs";
 import React from "react";

@@ -34,10 +34,12 @@ import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 import { TabIndentationPlugin } from "@lexical/react/LexicalTabIndentationPlugin";
 import { Checkbox, Modal, Skeleton, Space, Tag, Tooltip, Typography, message } from "antd";
 import React, { useEffect, useRef, useState } from "react";
+import { useLocation, useParams } from "react-router-dom";
 import { shallow } from "zustand/shallow";
 
 import { MindmapModal } from "./mindmap-modal";
 import { NewDetailSummary } from "./news-detail/components";
+import "./table-news.less";
 import styles from "./table-news.module.less";
 
 interface Props {
@@ -63,6 +65,8 @@ export const NewsTableItem: React.FC<Props> = ({
   setSeen,
   handleUpdateCache,
 }) => {
+  let { newsletterId, tag } = useParams();
+  const { pathname } = useLocation();
   const [newsSelection, setNewsSelection] = useNewsSelection(
     (state) => [state.newsSelection, state.setNewsSelection],
     shallow,
@@ -70,7 +74,12 @@ export const NewsTableItem: React.FC<Props> = ({
   const [checkbox, setCheckbox] = useState<boolean>(false);
   const setOpenSelection = useNewsSelection((state) => state.setOpen);
   const [typeShow, setTypeShow] = useState<boolean>(true);
+
   const checkSeen = item.list_user_read?.findIndex((e: string) => e === userId) ?? -1;
+  // const checkSeen = pathname.includes("organization")
+  //   ? item.list_user_read?.findIndex((e: string) => e === userId) ?? -1
+  //   : item.is_read ?? -1;
+
   const [typeDetail, setTypeDetail] = useState<any>("content");
   const [isVisibleModalMindmap, setIsVisibleModalMindmap] = useState<boolean>(false);
   const [isTranslation, setIsTranslation] = useState<boolean>(false);
@@ -98,7 +107,6 @@ export const NewsTableItem: React.FC<Props> = ({
   };
 
   useEffect(() => {
-    // newsSelection.forEach((item) => "is_read" in item && delete item.is_read);
     const a = newsSelection.findIndex((e) => e._id === item._id);
     if (a !== -1) {
       setCheckbox(true);
@@ -132,16 +140,19 @@ export const NewsTableItem: React.FC<Props> = ({
                   onChangeCheckbox();
                 }}
               />
-              <Tooltip title="Thêm vào giỏ tin">
-                <ShoppingCartOutlined
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    onChangeCheckbox();
-                    handleClickShop();
-                  }}
-                  className={styles.taskIcon}
-                />
-              </Tooltip>
+
+              {tag != "gio_tin" && (
+                <Tooltip title="Thêm vào giỏ tin">
+                  <ShoppingCartOutlined
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      onChangeCheckbox();
+                      handleClickShop();
+                    }}
+                    className={styles.taskIcon}
+                  />
+                </Tooltip>
+              )}
 
               <Tooltip title={item.isBell ? "Xoá khỏi tin quan trọng" : "Thêm vào tin quan trọng"}>
                 <ImportantButton item={item} handleClickImportant={handleClickImportant} />
@@ -188,15 +199,21 @@ export const NewsTableItem: React.FC<Props> = ({
             className={styles.titleHeaderContainer}
             onClick={() => {
               setTypeShow(!typeShow);
+
               if (checkSeen === -1) {
                 setSeen(true, item._id);
               }
+              // if (!item.is_read) {
+              //   setSeen(true, item._id);
+              // }
               Ref?.current?.scrollIntoView();
             }}
           >
             <div
               className={checkSeen !== -1 ? styles.seenContentHeader : styles.contentHeader}
               // className={item.is_read ? styles.seenContentHeader : styles.contentHeader}
+              // className={item.is_read ? styles.seenContentHeader : styles.contentHeader}
+              // style={{ color: item.is_read ? "#c0c0c0" : "black" }}
             >
               {item.source_language !== "vi" && typeTranslate === "nuoc-ngoai"
                 ? item["data:title_translate"]
@@ -242,21 +259,24 @@ export const NewsTableItem: React.FC<Props> = ({
       ) : (
         <tr ref={Ref}>
           <td colSpan={type === "edit" ? 5 : 4}>
-            <div className={styles.content}>
+            <div className={`${styles.content}`}>
               <div
                 onClick={() => {
                   Ref?.current?.scrollIntoView();
                 }}
                 className={styles.scrollContainer}
               >
-                <button className={styles.hideDetailButton} onClick={() => setTypeShow(!typeShow)}>
+                <button
+                  className={`${styles.hideDetailButton} btn__close`}
+                  onClick={() => setTypeShow(!typeShow)}
+                >
                   <CloseOutlined title="Đóng chi tiết tin" className={styles.closeIcon} />
                 </button>
               </div>
-              <div className={styles.detailContainer}>
+              <div className={`${styles.detailContainer} news__detail`}>
                 <div className={styles.detailHeader}>
-                  <div className={styles.title}>
-                    <span style={{ marginRight: 10 }}>
+                  <div className={styles.title} style={{ marginBottom: "50px" }}>
+                    <span style={{ marginRight: 10 }} className="news__title">
                       {item["data:class_sacthai"] === "1" ? (
                         <Tooltip title="Tích cực">
                           <CaretUpFilled className={styles.goodIcon} />
@@ -275,13 +295,13 @@ export const NewsTableItem: React.FC<Props> = ({
                       ? item["data:title_translate"]
                       : item["data:title"]}
                   </div>
-                  <div className={styles.container1}>
+                  <div className={`${styles.container1} news__datetime`}>
                     {item["data:author"] ? (
                       <div className={styles.source}>{item["data:author"]}</div>
                     ) : null}
                     <div className={styles.time}>{item["data:time"]}</div>
                   </div>
-                  <div className={styles.container2}>
+                  <div className={`${styles.container2} news__keywords`}>
                     {item.keywords
                       ? item.keywords.map((element: any, index: any) => {
                           return (
@@ -292,7 +312,7 @@ export const NewsTableItem: React.FC<Props> = ({
                         })
                       : null}
                   </div>
-                  <div className={styles.comtainer3}>
+                  <div className={`${styles.comtainer3} menu__tools`}>
                     <div className={styles.leftContainer3}>
                       <Space>
                         <Tooltip title="Thêm vào giỏ tin">
@@ -420,12 +440,12 @@ export const NewsTableItem: React.FC<Props> = ({
                     ) : (
                       <div
                         dangerouslySetInnerHTML={{ __html: item["data:html"] }}
-                        className={styles.detailContent}
+                        className={`${styles.detailContent} news__content`}
                         onClick={(event) => event.stopPropagation()}
                       />
                     )
                   ) : (
-                    <div className={styles.detailContent}>
+                    <div className={`${styles.detailContent}`}>
                       <NewDetailSummary content={item["data:content"]} title={item["data:title"]} />
                     </div>
                   )}

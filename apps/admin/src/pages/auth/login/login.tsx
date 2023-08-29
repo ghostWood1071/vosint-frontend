@@ -88,7 +88,7 @@ export const LoginPage = () => {
       <Form.Item wrapperCol={{ offset: 9, span: 16 }}>
         <Link to={authForgotPasswordPath}>
           <div className={styles.forgetPassword}>
-            <img className={styles.lockIcon} src="/lock.png" alt="lock" />
+            <img className={styles.lockIcon} src="/images/lock.png" alt="lock" />
             <span className={styles.titleForgetPassword}>{t("auth.forgot_password")}</span>
           </div>
         </Link>

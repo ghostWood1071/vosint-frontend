@@ -1,5 +1,5 @@
-import { TNews } from "@/services/news.type";
-import { ILogHistory } from "@/services/pipeline.type";
+import { TNews } from "@/models/news.type";
+import { ILogHistory } from "@/models/pipeline.type";
 import { create } from "zustand";
 
 interface PipelineState {

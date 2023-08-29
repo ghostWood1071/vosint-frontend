@@ -36,9 +36,9 @@ export const PostItem: React.FC<PostItemProps> = ({ item }) => {
           </div>
           <div className={styles.typePostContainer}>
             {item.goodPost ? (
-              <img className={styles.typePostIcon} src="/good-post-icon.png" alt="good" />
+              <img className={styles.typePostIcon} src="/images/good-post-icon.png" alt="good" />
             ) : (
-              <img className={styles.typePostIcon} src="/bad-post-icon.png" alt="bad" />
+              <img className={styles.typePostIcon} src="/images/bad-post-icon.png" alt="bad" />
             )}
           </div>
           <div
