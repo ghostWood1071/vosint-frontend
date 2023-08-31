@@ -19,6 +19,8 @@ import EventSummaryModal from "./components/event-summary-modal";
 import { SystemEventItem } from "./components/system-event-item";
 import { EVENT_CACHE_KEYS, useInfiniteEventsList, useMutationExportEvents } from "./event.loader";
 import styles from "./event.module.less";
+import "../news/less/news-filter.less"
+import "./less/event.less";
 
 interface Props {}
 
@@ -72,15 +74,20 @@ export const SystemEventPage: React.FC<Props> = () => {
 
   return (
     <div className={styles.mainContainer}>
-      <div className={pinned ? styles.filterContainerWithSidebar : styles.filterContainer}>
+      <div className={(pinned ? styles.filterContainerWithSidebar : styles.filterContainer) + " app-filter"}>
         <Space wrap>
           <Button
-            className={styles.item}
+            className={styles.item + " btn-tool"}
             icon={<FileWordOutlined />}
             onClick={handleExportWord}
             title="Tải file word"
+            disabled={eventChoosedList.length == 0}
           />
-          <DatePicker.RangePicker format={"DD/MM/YYYY"} onChange={handleChangeFilterTime} />
+          <DatePicker.RangePicker
+            inputReadOnly
+            format={"DD/MM/YYYY"}
+            onChange={handleChangeFilterTime}
+          />
           <Input.Search
             onSearch={(value) => {
               setFilterEvent({ ...filterEvent, event_name: value });
@@ -100,7 +107,7 @@ export const SystemEventPage: React.FC<Props> = () => {
         </Space>
       </div>
       <div className={styles.body}>
-        <div className={styles.recordsContainer}>
+        <div className={styles.recordsContainer + " event-container"}>
           {dataSource[0] !== undefined ? (
             <List
               itemLayout="vertical"

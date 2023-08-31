@@ -73,7 +73,11 @@ export const CardStatistic: React.FC<CardStatisticProps> = ({ title, number, col
             onOk={handleSetDate}
             onCancel={() => setIsVisible(false)}
           >
-            <DatePicker.RangePicker format={"DD/MM/YYYY"} onChange={handleChangeTime} />
+            <DatePicker.RangePicker
+              inputReadOnly
+              format={"DD/MM/YYYY"}
+              onChange={handleChangeTime}
+            />
           </Modal>
         </div>
       </div>

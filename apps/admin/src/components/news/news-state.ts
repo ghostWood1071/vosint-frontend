@@ -54,7 +54,9 @@ interface NewsSelectionState {
   openNewsCategory: boolean;
   setOpenNewsCategory: Dispatch<boolean>;
   newsSelection: TNews[];
-  setNewsSelection: Dispatch<TNews[]>;
+  setNewsSelection: Dispatch<any[]>;
+  objectSelection: any[];
+  setObjectSelection: Dispatch<any[]>;
 }
 export const useNewsSelection = create<NewsSelectionState>((set) => ({
   open: false,
@@ -65,6 +67,9 @@ export const useNewsSelection = create<NewsSelectionState>((set) => ({
 
   newsSelection: [],
   setNewsSelection: (newsSelection) => set({ newsSelection: compact(newsSelection) }),
+
+  objectSelection: [],
+  setObjectSelection: (objectSelection) => set({ objectSelection: compact(objectSelection) }),
 }));
 
 export type NewsType = {

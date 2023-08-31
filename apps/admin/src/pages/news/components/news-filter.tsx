@@ -4,39 +4,29 @@ import { ReactComponent as UnreadIcon } from "@/assets/svg/envelope-open.svg";
 import { ReactComponent as ReadIcon } from "@/assets/svg/envelope.svg";
 import { downloadFileWord } from "@/common/_helper";
 import { Tree } from "@/components";
-import { downloadFile } from "@/components/editor/utils";
 import { ETreeTag, useNewsSelection, useNewsState } from "@/components/news/news-state";
 import { useSidebar } from "@/pages/app/app.store";
 import { useGetMe } from "@/pages/auth/auth.loader";
-import {
-  useDeleteNewsInNewsletter,
-  useMutationChangeStatusSeenPost,
-  useMutationExportNews,
-  useMutationNewsToCategory,
-  useNewsIdToNewsletter,
-  useNewsSidebar,
+import { 
+  useDeleteNewsInNewsletter, useMutationChangeStatusSeenPost, 
+  useMutationDeleteNewsFromCategory, useMutationExportNews,
+  useNewsIdToNewsletter, useNewsSidebar,
 } from "@/pages/news/news.loader";
 import { buildTree } from "@/pages/news/news.utils";
 import {
-  DeleteOutlined,
-  ExclamationCircleOutlined,
-  FileWordOutlined,
-  MailOutlined,
-  MailTwoTone,
-  MinusCircleTwoTone,
-  PlusCircleTwoTone,
+  DeleteOutlined, ExclamationCircleOutlined, FileWordOutlined, 
+  MailOutlined, MailTwoTone, MinusCircleTwoTone, PlusCircleOutlined, PlusCircleTwoTone, PlusOutlined,
 } from "@ant-design/icons";
-import { Button, DatePicker, Form, Input, List, Modal, Select, Typography } from "antd";
-import produce from "immer";
+import { Button, DatePicker, Form, Input, List, Modal, Select, Typography, message } from "antd";
 import { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import { shallow } from "zustand/shallow";
-
 import { useNewsFilter, useNewsFilterDispatch } from "../news.context";
-import NewsCategoryModal from "./news-category/news-category-modal";
-import "./news-filter.less";
-import styles from "./news-filter.module.less";
 import { NewsSummaryModal } from "./news-summary-modal";
+import NewsCategoryModal from "./news-category/news-category-modal";
+import produce from "immer";
+import styles from "./news-filter.module.less";
+import "../less/news-filter.less";
 
 export function NewsFilter(): JSX.Element {
   const { data: dataIAm } = useGetMe();
@@ -65,7 +55,7 @@ export function NewsFilter(): JSX.Element {
 
   const [internalTextSearch, setInternalTextSearch] = useState("");
   const { mutate } = useMutationExportNews();
-  const { mutate: mutateNewsToCategory } = useMutationNewsToCategory();
+  const { mutate: mutateDeleteNewsFromCategory } = useMutationDeleteNewsFromCategory();
 
   function handleSetSeen(checkedSeen: boolean, idNews: string) {
     if (checkedSeen) {
@@ -88,17 +78,17 @@ export function NewsFilter(): JSX.Element {
   };
 
   const handleRemoveNewsFromCategory = () => {
-    const post = newsSelection.map((news) => news._id);
+    const newsIds = newsSelection.map((news) => news._id);
+    const objectIds = pathname.replace("/organization/", "");
+    const data = { news_ids: newsIds, object_ids: objectIds };
 
-    mutateNewsToCategory(
-      { post, action: "delete" },
-      {
-        onSuccess: (res) => {
-          // console.log(res);
-        },
-        onError: (err) => {},
+    mutateDeleteNewsFromCategory(data, {
+      onSuccess: (res) => {
+        // console.log(res);
+        // message.success("Xoá thành công");
       },
-    );
+      onError: (err) => {},
+    });
   };
 
   // const seen = newsSelection.find((item: any) => item.is_read);
@@ -110,69 +100,68 @@ export function NewsFilter(): JSX.Element {
   );
 
   return (
-    <div className={pinned ? styles.filterWithSidebar : styles.filter}>
+    <div className={(pinned ? styles.filterWithSidebar : styles.filter) + " app-filter"}>
       <Form
         onValuesChange={handleFinish}
         initialValues={{
           sac_thai: "",
         }}
-        style={{ width: "100%", display: "flex", flexDirection: "row", flexWrap: "wrap" }}
+        // style={{ width: "100%", display: "flex", flexDirection: "row", flexWrap: "wrap" }}
       >
-        {/* {seen && unseen && ( */}
-        <>
-          <div
-            className={`${styles.iconWrap} newsFilter__btn`}
-            onClick={() => {
-              newsSelection.forEach((item) => {
-                handleSetSeen(true, item._id);
-              });
-              setNewsSelection([]);
-              setNewsSelection(
-                newsSelection.map((item) => ({ ...item, list_user_read: [dataIAm] })),
-              );
-              // setNewsSelection(newsSelection.map((item) => ({ ...item, is_read: true })));
-            }}
-            title="Đánh dấu đã đọc tin"
-          >
-            <Button
-              icon={<UnreadIcon className={styles.unreadIcon} />}
-              className={styles.iconWrapBtn}
-              disabled={!(!seen && unseen) && !(seen && unseen)}
-              // disabled={!!(seen && unseen)}
-            />
-          </div>
+        <div className="app-filter-tools">
+        <div
+          className={`${styles.iconWrap} newsFilter__btn`}
+          onClick={() => {
+            newsSelection.forEach((item) => {
+              handleSetSeen(true, item._id);
+            });
+            setNewsSelection([]);
+            setNewsSelection(
+              newsSelection.map((item) => ({ ...item, list_user_read: [dataIAm] })),
+            );
+            // setNewsSelection(newsSelection.map((item) => ({ ...item, is_read: true })));
+          }}
+          title="Đánh dấu đã đọc tin"
+        >
+          <Button
+            icon={<UnreadIcon className={styles.unreadIcon} />}
+            className={styles.iconWrapBtn + " btn-tool"}
+            disabled={!(!seen && unseen) && !(seen && unseen)}
+            // disabled={!!(seen && unseen)}
+          />
+        </div>
 
-          <div
-            className={styles.iconWrap + " " + styles.iconWrapLast}
-            onClick={() => {
-              newsSelection.forEach((item) => {
-                handleSetSeen(false, item._id);
-              });
-              setNewsSelection(newsSelection.map((item) => ({ ...item, list_user_read: [] })));
-              // setNewsSelection(newsSelection.map((item) => ({ ...item, is_read: false })));
-            }}
-            title="Đánh dấu chưa đọc tin"
-          >
-            <Button
-              icon={<ReadIcon className={styles.readIcon} />}
-              // disabled={!(seen && !unseen) && !(seen && unseen)}
-              disabled={!(seen && !unseen) && !(seen && unseen)}
-              className={styles.iconWrapBtn}
-            />
-          </div>
-        </>
+        <div
+          className={styles.iconWrap + " " + styles.iconWrapLast + " newsFilter__btn"}
+          onClick={() => {
+            newsSelection.forEach((item) => {
+              handleSetSeen(false, item._id);
+            });
+            setNewsSelection(newsSelection.map((item) => ({ ...item, list_user_read: [] })));
+            // setNewsSelection(newsSelection.map((item) => ({ ...item, is_read: false })));
+          }}
+          title="Đánh dấu chưa đọc tin"
+        >
+          <Button
+            icon={<ReadIcon className={styles.readIcon} />}
+            // disabled={!(seen && !unseen) && !(seen && unseen)}
+            disabled={!(seen && !unseen) && !(seen && unseen)}
+            className={styles.iconWrapBtn + " btn-tool"}
+          />
+        </div>
 
         <Button
-          className={styles.item}
+          className={styles.item + " btn-tool"}
           icon={<FileWordOutlined />}
           onClick={handleExportWord}
           title="Tải file word"
+          disabled={newsSelection.length == 0}
         />
 
         {pathname === "/organization" ? (
           <Button
             icon={<CreateIcon />}
-            className={styles.createIcon}
+            className={styles.createIcon + " btn-tool"}
             disabled={newsSelection.length == 0}
             onClick={() => setOpenNewsCategory(true)}
             title={"Thêm Tin Vào Danh Mục"}
@@ -180,15 +169,35 @@ export function NewsFilter(): JSX.Element {
         ) : (
           <Button
             icon={<RemoveNewsIcon />}
-            className={styles.createIcon}
+            className={styles.createIcon + " btn-tool"}
             disabled={newsSelection.length == 0}
-            onClick={() => {}}
+            onClick={handleRemoveNewsFromCategory}
             title={"Xoá Tin Khỏi Danh Mục"}
           />
         )}
 
+        {/* <Button
+          className={styles.item + " btn-tool"}
+          icon={<PlusCircleOutlined />}
+          onClick={handleAddBasket}
+          disabled={newsSelectionIds.length === 0}
+          title="Thêm tin"
+        /> */}
+
+        {detailIds && ![ETreeTag.LINH_VUC, ETreeTag.CHU_DE].includes((tag ?? "") as ETreeTag) && (
+          <Button
+            className={styles.item + " btn-tool"}
+            icon={<MinusCircleTwoTone twoToneColor="#ff4d4f" />}
+            danger
+            disabled={newsSelectionIds.length === 0}
+            onClick={handleRemoveNewsIds}
+            title="Xoá tin"
+          />
+        )}
+        </div>
+
         <Form.Item className={styles.item} name="datetime">
-          <DatePicker.RangePicker format={"DD/MM/YYYY"} />
+          <DatePicker.RangePicker inputReadOnly format={"DD/MM/YYYY"} />
         </Form.Item>
         <Form.Item className={styles.item} name={"type_translate"}>
           <Select placeholder="Dịch" defaultValue="nguon">
@@ -220,24 +229,6 @@ export function NewsFilter(): JSX.Element {
         </Form.Item>
         <NewsSummaryModal />
 
-        <Button
-          className={styles.item}
-          icon={<PlusCircleTwoTone />}
-          onClick={handleAddBasket}
-          disabled={newsSelectionIds.length === 0}
-          title="Thêm tin"
-        />
-
-        {detailIds && ![ETreeTag.LINH_VUC, ETreeTag.CHU_DE].includes((tag ?? "") as ETreeTag) && (
-          <Button
-            className={styles.item}
-            icon={<MinusCircleTwoTone twoToneColor="#ff4d4f" />}
-            danger
-            disabled={newsSelectionIds.length === 0}
-            onClick={handleRemoveNewsIds}
-            title="Xoá tin"
-          />
-        )}
         <div className={styles.input}>
           <Input.Search
             className={styles.search}

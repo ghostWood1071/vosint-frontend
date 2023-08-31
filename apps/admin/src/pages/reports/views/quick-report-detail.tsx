@@ -230,6 +230,7 @@ function QuickReport(): JSX.Element {
                 <Space>
                   <Typography.Text>Từ ngày: </Typography.Text>
                   <DatePicker.RangePicker
+                    inputReadOnly
                     defaultValue={[moment().subtract(7, "days"), moment()]}
                     format={"DD/MM/YYYY"}
                     bordered={false}

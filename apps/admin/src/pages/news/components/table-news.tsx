@@ -76,9 +76,6 @@ export const NewsTableItem: React.FC<Props> = ({
   const [typeShow, setTypeShow] = useState<boolean>(true);
 
   const checkSeen = item.list_user_read?.findIndex((e: string) => e === userId) ?? -1;
-  // const checkSeen = pathname.includes("organization")
-  //   ? item.list_user_read?.findIndex((e: string) => e === userId) ?? -1
-  //   : item.is_read ?? -1;
 
   const [typeDetail, setTypeDetail] = useState<any>("content");
   const [isVisibleModalMindmap, setIsVisibleModalMindmap] = useState<boolean>(false);
@@ -209,12 +206,7 @@ export const NewsTableItem: React.FC<Props> = ({
               Ref?.current?.scrollIntoView();
             }}
           >
-            <div
-              className={checkSeen !== -1 ? styles.seenContentHeader : styles.contentHeader}
-              // className={item.is_read ? styles.seenContentHeader : styles.contentHeader}
-              // className={item.is_read ? styles.seenContentHeader : styles.contentHeader}
-              // style={{ color: item.is_read ? "#c0c0c0" : "black" }}
-            >
+            <div className={checkSeen !== -1 ? styles.seenContentHeader : styles.contentHeader}>
               {item.source_language !== "vi" && typeTranslate === "nuoc-ngoai"
                 ? item["data:title_translate"]
                 : item["data:title"]}

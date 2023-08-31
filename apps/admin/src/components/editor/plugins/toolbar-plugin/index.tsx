@@ -264,6 +264,7 @@ export function ToolbarPlugin(): JSX.Element {
 
           <Typography.Text strong>Lọc sự kiện theo ngày: </Typography.Text>
           <DatePicker.RangePicker
+            inputReadOnly
             defaultValue={[moment().subtract(7, "days"), moment()]}
             format={"DD/MM/YYYY"}
             bordered={false}

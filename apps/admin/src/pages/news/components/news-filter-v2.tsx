@@ -34,7 +34,7 @@ import { useNewsFilter, useNewsFilterDispatch } from "../news.context";
 import styles from "./news-filter.module.less";
 import { NewsSummaryModal } from "./news-summary-modal";
 
-export function NewsFilterV2({ handleConvert }: { handleConvert: any }): JSX.Element {
+export function NewsFilterV2(): JSX.Element {
   let { newsletterId: detailIds, tag } = useParams();
 
   const { data: dataIAm } = useGetMe();
@@ -137,7 +137,7 @@ export function NewsFilterV2({ handleConvert }: { handleConvert: any }): JSX.Ele
           title="Tải file word"
         />
         <Form.Item className={styles.item} name="datetime">
-          <DatePicker.RangePicker format={"DD/MM/YYYY"} />
+          <DatePicker.RangePicker inputReadOnly format={"DD/MM/YYYY"} />
         </Form.Item>
         <Form.Item className={styles.item} name={"type_translate"}>
           <Select placeholder="Dịch" defaultValue="nguon">

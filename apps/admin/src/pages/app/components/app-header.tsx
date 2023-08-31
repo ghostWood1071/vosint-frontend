@@ -1,25 +1,19 @@
 import { LOCAL_ROLE, LOCAL_USER_PROFILE } from "@/constants/config";
 import { authLoginPath, dashboardPathWithRole } from "@/pages/router";
 import { generateImage } from "@/utils/image";
-import {
-  DoubleLeftOutlined,
-  DoubleRightOutlined,
-  LogoutOutlined,
-  MenuOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
+import { DoubleLeftOutlined, DoubleRightOutlined, LogoutOutlined, MenuOutlined, UserOutlined } from "@ant-design/icons";
 import { Avatar, Col, Dropdown, MenuProps, Row, Space, Typography } from "antd";
-import classNames from "classnames";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useLocalStorage } from "react-use";
 import { shallow } from "zustand/shallow";
-
 import { NAVBAR_HEADER, NAVBAR_HEADER_ADMIN } from "../app.constants";
-import { useSidebar } from "../app.store";
-import styles from "./app-header.module.less";
 import { UserProfile } from "./user-profile";
+import { useSidebar } from "../app.store";
+import classNames from "classnames";
+import styles from "./app-header.module.less";
+import "../less/app.less";
 
 export const AppHeader: React.FC = () => {
   const { t } = useTranslation("translation", { keyPrefix: "app" });
@@ -58,7 +52,7 @@ export const AppHeader: React.FC = () => {
   ];
 
   return (
-    <Row className={styles.header} align="middle">
+    <Row className={`${styles.header} app-header`} align="middle">
       <Col span={1}>
         <div
           className={styles.containerIcon}
@@ -82,7 +76,7 @@ export const AppHeader: React.FC = () => {
       <Col span={3}>
         <Link to={dashboardPathWithRole(role ?? "admin")}>
           <img
-            className={styles.logo}
+            className={styles.logo + " app-logo"}
             src="/images/logo-header.jpg"
             alt="Logo"
             width={200}
@@ -94,11 +88,12 @@ export const AppHeader: React.FC = () => {
         <Row
           // justify="space-between"
           align="middle"
+          className="app-header-middle"
         >
           {(role === "admin" ? NAVBAR_HEADER_ADMIN : NAVBAR_HEADER).map(({ title, to, icon }) => (
             <Col key={to}>
               <NavLink to={to} className={handleActive}>
-                <div className={styles.tabContainer}>
+                <div className={styles.tabContainer + " app-navbar-item"}>
                   {icon}
                   <div className={styles.title}>{t(title)}</div>
                 </div>

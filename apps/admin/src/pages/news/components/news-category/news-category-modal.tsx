@@ -1,23 +1,34 @@
 import default_thumb from "@/assets/img/default-thumbnail.jpg";
 import { Tree } from "@/components";
 import { ETreeTag, useNewsSelection, useNewsState } from "@/components/news/news-state";
+import { AddCateComponent } from "@/pages/configuration/components/cate-config/add-cate-component";
+import { useMutationObjectCate } from "@/pages/configuration/config.loader";
 import { OBJECT_TYPE, useObjectList } from "@/pages/organization/organizations.loader";
 import { AppstoreOutlined, DeleteOutlined } from "@ant-design/icons";
-import { Button, Checkbox, List, Menu, MenuProps, Modal, Select, Space, Typography } from "antd";
+import {
+  Button,
+  Checkbox,
+  List,
+  Menu,
+  MenuProps,
+  Modal,
+  Select,
+  Space,
+  Typography,
+  message,
+} from "antd";
 import Title from "antd/lib/skeleton/Title";
 import produce from "immer";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import shallow from "zustand/shallow";
 
-import {
-  useMutationNewsToCategory,
-  useNewsIdToNewsletter,
-  useNewsSidebar,
-} from "../../news.loader";
+import { useCheckMatchKeyword, useNewsIdToNewsletter, useNewsSidebar } from "../../news.loader";
 import { buildTree } from "../../news.utils";
 import "./news-category-modal.less";
 
 const NewsCategoryModal = () => {
+  const navigate = useNavigate();
   const [openNewsCategory, setOpenNewsCategory] = useNewsSelection(
     (state) => [state.openNewsCategory, state.setOpenNewsCategory],
     shallow,
@@ -28,14 +39,19 @@ const NewsCategoryModal = () => {
     shallow,
   );
 
-  const { mutate: mutateNewsToCategory } = useMutationNewsToCategory();
+  const [objectSelection, setObjectSelection] = useNewsSelection(
+    (state) => [state.objectSelection, state.setObjectSelection],
+    shallow,
+  );
+
+  const { mutate: mutateCheckMatchKeyword } = useCheckMatchKeyword();
 
   const handleCancel = () => setOpenNewsCategory(false);
 
   //build checkbox menu
-  const { data: dataObj } = useObjectList(OBJECT_TYPE.DOI_TUONG, { name: "" });
-  const { data: dataOrg } = useObjectList(OBJECT_TYPE.TO_CHUC, { name: "" });
-  const { data: dataReg } = useObjectList(OBJECT_TYPE.QUOC_GIA, { name: "" });
+  const { data: dataObject } = useObjectList(OBJECT_TYPE.DOI_TUONG, { name: "" });
+  const { data: dataOrganization } = useObjectList(OBJECT_TYPE.TO_CHUC, { name: "" });
+  const { data: dataRegion } = useObjectList(OBJECT_TYPE.QUOC_GIA, { name: "" });
 
   const CATEGORY_OBJECT = "Danh Mục Đối Tượng";
   const CATEGORY_ORGANIZATION = "Danh Mục Tổ Chức";
@@ -44,120 +60,128 @@ const NewsCategoryModal = () => {
   const { Option } = Select;
   const { Title } = Typography;
 
-  const [objSelected, setObjSelected] = useState<any[]>([]);
-  const [orgSelected, setOrgSelected] = useState<any[]>([]);
-  const [regSelected, setRegSelected] = useState<any[]>([]);
-
-  const handleSubmit = () => {
-    const data = {
-      news_list: newsSelection.map((news) => news._id),
-      category_list: [...objSelected, ...orgSelected, ...regSelected],
-    };
-
-    mutateNewsToCategory(
-      { data, action: "add" },
-      {
-        onSuccess: (res) => {
-          // console.log(res);
-          // setOpenNewsCategory(false);
-        },
-        onError: () => {},
-      },
-    );
+  const confirmGo = (type: any) => {
+    if (type == 1) navigate("/config/object-cate-config");
+    if (type == 2) navigate("/config/organization-cate-config");
+    if (type == 3) navigate("/config/country-cate-config");
   };
 
   const handleChangeSelect = (e: any, type: number) => {
-    // type == 1 / obj, type == 2 / org, type == 3 / reg
-    if (type == 1 && !objSelected.includes(e[0])) setObjSelected([...objSelected, ...e]);
-    if (type == 2 && !orgSelected.includes(e[0])) setOrgSelected([...orgSelected, ...e]);
-    if (type == 3 && !regSelected.includes(e[0])) setRegSelected([...regSelected, ...e]);
+    const selectionIds = newsSelection.map((news) => news._id);
+    const data = { news_ids: selectionIds, object_ids: e, new_keywords: [] };
+    setObjectSelection(e);
+
+    mutateCheckMatchKeyword(data, {
+      onSuccess: (res) => {
+        const check = res.find((news: any) => !news.is_contain);
+
+        if (check) {
+          // setIsOpenModal(true);
+          // confirm
+          const question = confirm(
+            "Danh mục chưa có keyword liên quan đến tin, bạn có muốn chuyển đến trang cấu hình để thêm keyword không?",
+          );
+          if (question) confirmGo(type);
+          return;
+        } else {
+          message.success("Danh sách tin đã có trong mục đối tượng!");
+        }
+      },
+      onError: (err) => {
+        console.log("err", err);
+      },
+    });
   };
 
   return (
     <>
-      {dataObj && dataOrg && dataReg && (
-        <Modal
-          className="news-category-modal-wrap"
-          title={"Thêm tin vào danh mục"}
-          open={openNewsCategory}
-          onOk={handleSubmit}
-          onCancel={handleCancel}
-          getContainer="#modal-mount"
-          okText="Thêm"
-          // okButtonProps={{ disabled: !newsSelectId || newsSelectId === ETreeTag.GIO_TIN }}
-          // confirmLoading={isLoadingMutate}
-          destroyOnClose
-        >
-          <div>
-            <div className="box">
-              <Typography.Text>Danh sách tin:</Typography.Text>
-              <List
-                dataSource={newsSelection}
-                renderItem={(item) => {
-                  const handleDelete = () => {
-                    const deletedNews = produce(newsSelection, (draft) => {
-                      const index = draft.findIndex((i) => i._id === item._id);
-                      if (index !== -1) draft.splice(index, 1);
-                    });
-                    setNewsSelection(deletedNews);
-                  };
+      {dataObject && dataOrganization && dataRegion && (
+        <>
+          <Modal
+            className="news-category-modal-wrap"
+            title={"Thêm tin vào danh mục"}
+            open={openNewsCategory}
+            // onOk={handleSubmit}
+            onCancel={handleCancel}
+            getContainer="#modal-mount"
+            okText="Thêm"
+            // okButtonProps={{ disabled: !newsSelectId || newsSelectId === ETreeTag.GIO_TIN }}
+            // confirmLoading={isLoadingMutate}
+            destroyOnClose
+            // footer={null}
+            // cancelButtonProps={{ style: { display: 'none' } }}
+            okButtonProps={{ style: { display: "none" } }}
+          >
+            <div>
+              <div className="box">
+                <Typography.Text>Danh sách tin:</Typography.Text>
+                <List
+                  dataSource={newsSelection}
+                  renderItem={(item) => {
+                    const handleDelete = () => {
+                      const deletedNews = produce(newsSelection, (draft) => {
+                        const index = draft.findIndex((i) => i._id === item._id);
+                        if (index !== -1) draft.splice(index, 1);
+                      });
+                      setNewsSelection(deletedNews);
+                    };
 
-                  return (
-                    <List.Item
-                      actions={[
-                        <Button
-                          className="btn__delete"
-                          icon={<DeleteOutlined />}
-                          title="Xoá tin khỏi danh sách tin"
-                          onClick={handleDelete}
-                          danger
-                          type="text"
-                        />,
-                      ]}
-                    >
-                      <Typography.Link target="_blank" href={item?.["data:url"]} rel="noreferrer">
-                        {item?.["data:title"]}
-                      </Typography.Link>
-                    </List.Item>
-                  );
-                }}
-              />
-            </div>
-            <div className="box">
-              <Typography.Text>Chọn danh mục:</Typography.Text>
-              <div className="box__category">
-                <Title level={5}>{CATEGORY_OBJECT}</Title>
-                <Checkbox.Group
-                  options={dataObj?.data.map((obj: any) => ({
-                    label: obj.name,
-                    value: obj._id,
-                  }))}
-                  onChange={(e) => handleChangeSelect(e, 1)}
+                    return (
+                      <List.Item
+                        actions={[
+                          <Button
+                            className="btn__delete"
+                            icon={<DeleteOutlined />}
+                            title="Xoá tin khỏi danh sách tin"
+                            onClick={handleDelete}
+                            danger
+                            type="text"
+                          />,
+                        ]}
+                      >
+                        <Typography.Link target="_blank" href={item?.["data:url"]} rel="noreferrer">
+                          {item?.["data:title"]}
+                        </Typography.Link>
+                      </List.Item>
+                    );
+                  }}
                 />
               </div>
-              <div className="box__category">
-                <Title level={5}>{CATEGORY_ORGANIZATION}</Title>
-                <Checkbox.Group
-                  options={dataOrg?.data.map((obj: any) => ({
-                    label: obj.name,
-                    value: obj._id,
-                  }))}
-                  onChange={(e) => handleChangeSelect(e, 2)}
-                />
-              </div>
+              <div className="box">
+                <Typography.Text>Chọn danh mục:</Typography.Text>
+                <div className="box__category">
+                  <Title level={5}>{CATEGORY_OBJECT}</Title>
+                  <Checkbox.Group
+                    options={dataObject?.data.map((obj: any) => ({
+                      label: obj.name,
+                      value: obj._id,
+                    }))}
+                    onChange={(e) => handleChangeSelect(e, 1)}
+                  />
+                </div>
+                <div className="box__category">
+                  <Title level={5}>{CATEGORY_ORGANIZATION}</Title>
+                  <Checkbox.Group
+                    options={dataOrganization?.data.map((obj: any) => ({
+                      label: obj.name,
+                      value: obj._id,
+                    }))}
+                    onChange={(e) => handleChangeSelect(e, 2)}
+                  />
+                </div>
 
-              <div className="box__category">
-                <Title level={5}>{CATEGORY_REGION}</Title>
-                <Checkbox.Group
-                  options={dataReg?.data.map((obj: any) => ({
-                    label: obj.name,
-                    value: obj._id,
-                  }))}
-                  onChange={(e) => handleChangeSelect(e, 3)}
-                />
-              </div>
+                <div className="box__category">
+                  <Title level={5}>{CATEGORY_REGION}</Title>
+                  <Checkbox.Group
+                    options={dataRegion?.data.map((obj: any) => ({
+                      label: obj.name,
+                      value: obj._id,
+                    }))}
+                    onChange={(e) => handleChangeSelect(e, 3)}
+                  />
+                </div>
 
-              {/* <div className="box__category">
+                {/* <div className="box__category">
                 <Title level={5}>{CATEGORY_OBJECT}</Title>
                 <Select
                   mode="multiple"
@@ -220,9 +244,10 @@ const NewsCategoryModal = () => {
                   ))}
                 </Select>
               </div> */}
+              </div>
             </div>
-          </div>
-        </Modal>
+          </Modal>
+        </>
       )}
     </>
   );
