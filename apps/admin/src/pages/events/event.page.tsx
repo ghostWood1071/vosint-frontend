@@ -108,7 +108,7 @@ export const EventPage: React.FC<Props> = () => {
       <div className={styles.filterContainer}>
         <Space wrap>
           <Button
-            className={styles.item}
+            className={styles.item + " btn-tool"}
             icon={<FileWordOutlined />}
             onClick={handleExportWord}
             title="Tải file word"
