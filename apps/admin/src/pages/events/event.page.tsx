@@ -112,6 +112,7 @@ export const EventPage: React.FC<Props> = () => {
             icon={<FileWordOutlined />}
             onClick={handleExportWord}
             title="Tải file word"
+            disabled={eventChoosedList.length == 0}
           />
           <DatePicker.RangePicker
             inputReadOnly
