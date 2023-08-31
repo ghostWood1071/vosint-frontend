@@ -21,7 +21,7 @@ export function NewsFilterTTXVN(): JSX.Element {
         style={{ width: "100%", display: "flex", flexDirection: "row", flexWrap: "wrap" }}
       >
         <Form.Item className={styles.item} name="datetime">
-          <DatePicker.RangePicker format={"DD/MM/YYYY"} />
+          <DatePicker.RangePicker inputReadOnly format={"DD/MM/YYYY"} />
         </Form.Item>
         <div className={styles.input}>
           <Input.Search

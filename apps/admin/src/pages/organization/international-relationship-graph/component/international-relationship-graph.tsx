@@ -138,7 +138,11 @@ export const InternationalRelationshipGraph = () => {
               options={dataSelect()}
             />
           </div>
-          <DatePicker.RangePicker format={"DD/MM/YYYY"} onChange={handleChangeFilterTime} />
+          <DatePicker.RangePicker
+            inputReadOnly
+            format={"DD/MM/YYYY"}
+            onChange={handleChangeFilterTime}
+          />
         </div>
       </Col>
       {valueObject1.label !== "" || valueObject2.label !== "" ? (

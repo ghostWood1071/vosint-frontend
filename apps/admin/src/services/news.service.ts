@@ -34,14 +34,22 @@ const exportNews = async (data: any) => {
 };
 
 const addNewsToCategory = async (data: any) => {
-  // console.log(data);
-  return;
-  const result = await apiClient.post<any>(``, data);
+  // const result = await apiClient.post<any>(``, data);
+  // return result.data;
+};
+
+const checkMatchKeyword = async (data: any) => {
+  const result = await apiClient.post<any>(`/news/check-news-contain-keywords`, data);
   return result.data;
 };
 
 const deleteNewsFromCategory = async (data: any) => {
-  const result = await apiClient.post<any>(``, data);
+  // const query = new URLSearchParams({  });
+  const result = await apiClient.post<any>(
+    `/news/remove-news-from-object?object_id=${data.object_ids}`,
+    data.news_ids,
+  );
+
   return result.data;
 };
 
@@ -52,5 +60,6 @@ export {
   SetNotSeenPost,
   exportNews,
   addNewsToCategory,
+  checkMatchKeyword,
   deleteNewsFromCategory,
 };

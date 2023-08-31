@@ -1,9 +1,12 @@
+import { useNewsSelection } from "@/components/news/news-state";
 import { BASE_URL } from "@/constants/config";
+import { useCheckMatchKeyword } from "@/pages/news/news.loader";
 import { uploadFile } from "@/services/upload.service";
 import { removeWhitespaceInStartAndEndOfString } from "@/utils/tool-validate-string";
-import { Form, Input, Modal, Upload } from "antd";
+import { Form, Input, Modal, Upload, message } from "antd";
 import type { RcFile, UploadFile, UploadProps } from "antd/es/upload/interface";
 import React, { useState } from "react";
+import shallow from "zustand/shallow";
 
 import styles from "./add-cate.module.less";
 
@@ -40,6 +43,18 @@ export const AddCateComponent: React.FC<Props> = ({
   setChoosedCate,
   typeObject,
 }) => {
+  const [newsSelection, setNewsSelection] = useNewsSelection(
+    (state) => [state.newsSelection, state.setNewsSelection],
+    shallow,
+  );
+
+  const [objectSelection, setObjectSelection] = useNewsSelection(
+    (state) => [state.objectSelection, state.setObjectSelection],
+    shallow,
+  );
+
+  const { mutate: mutateCheckMatchKeyword } = useCheckMatchKeyword();
+
   const [fileList, setFileList] = useState<any[]>(
     type === "edit"
       ? [
@@ -120,7 +135,7 @@ export const AddCateComponent: React.FC<Props> = ({
       .catch();
   }
 
-  async function handleEdit() {
+  const onSave = async () => {
     form
       .validateFields()
       .then(async (values) => {
@@ -143,6 +158,36 @@ export const AddCateComponent: React.FC<Props> = ({
         setChoosedCate(data);
       })
       .catch();
+  };
+
+  async function handleEdit() {
+    if (newsSelection.length > 0 && objectSelection.length > 0) {
+      const keywords = [];
+      for (const k in key) {
+        const strArr = key[k].split(", ");
+
+        if (key[k]) keywords.push([...strArr]);
+      }
+
+      const data = {
+        news_ids: newsSelection.map((news) => news._id),
+        object_ids: objectSelection,
+        new_keywords: keywords.flat(1),
+      };
+
+      mutateCheckMatchKeyword(data, {
+        onSuccess: (res) => {
+          const check = res.find((news: any) => news.is_contain);
+
+          if (check) {
+            onSave();
+          }
+        },
+        onError: (err) => {
+          console.log(err);
+        },
+      });
+    } else onSave();
   }
 
   if (type === "add" || type === "edit") {

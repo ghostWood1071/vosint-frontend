@@ -7,6 +7,7 @@ import { Dispatch, SetStateAction, useState } from "react";
 
 import { useNewsSamplesTopicState } from "../news-state";
 import { rulesRequiredItemKeyword, rulesTitle } from "./form-rules";
+import "./form.less";
 import styles from "./form.module.less";
 
 type IKeyword = Record<

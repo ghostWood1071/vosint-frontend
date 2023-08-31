@@ -25,6 +25,7 @@ import {
   SetNotSeenPost,
   SetSeenPost,
   addNewsToCategory,
+  checkMatchKeyword,
   deleteNewsFromCategory,
   exportNews,
   getNewsDetail,
@@ -334,24 +335,38 @@ export const useInfiniteNewsByNewsletter = (id: string, filter: any, tag: string
   });
 };
 
-export const useMutationNewsToCategory = () => {
+export const useCheckMatchKeyword = () => {
   const queryClient = useQueryClient();
   return useMutation(
-    ({ action, data }: any) => {
-      if (action === "add") return addNewsToCategory(data);
-      else return deleteNewsFromCategory(data);
+    (data: any) => {
+      return checkMatchKeyword(data);
+    },
+    {
+      onSuccess: (data: any, variables) => {
+        queryClient.invalidateQueries([CACHE_KEYS.NewsList]);
+      },
+      onError: (data: any, variables) => {},
+    },
+  );
+};
+
+export const useMutationDeleteNewsFromCategory = () => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    (data: any) => {
+      return deleteNewsFromCategory(data);
     },
     {
       onSuccess: (data: any, variables) => {
         queryClient.invalidateQueries([CACHE_KEYS.NewsList]);
         message.success({
-          content: variables.action === "add" ? "Thêm" : "Xoá" + " thành công",
+          content: "Xoá thành công",
           key: CACHE_KEYS.NewsList,
         });
       },
       onError: (err: any, variables) => {
         message.success({
-          content: variables.action === "add" ? "Thêm" : "Xoá" + "không thành công",
+          content: "Xoá không thành công",
           key: CACHE_KEYS.NewsList,
         });
       },

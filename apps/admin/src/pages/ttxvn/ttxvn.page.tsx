@@ -86,7 +86,11 @@ export const TTXVNNewsPage: React.FC<Props> = () => {
     <div className={styles.mainContainer}>
       <div className={pinned ? styles.filterContainerWithSidebar : styles.filterContainer}>
         <Space wrap>
-          <DatePicker.RangePicker format={"DD/MM/YYYY"} onChange={handleChangeFilterTime} />
+          <DatePicker.RangePicker
+            inputReadOnly
+            format={"DD/MM/YYYY"}
+            onChange={handleChangeFilterTime}
+          />
           <Input.Search
             onChange={(event) => {
               ProcessSearch(event.target.value);

@@ -75,6 +75,9 @@ export const useInfiniteEventFormElt = (id: string, filter: any, tag: string) =>
       type: tag === "source" || tag === "source_group" ? tag : "",
       newsletter_id: tag === "chu_de" || tag === "linh_vuc" || tag === "gio_tin" ? id : "",
     });
+    // event/id/tag
+    // if /event/organization/ id == organization => ...
+    // if /event/12312313/organization/
   });
 };
 

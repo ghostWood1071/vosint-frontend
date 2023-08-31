@@ -172,6 +172,7 @@ function EventFilterComponent({
   return (
     <BlockWithAlignableContents className={className} nodeKey={nodeKey} format={"center"}>
       <DatePicker.RangePicker
+        inputReadOnly
         defaultValue={[defaultStartDate, defaultEndDate]}
         bordered={false}
         onChange={handleChange}

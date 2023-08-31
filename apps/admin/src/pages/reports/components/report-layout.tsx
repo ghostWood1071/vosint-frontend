@@ -243,6 +243,7 @@ const Sidebar = () => {
           {showComponent && linhVucTree && (
             <Tree
               title=""
+              reportLayout={true}
               treeData={linhVucTree}
               isSpinning={isLoading}
               onClickTitle={handleClickTitle}

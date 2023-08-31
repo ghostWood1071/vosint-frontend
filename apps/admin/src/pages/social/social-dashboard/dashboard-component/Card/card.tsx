@@ -72,7 +72,11 @@ export const Card: React.FC<CardProps> = ({ titleSource, data }) => {
             closable={false}
             maskClosable={false}
           >
-            <DatePicker.RangePicker format={"DD/MM/YYYY"} onChange={handleChangeTime} />
+            <DatePicker.RangePicker
+              inputReadOnly
+              format={"DD/MM/YYYY"}
+              onChange={handleChangeTime}
+            />
           </Modal>
         </div>
       </div>

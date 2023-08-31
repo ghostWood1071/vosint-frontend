@@ -37,6 +37,10 @@ export const NewsListPage: React.FC<Props> = () => {
   const { mutateAsync: mutateDelete } = useDeleteNewsInNewsletter();
   const { mutate: mutateAdd } = useNewsIdToNewsletter();
   const [setNewsSelection] = useNewsSelection((state) => [state.setNewsSelection], shallow);
+  const [openNewsCategory, setOpenNewsCategory] = useNewsSelection(
+    (state) => [state.openNewsCategory, state.setOpenNewsCategory],
+    shallow,
+  );
   const dataSource = unionBy(
     flatMap(
       data?.pages.map((a) =>
@@ -54,6 +58,7 @@ export const NewsListPage: React.FC<Props> = () => {
     queryClient.removeQueries([CACHE_KEYS.NewsList]);
     setSkip(1);
     setNewsSelection([]);
+    setOpenNewsCategory(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

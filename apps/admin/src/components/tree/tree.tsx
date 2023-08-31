@@ -22,6 +22,7 @@ interface Props {
 
   isEditable?: boolean;
   tag: ETreeTag;
+  reportLayout?: boolean; 
 
   onSelect?: (selectedKeys: React.Key[]) => void;
   onClickTitle?: (_id: string, tag: ETreeTag) => void;
@@ -34,6 +35,7 @@ export const Tree: React.FC<Props> = ({
   isModal,
   isEditable = false,
   selectedKeys,
+  reportLayout,
   onClickTitle,
 }) => {
   const setNews = useNewsState((state) => state.setNews);
@@ -44,7 +46,7 @@ export const Tree: React.FC<Props> = ({
       <Row className={styles.title}>
         <Col span={18} className={styles.text + " " + styles.sidebarIcon}>
           {tag === "gio_tin" && !isModal && <CartIcon className={styles.sidebarIcon} />}
-          {tag === "linh_vuc" && <LayerHalfIcon className={styles.sidebarIcon} />}
+          {tag === "linh_vuc" && !reportLayout && <LayerHalfIcon className={styles.sidebarIcon} />}
           {tag === "source_group" && <StackIcon className={styles.sidebarIcon} />}
           {tag === "chu_de" && <CollectionIcon className={styles.sidebarIcon} />}
           {tag === "source" && <SlashIcon className={styles.sidebarIcon} />}
@@ -57,7 +59,7 @@ export const Tree: React.FC<Props> = ({
             <PlusSquareOutlined
               style={{ fontSize: 16, color: "#1890ff", cursor: "pointer" }}
               onClick={handleAdd}
-              title={`Thêm ${MTreeTag[tag]} con`}
+              title={`Thêm ${MTreeTag[tag]}`}
             />
           </Col>
         )}

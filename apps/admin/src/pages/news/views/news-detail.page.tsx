@@ -12,6 +12,7 @@ import { useParams } from "react-router-dom";
 import { shallow } from "zustand/shallow";
 
 import EventsByNews from "../components/EventsByNews";
+import { NewsFilter } from "../components/news-filter";
 import { NewsFilterV2 } from "../components/news-filter-v2";
 import { NewsTableItem } from "../components/table-news";
 import { useNewsFilter } from "../news.context";
@@ -84,14 +85,10 @@ export const NewsDetailPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inView]);
 
-  const handleConvert = (status: any) => {
-    // status: true => convert news to event, false => convert event to news
-    setStatus(status);
-  };
-
   return (
     <>
-      <NewsFilterV2 handleConvert={handleConvert} />
+      {/* <NewsFilterV2 /> */}
+      <NewsFilter />
       <div className={styles.mainContainer}>
         <div className={styles.bodyNews}>
           <table style={{ width: "100%" }}>
@@ -99,7 +96,7 @@ export const NewsDetailPage = () => {
               {dataSource[0] !== undefined ? (
                 dataSource?.map((item) => (
                   <NewsTableItem
-                    userId={dataIAm._id}
+                    userId={dataIAm?._id}
                     key={item?._id}
                     item={item}
                     onDelete={handleDelete}

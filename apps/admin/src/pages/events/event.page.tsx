@@ -113,7 +113,11 @@ export const EventPage: React.FC<Props> = () => {
             onClick={handleExportWord}
             title="Tải file word"
           />
-          <DatePicker.RangePicker format={"DD/MM/YYYY"} onChange={handleChangeFilterTime} />
+          <DatePicker.RangePicker
+            inputReadOnly
+            format={"DD/MM/YYYY"}
+            onChange={handleChangeFilterTime}
+          />
           <Input.Search
             onSearch={(value) => {
               setFilterEvent({ ...filterEvent, event_name: value });

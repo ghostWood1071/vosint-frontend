@@ -12,7 +12,7 @@ export function SocialFilter(): JSX.Element {
       <Form onValuesChange={handleFinish}>
         <Space wrap>
           <Form.Item noStyle name="datetime">
-            <DatePicker.RangePicker />
+            <DatePicker.RangePicker inputReadOnly />
           </Form.Item>
           {/* <Form.Item noStyle> */}
           <Select placeholder="Dịch" defaultValue="nguon">
