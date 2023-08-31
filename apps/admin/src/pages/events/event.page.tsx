@@ -105,7 +105,7 @@ export const EventPage: React.FC<Props> = () => {
 
   return (
     <div className={styles.mainContainer}>
-      <div className={styles.filterContainer}>
+      <div className={styles.filterContainer} style={{width: "100%"}}>
         <Space wrap>
           <Button
             className={styles.item + " btn-tool"}
