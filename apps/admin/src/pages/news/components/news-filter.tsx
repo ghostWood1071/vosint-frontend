@@ -9,7 +9,7 @@ import { useSidebar } from "@/pages/app/app.store";
 import { useGetMe } from "@/pages/auth/auth.loader";
 import { 
   useDeleteNewsInNewsletter, useMutationChangeStatusSeenPost, 
-  useMutationDeleteNewsFromCategory, useMutationExportNews,
+  useMutationDeleteNewsFromCategory, useMutationDeleteNewsObject, useMutationExportNews,
   useNewsIdToNewsletter, useNewsSidebar,
 } from "@/pages/news/news.loader";
 import { buildTree } from "@/pages/news/news.utils";
@@ -55,7 +55,7 @@ export function NewsFilter(): JSX.Element {
 
   const [internalTextSearch, setInternalTextSearch] = useState("");
   const { mutate } = useMutationExportNews();
-  const { mutate: mutateDeleteNewsFromCategory } = useMutationDeleteNewsFromCategory();
+  const { mutate: mutateDeleteNewsObject } = useMutationDeleteNewsObject();
 
   function handleSetSeen(checkedSeen: boolean, idNews: string) {
     if (checkedSeen) {
@@ -80,13 +80,10 @@ export function NewsFilter(): JSX.Element {
   const handleRemoveNewsFromCategory = () => {
     const newsIds = newsSelection.map((news) => news._id);
     const objectIds = pathname.replace("/organization/", "");
-    const data = { news_ids: newsIds, object_ids: objectIds };
+    const data = { news_ids: newsIds, object_ids: [objectIds] };
 
-    mutateDeleteNewsFromCategory(data, {
-      onSuccess: (res) => {
-        // console.log(res);
-        // message.success("Xoá thành công");
-      },
+    mutateDeleteNewsObject(data, {
+      onSuccess: (res) => {},
       onError: (err) => {},
     });
   };
@@ -166,7 +163,7 @@ export function NewsFilter(): JSX.Element {
             onClick={() => setOpenNewsCategory(true)}
             title={"Thêm Tin Vào Danh Mục"}
           />
-        ) : (
+        ) : (dataIAm?.role === "admin") && (
           <Button
             icon={<RemoveNewsIcon />}
             className={styles.createIcon + " btn-tool"}
@@ -184,7 +181,7 @@ export function NewsFilter(): JSX.Element {
           title="Thêm tin"
         /> */}
 
-        {detailIds && ![ETreeTag.LINH_VUC, ETreeTag.CHU_DE].includes((tag ?? "") as ETreeTag) && (
+        {/* {detailIds && ![ETreeTag.LINH_VUC, ETreeTag.CHU_DE].includes((tag ?? "") as ETreeTag) && (
           <Button
             className={styles.item + " btn-tool"}
             icon={<MinusCircleTwoTone twoToneColor="#ff4d4f" />}
@@ -193,7 +190,7 @@ export function NewsFilter(): JSX.Element {
             onClick={handleRemoveNewsIds}
             title="Xoá tin"
           />
-        )}
+        )} */}
         </div>
 
         <Form.Item className={styles.item} name="datetime">

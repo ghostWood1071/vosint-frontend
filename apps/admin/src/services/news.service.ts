@@ -33,9 +33,14 @@ const exportNews = async (data: any) => {
   return result.data;
 };
 
-const addNewsToCategory = async (data: any) => {
-  // const result = await apiClient.post<any>(``, data);
-  // return result.data;
+const createNewsObject = async (data: any) => {
+  const result = await apiClient.post<any>(`/news/add-news-to-object`, data);
+  return result.data;
+};
+
+const deleteNewsObject = async (data: any) => {
+  const result = await apiClient.post<any>(`/news/remove-news-from-object`, data);
+  return result.data;
 };
 
 const checkMatchKeyword = async (data: any) => {
@@ -59,7 +64,8 @@ export {
   SetSeenPost,
   SetNotSeenPost,
   exportNews,
-  addNewsToCategory,
+  createNewsObject, 
+  deleteNewsObject,
   checkMatchKeyword,
   deleteNewsFromCategory,
 };

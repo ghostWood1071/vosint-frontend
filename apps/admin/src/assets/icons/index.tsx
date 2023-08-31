@@ -1,4 +1,4 @@
-import { AiOutlineFileWord, AiOutlinePlus, AiOutlineSave } from "react-icons/ai";
+import { AiOutlineFileWord, AiOutlineMinusCircle, AiOutlinePlus, AiOutlinePlusCircle, AiOutlineSave } from "react-icons/ai";
 import { BiMessageSquareAdd } from "react-icons/bi";
 import {
   MdDragIndicator,
@@ -15,13 +15,13 @@ import { RiDeleteBack2Line } from "react-icons/ri";
 
 const CreateIcon = () => (
   <span className="anticon">
-    <BiMessageSquareAdd />
+    <AiOutlinePlusCircle  />
   </span>
 );
 
 const RemoveNewsIcon = () => (
   <span className="anticon">
-    <RiDeleteBack2Line />
+    <AiOutlineMinusCircle />
   </span>
 );
 

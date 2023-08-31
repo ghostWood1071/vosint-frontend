@@ -14,6 +14,7 @@ import { useSidebar } from "../app.store";
 import classNames from "classnames";
 import styles from "./app-header.module.less";
 import "../less/app.less";
+import { useGetMe } from "@/pages/auth/auth.loader";
 
 export const AppHeader: React.FC = () => {
   const { t } = useTranslation("translation", { keyPrefix: "app" });

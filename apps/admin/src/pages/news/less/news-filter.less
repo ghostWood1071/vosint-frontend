@@ -18,10 +18,25 @@
     .btn-tool {
         border: none !important;       
         cursor: pointer !important;
+        background: none !important;
         
         svg {
-        cursor: pointer !important;
+            cursor: pointer !important;
+        }
 
+        &:hover {
+            color: inherit !important;
+            background: #f2f2f2 !important;
+        }
+
+        &[disabled]{
+            cursor: auto !important;
+        }
+
+        &[disabled]:hover {
+            cursor: auto !important;
+            color:  rgba(0, 0, 0, 0.25) !important;
+            background: unset !important;
         }
     }
 

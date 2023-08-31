@@ -23,7 +23,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import shallow from "zustand/shallow";
 
-import { useCheckMatchKeyword, useNewsIdToNewsletter, useNewsSidebar } from "../../news.loader";
+import { useCheckMatchKeyword, useMutationCreateNewsObject, useMutationDeleteNewsObject, useNewsIdToNewsletter, useNewsSidebar } from "../../news.loader";
 import { buildTree } from "../../news.utils";
 import "./news-category-modal.less";
 
@@ -45,44 +45,44 @@ const NewsCategoryModal = () => {
   );
 
   const { mutate: mutateCheckMatchKeyword } = useCheckMatchKeyword();
-
-  const handleCancel = () => setOpenNewsCategory(false);
+  const { mutate: mutateCreateNewsObject} = useMutationCreateNewsObject();
+  const { mutate: mutateDeleteNewsObject} = useMutationDeleteNewsObject();
 
   //build checkbox menu
   const { data: dataObject } = useObjectList(OBJECT_TYPE.DOI_TUONG, { name: "" });
   const { data: dataOrganization } = useObjectList(OBJECT_TYPE.TO_CHUC, { name: "" });
   const { data: dataRegion } = useObjectList(OBJECT_TYPE.QUOC_GIA, { name: "" });
 
+  
   const CATEGORY_OBJECT = "Danh Mục Đối Tượng";
   const CATEGORY_ORGANIZATION = "Danh Mục Tổ Chức";
   const CATEGORY_REGION = "Danh Mục Quốc Gia";
 
   const { Option } = Select;
   const { Title } = Typography;
+  const [objectIds, setObjectIds] = useState<any>([]);
+  const [organizationIds, setOrganizationIds] = useState<any>([]);
+  const [regionIds, setRegionIds] = useState<any>([]);
 
-  const confirmGo = (type: any) => {
-    if (type == 1) navigate("/config/object-cate-config");
-    if (type == 2) navigate("/config/organization-cate-config");
-    if (type == 3) navigate("/config/country-cate-config");
-  };
+  const handleCancel = () => setOpenNewsCategory(false);
 
   const handleChangeSelect = (e: any, type: number) => {
-    const selectionIds = newsSelection.map((news) => news._id);
-    const data = { news_ids: selectionIds, object_ids: e, new_keywords: [] };
-    setObjectSelection(e);
+    if(type == 1) setObjectIds(e);
+    if(type == 2) setOrganizationIds(e);
+    if(type == 3) setRegionIds(e);
+  };
 
+  const handleSubmit = () => {
+    const selectionIds = newsSelection.map((news) => news._id);
+    const data = { news_ids: selectionIds, object_ids: [...objectIds, ...organizationIds, ...regionIds], news_keyword: []};
     mutateCheckMatchKeyword(data, {
       onSuccess: (res) => {
         const check = res.find((news: any) => !news.is_contain);
 
         if (check) {
-          // setIsOpenModal(true);
-          // confirm
-          const question = confirm(
-            "Danh mục chưa có keyword liên quan đến tin, bạn có muốn chuyển đến trang cấu hình để thêm keyword không?",
-          );
-          if (question) confirmGo(type);
-          return;
+          mutateCreateNewsObject(data, {onSuccess: (res) => {
+            setOpenNewsCategory(false);
+          }, onError: (err) => { console.log(err) }})
         } else {
           message.success("Danh sách tin đã có trong mục đối tượng!");
         }
@@ -91,7 +91,7 @@ const NewsCategoryModal = () => {
         console.log("err", err);
       },
     });
-  };
+  }
 
   return (
     <>
@@ -101,7 +101,7 @@ const NewsCategoryModal = () => {
             className="news-category-modal-wrap"
             title={"Thêm tin vào danh mục"}
             open={openNewsCategory}
-            // onOk={handleSubmit}
+            onOk={handleSubmit}
             onCancel={handleCancel}
             getContainer="#modal-mount"
             okText="Thêm"
@@ -110,7 +110,7 @@ const NewsCategoryModal = () => {
             destroyOnClose
             // footer={null}
             // cancelButtonProps={{ style: { display: 'none' } }}
-            okButtonProps={{ style: { display: "none" } }}
+            // okButtonProps={{ style: { display: "none" } }}
           >
             <div>
               <div className="box">
@@ -247,6 +247,7 @@ const NewsCategoryModal = () => {
               </div>
             </div>
           </Modal>
+         
         </>
       )}
     </>

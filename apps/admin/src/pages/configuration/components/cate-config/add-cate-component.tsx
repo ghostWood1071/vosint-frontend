@@ -21,6 +21,9 @@ interface Props {
   functionEdit: (value: any) => void;
   setChoosedCate: (value: any) => void;
   typeObject: string;
+  handleSetKey?: any;
+  handleSetCondition?: any;
+  editKeywords?: boolean;
 }
 
 const formItemLayoutWithOutLabel = {
@@ -42,6 +45,9 @@ export const AddCateComponent: React.FC<Props> = ({
   functionEdit,
   setChoosedCate,
   typeObject,
+  handleSetKey,
+  handleSetCondition,
+  editKeywords
 }) => {
   const [newsSelection, setNewsSelection] = useNewsSelection(
     (state) => [state.newsSelection, state.setNewsSelection],
@@ -197,71 +203,77 @@ export const AddCateComponent: React.FC<Props> = ({
         open={isOpen}
         destroyOnClose
         confirmLoading={confirmLoading}
-        onOk={type === "add" ? handleAdd : handleEdit}
+        onOk={!editKeywords ? (type === "add" ? handleAdd : handleEdit) : functionEdit}
         onCancel={handleCancel}
         width={800}
         closable={false}
         maskClosable={false}
       >
+        
         <Form
           initialValues={initialValues ?? {}}
           form={form}
           {...formItemLayoutWithOutLabel}
           preserve={false}
         >
-          <Form.Item
-            label={"Tên " + nameTitle}
-            name={"name"}
-            validateTrigger={["onChange", "onBlur"]}
-            rules={[
-              {
-                required: true,
-                message: "Hãy nhập vào tên " + nameTitle + "!",
-                whitespace: true,
-                pattern: new RegExp("[A-Za-z]{1}"),
-              },
-            ]}
-          >
-            <Input defaultValue={type === "edit" ? choosedCate.name : ""} />
-          </Form.Item>
-          <Form.Item
-            validateTrigger={["onChange", "onBlur"]}
-            label="Link Facebook"
-            name={"facebook_link"}
-          >
-            <Input defaultValue={type === "edit" ? choosedCate.facebook_link : ""} />
-          </Form.Item>
-          <Form.Item
-            validateTrigger={["onChange", "onBlur"]}
-            label="Link Twitter"
-            name={"twitter_link"}
-          >
-            <Input defaultValue={type === "edit" ? choosedCate.twitter_link : ""} />
-          </Form.Item>
-          <Form.Item
-            validateTrigger={["onChange", "onBlur"]}
-            label="Link Profile"
-            name={"profile_link"}
-          >
-            <Input defaultValue={type === "edit" ? choosedCate.profile_link : ""} />
-          </Form.Item>
-
-          <Form.Item validateTrigger={["onChange", "onBlur"]} label="Profile" name={"profile"}>
-            <Input defaultValue={type === "edit" ? choosedCate.profile : ""} />
-          </Form.Item>
-          <Form.Item label={"Upload avatar"}>
-            <Upload
-              listType="picture-card"
-              fileList={fileList}
-              onChange={onChange}
-              onPreview={onPreview}
-              onRemove={onRemove}
-              beforeUpload={() => false}
-              accept={"image/*"}
+          {!editKeywords && (
+            <>
+            <Form.Item
+              label={"Tên " + nameTitle}
+              name={"name"}
+              validateTrigger={["onChange", "onBlur"]}
+              rules={[
+                {
+                  required: true,
+                  message: "Hãy nhập vào tên " + nameTitle + "!",
+                  whitespace: true,
+                  pattern: new RegExp("[A-Za-z]{1}"),
+                },
+              ]}
             >
-              {fileList.length < 1 && "+ Upload"}
-            </Upload>
-          </Form.Item>
+              <Input defaultValue={type === "edit" ? choosedCate.name : ""} />
+            </Form.Item>
+            <Form.Item
+              validateTrigger={["onChange", "onBlur"]}
+              label="Link Facebook"
+              name={"facebook_link"}
+            >
+              <Input defaultValue={type === "edit" ? choosedCate.facebook_link : ""} />
+            </Form.Item>
+            <Form.Item
+              validateTrigger={["onChange", "onBlur"]}
+              label="Link Twitter"
+              name={"twitter_link"}
+            >
+              <Input defaultValue={type === "edit" ? choosedCate.twitter_link : ""} />
+            </Form.Item>
+            <Form.Item
+              validateTrigger={["onChange", "onBlur"]}
+              label="Link Profile"
+              name={"profile_link"}
+            >
+              <Input defaultValue={type === "edit" ? choosedCate.profile_link : ""} />
+            </Form.Item>
+
+            <Form.Item validateTrigger={["onChange", "onBlur"]} label="Profile" name={"profile"}>
+              <Input defaultValue={type === "edit" ? choosedCate.profile : ""} />
+            </Form.Item>
+            <Form.Item label={"Upload avatar"}>
+              <Upload
+                listType="picture-card"
+                fileList={fileList}
+                onChange={onChange}
+                onPreview={onPreview}
+                onRemove={onRemove}
+                beforeUpload={() => false}
+                accept={"image/*"}
+              >
+                {fileList.length < 1 && "+ Upload"}
+              </Upload>
+            </Form.Item>
+            </>
+          )}
+          
 
           {/* <input type="file" onChange={onChange} /> */}
           <div className={styles.conditionContainer}>
@@ -277,6 +289,7 @@ export const AddCateComponent: React.FC<Props> = ({
                     }
                     onClick={() => {
                       setConditionValue("vi");
+                      if(editKeywords) handleSetCondition("vi");
                     }}
                   >
                     Tiếng Việt
@@ -291,6 +304,8 @@ export const AddCateComponent: React.FC<Props> = ({
                     }
                     onClick={() => {
                       setConditionValue("en");
+                      if(editKeywords) handleSetCondition("en");
+
                     }}
                   >
                     Tiếng Anh
@@ -305,6 +320,8 @@ export const AddCateComponent: React.FC<Props> = ({
                     }
                     onClick={() => {
                       setConditionValue("cn");
+                      if(editKeywords) handleSetCondition("cn");
+
                     }}
                   >
                     Tiếng Trung
@@ -319,6 +336,8 @@ export const AddCateComponent: React.FC<Props> = ({
                     }
                     onClick={() => {
                       setConditionValue("ru");
+                      if(editKeywords) handleSetCondition("ru");
+
                     }}
                   >
                     Tiếng Nga
@@ -329,6 +348,8 @@ export const AddCateComponent: React.FC<Props> = ({
                 <Input
                   onChange={(event) => {
                     setKey({ ...key, [conditionValue]: event.target.value });
+                    if(editKeywords)
+                      handleSetKey(event.target.value);
                   }}
                   value={key[conditionValue]}
                 />

@@ -32,16 +32,23 @@ export const OrganizationsDetailPage: React.FC<Props> = () => {
   const newsFilter = useNewsFilter();
   const { mutate: mutateChangeStatusSeenPost } = useMutationChangeStatusSeenPost();
 
+  
+  console.log("key-search", keySearch)
+  console.log("news-filter-search", newsFilter.text_search)
   // useInfiniteNewsByObject
   const { data, isFetchingNextPage, fetchNextPage, hasNextPage } = useInfiniteNewsByObject({
     ...newsFilter,
-    text_search:
-      keySearch +
-      (newsFilter.text_search !== "" && newsFilter.text_search !== undefined
-        ? `${keySearch !== "" ? "+" : ""}"${newsFilter.text_search}"`
-        : ""),
-    order: "pub_date",
+    // text_search:
+    //   keySearch +
+    //   (newsFilter.text_search !== "" && newsFilter.text_search !== undefined
+    //     ? `${keySearch !== "" ? "+" : ""}"${newsFilter.text_search}"`
+    //     : ""),
+    text_search: newsFilter.text_search,
+    // order: "pub_date",
+    object_id: id
   });
+  console.log(data);
+
   const { data: dataIAm } = useGetMe();
 
   const [setNewsSelection] = useNewsSelection((state) => [state.setNewsSelection], shallow);
