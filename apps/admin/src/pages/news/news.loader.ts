@@ -24,9 +24,10 @@ import {
 import {
   SetNotSeenPost,
   SetSeenPost,
-  addNewsToCategory,
   checkMatchKeyword,
+  createNewsObject,
   deleteNewsFromCategory,
+  deleteNewsObject,
   exportNews,
   getNewsDetail,
 } from "@/services/news.service";
@@ -114,6 +115,49 @@ export const useMutationSwitch = () => {
 
       message.success({
         content: "Chuyển đổi thành công!",
+        key: CACHE_KEYS.SWITCH,
+      });
+    },
+    onError: (err) => {
+      message.error({
+        content: err || "Lỗi",
+        key: CACHE_KEYS.SWITCH,
+      });
+    },
+  });
+};
+
+export const useMutationCreateNewsObject = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation((data: any) => createNewsObject(data), {
+    onSuccess: () => {
+      queryClient.invalidateQueries(CACHE_KEYS.SWITCH);
+
+      message.success({
+        content: "Thêm thành công!",
+        key: CACHE_KEYS.SWITCH,
+      });
+    },
+    onError: (err) => {
+      message.error({
+        content: err || "Lỗi",
+        key: CACHE_KEYS.SWITCH,
+      });
+    },
+  });
+};
+
+
+export const useMutationDeleteNewsObject = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation((data: any) => deleteNewsObject(data), {
+    onSuccess: () => {
+      queryClient.invalidateQueries(CACHE_KEYS.SWITCH);
+
+      message.success({
+        content: "Xoá thành công!",
         key: CACHE_KEYS.SWITCH,
       });
     },

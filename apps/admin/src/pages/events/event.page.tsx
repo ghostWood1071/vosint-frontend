@@ -27,6 +27,8 @@ import { EventItem } from "./components/event-item";
 import EventSummaryModal from "./components/event-summary-modal";
 import { EVENT_CACHE_KEYS, useInfiniteEventsList, useMutationEvents } from "./event.loader";
 import styles from "./event.module.less";
+import "../news/less/news-filter.less"
+import "./less/event.less";
 
 interface Props {}
 
@@ -112,6 +114,7 @@ export const EventPage: React.FC<Props> = () => {
             icon={<FileWordOutlined />}
             onClick={handleExportWord}
             title="Tải file word"
+            style={{ border: "none !important"}}
             disabled={eventChoosedList.length == 0}
           />
           <DatePicker.RangePicker
@@ -147,7 +150,7 @@ export const EventPage: React.FC<Props> = () => {
         </Space>
       </div>
       <div className={styles.body}>
-        <div className={styles.recordsContainer}>
+        <div className={styles.recordsContainer  + " event-container"}>
           <LexicalComposer initialConfig={initialConfig}>
             <EventProvider>
               <EventPlugin eventEditorConfig={eventConfig}>

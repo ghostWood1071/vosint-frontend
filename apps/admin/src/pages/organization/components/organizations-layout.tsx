@@ -5,12 +5,11 @@ import { NewsFilterProvider } from "@/pages/news/news.context";
 import { getOrganizationsDetailUrl, organizationGraphPath } from "@/pages/router";
 import { UserOutlined } from "@ant-design/icons";
 import { Avatar, Input, Menu, MenuProps, Pagination, Space, Typography } from "antd";
-import produce from "immer";
 import { useState } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-
 import { OBJECT_TYPE, useObjectList } from "../organizations.loader";
 import { useOrganizationsStore } from "../organizations.store";
+import produce from "immer";
 import styles from "./organizations-layout.module.less";
 
 export const OrganizationsLayout: React.FC = () => {

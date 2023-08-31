@@ -103,7 +103,7 @@ export function NewsletterFormChuDe({ title, keyword, setKeyword }: Props): JSX.
     <>
       <Form.Item
         labelAlign="right"
-        label={<div style={{ width: 110 }}>{`Tên ${title}`}</div>}
+        label={<div className="topic-title">{`Tên ${title}`}</div>}
         name="title"
         rules={rulesTitle(title)}
       >
