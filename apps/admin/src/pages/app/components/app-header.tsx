@@ -85,7 +85,7 @@ export const AppHeader: React.FC = () => {
           />
         </Link>
       </Col>
-      <Col span={17} push={1} className={styles.navbar}>
+      <Col span={18} push={1} className={styles.navbar}>
         <Row
           // justify="space-between"
           align="middle"
