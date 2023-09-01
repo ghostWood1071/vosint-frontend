@@ -38,11 +38,12 @@ const EventsByNews = ({ newsletterId, dataSource }: { newsletterId: any; dataSou
               dataSource={dataEvents}
               renderItem={(item) => {
                 return (
-                  <SystemEventItem
-                    item={item}
-                    eventChoosedList={eventChoosedList}
-                    setEventChoosedList={setEventChoosedList}
-                  />
+                  <></>
+                  // <SystemEventItem
+                  //   item={item}
+                  //   eventChoosedList={eventChoosedList}
+                  //   setEventChoosedList={setEventChoosedList}
+                  // />
                 );
               }}
             />
