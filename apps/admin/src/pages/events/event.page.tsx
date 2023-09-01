@@ -118,6 +118,8 @@ export const EventPage: React.FC<Props> = () => {
           <Button
             icon={<UnreadIcon className={styles.unreadIcon} />}
             className={styles.iconWrapBtn + " btn-tool"}
+            disabled={true}
+            title={"Đang tích hợp tính năng"}
             // disabled={!(!seen && unseen) && !(seen && unseen)}
           />
         </div>
@@ -132,6 +134,8 @@ export const EventPage: React.FC<Props> = () => {
           <Button
             icon={<ReadIcon className={styles.readIcon} />}
             // disabled={!(seen && !unseen) && !(seen && unseen)}
+            disabled={true}
+            title={"Đang tích hợp tính năng"}
             className={styles.iconWrapBtn + " btn-tool"}
           />
         </div>

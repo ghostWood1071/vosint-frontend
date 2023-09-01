@@ -52,7 +52,7 @@ export const OrganizationsDetailPage: React.FC<Props> = () => {
   const { mutateAsync: mutateDelete } = useDeleteNewsInNewsletter();
   const { mutate: mutateAdd } = useNewsIdToNewsletter();
 
-  const dataSource = unionBy(
+  let dataSource = unionBy(
     flatMap(
       data?.pages.map((a) =>
         a?.result?.map((e: any) => ({
@@ -99,15 +99,22 @@ export const OrganizationsDetailPage: React.FC<Props> = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [skip]);
 
+  const [filterData, setFilterData] = useState<any>([]);
+  const handleDeleteNews = (newsSelection: any) => {
+    const newsIds = newsSelection.map((news: any) => news._id);
+    dataSource = dataSource.filter(item => !newsIds.includes(item._id));
+    setFilterData(dataSource);
+  }
+
   return (
     <>
-      <NewsFilter />
+      <NewsFilter organization={true} handleDeleteNews={(newsSelection: any) => handleDeleteNews(newsSelection)}/>
       <div className={styles.mainContainer}>
         <div className={styles.bodyNews}>
           <table style={{ width: "100%" }}>
             <tbody>
               {dataSource[0] !== undefined ? (
-                dataSource.map((item) => (
+                (filterData.length > 0 ? filterData : dataSource).map((item: any) => (
                   <NewsTableItem
                     userId={dataIAm._id}
                     key={item._id}

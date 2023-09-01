@@ -28,7 +28,9 @@ import produce from "immer";
 import styles from "./news-filter.module.less";
 import "../less/news-filter.less";
 
-export function NewsFilter(): JSX.Element {
+export function NewsFilter(
+  {handleDeleteNews, organization}:
+  {handleDeleteNews?: any, organization?: any}): JSX.Element {
   const { data: dataIAm } = useGetMe();
   let { newsletterId: detailIds, tag } = useParams();
   const { pathname } = useLocation();
@@ -82,10 +84,28 @@ export function NewsFilter(): JSX.Element {
     const objectIds = pathname.replace("/organization/", "");
     const data = { news_ids: newsIds, object_ids: [objectIds] };
 
-    mutateDeleteNewsObject(data, {
-      onSuccess: (res) => {},
-      onError: (err) => {},
+    Modal.confirm({
+      title: "Bạn có chắc muốn xoá những bản tin này không?",
+      icon: <ExclamationCircleOutlined />,
+      okText: "Xoá",
+      cancelText: "Huỷ",
+      onOk() {
+        mutateDeleteNewsObject(data, {
+          onSuccess: (res) => {
+            handleDeleteNews(newsSelection);
+            setNewsSelection([]);
+          },
+          onError: (err) => {},
+        });
+      },
     });
+    // mutateDeleteNewsObject(data, {
+    //   onSuccess: (res) => {
+    //     console.log("res", res);
+    //     // const index = 
+    //   },
+    //   onError: (err) => {},
+    // });
   };
 
   // const seen = newsSelection.find((item: any) => item.is_read);
@@ -158,7 +178,7 @@ export function NewsFilter(): JSX.Element {
             onClick={() => setOpenNewsCategory(true)}
             title={"Thêm Tin Vào Danh Mục"}
           />
-        ) : (dataIAm?.role === "admin") && (
+        ) : (dataIAm?.role === "admin" && organization) && (
           <Button
             icon={<RemoveNewsIcon />}
             className={styles.createIcon + " btn-tool"}
