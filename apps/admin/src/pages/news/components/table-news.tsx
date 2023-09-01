@@ -41,6 +41,7 @@ import { MindmapModal } from "./mindmap-modal";
 import { NewDetailSummary } from "./news-detail/components";
 import "./table-news.less";
 import styles from "./table-news.module.less";
+import "@/assets/img/default-thumbnail.jpg";
 
 interface Props {
   item: any;
@@ -50,7 +51,7 @@ interface Props {
   lengthDataSource: number;
   typeTranslate: string;
   userId?: string;
-  setSeen: (value: boolean, idNews: string) => void;
+  setSeen: (value: boolean, data: any) => void;
   handleUpdateCache: (value: string, func: Function) => void;
 }
 
@@ -75,7 +76,7 @@ export const NewsTableItem: React.FC<Props> = ({
   const setOpenSelection = useNewsSelection((state) => state.setOpen);
   const [typeShow, setTypeShow] = useState<boolean>(true);
 
-  const checkSeen = item.list_user_read?.findIndex((e: string) => e === userId) ?? -1;
+  const checkSeen = item.list_user_read ? item.list_user_read?.findIndex((e: string) => e === userId) : -1;
 
   const [typeDetail, setTypeDetail] = useState<any>("content");
   const [isVisibleModalMindmap, setIsVisibleModalMindmap] = useState<boolean>(false);
@@ -113,11 +114,12 @@ export const NewsTableItem: React.FC<Props> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [newsSelection, lengthDataSource]);
 
+
   return (
     <>
       {typeShow ? (
         <tr ref={Ref} className={styles.header}>
-          <td width={135}>
+          <td width={120}>
             <Space>
               {/* <div className={styles.statusContainer}>
                 <button
@@ -183,12 +185,16 @@ export const NewsTableItem: React.FC<Props> = ({
           </td>
           <td className={styles.sourceNameContainer}>
             <Tooltip title={item["source_name"].length >= 14 ? item["source_name"] : null}>
-              <div
+              {/* <div
                 className={checkSeen !== -1 ? styles.seenSourceNameHeader : styles.sourceNameHeader}
                 // className={item.is_read ? styles.seenSourceNameHeader : styles.sourceNameHeader}
                 // style={{ color: item.is_read ? "#c0c0c0" : "black" }}
               >
                 {item["source_name"]}
+              </div> */}
+              <div style={{ marginRight: "10px" }}>
+                <img src={item["source_favicon"]} title={item["source_name"]} className="source-icon" alt="" />
+                {/* <img src={"https://dantri.com.vn/favicon.ico"} title={item["source_name"]} className="source-icon" alt="" /> */}
               </div>
             </Tooltip>
           </td>
@@ -198,7 +204,7 @@ export const NewsTableItem: React.FC<Props> = ({
               setTypeShow(!typeShow);
 
               if (checkSeen === -1) {
-                setSeen(true, item._id);
+                setSeen(true, newsSelection.map((news:any) => news._id));
               }
               // if (!item.is_read) {
               //   setSeen(true, item._id);

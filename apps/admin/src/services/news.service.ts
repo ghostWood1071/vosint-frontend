@@ -15,13 +15,13 @@ const getNewsDetail = async (id: string) => {
   return result.data;
 };
 
-const SetSeenPost = async (newsId: string) => {
-  const result = await apiClient.post<any>(`/news/read/${newsId}`);
+const SetSeenPost = async (data: any) => {
+  const result = await apiClient.post<any>(`/news/read`, data);
   return result.data;
 };
 
-const SetNotSeenPost = async (newsId: string) => {
-  const result = await apiClient.post<any>(`/news/unread/${newsId}`);
+const SetNotSeenPost = async (data: any) => {
+  const result = await apiClient.post<any>(`/news/unread`, data);
   return result.data;
 };
 

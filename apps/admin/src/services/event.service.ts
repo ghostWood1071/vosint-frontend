@@ -73,6 +73,16 @@ const AddManyEventToNews = async (data: any, news_id: string) => {
   return result.data;
 };
 
+const SetSeenEvent = async (data: any) => {
+  const result = await apiClient.post<any>(`/events/read`, data);
+  return result.data;
+};
+
+const SetNotSeenEvent = async (data: any) => {
+  const result = await apiClient.post<any>(`/events/unread`, data);
+  return result.data;
+};
+
 const updateEvent = async (id: string, data: any) => {
   const result = await apiClient.put(`/event/${id}`, data);
   return result.data;
@@ -142,6 +152,8 @@ export {
   createEventFromUser,
   createEventNews,
   AddManyEventToNews,
+  SetSeenEvent,
+  SetNotSeenEvent,
   updateEvent,
   updateEventNews,
   updateEventCreatedByUser,

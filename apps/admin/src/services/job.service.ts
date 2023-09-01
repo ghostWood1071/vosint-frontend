@@ -106,7 +106,6 @@ const getEventFormElt = async (filter: Record<string, any>) => {
 // };
 
 const getNewsBasedOnObject = async (filter: Record<string, string>) => {
-  console.log("filter", filter);
   const result = await apiClient.post(`${BASE_URL}/Job/search_news_from_object`, "", {
     params: filterEmptyString(filter),
   });

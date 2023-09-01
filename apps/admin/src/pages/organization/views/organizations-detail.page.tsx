@@ -33,8 +33,6 @@ export const OrganizationsDetailPage: React.FC<Props> = () => {
   const { mutate: mutateChangeStatusSeenPost } = useMutationChangeStatusSeenPost();
 
   
-  console.log("key-search", keySearch)
-  console.log("news-filter-search", newsFilter.text_search)
   // useInfiniteNewsByObject
   const { data, isFetchingNextPage, fetchNextPage, hasNextPage } = useInfiniteNewsByObject({
     ...newsFilter,
@@ -47,7 +45,6 @@ export const OrganizationsDetailPage: React.FC<Props> = () => {
     // order: "pub_date",
     object_id: id
   });
-  console.log(data);
 
   const { data: dataIAm } = useGetMe();
 
@@ -169,11 +166,11 @@ export const OrganizationsDetailPage: React.FC<Props> = () => {
     }
   }
 
-  function handleSetSeen(checkedSeen: boolean, idNews: string) {
+  function handleSetSeen(checkedSeen: boolean, data: any) {
     if (checkedSeen) {
-      mutateChangeStatusSeenPost({ action: "set-seen", newsId: idNews });
+      mutateChangeStatusSeenPost({ action: "set-seen", data: data });
     } else {
-      mutateChangeStatusSeenPost({ action: "set-unseen", newsId: idNews });
+      mutateChangeStatusSeenPost({ action: "set-unseen", data: data });
     }
   }
 

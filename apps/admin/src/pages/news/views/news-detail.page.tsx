@@ -41,6 +41,8 @@ export const NewsDetailPage = () => {
     newsFilter,
     tag ?? "",
   );
+
+
   const { data: dataIAm } = useGetMe();
   const { mutateAsync: mutateDelete } = useDeleteNewsInNewsletter();
   const { mutate: mutateAdd } = useNewsIdToNewsletter();
@@ -62,6 +64,8 @@ export const NewsDetailPage = () => {
     ),
     "_id",
   );
+  console.log(dataSource);
+
 
   // const data1 =data?.pages.map((a) =>
   //   a?.result?.map((e: any) => ({
@@ -162,11 +166,11 @@ export const NewsDetailPage = () => {
     }
   }
 
-  function handleSetSeen(checkedSeen: boolean, idNews: string) {
+  function handleSetSeen(checkedSeen: boolean, data: any) {
     if (checkedSeen) {
-      mutateChangeStatusSeenPost({ action: "set-seen", newsId: idNews });
+      mutateChangeStatusSeenPost({ action: "set-seen", data: data });
     } else {
-      mutateChangeStatusSeenPost({ action: "set-unseen", newsId: idNews });
+      mutateChangeStatusSeenPost({ action: "set-unseen", data: data });
     }
   }
 

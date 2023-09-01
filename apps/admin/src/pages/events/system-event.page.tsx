@@ -21,6 +21,7 @@ import { EVENT_CACHE_KEYS, useInfiniteEventsList, useMutationExportEvents } from
 import styles from "./event.module.less";
 import "../news/less/news-filter.less"
 import "./less/event.less";
+import { useGetMe } from "../auth/auth.loader";
 
 interface Props {}
 
@@ -31,6 +32,7 @@ interface FilterEventProps {
 }
 
 export const SystemEventPage: React.FC<Props> = () => {
+  const { data: dataIAm } = useGetMe();
   const [skip, setSkip] = useState<number>(1);
   const pinned = useSidebar((state) => state.pinned);
   const [filterEvent, setFilterEvent] = useState<FilterEventProps>();
@@ -73,9 +75,35 @@ export const SystemEventPage: React.FC<Props> = () => {
   };
 
   return (
-    <div className={styles.mainContainer}>
+    <div className={styles.mainContainer + " system-event-container"}>
       <div className={(pinned ? styles.filterContainerWithSidebar : styles.filterContainer) + " app-filter"}>
         <Space wrap>
+          <div
+            className={`${styles.iconWrap} newsFilter__btn`}
+            onClick={() => {
+            }}
+            title="Đánh dấu đã đọc sự kiện"
+          >
+            <Button
+              icon={<UnreadIcon className={styles.unreadIcon} />}
+              className={styles.iconWrapBtn + " btn-tool"}
+              // disabled={!(!seen && unseen) && !(seen && unseen)}
+            />
+          </div>
+
+          <div
+            className={styles.iconWrap + " " + styles.iconWrapLast + " newsFilter__btn"}
+            onClick={() => {
+            
+            }}
+            title="Đánh dấu chưa đọc sự kiện"
+          >
+            <Button
+              icon={<ReadIcon className={styles.readIcon} />}
+              // disabled={!(seen && !unseen) && !(seen && unseen)}
+              className={styles.iconWrapBtn + " btn-tool"}
+            />
+          </div>
           <Button
             className={styles.item + " btn-tool"}
             icon={<FileWordOutlined />}
@@ -88,11 +116,7 @@ export const SystemEventPage: React.FC<Props> = () => {
             format={"DD/MM/YYYY"}
             onChange={handleChangeFilterTime}
           />
-          <Input.Search
-            onSearch={(value) => {
-              setFilterEvent({ ...filterEvent, event_name: value });
-            }}
-          />
+          
           {/* summary */}
           <EventSummaryModal eventChoosedList={eventChoosedList} isUserEvent={false} />
           <Button
@@ -104,6 +128,11 @@ export const SystemEventPage: React.FC<Props> = () => {
           >
             Thêm sự kiện vào báo cáo ({eventChoosedList.length})
           </Button>
+          <Input.Search
+            onSearch={(value) => {
+              setFilterEvent({ ...filterEvent, event_name: value });
+            }}
+          />
         </Space>
       </div>
       <div className={styles.body}>
@@ -117,6 +146,7 @@ export const SystemEventPage: React.FC<Props> = () => {
                 return (
                   <SystemEventItem
                     item={item}
+                    userId={dataIAm._id}
                     eventChoosedList={eventChoosedList}
                     setEventChoosedList={setEventChoosedList}
                   />
