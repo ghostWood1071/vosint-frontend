@@ -64,8 +64,6 @@ export const NewsDetailPage = () => {
     ),
     "_id",
   );
-  console.log(dataSource);
-
 
   // const data1 =data?.pages.map((a) =>
   //   a?.result?.map((e: any) => ({

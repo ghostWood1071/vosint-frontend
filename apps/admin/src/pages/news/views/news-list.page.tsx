@@ -53,7 +53,6 @@ export const NewsListPage: React.FC<Props> = () => {
     ),
     "_id",
   );
-  console.log("data", dataSource);
 
   useEffect(() => {
     queryClient.removeQueries([CACHE_KEYS.NewsList]);

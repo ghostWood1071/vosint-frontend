@@ -87,6 +87,8 @@ export const SystemEventPage: React.FC<Props> = () => {
             <Button
               icon={<UnreadIcon className={styles.unreadIcon} />}
               className={styles.iconWrapBtn + " btn-tool"}
+              disabled={true}
+              title={"Đang tích hợp tính năng"}
               // disabled={!(!seen && unseen) && !(seen && unseen)}
             />
           </div>
@@ -102,6 +104,8 @@ export const SystemEventPage: React.FC<Props> = () => {
               icon={<ReadIcon className={styles.readIcon} />}
               // disabled={!(seen && !unseen) && !(seen && unseen)}
               className={styles.iconWrapBtn + " btn-tool"}
+              disabled={true}
+              title={"Đang tích hợp tính năng"}
             />
           </div>
           <Button

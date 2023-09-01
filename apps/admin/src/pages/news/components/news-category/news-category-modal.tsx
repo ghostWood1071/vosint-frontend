@@ -104,7 +104,7 @@ const NewsCategoryModal = () => {
       name: "Đối tượng",
       child: 
         <div className="box__category">
-          <Title level={5}>{CATEGORY_OBJECT}</Title>
+          {/* <Title level={5}>{CATEGORY_OBJECT}</Title> */}
           <Checkbox.Group
             options={dataObject?.data.map((obj: any) => ({
               label: obj.name,
@@ -119,7 +119,7 @@ const NewsCategoryModal = () => {
       name: "Tổ chức",
       child: 
         <div className="box__category">
-          <Title level={5}>{CATEGORY_ORGANIZATION}</Title>
+          {/* <Title level={5}>{CATEGORY_ORGANIZATION}</Title> */}
           <Checkbox.Group
             options={dataOrganization?.data.map((obj: any) => ({
               label: obj.name,
@@ -134,7 +134,7 @@ const NewsCategoryModal = () => {
       name: "Quốc gia",
       child: 
         <div className="box__category">
-          <Title level={5}>{CATEGORY_REGION}</Title>
+          {/* <Title level={5}>{CATEGORY_REGION}</Title> */}
           <Checkbox.Group
             options={dataRegion?.data.map((obj: any) => ({
               label: obj.name,
