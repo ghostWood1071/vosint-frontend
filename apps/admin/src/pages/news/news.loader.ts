@@ -486,13 +486,13 @@ export const useMutationAddManyEvent = () => {
 export const useMutationChangeStatusSeenPost = () => {
   const queryClient = useQueryClient();
   return useMutation(
-    ({ action, newsId }: any) => {
+    ({ action, data }: any) => {
       if (action === "set-seen") {
-        return SetSeenPost(newsId);
+        return SetSeenPost(data);
       }
 
       if (action === "set-unseen") {
-        return SetNotSeenPost(newsId);
+        return SetNotSeenPost(data);
       }
 
       throw new Error("action invalid");

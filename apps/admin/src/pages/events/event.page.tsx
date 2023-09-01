@@ -18,7 +18,8 @@ import { flatMap, unionBy } from "lodash";
 import React, { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import { useQueryClient } from "react-query";
-
+import { ReactComponent as UnreadIcon } from "@/assets/svg/envelope-open.svg";
+import { ReactComponent as ReadIcon } from "@/assets/svg/envelope.svg";
 import { QuickReportModal } from "../news/components/quick-report-modal";
 import { ReportModal } from "../news/components/report-modal";
 import { useReportModalState } from "../news/components/report-modal/index.state";
@@ -51,7 +52,6 @@ export const EventPage: React.FC<Props> = () => {
   const { data, isFetchingNextPage, fetchNextPage, hasNextPage } =
     useInfiniteEventsList(filterEvent);
   const { mutate } = useMutationEvents();
-
   const setEvent = useReportModalState((state) => state.setEvent);
 
   const dataSource = unionBy(flatMap(data?.pages.map((a) => a?.data?.map((e: any) => e))), "_id");
@@ -109,6 +109,32 @@ export const EventPage: React.FC<Props> = () => {
     <div className={styles.mainContainer}>
       <div className={styles.filterContainer} style={{width: "100%"}}>
         <Space wrap>
+        <div
+          className={`${styles.iconWrap} newsFilter__btn`}
+          onClick={() => {
+          }}
+          title="Đánh dấu đã đọc sự kiện"
+        >
+          <Button
+            icon={<UnreadIcon className={styles.unreadIcon} />}
+            className={styles.iconWrapBtn + " btn-tool"}
+            // disabled={!(!seen && unseen) && !(seen && unseen)}
+          />
+        </div>
+
+        <div
+          className={styles.iconWrap + " " + styles.iconWrapLast + " newsFilter__btn"}
+          onClick={() => {
+          
+          }}
+          title="Đánh dấu chưa đọc sự kiện"
+        >
+          <Button
+            icon={<ReadIcon className={styles.readIcon} />}
+            // disabled={!(seen && !unseen) && !(seen && unseen)}
+            className={styles.iconWrapBtn + " btn-tool"}
+          />
+        </div>
           <Button
             className={styles.item + " btn-tool"}
             icon={<FileWordOutlined />}
@@ -122,11 +148,7 @@ export const EventPage: React.FC<Props> = () => {
             format={"DD/MM/YYYY"}
             onChange={handleChangeFilterTime}
           />
-          <Input.Search
-            onSearch={(value) => {
-              setFilterEvent({ ...filterEvent, event_name: value });
-            }}
-          />
+        
           {/* summary */}
           <EventSummaryModal eventChoosedList={eventChoosedList} isUserEvent={true} />
           <Button
@@ -147,6 +169,11 @@ export const EventPage: React.FC<Props> = () => {
           >
             Thêm sự kiện
           </Button>
+          <Input.Search
+            onSearch={(value) => {
+              setFilterEvent({ ...filterEvent, event_name: value });
+            }}
+          />
         </Space>
       </div>
       <div className={styles.body}>

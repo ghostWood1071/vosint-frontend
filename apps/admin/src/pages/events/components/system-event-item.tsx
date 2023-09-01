@@ -25,6 +25,7 @@ import styles from "./system-event-item.module.less";
 
 interface Props {
   item: any;
+  userId: any;
   eventChoosedList: any[];
   setEventChoosedList: (value: any) => void;
 }
@@ -33,6 +34,7 @@ export const SystemEventItem: React.FC<Props> = ({
   item,
   eventChoosedList,
   setEventChoosedList,
+  userId,
 }) => {
   const setQuickEvent = useQuickReportModalState((state) => state.setEvent);
   const [checkbox, setCheckbox] = useState<boolean>(false);
@@ -40,8 +42,8 @@ export const SystemEventItem: React.FC<Props> = ({
   const [typeDetail, setTypeDetail] = useState<any>("content");
   const { mutate } = useMutationSystemEvents();
   const { data: dataIAm } = useGetMe();
+  const checkSeen = item.list_user_read?.findIndex((e: string) => e === userId) ?? -1;
   const Ref = useRef<any>();
-
   useEffect(() => {
     const a = eventChoosedList.findIndex((e) => e._id === item._id);
     if (a !== -1) {

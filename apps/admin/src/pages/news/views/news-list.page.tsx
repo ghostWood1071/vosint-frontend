@@ -53,6 +53,7 @@ export const NewsListPage: React.FC<Props> = () => {
     ),
     "_id",
   );
+  console.log("data", dataSource);
 
   useEffect(() => {
     queryClient.removeQueries([CACHE_KEYS.NewsList]);
@@ -91,8 +92,8 @@ export const NewsListPage: React.FC<Props> = () => {
               {dataSource[0] !== undefined ? (
                 dataSource.map((item) => (
                   <NewsTableItem
-                    // userId={dataIAm._id}
-                    userId="64aae3b628920312b13905de"
+                    userId={dataIAm._id}
+                    // userId="64aae3b628920312b13905de"
                     key={item._id}
                     item={item}
                     onDelete={handleDelete}
@@ -149,11 +150,11 @@ export const NewsListPage: React.FC<Props> = () => {
     }
   }
 
-  function handleSetSeen(checkedSeen: boolean, idNews: string) {
+  function handleSetSeen(checkedSeen: boolean, data: any) {
     if (checkedSeen) {
-      mutateChangeStatusSeenPost({ action: "set-seen", newsId: idNews });
+      mutateChangeStatusSeenPost({ action: "set-seen", data: data });
     } else {
-      mutateChangeStatusSeenPost({ action: "set-unseen", newsId: idNews });
+      mutateChangeStatusSeenPost({ action: "set-unseen", data: data });
     }
   }
 

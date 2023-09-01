@@ -1,19 +1,21 @@
-.ant-modal-wrap {
-    display: grid;
-    place-items: center;
-}
+
 
 .box:not(:last-child) {
     margin-bottom: 50px;
 }
 
 .news-category-modal-wrap {
+    .ant-modal-wrap {
+        display: grid;
+        place-items: center;
+    }
+    
     .ant-checkbox-wrapper {
         font-size: 14px;
         font-weight: bold;
-        font-style: italic;
+        
         padding: 10px 0;
-        color: grey;
+        color: #595959;
       }
 
       
@@ -59,7 +61,7 @@
     
     .ant-typography {
         font-weight: bold;
-        // font-style: italic;
+        // 
     }
     
     span.ant-typography {
@@ -70,15 +72,15 @@
     
     a.ant-typography {
         font-size: 14px;
-        color: grey !important;
-        font-style: italic;
+        color: #595959 !important;
+        
 
     }
 
     h5.ant-typography {
         font-size: 14px;
-        font-style: italic;
-        color: grey !important;
+        
+        color: #595959 !important;
 
 
     }
@@ -86,6 +88,12 @@
     .ant-select-multiple .ant-select-selection-placeholder {
         padding-right: 10px;
         padding-left: 10px;
+    }
+
+    .box__category {
+        padding: 10px;
+
+        
     }
 
     .box__category:not(:last-child) {
@@ -110,3 +118,11 @@
     display: flex;
     flex-direction: column;
   }
+
+.ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+    color: #fff !important;
+}
+
+.ant-tabs-card.ant-tabs-top > .ant-tabs-nav .ant-tabs-tab-active, .ant-tabs-card.ant-tabs-top > div > .ant-tabs-nav .ant-tabs-tab-active {
+    background: #2075bd !important;
+}

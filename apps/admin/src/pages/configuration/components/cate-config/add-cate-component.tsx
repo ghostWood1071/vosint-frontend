@@ -199,7 +199,7 @@ export const AddCateComponent: React.FC<Props> = ({
   if (type === "add" || type === "edit") {
     return (
       <Modal
-        title={(type === "add" ? "Thêm mới " : "Sửa ") + nameTitle}
+        title={(type === "add" ? "Thêm mới " : "Cập nhật ") + nameTitle}
         open={isOpen}
         destroyOnClose
         confirmLoading={confirmLoading}
@@ -208,6 +208,8 @@ export const AddCateComponent: React.FC<Props> = ({
         width={800}
         closable={false}
         maskClosable={false}
+        okText="Cập nhật"
+        cancelText="Thoát"
       >
         
         <Form

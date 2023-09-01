@@ -18,6 +18,7 @@ import { EVENT_CACHE_KEYS, useInfiniteEventFormElt } from "../event.loader";
 import styles from "../event.module.less";
 import EventSummaryModal from "./event-summary-modal";
 import { SystemEventItem } from "./system-event-item";
+import { useGetMe } from "@/pages/auth/auth.loader";
 
 interface Props {}
 
@@ -28,6 +29,7 @@ interface FilterEventProps {
 }
 
 export const EventDetailPage: React.FC<Props> = () => {
+  const { data: dataIAm } = useGetMe();
   const [skip, setSkip] = useState<number>(1);
   const pinned = useSidebar((state) => state.pinned);
   const [filterEvent, setFilterEvent] = useState<FilterEventProps>();
@@ -43,6 +45,8 @@ export const EventDetailPage: React.FC<Props> = () => {
     newsFilter,
     tag ?? "",
   );
+
+
   const setQuickEvent = useQuickReportModalState((state) => state.setEvent);
   // const dataSource = unionBy(flatMap(data?.pages.map((a) => a?.data?.map((e: any) => e))), "_id");
   const dataSource = unionBy(flatMap(data?.pages.map((a) => a?.result?.map((e: any) => e))), "_id");
@@ -116,7 +120,8 @@ export const EventDetailPage: React.FC<Props> = () => {
               renderItem={(item) => {
                 return (
                   <SystemEventItem
-                    item={item}
+                  userId={dataIAm._id}  
+                  item={item}
                     eventChoosedList={eventChoosedList}
                     setEventChoosedList={setEventChoosedList}
                   />

@@ -14,6 +14,7 @@ import {
   Modal,
   Select,
   Space,
+  Tabs,
   Typography,
   message,
 } from "antd";
@@ -26,6 +27,7 @@ import shallow from "zustand/shallow";
 import { useCheckMatchKeyword, useMutationCreateNewsObject, useMutationDeleteNewsObject, useNewsIdToNewsletter, useNewsSidebar } from "../../news.loader";
 import { buildTree } from "../../news.utils";
 import "./news-category-modal.less";
+import TabPane from "antd/lib/tabs/TabPane";
 
 const NewsCategoryModal = () => {
   const navigate = useNavigate();
@@ -93,6 +95,57 @@ const NewsCategoryModal = () => {
     });
   }
 
+  const [activeKey, setActiveKey] = useState('1')
+  const onKeyChange = (key: any) => setActiveKey(key)
+  const { TabPane } = Tabs;
+  const tabMenus = [
+    {
+      id: 1,
+      name: "Đối tượng",
+      child: 
+        <div className="box__category">
+          <Title level={5}>{CATEGORY_OBJECT}</Title>
+          <Checkbox.Group
+            options={dataObject?.data.map((obj: any) => ({
+              label: obj.name,
+              value: obj._id,
+            }))}
+            onChange={(e) => handleChangeSelect(e, 1)}
+          />
+        </div>
+    },
+    {
+      id: 2,
+      name: "Tổ chức",
+      child: 
+        <div className="box__category">
+          <Title level={5}>{CATEGORY_ORGANIZATION}</Title>
+          <Checkbox.Group
+            options={dataOrganization?.data.map((obj: any) => ({
+              label: obj.name,
+              value: obj._id,
+            }))}
+            onChange={(e) => handleChangeSelect(e, 2)}
+          />
+        </div>
+    },
+    {
+      id: 3,
+      name: "Quốc gia",
+      child: 
+        <div className="box__category">
+          <Title level={5}>{CATEGORY_REGION}</Title>
+          <Checkbox.Group
+            options={dataRegion?.data.map((obj: any) => ({
+              label: obj.name,
+              value: obj._id,
+            }))}
+            onChange={(e) => handleChangeSelect(e, 3)}
+          />
+        </div>
+    },
+  ]
+
   return (
     <>
       {dataObject && dataOrganization && dataRegion && (
@@ -149,7 +202,16 @@ const NewsCategoryModal = () => {
               </div>
               <div className="box">
                 <Typography.Text>Chọn danh mục:</Typography.Text>
-                <div className="box__category">
+                <Tabs defaultActiveKey="1" activeKey={activeKey} onChange={onKeyChange} type="card">
+                  { 
+                    tabMenus.map((menu: any) => (
+                      <TabPane tab={menu.name} key={menu.id}>
+                        {menu.child}
+                      </TabPane>
+                    ))}
+                </Tabs>
+                
+                {/* <div className="box__category">
                   <Title level={5}>{CATEGORY_OBJECT}</Title>
                   <Checkbox.Group
                     options={dataObject?.data.map((obj: any) => ({
@@ -169,7 +231,6 @@ const NewsCategoryModal = () => {
                     onChange={(e) => handleChangeSelect(e, 2)}
                   />
                 </div>
-
                 <div className="box__category">
                   <Title level={5}>{CATEGORY_REGION}</Title>
                   <Checkbox.Group
@@ -179,7 +240,7 @@ const NewsCategoryModal = () => {
                     }))}
                     onChange={(e) => handleChangeSelect(e, 3)}
                   />
-                </div>
+                </div> */}
 
                 {/* <div className="box__category">
                 <Title level={5}>{CATEGORY_OBJECT}</Title>

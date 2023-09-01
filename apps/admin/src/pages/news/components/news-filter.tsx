@@ -57,11 +57,11 @@ export function NewsFilter(): JSX.Element {
   const { mutate } = useMutationExportNews();
   const { mutate: mutateDeleteNewsObject } = useMutationDeleteNewsObject();
 
-  function handleSetSeen(checkedSeen: boolean, idNews: string) {
+  function handleSetSeen(checkedSeen: boolean, data: any) {
     if (checkedSeen) {
-      mutateChangeStatusSeenPost({ action: "set-seen", newsId: idNews });
+      mutateChangeStatusSeenPost({ action: "set-seen", data: data });
     } else {
-      mutateChangeStatusSeenPost({ action: "set-unseen", newsId: idNews });
+      mutateChangeStatusSeenPost({ action: "set-unseen", data: data });
     }
   }
 
@@ -109,12 +109,10 @@ export function NewsFilter(): JSX.Element {
         <div
           className={`${styles.iconWrap} newsFilter__btn`}
           onClick={() => {
-            newsSelection.forEach((item) => {
-              handleSetSeen(true, item._id);
-            });
+            handleSetSeen(true, newsSelection.map((news: any) => news._id ));
             setNewsSelection([]);
             setNewsSelection(
-              newsSelection.map((item) => ({ ...item, list_user_read: [dataIAm] })),
+              newsSelection.map((item) => ({ ...item, is_read: true, list_user_read: [dataIAm] })),
             );
             // setNewsSelection(newsSelection.map((item) => ({ ...item, is_read: true })));
           }}
@@ -131,11 +129,8 @@ export function NewsFilter(): JSX.Element {
         <div
           className={styles.iconWrap + " " + styles.iconWrapLast + " newsFilter__btn"}
           onClick={() => {
-            newsSelection.forEach((item) => {
-              handleSetSeen(false, item._id);
-            });
-            setNewsSelection(newsSelection.map((item) => ({ ...item, list_user_read: [] })));
-            // setNewsSelection(newsSelection.map((item) => ({ ...item, is_read: false })));
+            handleSetSeen(false, newsSelection.map((news: any) => news._id ));
+            setNewsSelection(newsSelection.map((item) => ({ ...item, is_read: false, list_user_read: [] })));
           }}
           title="Đánh dấu chưa đọc tin"
         >
