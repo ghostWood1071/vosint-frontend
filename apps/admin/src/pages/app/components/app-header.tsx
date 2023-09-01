@@ -74,7 +74,7 @@ export const AppHeader: React.FC = () => {
           )}
         </div>
       </Col>
-      <Col span={3}>
+      <Col span={2}>
         <Link to={dashboardPathWithRole(role ?? "admin")}>
           <img
             className={styles.logo + " app-logo"}
