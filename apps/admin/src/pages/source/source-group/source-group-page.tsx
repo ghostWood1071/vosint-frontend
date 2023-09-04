@@ -79,7 +79,7 @@ export const ViewList = () => {
           <Col push={0}>
             <EditOutlined
               className={styles.edit}
-              title={"Sửa nhóm nguồn tin"}
+              title={"Cập nhật nhóm nguồn tin"}
               onClick={() => handleClickEditGroup(item)}
             />
           </Col>
@@ -238,7 +238,7 @@ export const ViewList = () => {
       {
         onSuccess: () => {
           message.success({
-            content: "Sửa nhóm nguồn tin thành công",
+            content: "Cập nhật nhóm nguồn tin thành công",
           });
           setIsOpenGroupModal(false);
         },

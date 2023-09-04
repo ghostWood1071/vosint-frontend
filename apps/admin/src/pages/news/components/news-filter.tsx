@@ -1,4 +1,4 @@
-import { CreateIcon } from "@/assets/icons";
+import { CreateIcon, OutlineEventIcon } from "@/assets/icons";
 import { RemoveNewsIcon } from "@/assets/icons";
 import { ReactComponent as UnreadIcon } from "@/assets/svg/envelope-open.svg";
 import { ReactComponent as ReadIcon } from "@/assets/svg/envelope.svg";
@@ -19,7 +19,7 @@ import {
 } from "@ant-design/icons";
 import { Button, DatePicker, Form, Input, List, Modal, Select, Typography, message } from "antd";
 import { useEffect, useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { shallow } from "zustand/shallow";
 import { useNewsFilter, useNewsFilterDispatch } from "../news.context";
 import { NewsSummaryModal } from "./news-summary-modal";
@@ -27,10 +27,12 @@ import NewsCategoryModal from "./news-category/news-category-modal";
 import produce from "immer";
 import styles from "./news-filter.module.less";
 import "../less/news-filter.less";
+import { getEventDetailUrl } from "@/pages/router";
 
 export function NewsFilter(
   {handleDeleteNews, organization}:
   {handleDeleteNews?: any, organization?: any}): JSX.Element {
+  let navigate = useNavigate();
   const { data: dataIAm } = useGetMe();
   let { newsletterId: detailIds, tag } = useParams();
   const { pathname } = useLocation();
@@ -130,7 +132,6 @@ export function NewsFilter(
           className={`${styles.iconWrap} newsFilter__btn`}
           onClick={() => {
             handleSetSeen(true, newsSelection.map((news: any) => news._id ));
-            setNewsSelection([]);
             setNewsSelection(
               newsSelection.map((item) => ({ ...item, is_read: true, list_user_read: [dataIAm] })),
             );
@@ -240,6 +241,18 @@ export function NewsFilter(
           </Select>
         </Form.Item>
         <NewsSummaryModal />
+
+        <Button
+          className={styles.item}
+          // icon={<ReloadOutlined />}
+          icon={<OutlineEventIcon />}
+          onClick={() => {
+            // setStatus(!status);
+            // handleConvert(status);
+            navigate(getEventDetailUrl(detailIds, tag));
+          }}
+          title={"Hiển thị dòng sự kiện"}
+        />
 
         <div className={styles.input}>
           <Input.Search

@@ -64,7 +64,7 @@ export const AddNewsSourceComponent: React.FC<Props> = ({
   if (type === "add" || type === "edit") {
     return (
       <Modal
-        title={(type === "add" ? "Thêm mới " : "Sửa ") + "nguồn tin"}
+        title={(type === "add" ? "Thêm mới " : "Cập nhật ") + "nguồn tin"}
         open={isOpen}
         destroyOnClose
         confirmLoading={confirmLoading}
@@ -73,6 +73,8 @@ export const AddNewsSourceComponent: React.FC<Props> = ({
         width={700}
         closable={false}
         maskClosable={false}
+        okText={type === "add" ? "Thêm" : "Cập nhật"}
+        cancelText="Thoát"
       >
         <Form
           initialValues={initialValues ?? {}}

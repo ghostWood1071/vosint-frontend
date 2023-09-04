@@ -103,7 +103,7 @@ export const SettingTable: React.FC<Props> = ({ data, listProxy, accountMonitor,
       render: (_id: string, values) => {
         return (
           <Space className={styles.spaceStyle}>
-            <Tooltip title={"Sửa "}>
+            <Tooltip title={"Cập nhật "}>
               <EditOutlined onClick={handleEdit} className={styles.edit} />
             </Tooltip>
             <Tooltip title={"Xoá "}>
@@ -130,9 +130,10 @@ export const SettingTable: React.FC<Props> = ({ data, listProxy, accountMonitor,
         size="small"
         pagination={{ position: ["bottomCenter"], showSizeChanger: true }}
         loading={loading}
+        bordered
       />
       <Modal
-        title="Sửa cấu hình Twitter"
+        title="Cập nhật cấu hình Twitter"
         open={isEditOpen}
         onCancel={handleCancelEdit}
         onOk={handleOkEdit}
@@ -140,6 +141,8 @@ export const SettingTable: React.FC<Props> = ({ data, listProxy, accountMonitor,
         maskClosable={false}
         closeIcon={true}
         width={900}
+        okText="Cập nhật"
+        cancelText="Thoát"
       >
         <SettingCreateForm
           listProxy={listProxy}

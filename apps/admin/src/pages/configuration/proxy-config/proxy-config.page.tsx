@@ -58,7 +58,7 @@ export const ProxyConfig = () => {
       render: (item: any) => {
         return (
           <Space className={styles.spaceStyle}>
-            <Tooltip title={"Sửa proxy"}>
+            <Tooltip title={"Cập nhật proxy"}>
               <EditOutlined onClick={() => handleClickEdit(item)} className={styles.edit} />
             </Tooltip>
             <Tooltip title={"Xoá proxy"}>
@@ -107,6 +107,7 @@ export const ProxyConfig = () => {
               showSizeChanger: true,
             }}
             loading={isProxyLoading}
+            bordered
           />
         </div>
         {isOpenModal ? (

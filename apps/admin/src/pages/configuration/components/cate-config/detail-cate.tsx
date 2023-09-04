@@ -40,7 +40,7 @@ export const DetailCate: React.FC<Props> = ({
         <div className={styles.rightHeader}>
           <Space className={styles.spaceStyle}>
             <EditOutlined
-              title={"Sửa " + nameTitle}
+              title={"Cập nhật " + nameTitle}
               onClick={handleOpenEditModal}
               className={styles.edit}
             />

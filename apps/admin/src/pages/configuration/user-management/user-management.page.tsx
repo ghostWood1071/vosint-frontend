@@ -56,13 +56,13 @@ export const UserManagerList: React.FC = () => {
     reset: resetUpdate,
   } = useUpdateUser({
     onSuccess: () => {
-      message.success("Sửa người dùng thành công");
+      message.success("Cập nhật người dùng thành công");
       setIsOpen(null);
       queryClient.invalidateQueries([CACHE_KEYS.LIST]);
       form.resetFields();
     },
     onError: () => {
-      message.error("Sửa người dùng thất bại");
+      message.error("Cập nhật người dùng thất bại");
     },
   });
 
@@ -124,7 +124,7 @@ export const UserManagerList: React.FC = () => {
         />
       </PageHeader>
       <Modal
-        title={isOpen === "create" ? "Thêm người dùng" : "Sửa người dùng"}
+        title={isOpen === "create" ? "Thêm người dùng" : "Cập nhật người dùng"}
         open={!!isOpen}
         onCancel={handleCancel}
         onOk={handleOk}
@@ -133,6 +133,8 @@ export const UserManagerList: React.FC = () => {
         maskClosable={false}
         closeIcon={true}
         width={800}
+        okText={isOpen === "create" ? "Thêm" : "Cập nhật"}
+        cancelText="Thoát"
       >
         {(isErrorCreate || isErrorUpdate) && (
           <Alert

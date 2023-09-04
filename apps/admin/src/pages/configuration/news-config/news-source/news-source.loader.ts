@@ -38,7 +38,7 @@ export const useMutationNewsSource = () => {
         queryClient.invalidateQueries(CACHE_KEYS.SourceNewsConfig);
         message.success({
           content:
-            (variables.action === "add" ? "Thêm" : variables.action === "update" ? "Sửa" : "Xoá") +
+            (variables.action === "add" ? "Thêm" : variables.action === "update" ? "Cập nhật" : "Xoá") +
             " nguồn tin thành công",
           key: CACHE_KEYS.SourceNewsConfig,
         });

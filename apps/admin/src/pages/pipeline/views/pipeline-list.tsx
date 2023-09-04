@@ -150,6 +150,8 @@ export const PipelineList: React.FC = () => {
         onOk={handleOkCreate}
         confirmLoading={isUpdating}
         width={800}
+        okText="Thêm"
+        cancelText="Thoát"
       >
         <Form layout="vertical" form={form}>
           <Form.Item
@@ -165,7 +167,7 @@ export const PipelineList: React.FC = () => {
               value={cronExpr}
               setValue={setCronExpr}
               locale={VI_LOCALE}
-              clearButtonProps={{ type: "default" }}
+              clearButtonProps={{ type: "default", disabled: !(/\d/.test(cronExpr)) && true }}
             />
           </Form.Item>
         </Form>

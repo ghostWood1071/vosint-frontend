@@ -15,7 +15,7 @@ export const NewDetailSummary: React.FC<Props> = ({ content, title }) => {
 
   const { mutate, isLoading } = useGetNewsSummaryLazy({
     onSuccess: (data) => {
-      setDataSumm(data);
+      setDataSumm(Object.values(data)[0]);
     },
   });
 

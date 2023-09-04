@@ -103,7 +103,7 @@ export function NewsletterModal({ onFinish, confirmLoading }: Props): JSX.Elemen
       onCancel={handleCancel}
       closable={false}
       width={800}
-      okText="Cập nhật"
+      okText={action === "create" ? "Thêm" : "Cập nhật"}
       cancelText="Thoát"
     >
       {action !== ETreeAction.SELECT && action !== ETreeAction.DELETE && (

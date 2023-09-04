@@ -14,7 +14,7 @@ import { useInView } from "react-intersection-observer";
 import { useQueryClient } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { EVENT_CACHE_KEYS, useInfiniteEventFormElt } from "../event.loader";
+import { EVENT_CACHE_KEYS, useInfiniteEventFormElt, useMutationChangeStatusSeenEvent } from "../event.loader";
 import styles from "../event.module.less";
 import EventSummaryModal from "./event-summary-modal";
 import { SystemEventItem } from "./system-event-item";
@@ -39,7 +39,8 @@ export const EventDetailPage: React.FC<Props> = () => {
   const navigate = useNavigate();
   const [eventChoosedList, setEventChoosedList] = useState<any[]>([]);
   const newsFilter = useNewsFilter();
-
+  const { mutate: mutateChangeStatusSeenEvent } = useMutationChangeStatusSeenEvent();
+  
   const { data, isFetchingNextPage, fetchNextPage, hasNextPage } = useInfiniteEventFormElt(
     detailIds!,
     newsFilter,
@@ -71,6 +72,20 @@ export const EventDetailPage: React.FC<Props> = () => {
     setSkip(1);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [detailIds, newsFilter]);
+
+  const handleSetSeen = (checkedSeen: boolean, data: any) => {
+    if (checkedSeen) {
+      mutateChangeStatusSeenEvent({ action: "set-seen", data: data });
+    } else {
+      mutateChangeStatusSeenEvent({ action: "set-unseen", data: data });
+    }
+  }
+
+  const seen = eventChoosedList.find((item: any) => item.list_user_read?.length > 0);
+  const unseen = eventChoosedList.find(
+    (item: any) => item.list_user_read?.length == 0 || !("list_user_read" in item),
+  );
+
 
   return (
     <div className={styles.mainContainer}>
@@ -121,6 +136,7 @@ export const EventDetailPage: React.FC<Props> = () => {
                 return (
                   <SystemEventItem
                   userId={dataIAm._id}  
+                  setSeen={handleSetSeen}
                   item={item}
                     eventChoosedList={eventChoosedList}
                     setEventChoosedList={setEventChoosedList}

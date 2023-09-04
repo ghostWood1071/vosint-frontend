@@ -68,7 +68,7 @@ export const AddProxyComponent: React.FC<Props> = ({
 
   return (
     <Modal
-      title={(type === "add" ? "Thêm mới " : "Sửa ") + "proxy"}
+      title={(type === "add" ? "Thêm mới " : "Cập nhật ") + "proxy"}
       open={isOpen}
       destroyOnClose
       confirmLoading={confirmLoading}
@@ -77,6 +77,8 @@ export const AddProxyComponent: React.FC<Props> = ({
       width={800}
       closable={false}
       maskClosable={false}
+      okText={type === "add" ? "Thêm" : "Cập nhật"}
+      cancelText="Thoát"
     >
       <Form
         initialValues={initialValues ?? {}}

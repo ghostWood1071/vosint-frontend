@@ -441,7 +441,7 @@ export const useMutationEventNews = () => {
         queryClient.invalidateQueries([CACHE_KEYS.NewsEvent]);
         message.success({
           content:
-            (variables.action === "add" ? "Thêm" : variables.action === "update" ? "Sửa" : "Xoá") +
+            (variables.action === "add" ? "Thêm" : variables.action === "update" ? "Cập nhật" : "Xoá") +
             " sự kiện thành công",
           key: CACHE_KEYS.NewsEvent,
         });

@@ -16,7 +16,7 @@ export const RelationshipGraph = () => {
             <Button icon={<PlusCircleTwoTone />} onClick={() => setOpen(true)}>
               Tạo mới
             </Button>
-            <Button icon={<EditTwoTone />}>Sửa</Button>
+            <Button icon={<EditTwoTone />}>Cập nhật</Button>
             <Button icon={<SaveTwoTone />}>Lưu</Button>
           </Space>
 

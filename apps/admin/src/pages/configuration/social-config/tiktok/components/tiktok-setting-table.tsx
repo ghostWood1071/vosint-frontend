@@ -76,7 +76,7 @@ export const TTSettingTable: React.FC<Props> = ({
       render: (_id: any, values: any) => {
         return (
           <Space className={styles.spaceStyle}>
-            <Tooltip title={"Sửa "}>
+            <Tooltip title={"Cập nhật "}>
               <EditOutlined onClick={handleEdit} className={styles.edit} />
             </Tooltip>
             <Tooltip title={"Xoá "}>
@@ -111,9 +111,10 @@ export const TTSettingTable: React.FC<Props> = ({
           showSizeChanger: true,
         }}
         loading={loading}
+        bordered
       />
       <Modal
-        title="Sửa cấu hình Tiktok"
+        title="Cập nhật cấu hình Tiktok"
         open={isEditOpen}
         onCancel={handleCancelEdit}
         onOk={handleOkEdit}
@@ -121,6 +122,8 @@ export const TTSettingTable: React.FC<Props> = ({
         maskClosable={false}
         closeIcon={true}
         width={800}
+        okText="Cập nhật"
+        cancelText="Thoát"
       >
         <SettingCreateForm
           setAdminSelect

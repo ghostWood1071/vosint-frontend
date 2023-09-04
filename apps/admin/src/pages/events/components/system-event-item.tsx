@@ -26,12 +26,14 @@ import styles from "./system-event-item.module.less";
 interface Props {
   item: any;
   userId: any;
+  setSeen: (value: boolean, data: any) => void;
   eventChoosedList: any[];
   setEventChoosedList: (value: any) => void;
 }
 
 export const SystemEventItem: React.FC<Props> = ({
   item,
+  setSeen,
   eventChoosedList,
   setEventChoosedList,
   userId,
@@ -42,8 +44,10 @@ export const SystemEventItem: React.FC<Props> = ({
   const [typeDetail, setTypeDetail] = useState<any>("content");
   const { mutate } = useMutationSystemEvents();
   const { data: dataIAm } = useGetMe();
-  const checkSeen = item.list_user_read?.findIndex((e: string) => e === userId) ?? -1;
+  const checkSeen = item.list_user_read ? item.list_user_read?.findIndex((e: string) => e === userId) : -1;
   const Ref = useRef<any>();
+
+
   useEffect(() => {
     const a = eventChoosedList.findIndex((e) => e._id === item._id);
     if (a !== -1) {
@@ -55,7 +59,6 @@ export const SystemEventItem: React.FC<Props> = ({
   }, [eventChoosedList]);
 
   const checkoutClone = item?.list_user_clone?.includes(dataIAm?._id);
-
   return (
     <div className={styles.mainContainer} key={item._id}>
       {typeShow ? (
@@ -79,11 +82,13 @@ export const SystemEventItem: React.FC<Props> = ({
                   : styles.contentHeaderContainer
               }
               onClick={() => {
+                if (checkSeen === -1) setSeen(true, [item._id]);
+
                 setTypeShow(!typeShow);
                 Ref?.current?.scrollIntoView();
               }}
             >
-              <div className={styles.contentHeader}>
+              <div className={checkSeen !== -1 ? styles.contentHeaderSeen : styles.contentHeader}>
                 {item?.event_name}.{" "}
                 {<span className={styles.detailContentHeader}>{item?.event_content}</span>}
               </div>

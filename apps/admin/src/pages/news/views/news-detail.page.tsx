@@ -26,6 +26,7 @@ import {
   useNewsIdToNewsletter,
 } from "../news.loader";
 import styles from "./news-detail.module.less";
+import MOCK_DATA from "@/services/mocks/mock-data";
 
 export const NewsDetailPage = () => {
   let { newsletterId, tag } = useParams();
@@ -95,8 +96,9 @@ export const NewsDetailPage = () => {
         <div className={styles.bodyNews}>
           <table style={{ width: "100%" }}>
             <tbody>
+              {/* dataSource -> MOCK_DATA */}
               {dataSource[0] !== undefined ? (
-                dataSource?.map((item) => (
+                dataSource?.map((item: any) => (
                   <NewsTableItem
                     userId={dataIAm?._id}
                     key={item?._id}

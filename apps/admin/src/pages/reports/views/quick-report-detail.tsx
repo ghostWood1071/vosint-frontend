@@ -359,8 +359,9 @@ function QuickReport(): JSX.Element {
 
   function handleDelete() {
     Modal.confirm({
-      title: "Xác nhận xoá báo cáo",
-      content: "Bạn có chắc chắn muốn xoá báo cáo này?",
+      // title: "Xác nhận xoá báo cáo",
+      title: "Bạn có chắc chắn muốn xoá báo cáo này?",
+      // content: "Bạn có chắc chắn muốn xoá báo cáo này?",
       okText: "Xoá",
       cancelText: "Huỷ",
       onOk: () => {

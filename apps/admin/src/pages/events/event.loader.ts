@@ -1,6 +1,8 @@
 import { ETreeTag } from "@/components/news/news-state";
 import { ISummary, ISummaryDTO } from "@/models/summary.type";
 import {
+  SetNotSeenEvent,
+  SetSeenEvent,
   cloneSystemEventToUserEvent,
   createEventFromUser,
   deleteEventCreatedByUser,
@@ -133,7 +135,7 @@ export const useMutationEvents = () => {
             variables.action == "export"
               ? "Xuất file thành công"
               : (variables.action === "update"
-                  ? "Sửa"
+                  ? "Cập nhật"
                   : variables.action === "add"
                   ? "Thêm mới"
                   : "Xoá") + " sự kiện thành công",
@@ -167,6 +169,29 @@ export const useMutationSystemEvents = () => {
           content: "Đã xảy ra lỗi!",
         });
       },
+    },
+  );
+};
+
+export const useMutationChangeStatusSeenEvent = () => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    ({ action, data }: any) => {
+      if (action === "set-seen") {
+        return SetSeenEvent(data);
+      }
+
+      if (action === "set-unseen") {
+        return SetNotSeenEvent(data);
+      }
+
+      throw new Error("action invalid");
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries([EVENT_CACHE_KEYS.ListEvents]);
+      },
+      onError: () => {},
     },
   );
 };

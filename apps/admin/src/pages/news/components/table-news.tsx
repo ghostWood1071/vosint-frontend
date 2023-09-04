@@ -203,12 +203,9 @@ export const NewsTableItem: React.FC<Props> = ({
             onClick={() => {
               setTypeShow(!typeShow);
 
-              if (checkSeen === -1) {
-                setSeen(true, newsSelection.map((news:any) => news._id));
-              }
-              // if (!item.is_read) {
-              //   setSeen(true, item._id);
-              // }
+              if (checkSeen === -1) 
+                setSeen(true, [item._id]);
+              
               Ref?.current?.scrollIntoView();
             }}
           >

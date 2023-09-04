@@ -178,7 +178,7 @@ export const PipelineDetail: React.FC = () => {
             value={cron}
             setValue={setCron}
             locale={VI_LOCALE}
-            clearButtonProps={{ type: "default" }}
+            clearButtonProps={{ type: "default", disabled: !(/\d/.test(cron)) && true }}
           />
 
           {handleSavePipeline && (

@@ -70,6 +70,8 @@ export const AccountForMonitoringFacebook: React.FC = () => {
         maskClosable={false}
         closeIcon={true}
         width={900}
+        okText="Thêm"
+        cancelText="Thoát"
       >
         <SettingCreateForm
           listProxy={listProxy}
