@@ -144,7 +144,7 @@ export const AddGroupModal: React.FC<Props> = ({
   if (type === "add" || type === "edit") {
     return (
       <Modal
-        title={(type === "add" ? "Thêm mới " : "Sửa ") + "nhóm nguồn tin"}
+        title={(type === "add" ? "Thêm mới " : "Cập nhật ") + "nhóm nguồn tin"}
         open={isOpen}
         destroyOnClose
         getContainer="#modal-mount"
@@ -154,6 +154,8 @@ export const AddGroupModal: React.FC<Props> = ({
         width={800}
         closable={false}
         maskClosable={false}
+        okText={type === "add" ? "Thêm" : "Cập nhật"}
+        cancelText="Thoát"
       >
         {contextHolder}
         <Form

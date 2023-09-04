@@ -109,7 +109,7 @@ export enum ETreeAction {
 
 export const MTreeAction: Record<ETreeAction, string> = {
   [ETreeAction.CREATE]: "Thêm",
-  // [ETreeAction.UPDATE]: "Sửa",
+  // [ETreeAction.UPDATE]: "Cập nhật",
   [ETreeAction.UPDATE]: "Cập nhật",
   [ETreeAction.DELETE]: "Xóa",
   [ETreeAction.SELECT]: "Chọn",

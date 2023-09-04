@@ -77,7 +77,7 @@ export const SettingTable: React.FC<Props> = ({
       render: (_id: string, values) => {
         return (
           <Space className={styles.spaceStyle}>
-            <Tooltip title={"Sửa "}>
+            <Tooltip title={"Cập nhật "}>
               <EditOutlined onClick={handleEdit} className={styles.edit} />
             </Tooltip>
             <Tooltip title={"Xoá "}>
@@ -112,10 +112,11 @@ export const SettingTable: React.FC<Props> = ({
           showSizeChanger: true,
         }}
         loading={loading}
+        bordered
       />
 
       <Modal
-        title="Sửa cấu hình Facebook"
+        title="Cập nhật cấu hình Facebook"
         open={isEditOpen}
         onCancel={handleCancelEdit}
         onOk={handleOkEdit}
@@ -123,6 +124,8 @@ export const SettingTable: React.FC<Props> = ({
         maskClosable={false}
         closeIcon={true}
         width={800}
+        okText="Cập nhật"
+        cancelText="Thoát"
       >
         <SettingCreateForm
           setAdminSelect

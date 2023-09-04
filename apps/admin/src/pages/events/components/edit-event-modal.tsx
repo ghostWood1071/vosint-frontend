@@ -231,7 +231,7 @@ export const EditEventModal: React.FC<ModalEditProps> = ({
   }, 500);
   return (
     <Modal
-      title={typeModal === "add" ? "Thêm mới sự kiện" : "Sửa sự kiện"}
+      title={typeModal === "add" ? "Thêm mới sự kiện" : "Cập nhật sự kiện"}
       open={isOpen}
       destroyOnClose
       confirmLoading={confirmLoading}
@@ -242,6 +242,8 @@ export const EditEventModal: React.FC<ModalEditProps> = ({
       closable={false}
       maskClosable={false}
       className={styles.modal}
+      okText={typeModal === "add" ? "Thêm" : "Cập nhật"}
+      cancelText="Thoát"
     >
       <Form
         initialValues={initialValues}

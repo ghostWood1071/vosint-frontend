@@ -120,7 +120,8 @@ export const SettingCreateForm: React.FC<Props> = ({
             value={cronExpr}
             setValue={setCronExpr}
             locale={VI_LOCALE}
-            clearButtonProps={{ type: "default" }}
+            clearButtonProps={{ type: "default", disabled: !(/\d/.test(cronExpr)) && true }}
+
           />
         </Form.Item>
         <Form.Item

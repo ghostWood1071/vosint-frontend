@@ -1,5 +1,5 @@
-import { DeleteOutlined, EditOutlined, EllipsisOutlined, PlusOutlined } from "@ant-design/icons";
-import { Col, Row, Space, TreeDataNode, Typography } from "antd";
+import { DeleteOutlined, EditOutlined, EllipsisOutlined, ExclamationCircleOutlined, PlusOutlined } from "@ant-design/icons";
+import { Col, Modal, Row, Space, TreeDataNode, Typography } from "antd";
 import classNames from "classnames";
 import { useRef, useState } from "react";
 import { useClickAway } from "react-use";
@@ -52,7 +52,7 @@ export function TreeTitleGioTin({ onClick, children, isEditable, ...node }: Prop
               <EditOutlined
                 onClick={handleUpdate}
                 className={styles.edit}
-                title={`Sửa ${MTreeTag[node.tag]}`}
+                title={`Cập nhật ${MTreeTag[node.tag]} con`}
               />
               <DeleteOutlined
                 onClick={handleDelete}
@@ -109,6 +109,14 @@ export function TreeTitleGioTin({ onClick, children, isEditable, ...node }: Prop
   }
 
   function handleDelete() {
+    // Modal.confirm({
+    //   title: `Bạn có chắc muốn xoá "${data?.title}" không?`,
+    //   icon: <ExclamationCircleOutlined />,
+    //   okText: "Xoá",
+    //   cancelText: "Huỷ",
+    //   onOk: handleFormFinish,
+    //   onCancel: handleCancel,
+    // });
     setNews({
       tag: node.tag,
       action: ETreeAction.DELETE,

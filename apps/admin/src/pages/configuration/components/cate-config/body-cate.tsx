@@ -90,6 +90,7 @@ export const BodyCate: React.FC<Props> = ({ title }) => {
             </div>
           ) : null}
         </div>
+        
         {isOpenModal ? (
           <AddCateComponent
             type={typeModal}
@@ -102,6 +103,7 @@ export const BodyCate: React.FC<Props> = ({ title }) => {
             confirmLoading={isObjectCateLoading}
             setChoosedCate={setChoosedCate}
             typeObject={typeObject}
+           
           />
         ) : null}
       </div>
@@ -154,7 +156,7 @@ export const BodyCate: React.FC<Props> = ({ title }) => {
       {
         onSuccess: () => {
           message.success({
-            content: "Sửa " + title + " thành công",
+            content: "Cập nhật " + title + " thành công",
             key: title,
           });
           setIsOpenModal(false);

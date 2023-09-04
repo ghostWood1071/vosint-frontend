@@ -17,7 +17,7 @@ import { useQuickReportModalState } from "../news/components/quick-report-modal/
 import { ReportModal } from "../news/components/report-modal";
 import EventSummaryModal from "./components/event-summary-modal";
 import { SystemEventItem } from "./components/system-event-item";
-import { EVENT_CACHE_KEYS, useInfiniteEventsList, useMutationExportEvents } from "./event.loader";
+import { EVENT_CACHE_KEYS, useInfiniteEventsList, useMutationChangeStatusSeenEvent, useMutationExportEvents } from "./event.loader";
 import styles from "./event.module.less";
 import "../news/less/news-filter.less"
 import "./less/event.less";
@@ -43,10 +43,13 @@ export const SystemEventPage: React.FC<Props> = () => {
     ...filterEvent,
     system_created: true,
   });
+
   const setQuickEvent = useQuickReportModalState((state) => state.setEvent);
   const { mutate } = useMutationExportEvents();
+  const { mutate: mutateChangeStatusSeenEvent } = useMutationChangeStatusSeenEvent();
 
   const dataSource = unionBy(flatMap(data?.pages.map((a) => a?.data?.map((e: any) => e))), "_id");
+
   useEffect(() => {
     if (inView && skip * 50 <= data?.pages[0].total) {
       fetchNextPage({ pageParam: { skip: skip + 1, limit: 50 } });
@@ -74,6 +77,20 @@ export const SystemEventPage: React.FC<Props> = () => {
     );
   };
 
+  const handleSetSeen = (checkedSeen: boolean, data: any) => {
+    if (checkedSeen) {
+      mutateChangeStatusSeenEvent({ action: "set-seen", data: data });
+    } else {
+      mutateChangeStatusSeenEvent({ action: "set-unseen", data: data });
+    }
+  }
+
+  const seen = eventChoosedList.find((item: any) => item.list_user_read?.length > 0);
+  const unseen = eventChoosedList.find(
+    (item: any) => item.list_user_read?.length == 0 || !("list_user_read" in item),
+  );
+
+
   return (
     <div className={styles.mainContainer + " system-event-container"}>
       <div className={(pinned ? styles.filterContainerWithSidebar : styles.filterContainer) + " app-filter"}>
@@ -81,14 +98,17 @@ export const SystemEventPage: React.FC<Props> = () => {
           <div
             className={`${styles.iconWrap} newsFilter__btn`}
             onClick={() => {
+              handleSetSeen(true, eventChoosedList.map((news: any) => news._id ));
+              setEventChoosedList(
+                eventChoosedList.map((item) => ({ ...item, is_read: true, list_user_read: [dataIAm] })),
+              );
             }}
             title="Đánh dấu đã đọc sự kiện"
           >
             <Button
               icon={<UnreadIcon className={styles.unreadIcon} />}
               className={styles.iconWrapBtn + " btn-tool"}
-              disabled={true}
-              title={"Đang tích hợp tính năng"}
+              disabled={!(!seen && unseen) && !(seen && unseen)}
               // disabled={!(!seen && unseen) && !(seen && unseen)}
             />
           </div>
@@ -96,7 +116,8 @@ export const SystemEventPage: React.FC<Props> = () => {
           <div
             className={styles.iconWrap + " " + styles.iconWrapLast + " newsFilter__btn"}
             onClick={() => {
-            
+              handleSetSeen(false, eventChoosedList.map((news: any) => news._id ));
+              setEventChoosedList(eventChoosedList.map((item) => ({ ...item, is_read: false, list_user_read: [] })));
             }}
             title="Đánh dấu chưa đọc sự kiện"
           >
@@ -104,8 +125,7 @@ export const SystemEventPage: React.FC<Props> = () => {
               icon={<ReadIcon className={styles.readIcon} />}
               // disabled={!(seen && !unseen) && !(seen && unseen)}
               className={styles.iconWrapBtn + " btn-tool"}
-              disabled={true}
-              title={"Đang tích hợp tính năng"}
+              disabled={!(seen && !unseen) && !(seen && unseen)}
             />
           </div>
           <Button
@@ -150,6 +170,7 @@ export const SystemEventPage: React.FC<Props> = () => {
                 return (
                   <SystemEventItem
                     item={item}
+                    setSeen={handleSetSeen}
                     userId={dataIAm._id}
                     eventChoosedList={eventChoosedList}
                     setEventChoosedList={setEventChoosedList}

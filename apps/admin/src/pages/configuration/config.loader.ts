@@ -145,7 +145,7 @@ export const useMutationProxy = () => {
         queryClient.invalidateQueries(CACHE_KEYS.ProxyConfig);
         message.success({
           content:
-            (variables.action === "add" ? "Thêm" : variables.action === "update" ? "Sửa" : "Xoá") +
+            (variables.action === "add" ? "Thêm" : variables.action === "update" ? "Cập nhật" : "Xoá") +
             " proxy thành công!",
           key: CACHE_KEYS.ProxyConfig,
         });

@@ -227,7 +227,7 @@ export const AddMindmap: React.FC<ModalEditProps> = ({
 
   return (
     <Modal
-      title={(typeModal === "add" ? "Thêm" : "Sửa") + " sự kiện"}
+      title={(typeModal === "add" ? "Thêm" : "Cập nhật") + " sự kiện"}
       open={isOpen}
       destroyOnClose
       confirmLoading={confirmLoading}
@@ -275,7 +275,7 @@ export const AddMindmap: React.FC<ModalEditProps> = ({
           name={"date_created"}
           rules={[{ type: "object" as const, required: true, message: "Hãy nhập vào thời gian!" }]}
         >
-          <DatePicker format={"DD/MM/YYYY"} />
+          <DatePicker format={"DD/MM/YYYY"} inputReadOnly/>
         </Form.Item>
         <Form.Item validateTrigger={["onChange", "onBlur"]} label="Nguồn tin">
           <div>

@@ -39,7 +39,7 @@ export const useMutationPriorityObject = () => {
         queryClient.invalidateQueries(CACHE_KEYS_SOCIAL.PrioritySocial);
         message.success({
           content:
-            (variables.action === "add" ? "Thêm" : variables.action === "update" ? "Sửa" : "Xoá") +
+            (variables.action === "add" ? "Thêm" : variables.action === "update" ? "Cập nhật" : "Xoá") +
             " đối tượng ưu tiên hành công!",
         });
       },

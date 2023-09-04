@@ -87,6 +87,8 @@ export function QuickReportModal(): JSX.Element {
       width="70%"
       confirmLoading={isLoadingUpdate}
       getContainer="#modal-mount"
+      okText="Thêm"
+      cancelText="Thoát"
     >
       <Row gutter={[16, 16]}>
         <Col span={12}>

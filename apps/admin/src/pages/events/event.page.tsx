@@ -26,10 +26,11 @@ import { useReportModalState } from "../news/components/report-modal/index.state
 import { EditEventModal } from "./components/edit-event-modal";
 import { EventItem } from "./components/event-item";
 import EventSummaryModal from "./components/event-summary-modal";
-import { EVENT_CACHE_KEYS, useInfiniteEventsList, useMutationEvents } from "./event.loader";
+import { EVENT_CACHE_KEYS, useInfiniteEventsList, useMutationChangeStatusSeenEvent, useMutationEvents } from "./event.loader";
 import styles from "./event.module.less";
 import "../news/less/news-filter.less"
 import "./less/event.less";
+import { useGetMe } from "../auth/auth.loader";
 
 interface Props {}
 
@@ -40,22 +41,22 @@ interface FilterEventProps {
 }
 
 export const EventPage: React.FC<Props> = () => {
+  const queryClient = useQueryClient();
+  const { ref, inView } = useInView();
+  const { data: dataIAm } = useGetMe();
   const [skip, setSkip] = useState<number>(1);
-
   const [choosedEvent, setChoosedEvent] = useState<any>();
   const [typeModal, setTypeModal] = useState<string>("");
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
   const [filterEvent, setFilterEvent] = useState<FilterEventProps>();
-  const queryClient = useQueryClient();
-  const { ref, inView } = useInView();
   const [eventChoosedList, setEventChoosedList] = useState<any[]>([]);
-  const { data, isFetchingNextPage, fetchNextPage, hasNextPage } =
-    useInfiniteEventsList(filterEvent);
+  const { data, isFetchingNextPage, fetchNextPage, hasNextPage } = useInfiniteEventsList(filterEvent);
   const { mutate } = useMutationEvents();
   const setEvent = useReportModalState((state) => state.setEvent);
-
+  const { mutate: mutateChangeStatusSeenEvent } = useMutationChangeStatusSeenEvent();
+  
   const dataSource = unionBy(flatMap(data?.pages.map((a) => a?.data?.map((e: any) => e))), "_id");
-
+  
   const initialConfig: InitialConfigType = {
     namespace: "synthetic-report",
     onError: (error) => {
@@ -105,40 +106,56 @@ export const EventPage: React.FC<Props> = () => {
     );
   };
 
+  const handleSetSeen = (checkedSeen: boolean, data: any) => {
+    if (checkedSeen) {
+      mutateChangeStatusSeenEvent({ action: "set-seen", data: data });
+    } else {
+      mutateChangeStatusSeenEvent({ action: "set-unseen", data: data });
+    }
+  }
+
+  const seen = eventChoosedList.find((item: any) => item.list_user_read?.length > 0);
+  const unseen = eventChoosedList.find(
+    (item: any) => item.list_user_read?.length == 0 || !("list_user_read" in item),
+  );
+
   return (
     <div className={styles.mainContainer}>
       <div className={styles.filterContainer} style={{width: "100%"}}>
         <Space wrap>
         <div
-          className={`${styles.iconWrap} newsFilter__btn`}
-          onClick={() => {
-          }}
-          title="Đánh dấu đã đọc sự kiện"
-        >
-          <Button
-            icon={<UnreadIcon className={styles.unreadIcon} />}
-            className={styles.iconWrapBtn + " btn-tool"}
-            disabled={true}
-            title={"Đang tích hợp tính năng"}
-            // disabled={!(!seen && unseen) && !(seen && unseen)}
-          />
-        </div>
+            className={`${styles.iconWrap} newsFilter__btn`}
+            onClick={() => {
+              handleSetSeen(true, eventChoosedList.map((news: any) => news._id ));
+              setEventChoosedList(
+                eventChoosedList.map((item) => ({ ...item, is_read: true, list_user_read: [dataIAm] })),
+              );
+            }}
+            title="Đánh dấu đã đọc sự kiện"
+          >
+            <Button
+              icon={<UnreadIcon className={styles.unreadIcon} />}
+              className={styles.iconWrapBtn + " btn-tool"}
+              disabled={!(!seen && unseen) && !(seen && unseen)}
+              // disabled={!(!seen && unseen) && !(seen && unseen)}
+            />
+          </div>
 
-        <div
-          className={styles.iconWrap + " " + styles.iconWrapLast + " newsFilter__btn"}
-          onClick={() => {
-          
-          }}
-          title="Đánh dấu chưa đọc sự kiện"
-        >
-          <Button
-            icon={<ReadIcon className={styles.readIcon} />}
-            // disabled={!(seen && !unseen) && !(seen && unseen)}
-            disabled={true}
-            title={"Đang tích hợp tính năng"}
-            className={styles.iconWrapBtn + " btn-tool"}
-          />
-        </div>
+          <div
+            className={styles.iconWrap + " " + styles.iconWrapLast + " newsFilter__btn"}
+            onClick={() => {
+              handleSetSeen(false, eventChoosedList.map((news: any) => news._id ));
+              setEventChoosedList(eventChoosedList.map((item) => ({ ...item, is_read: false, list_user_read: [] })));
+            }}
+            title="Đánh dấu chưa đọc sự kiện"
+          >
+            <Button
+              icon={<ReadIcon className={styles.readIcon} />}
+              // disabled={!(seen && !unseen) && !(seen && unseen)}
+              className={styles.iconWrapBtn + " btn-tool"}
+              disabled={!(seen && !unseen) && !(seen && unseen)}
+            />
+          </div>
           <Button
             className={styles.item + " btn-tool"}
             icon={<FileWordOutlined />}
@@ -202,6 +219,8 @@ export const EventPage: React.FC<Props> = () => {
                     return (
                       <EventItem
                         item={item}
+                        setSeen={handleSetSeen}
+                        userId={dataIAm._id}
                         onClickDelete={handleClickDelete}
                         onClickEdit={handleClickEdit}
                         eventChoosedList={eventChoosedList}

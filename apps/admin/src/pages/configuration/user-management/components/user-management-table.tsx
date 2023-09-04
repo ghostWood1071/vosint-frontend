@@ -65,7 +65,7 @@ export const UserManagerTable: React.FC<Props> = ({
         return (
           <Space>
             {onUpdate && (
-              <Tooltip title={"Sửa người dùng"}>
+              <Tooltip title={"Cập nhật người dùng"}>
                 <EditOutlined onClick={handleClickUpdate} className={styles.edit} />
               </Tooltip>
             )}

@@ -148,6 +148,8 @@ export const TTXVNNewsPage: React.FC<Props> = () => {
           width={800}
           closable={false}
           maskClosable={false}
+          okText="Cấu hình"
+          cancelText="Thoát"
         >
           <Form
             initialValues={initialValues ?? {}}

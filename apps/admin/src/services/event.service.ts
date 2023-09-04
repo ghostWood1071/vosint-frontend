@@ -74,12 +74,12 @@ const AddManyEventToNews = async (data: any, news_id: string) => {
 };
 
 const SetSeenEvent = async (data: any) => {
-  const result = await apiClient.post<any>(`/events/read`, data);
+  const result = await apiClient.post<any>(`/event/read-check`, data);
   return result.data;
 };
 
 const SetNotSeenEvent = async (data: any) => {
-  const result = await apiClient.post<any>(`/events/unread`, data);
+  const result = await apiClient.post<any>(`/event/read-uncheck`, data);
   return result.data;
 };
 

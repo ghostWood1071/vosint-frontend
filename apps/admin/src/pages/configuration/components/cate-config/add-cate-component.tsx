@@ -208,7 +208,7 @@ export const AddCateComponent: React.FC<Props> = ({
         width={800}
         closable={false}
         maskClosable={false}
-        okText="Cập nhật"
+        okText={type === "add" ? "Thêm" : "Cập nhật"}
         cancelText="Thoát"
       >
         

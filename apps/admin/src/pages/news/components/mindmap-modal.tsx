@@ -384,7 +384,7 @@ export const MindmapModal: React.FC<props> = ({
                 { type: "object" as const, required: true, message: "Hãy nhập vào thời gian!" },
               ]}
             >
-              <DatePicker format={"DD/MM/YYYY"} />
+              <DatePicker format={"DD/MM/YYYY"} inputReadOnly/>
             </Form.Item>
             <Form.Item validateTrigger={["onChange", "onBlur"]} label="Nguồn tin">
               <div>
@@ -982,7 +982,7 @@ const Items: React.FC<ItemsProps> = ({ item, handleEdit, handleDelete }) => {
               onClick={() => {
                 handleEdit(item);
               }}
-              title={"Sửa sự kiện"}
+              title={"Cập nhật sự kiện"}
               className={styles.edit}
             />
             <DeleteOutlined

@@ -68,7 +68,7 @@ export const SourceNewsTable: React.FC<Props> = ({
         return (
           <Space>
             <EditOutlined
-              title={"Sửa nguồn tin"}
+              title={"Cập nhật nguồn tin"}
               onClick={() => handleClickEdit(item)}
               className={styles.edit}
             />
@@ -100,6 +100,7 @@ export const SourceNewsTable: React.FC<Props> = ({
       }}
       size={"small"}
       loading={loading}
+      bordered
     />
   );
 

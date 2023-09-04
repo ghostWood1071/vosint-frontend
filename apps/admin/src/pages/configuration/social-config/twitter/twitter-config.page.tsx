@@ -60,6 +60,8 @@ export const TwitterConfig: React.FC = () => {
         maskClosable={false}
         closeIcon={true}
         width={800}
+        okText="Thêm"
+        cancelText="Thoát"
       >
         <SettingCreateForm
           setAdminSelect={setAdminSelect}

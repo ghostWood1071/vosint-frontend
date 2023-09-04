@@ -24,6 +24,8 @@ import EventKeyword from "./event-keywords";
 
 interface Props {
   item: any;
+  userId: any;
+  setSeen: (value: boolean, data: any) => void;
   onClickDelete: (value: any) => void;
   onClickEdit: (value: any) => void;
   onClickReport: (value: any) => void;
@@ -34,6 +36,8 @@ interface Props {
 
 export const EventItem: React.FC<Props> = ({
   item,
+  userId,
+  setSeen,
   onClickDelete,
   onClickEdit,
   lengthDataSource,
@@ -45,6 +49,7 @@ export const EventItem: React.FC<Props> = ({
   const [checkbox, setCheckbox] = useState<boolean>(false);
   const [typeShow, setTypeShow] = useState<boolean>(true);
   const [typeDetail, setTypeDetail] = useState<any>("content");
+  const checkSeen = item.list_user_read ? item.list_user_read?.findIndex((e: string) => e === userId) : -1;
   const Ref = useRef<any>();
 
   useEffect(() => {
@@ -97,11 +102,13 @@ export const EventItem: React.FC<Props> = ({
                   : styles.contentHeaderContainer
               }
               onClick={() => {
+                if (checkSeen === -1) setSeen(true, [item._id]);
+
                 setTypeShow(!typeShow);
                 Ref?.current?.scrollIntoView();
               }}
             >
-              <div className={styles.contentHeader}>
+              <div className={checkSeen !== -1 ? styles.contentHeaderSeen : styles.contentHeader}>
                 {item.event_name}.{" "}
                 <span className={styles.detailContentHeader}>
                   {returnTextFromRichText(item.event_content)}
@@ -125,7 +132,7 @@ export const EventItem: React.FC<Props> = ({
                   <BellOutlined className={styles.ringIcon} onClick={handleOpenQuickReport} />
                 </Tooltip>
 
-                <Tooltip placement="topRight" arrowPointAtCenter={true} title="Sửa sự kiện">
+                <Tooltip placement="topRight" arrowPointAtCenter={true} title="Cập nhật sự kiện">
                   <EditOutlined
                     className={styles.edit}
                     onClick={(event) => {
@@ -153,6 +160,9 @@ export const EventItem: React.FC<Props> = ({
         <div ref={Ref} className={styles.content}>
           <div
             onClick={() => {
+              
+              
+
               Ref?.current?.scrollIntoView();
             }}
             className={styles.scrollContainer}
@@ -185,7 +195,7 @@ export const EventItem: React.FC<Props> = ({
                       <BellOutlined className={styles.ringIcon} onClick={handleOpenQuickReport} />
                     </Tooltip>
 
-                    <Tooltip placement="topRight" arrowPointAtCenter={true} title="Sửa sự kiện">
+                    <Tooltip placement="topRight" arrowPointAtCenter={true} title="Cập nhật sự kiện">
                       <EditOutlined
                         className={styles.edit}
                         onClick={(event) => {
