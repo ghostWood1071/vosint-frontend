@@ -108,9 +108,9 @@ export const EventPage: React.FC<Props> = () => {
 
   const handleSetSeen = (checkedSeen: boolean, data: any) => {
     if (checkedSeen) {
-      mutateChangeStatusSeenEvent({ action: "set-seen", data: data });
+      mutateChangeStatusSeenEvent({ action: "set-seen", data: data, is_system_created: false });
     } else {
-      mutateChangeStatusSeenEvent({ action: "set-unseen", data: data });
+      mutateChangeStatusSeenEvent({ action: "set-unseen", data: data, is_system_created: false });
     }
   }
 

@@ -1,8 +1,8 @@
-import { EarthIcon, FlagIcon, GroupIcon, UserTieIcon } from "@/assets/svg";
+import { EarthIcon, FlagIcon, GroupIcon, UserTieIcon, CrossComparisonIcon } from "@/assets/svg";
 import { AppContainer } from "@/pages/app";
 import { NewsFilter } from "@/pages/news/components/news-filter";
 import { NewsFilterProvider } from "@/pages/news/news.context";
-import { getOrganizationsDetailUrl, organizationGraphPath } from "@/pages/router";
+import { getOrganizationsDetailUrl, organizationGraphPath, organizationCrossComparisonPath } from "@/pages/router";
 import { UserOutlined } from "@ant-design/icons";
 import { Avatar, Input, Menu, MenuProps, Pagination, Space, Typography } from "antd";
 import { useState } from "react";
@@ -152,6 +152,11 @@ function Sidebar(): JSX.Element {
       key: organizationGraphPath,
       icon: <EarthIcon />,
     },
+    {
+      label: "SO SÁNH CHÉO",
+      key: organizationCrossComparisonPath,
+      icon: <CrossComparisonIcon />,
+    },
   ];
 
   return (
@@ -171,6 +176,9 @@ function Sidebar(): JSX.Element {
 
     if (key === organizationGraphPath) {
       navigate(organizationGraphPath);
+    } else if(key === organizationCrossComparisonPath) {
+      navigate(organizationCrossComparisonPath);
+
     } else {
       navigate(key);
     }
@@ -185,7 +193,7 @@ function Sidebar(): JSX.Element {
       ).find((e: any) => e._id === listString[listString.length - 1]);
 
       let keywordsString = "";
-      Object.keys(dataObject.keywords).forEach((e) => {
+      Object.keys(dataObject?.keywords).forEach((e) => {
         if (dataObject.keywords[e] !== "") {
           let keyStringItem = "";
           const listKey = dataObject.keywords[e].split(",");

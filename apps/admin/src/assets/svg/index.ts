@@ -60,3 +60,6 @@ export { ReactComponent as EarthIcon } from "./earth.svg";
 export { ReactComponent as FlagIcon } from "./flag.svg";
 export { ReactComponent as GroupIcon } from "./group.svg";
 export { ReactComponent as UserTieIcon } from "./user-tie.svg";
+export { ReactComponent as CrossComparisonIcon } from "./cross-comparison.svg";
+export { ReactComponent as ArrowRightIcon } from "./arrow-right.svg";
+export { ReactComponent as ArrowLeftRightIcon } from "./arrow-left-right.svg";

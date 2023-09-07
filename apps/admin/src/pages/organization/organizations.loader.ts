@@ -1,9 +1,9 @@
-import { getEventBaseOnKhachTheAndChuThe, getKhachTheAndChuThe } from "@/services/event.service";
+import { drawGraph, getEventBaseOnKhachTheAndChuThe, getKhachTheAndChuThe, mappingGraph } from "@/services/event.service";
 import { getNewsBasedOnObject } from "@/services/job.service";
 import { getNewsList } from "@/services/news.service";
 import { getNewsByObjectId, getObject } from "@/services/object.service";
 import { getOrganizationsSidebar } from "@/services/organizations.service";
-import { useInfiniteQuery, useQuery } from "react-query";
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "react-query";
 
 export const CACHE_KEYS = {
   OrganizationsSidebar: "ORGANIZATIONS_SIDEBAR",
@@ -56,6 +56,30 @@ export const useInfiniteNewsByObject = (filter: Record<string, any>) => {
 export const useNewsByObject = (id: any, filter: Record<string, any>) => {
   return useInfiniteQuery<any>([CACHE_KEYS.NewsList], (data) => getNewsByObjectId(id, filter));
 };
+
+export const useMutationDrawGraph = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation(({data, filterEvent}: any) => drawGraph(data, filterEvent),
+  {
+    onSuccess: (res) => {
+    }, onError: (err) => {
+      console.log(err);
+    }
+  })
+}
+
+export const useMutationMappingGraph = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation(({data, filterEvent}:any) => mappingGraph(data, filterEvent), 
+  {
+    onSuccess: (res) => {
+    }, onError: (err) => {
+      console.log(err);
+    }
+  })
+}
 
 export enum OBJECT_TYPE {
   DOI_TUONG = "Đối tượng",

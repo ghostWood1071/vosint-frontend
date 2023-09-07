@@ -17,6 +17,7 @@ import { UseMutationOptions, useInfiniteQuery, useMutation, useQueryClient } fro
 
 export const EVENT_CACHE_KEYS = {
   ListEvents: "LIST_EVENT",
+  ListEventsDetail: "LIST_EVENT_DETAIL",
   NewsListEvents: "NEW_LIST_EVENT",
   Summary: "SUMMARY",
 };
@@ -63,14 +64,15 @@ export const useInfiniteEventsList = (filter: any) => {
 // };
 
 export const useInfiniteEventFormElt = (id: string, filter: any, tag: string) => {
-  return useInfiniteQuery([EVENT_CACHE_KEYS.NewsListEvents, id], ({ pageParam }) => {
+  
+  return useInfiniteQuery([EVENT_CACHE_KEYS.ListEvents, id], ({ pageParam }) => {
     return getEventFormElt({
       page_number: pageParam?.page_number || 1,
       page_size: pageParam?.page_size || 50,
       groupType: id === ETreeTag.QUAN_TRONG ? "vital" : id === ETreeTag.DANH_DAU ? "bookmarks" : "",
-      search_Query: filter.text_search,
-      startDate: filter.startDate,
-      endDate: filter.endDate,
+      search_Query: filter.text_search || filter.event_name,
+      startDate: filter.startDate || filter.start_date,
+      endDate: filter.endDate || filter.end_date,
       langs: filter?.langs ? filter.langs.join(",") : "",
       sentiment: filter?.sentiment,
       id_nguon_nhom_nguon: tag === "source" || tag === "source_group" ? id : "",
@@ -176,13 +178,13 @@ export const useMutationSystemEvents = () => {
 export const useMutationChangeStatusSeenEvent = () => {
   const queryClient = useQueryClient();
   return useMutation(
-    ({ action, data }: any) => {
+    ({ action, data, is_system_created }: any) => {
       if (action === "set-seen") {
-        return SetSeenEvent(data);
+        return SetSeenEvent(data, is_system_created);
       }
 
       if (action === "set-unseen") {
-        return SetNotSeenEvent(data);
+        return SetNotSeenEvent(data, is_system_created);
       }
 
       throw new Error("action invalid");

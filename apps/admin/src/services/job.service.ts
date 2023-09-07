@@ -93,6 +93,7 @@ const getEventsByNewsletterWithApiJob = async (
 };
 
 const getEventFormElt = async (filter: Record<string, any>) => {
+
   const result = await apiClient.post(`/Job/api/view_time_line`, filterEmptyString(filter));
   return result.data;
 };

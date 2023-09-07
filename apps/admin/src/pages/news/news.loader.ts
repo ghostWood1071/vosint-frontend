@@ -29,6 +29,7 @@ import {
   deleteNewsFromCategory,
   deleteNewsObject,
   exportNews,
+  getEventFormObj,
   getNewsDetail,
 } from "@/services/news.service";
 import {
@@ -67,8 +68,26 @@ export const CACHE_KEYS = {
   NewsletterDetail: "NEWSLETTER_DETAIL",
   Summary: "SUMMARY",
   NewsEvent: "NEWS_EVENT",
+  ListEvents: "LIST_EVENT",
   NewsTTXVN: "NEWS_TTXVN",
   SWITCH: "SWITCH",
+};
+
+
+export const useInfiniteEventFormObj = (id: string, filter: any, tag: string) => {
+  return useInfiniteQuery([CACHE_KEYS.ListEvents, id], ({ pageParam }) => {
+    return getEventFormObj({
+      page_number: pageParam?.page_number || 1,
+      page_size: pageParam?.page_size || 50,
+      text_search: filter.text_search || filter.event_name,
+      start_date: filter.startDate || filter.start_date,
+      end_date: filter.endDate || filter.end_date,
+      sac_thai: "",
+      language_source: filter?.langs ? filter.langs.join(",") : "",
+      type: tag === "source" || tag === "source_group" ? tag : "",
+      object_id: (id === "organization") ? "" : id,
+    });
+  });
 };
 
 export const useNewsSidebar = (title?: string) => {

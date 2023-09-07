@@ -53,6 +53,21 @@ const getEventBaseOnKhachTheAndChuThe = async (filter: Record<string, string>) =
   return result.data;
 };
 
+const drawGraph = async (data: any, filterEvent: any) => {
+  const result = await apiClient.post(`event/get-international-graph`, data,
+  {
+    params: filterEmptyString(filterEvent)
+  });
+  return result.data;
+};
+
+const mappingGraph = async (data: any, filterEvent: any) => {
+  const result = await apiClient.post(`/event/get-events-by-edge`, data, {
+    params: filterEmptyString(filterEvent)
+  });
+  return result.data;
+};
+
 const createEvent = async (data: IEventDTO) => {
   const result = await apiClient.post(`/event`, data);
   return result.data;
@@ -73,13 +88,13 @@ const AddManyEventToNews = async (data: any, news_id: string) => {
   return result.data;
 };
 
-const SetSeenEvent = async (data: any) => {
-  const result = await apiClient.post<any>(`/event/read-check`, data);
+const SetSeenEvent = async (data: any, is_system_created: any) => {
+  const result = await apiClient.post<any>(`/event/read-check?is_system_created=${is_system_created}`, data);
   return result.data;
 };
 
-const SetNotSeenEvent = async (data: any) => {
-  const result = await apiClient.post<any>(`/event/read-uncheck`, data);
+const SetNotSeenEvent = async (data: any, is_system_created: any) => {
+  const result = await apiClient.post<any>(`/event/read-uncheck?is_system_created=${is_system_created}`, data);
   return result.data;
 };
 
@@ -148,6 +163,8 @@ export {
   getAllEventNews,
   getKhachTheAndChuThe,
   getEventBaseOnKhachTheAndChuThe,
+  drawGraph,
+  mappingGraph,
   createEvent,
   createEventFromUser,
   createEventNews,
