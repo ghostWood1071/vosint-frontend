@@ -206,6 +206,7 @@ function QuickReport(): JSX.Element {
                   title="Xoá báo cáo"
                   onClick={handleDelete}
                   loading={isDeleting}
+                  style={{border: 0}}
                 />
               )}
             </Space>

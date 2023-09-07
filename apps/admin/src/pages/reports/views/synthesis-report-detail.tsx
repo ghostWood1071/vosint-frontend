@@ -177,6 +177,8 @@ export function SynthesisReport(): JSX.Element {
               title="Xoá báo cáo"
               onClick={handleDelete}
               loading={isDeleting}
+              style={{border: 0}}
+
             />
           </Space>
 

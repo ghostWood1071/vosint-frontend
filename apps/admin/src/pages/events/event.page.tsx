@@ -194,6 +194,7 @@ export const EventPage: React.FC<Props> = () => {
             onSearch={(value) => {
               setFilterEvent({ ...filterEvent, event_name: value });
             }}
+            placeholder="Tìm kiếm"
           />
         </Space>
       </div>

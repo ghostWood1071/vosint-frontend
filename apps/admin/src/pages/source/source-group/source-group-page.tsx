@@ -1,9 +1,11 @@
 import {
   DeleteOutlined,
+  DownCircleOutlined,
   EditOutlined,
   EyeInvisibleOutlined,
   EyeOutlined,
   PlusOutlined,
+  UpCircleOutlined,
 } from "@ant-design/icons";
 import {
   Button,
@@ -134,6 +136,12 @@ export const ViewList = () => {
               item.news[0] !== undefined ? expandedRow(item.news, item._id) : null,
             rowExpandable: (item) => item._id !== "Not Expandable",
             indentSize: 10,
+            expandIcon: ({ expanded, onExpand, record }) =>
+            expanded ? (
+              <UpCircleOutlined onClick={(e:any) => onExpand(record, e)} />
+            ) : (
+              <DownCircleOutlined onClick={(e:any) => onExpand(record, e)} />
+            )
           }}
           pagination={{
             position: ["bottomCenter"],

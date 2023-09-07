@@ -131,7 +131,7 @@ export const SettingCreateForm: React.FC<Props> = ({
           name="users_follow"
           label="Các tài khoản được giám sát: "
           labelCol={{
-            span: 6.5,
+            span: 7,
           }}
         >
           <Select

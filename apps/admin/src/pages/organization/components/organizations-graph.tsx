@@ -29,6 +29,7 @@ const Graph = ({data, handleChooseEdge} : {data:any, handleChooseEdge:any}) => {
       
     // ],
   });
+  
   const ref = useRef(null);
 
   const createGraph = (ref:React.MutableRefObject<any>, data:any) => {
@@ -45,13 +46,14 @@ const Graph = ({data, handleChooseEdge} : {data:any, handleChooseEdge:any}) => {
         defaultNode: {
           type: 'image',
           shape: "circle",
-          size: [200],
-
+          size: [60],
+          
           clipCfg: {
             show: true,
             type: 'circle',
-            r: 80,
+            r: 30,
           },
+
           style: {
             cursor: 'pointer',
             shadowOffsetX: 10,
@@ -59,7 +61,7 @@ const Graph = ({data, handleChooseEdge} : {data:any, handleChooseEdge:any}) => {
             shadowColor: "#d6d6d6",
             shadowBlur: 10,
             opacity: 0.8,
-            objectFit: "cover" 
+            // filter: "blur" 
           },
         },
         defaultEdge: {
@@ -70,22 +72,26 @@ const Graph = ({data, handleChooseEdge} : {data:any, handleChooseEdge:any}) => {
           labelCfg: {
             refY: 10,
             refX: 40,
+
             style: {
-              fontSize: 14,
-              fontWeight: "bold",
+              fontSize: 13,
+              // fontWeight: "bold",
+              // fill: "#008000"
             }
           },
+
           
           style: {
-            lineWidth: 3,
-            stroke: '#234170',
+            lineWidth: 2,
+            stroke: '#5172a9',
             // startArrow: {
             //   path: 'M 0,0 L 12,6 L 9,0 L 12,-6 Z',
             //   fill: '#234170',
             // },
             endArrow: {
+              // path: 'M 0,0 L 12,6 L 9,0 L 12,-6 Z',
               path: 'M 0,0 L 12,6 L 9,0 L 12,-6 Z',
-              fill: '#234170',
+              fill: '#557bb9',
             },
           },
         },
@@ -95,19 +101,24 @@ const Graph = ({data, handleChooseEdge} : {data:any, handleChooseEdge:any}) => {
 
     // Click an edge
     graph.on('edge:click', (e: any) => {
-      const source = e.item._cfg.source._cfg.id;
-      const target = e.item._cfg.target._cfg.id;
+      // const source = e.item._cfg.source._cfg.id;
+      // const target = e.item._cfg.target._cfg.id;
+      const source = {id: e.item._cfg.source._cfg.id, img: e.item._cfg.source._cfg.model.img};
+      const target = {id: e.item._cfg.target._cfg.id, img: e.item._cfg.target._cfg.model.img};
+      console.log(e.item);
       handleChooseEdge(source, target);
     });
 
     // graph.refresh();
     graph.data(data);
     graph.render();
+
     return graph;
   }
 
   useEffect(() => {
     const graph = createGraph(ref,data);
+
     // return () => {
     //   graph.changeData(data);
     // };

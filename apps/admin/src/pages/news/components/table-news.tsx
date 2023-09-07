@@ -153,10 +153,12 @@ export const NewsTableItem: React.FC<Props> = ({
                 </Tooltip>
               )}
 
-              <Tooltip title={item.isBell ? "Xoá khỏi tin quan trọng" : "Thêm vào tin quan trọng"}>
+              <Tooltip  
+              // title={item.isBell ? "Xoá khỏi tin quan trọng" : "Thêm vào tin quan trọng"}>
+              title="Xoá khỏi tin quan trọng">
                 <ImportantButton item={item} handleClickImportant={handleClickImportant} />
               </Tooltip>
-              <Tooltip
+              <Tooltip 
                 title={item.isStar ? "Xoá khỏi tin được đánh dấu" : "Thêm vào tin được đánh dấu"}
               >
                 <StarTwoTone

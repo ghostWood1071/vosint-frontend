@@ -92,6 +92,8 @@ export function NewsletterModal({ onFinish, confirmLoading }: Props): JSX.Elemen
     }
   }, [action]);
 
+  console.log(t(tag!));
+  
   return (
     <Modal
       title={t(action!) + t(tag!)}

@@ -28,26 +28,31 @@
     }
 
     .graph-header {
-        background: #e4f6ff !important;
-        padding: 10px;
+        background: #2074bd !important;
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+
+        padding: 15px;
         display: grid;
         place-items: center;
-        border: 1px solid #A6A6A6;
-
+        // border-top: 1px solid #A6A6A6;
+        box-shadow: 0 14px 28px rgba(0, 0, 0, 0.1), 0 0px 0px rgba(0, 0, 0, 0.1);
         h3 {
-            font-size: 20px;
+            font-size: 16px;
             margin-bottom: 0;
             font-weight: 700;
-            color: #234170;
+            color: #fff;
         }
     }
 
     .graph-body {
         min-height: 500px;
-        border-left: 1px solid #a6a6a6;
-        border-right: 1px solid #a6a6a6;
-        border-bottom: 1px solid #a6a6a6;
-
+        border: 1px solid #ececec;
+        // border-right: 1px solid #ececec;
+        // border-bottom: 1px solid #ececec;
+        box-shadow: 0 14px 28px rgba(0, 0, 0, 0.1), 0 0px 0px rgba(0, 0, 0, 0.1);
+        border-bottom-left-radius: 5px;
+        border-bottom-right-radius: 5px;
         .graph-body-relation {
             // padding: 50px 20px;
 
@@ -72,13 +77,26 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: #e4f6ff;
-            padding: 5px;
+            background: #fff;
+            padding: 15px;
             font-weight: bold;
+            border: 1px solid #ececec;
+            border-radius: 5px;
+            margin-bottom: 10px;
+
+            .item-header-img {
+                width: 20px;
+                height: 20px;
+                object-fit: cover;
+                border-radius: 50%;
+                margin-right: 10px;
+                box-shadow: 0 14px 28px rgba(0, 0, 0, 0.1), 0 0px 0px rgba(0, 0, 0, 0.1);
+
+            }
         }
 
         &-content {
-            padding: 5px;
+            // padding: 5px;
         }
     }
 
@@ -92,16 +110,35 @@
             // padding-right: 20px;
             align-items: flex-start;
             font-weight: bold;
+            display: flex;
+            align-items: center;
+            margin-top: 2px;
+
+            &-icon {
+                width: 20px;
+                height: 20px;
+                border-radius: 5px;
+                display: grid;
+                place-items: center;
+                border: 1px solid #ececec;
+                margin-right: 5px;
+            }
         }
 
         .box-collapse {
             flex: 2;
+
+            .ant-collapse-expand-icon {
+                margin-top: 2px;
+            }
 
             .ant-collapse-header {
                 padding-top: 0 !important;
                 padding-bottom: 5px !important;
                 
                 .ant-collapse-header-text {
+                    line-height: 2;
+                    font-weight: 500;
                     color: #2076BE
                 }
             }
@@ -116,6 +153,7 @@
 
             .ant-collapse-content-box {
                 padding-bottom: 10px !important;
+                line-height: 2;
             }
         }
 
