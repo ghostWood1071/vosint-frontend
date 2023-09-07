@@ -1,5 +1,5 @@
 import { convertTimeToShowInUI } from "@/utils/tool-validate-string";
-import { CaretRightOutlined, CaretUpFilled, LineOutlined } from "@ant-design/icons";
+import { CaretDownFilled, CaretRightOutlined, CaretUpFilled, LineOutlined } from "@ant-design/icons";
 import { Col, Collapse, DatePicker, Empty, Row, Select } from "antd";
 import { flatMap, unionBy } from "lodash";
 import React, { useRef, useState } from "react";
@@ -49,7 +49,6 @@ export const CrossComparison = () => {
     flatMap(data?.pages?.map((a) => a?.result?.map((e: any) => e))),
     "_id",
   );
-
 
   function groupByDateCreated(array: any) {
     const grouped = array.reduce((prev: any, curr: any) => {
@@ -241,6 +240,9 @@ const Items: React.FC<ItemProps> = ({ item, object1, object2 }) => {
     data2 = item.data.filter((e: any) => e.khach_the === object1);
   }
   const Ref = useRef<any>();
+
+  console.log(data1, data2);
+
   return (
     <div className={styles.mainItemContainer}>
       {data1.length > 0 || data2.length > 0 ? (
@@ -258,7 +260,11 @@ const Items: React.FC<ItemProps> = ({ item, object1, object2 }) => {
                             // <CaretRightOutlined rotate={isActive ? 90 : 0} />
                             // <CaretUpFilled className={styles.goodIcon} />
                             // <CaretDownFilled className={styles.badIcon}/>
-                            <LineOutlined className={styles.normalIcon} />
+                            element.sentiment === "0" ? (
+                              <LineOutlined className={styles.normalIcon} />
+                            ) : (element.sentiment === "1") ? (
+                              <CaretUpFilled className={styles.goodIcon} />
+                            ) : <CaretDownFilled className={styles.badIcon}/>
                           )}
                           ghost
                           onChange={(value) => {
@@ -299,8 +305,13 @@ const Items: React.FC<ItemProps> = ({ item, object1, object2 }) => {
                         <div key={index}>
                           <Collapse
                             expandIcon={({ isActive }) => (
-                              <CaretRightOutlined rotate={isActive ? 90 : 0} />
-                            )}
+                              // <CaretRightOutlined rotate={isActive ? 90 : 0} />
+                              element.sentiment === "0" ? (
+                                <LineOutlined className={styles.normalIcon} />
+                              ) : (element.sentiment === "1") ? (
+                                <CaretUpFilled className={styles.goodIcon} />
+                              ) : <CaretDownFilled className={styles.badIcon}/>
+                              )}
                             ghost
                             onChange={(value) => {
                               if (value[0] === "1") {

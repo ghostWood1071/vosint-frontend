@@ -1,6 +1,6 @@
 import { convertTimeToShowInUI } from "@/utils/tool-validate-string";
-import { CaretRightOutlined } from "@ant-design/icons";
-import { Checkbox, Col, Collapse, DatePicker, Empty, Row, Select } from "antd";
+import { CaretRightOutlined, LineOutlined } from "@ant-design/icons";
+import { Checkbox, Col, Collapse, DatePicker, Empty, Row, Select, Tooltip } from "antd";
 import { flatMap, unionBy } from "lodash";
 import React, { useEffect, useRef, useState } from "react";
 import { useInView } from "react-intersection-observer";
@@ -48,9 +48,9 @@ export const InternationalRelationshipGraph = () => {
       //   },
       // ],
       // edges: [
-      //   { source: "node1", target: "node2", label: "edge1" },
-      //   { source: "node2", target: "node1", label: "edge2" },
-      //   { source: "node3", target: "node2", label: "edge3" },
+      //   { source: "node1", target: "node2", label: "8 sự kiện: 3 tích cực, 2 tiêu cực, 3 trung tính" },
+      //   { source: "node2", target: "node1", label: "8 sự kiện: 3 tích cực, 2 tiêu cực, 3 trung tính" },
+      //   { source: "node3", target: "node2", label: "8 sự kiện: 3 tích cực, 2 tiêu cực, 3 trung tính" },
       // ],
       }
     );
@@ -74,20 +74,28 @@ export const InternationalRelationshipGraph = () => {
     // const data = text.map((item: any) => item.label.props.children);
     const data = value;
     mutateDrawGraph({data, filterEvent}, {
-      onSuccess: (res) => {setDataDraw(res)},
+      onSuccess: (res) => {
+        const combined = res.edges.map((edge:any) => ({
+          source: edge.source, 
+          target: edge.target,
+          label: `${edge.total} sự kiện: ${edge.positive} tích cực, ${edge.negative} tiêu cực, ${edge.normal} trung tính`
+        }));
+
+        res.edges = combined;
+        setDataDraw(res)
+      },
       onError: (err) => {}
     })
   };
-  
+
   const handleChooseEdge = (source:any, target:any) => {
-    const data = [source, target];
-    setSelectedLabelOptions(data);
+    const data = [source.id, target.id];
+    setSelectedLabelOptions([source, target]);
     mutateMappingGraph({data, filterEvent}, {
       onSuccess: (res) => {setEventContent(res)},
       onError: (err) => {console.log(err); }
     })
   }
-
   const handleChangeFilterTime = (value: any) => {
     const start_date = value?.[0].format("DD/MM/YYYY");
     const end_date = value?.[1].format("DD/MM/YYYY");
@@ -157,7 +165,7 @@ export const InternationalRelationshipGraph = () => {
             />
           </div>
           <div style={{marginTop: "15px", padding: "10px"}}>
-            <Row gutter={8}>
+            <Row gutter={15}>
               <Col span={14}>
                 <div className="graph-header">
                   <h3>ĐỒ THỊ QUAN HỆ QUỐC TẾ</h3>
@@ -176,9 +184,15 @@ export const InternationalRelationshipGraph = () => {
                   {selectedLabelOptions.length > 0 && selectedOptions.length > 0 && (
                     <div className="graph-item">
                       <div className="graph-item-header">
-                        <span>{selectedLabelOptions[0]}</span>
+                        <div>
+                          <img src={selectedLabelOptions[0].img} alt="" className="item-header-img" />
+                          <span>{selectedLabelOptions[0].id}</span>
+                        </div>
                         <ArrowRightIcon />
-                        <span>{selectedLabelOptions[1]}</span>
+                        <div>
+                          <img src={selectedLabelOptions[1].img} alt="" className="item-header-img" />
+                          <span>{selectedLabelOptions[1].id}</span>
+                        </div>
                       </div>
                       <div className="graph-item-content">
                       {eventContent && eventContent[1] && (
@@ -233,7 +247,14 @@ export const InternationalRelationshipGraph = () => {
                         )}
                         {eventContent && eventContent[0] && (
                           <div className="graph-content-box neutral">
-                            <div className="box-shade">Trung tính</div>
+                            <div className="box-shade">
+                              <div className="box-shade-icon">
+                                <Tooltip title="Trung tính">
+                                  <LineOutlined className={styles.normalIcon} />
+                                </Tooltip>
+                              </div>
+                              Trung tính
+                            </div>
                             <div className="box-collapse">
                               {
                                 eventContent[0].map((event:any, index:any) => (

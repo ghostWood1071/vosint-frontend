@@ -190,6 +190,7 @@ export function NewsletterFormChuDe({ title, keyword, setKeyword }: Props): JSX.
                 rowKey="id"
                 pagination={false}
                 size="small"
+                
               />
             )}
           </Form.Item>

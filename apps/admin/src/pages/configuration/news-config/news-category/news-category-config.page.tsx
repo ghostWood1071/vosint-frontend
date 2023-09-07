@@ -62,7 +62,7 @@ export const CategoryNewsConfig = () => {
             <Row className={styles.row} align="stretch">
               {dataDetail?.title && (
                 <>
-                  <Col span={6} className={styles.itemLabel}>
+                  <Col span={6} className={styles.itemLabel} style={{paddingRight: "20px"}}>
                     Tên lĩnh vực
                   </Col>
                   <Col span={18} className={styles.itemContent}>
