@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@antv/g6':
+        specifier: ^4.8.21
+        version: 4.8.21
       konva:
         specifier: ^9.2.0
         version: 9.2.0
