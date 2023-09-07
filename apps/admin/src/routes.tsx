@@ -70,6 +70,7 @@ import {
   organizationCateConfigPath,
   organizationDetailPath,
   organizationGraphPath,
+  organizationCrossComparisonPath,
   organizationPath,
   pipelineDashboardPath,
   pipelineDataProcessingPath,
@@ -96,6 +97,7 @@ import {
   ttxvnPath,
   twitterConfigPath,
   userManagementPath,
+  organizationGraphPathBackup,
 } from "./pages/router";
 import { Search } from "./pages/search/search.page";
 import {
@@ -108,6 +110,9 @@ import {
 } from "./pages/social";
 import { SourceGroup, SourceManagementLayout } from "./pages/source";
 import { TTXVNNewsPage } from "./pages/ttxvn";
+import { CrossComparison } from "./pages/organization/cross-comparison/component/cross-comparison";
+import { InternationalRelationshipGraphBackup } from "./pages/organization/international-relationship-graph/component/international-relationship-graph-backup";
+import { EventObjectPage } from "./pages/events/components/event-object.page";
 
 export const routers = createBrowserRouter([
   {
@@ -139,11 +144,11 @@ export const routers = createBrowserRouter([
             element: <NewsDetailPage />,
           },
           {
-            path: "/event/:newsletterId",
+            path: "/events/:newsletterId",
             element: <EventDetailPage />,
           },
           {
-            path: "/event/:newsletterId/:tag",
+            path: "/events/:newsletterId/:tag",
             element: <EventDetailPage />,
           },
           // {
@@ -166,6 +171,23 @@ export const routers = createBrowserRouter([
           {
             path: organizationGraphPath,
             element: <InternationalRelationshipGraph />,
+          },
+          
+          // {
+          //   path: organizationGraphPathBackup,
+          //   element: <InternationalRelationshipGraphBackup />,
+          // },
+          {
+            path: organizationCrossComparisonPath,
+            element: <CrossComparison />,
+          },
+          {
+            path: "/organization/:newsletterId/events",
+            element: <EventObjectPage />,
+          },
+          {
+            path: "/organization/events",
+            element: <EventObjectPage />,
           },
         ],
       },
@@ -205,6 +227,14 @@ export const routers = createBrowserRouter([
             path: eventPath,
             element: <EventPage />,
           },
+          // {
+          //   path: "/event/:newsletterId",
+          //   element: <EventDetailPage />,
+          // },
+          // {
+          //   path: "/event/:newsletterId/:tag",
+          //   element: <EventDetailPage />,
+          // },
           // {
           //   path: "/event/:newsletterId/:tag",
           //   element: <EventDetailPage />,

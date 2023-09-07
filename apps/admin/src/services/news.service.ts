@@ -15,6 +15,12 @@ const getNewsDetail = async (id: string) => {
   return result.data;
 };
 
+const getEventFormObj = async (filter: any) => {
+  const result = await apiClient.get<any>(`/news/get_time_line`, {params: filterEmptyString(filter)});
+
+  return result.data;
+};
+
 const SetSeenPost = async (data: any) => {
   const result = await apiClient.post<any>(`/news/read`, data);
   return result.data;
@@ -61,6 +67,7 @@ const deleteNewsFromCategory = async (data: any) => {
 export {
   getNewsDetail,
   getNewsList,
+  getEventFormObj,
   SetSeenPost,
   SetNotSeenPost,
   exportNews,

@@ -27,7 +27,7 @@ import NewsCategoryModal from "./news-category/news-category-modal";
 import produce from "immer";
 import styles from "./news-filter.module.less";
 import "../less/news-filter.less";
-import { getEventDetailUrl } from "@/pages/router";
+import { getEventNewsDetailUrl, getEventObjectDetailUrl } from "@/pages/router";
 
 export function NewsFilter(
   {handleDeleteNews, organization}:
@@ -189,6 +189,23 @@ export function NewsFilter(
           />
         )}
 
+        <Button
+          className={styles.item + " btn-tool"}
+          // icon={<ReloadOutlined />}
+          icon={<OutlineEventIcon />}
+          onClick={() => {
+            // setStatus(!status);
+            // handleConvert(status);
+            let target = "";
+            const objectId = pathname.replace("/organization", "");
+            if(objectId) target=objectId;
+            if(pathname.includes("/organization"))  
+              navigate(getEventObjectDetailUrl(target ? target.replace("/", "") : "all"));
+            else navigate(getEventNewsDetailUrl((pathname.includes("/organization")) ? target.replace("/", "") : detailIds, tag));
+          }}
+          title={"Hiển thị dòng sự kiện"}
+        />
+
         {/* <Button
           className={styles.item + " btn-tool"}
           icon={<PlusCircleOutlined />}
@@ -242,17 +259,7 @@ export function NewsFilter(
         </Form.Item>
         <NewsSummaryModal />
 
-        <Button
-          className={styles.item}
-          // icon={<ReloadOutlined />}
-          icon={<OutlineEventIcon />}
-          onClick={() => {
-            // setStatus(!status);
-            // handleConvert(status);
-            navigate(getEventDetailUrl(detailIds, tag));
-          }}
-          title={"Hiển thị dòng sự kiện"}
-        />
+        
 
         <div className={styles.input}>
           <Input.Search
