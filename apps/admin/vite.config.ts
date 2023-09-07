@@ -48,34 +48,34 @@ export default defineConfig({
     },
   },
   ///
-  // server: {
-  //   proxy: {
-  //     "/api": "http://vosint.aiacademy.edu.vn",
-  //     "/api/pipeline": "http://vosint.aiacademy.edu.vn/api",
-  //     "/api/summ": "http://vosint.aiacademy.edu.vn/api",
-  //   }
+  server: {
+    proxy: {
+      "/api": "http://vosint.aiacademy.edu.vn",
+      "/api/pipeline": "http://vosint.aiacademy.edu.vn/api",
+      "/api/summ": "http://vosint.aiacademy.edu.vn/api",
+    }
 
-  //   // proxy: {
-  //   //   "/api": "http://testvosint3api.aiacademy.edu.vn",
-  //   //   "/api/pipeline": "http://testvosint3api.aiacademy.edu.vn/api",
-  //   //   "/api/summ": "http://testvosint3api.aiacademy.edu.vn/api",
-  //   // }
+    // proxy: {
+    //   "/api": "http://testvosint3api.aiacademy.edu.vn",
+    //   "/api/pipeline": "http://testvosint3api.aiacademy.edu.vn/api",
+    //   "/api/summ": "http://testvosint3api.aiacademy.edu.vn/api",
+    // }
 
-  //   // proxy: {
-  //   //   "/api": "http://vosint.aiacademy.edu.vn",
-  //   //   "/api/pipeline": "http://vosint.aiacademy.edu.vn/api",
-  //   //   "/api/summ": "http://vosint.aiacademy.edu.vn/api",
-  //   // },
+    // proxy: {
+    //   "/api": "http://vosint.aiacademy.edu.vn",
+    //   "/api/pipeline": "http://vosint.aiacademy.edu.vn/api",
+    //   "/api/summ": "http://vosint.aiacademy.edu.vn/api",
+    // },
 
-  //   // proxy: {
-  //   //   '/api': {
-  //   //     target: "http://testvosint3api.aiacademy.edu.vn",
-  //   //     changeOrigin: true,
-  //   //     secure: false,
-  //   //     rewrite: path => path.replace('/api', ''),
-  //   //   }
-  //   // }
-  // },
+    // proxy: {
+    //   '/api': {
+    //     target: "http://testvosint3api.aiacademy.edu.vn",
+    //     changeOrigin: true,
+    //     secure: false,
+    //     rewrite: path => path.replace('/api', ''),
+    //   }
+    // }
+  },
 
 
 });
