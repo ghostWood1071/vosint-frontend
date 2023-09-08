@@ -10,6 +10,7 @@ interface NewsState {
   newsSelectId: React.Key | null;
   setNewsSelectId: Dispatch<React.Key | null>;
 }
+
 export const useNewsState = create<NewsState>((set) => ({
   news: {
     action: null,

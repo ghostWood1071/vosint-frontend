@@ -14,6 +14,7 @@ import {
   useMutationAccountTTXVNConfig,
 } from "./ttxvn.loader";
 import styles from "./ttxvn.module.less";
+import "./less/ttxvn.less"
 
 interface Props {}
 

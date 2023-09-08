@@ -241,7 +241,6 @@ const Items: React.FC<ItemProps> = ({ item, object1, object2 }) => {
   }
   const Ref = useRef<any>();
 
-  console.log(data1, data2);
 
   return (
     <div className={styles.mainItemContainer}>

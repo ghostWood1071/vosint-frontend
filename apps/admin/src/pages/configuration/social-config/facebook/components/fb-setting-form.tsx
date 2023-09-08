@@ -41,6 +41,7 @@ export const SettingCreateForm: React.FC<Props> = ({
   useEffect(() => {
     form.setFieldsValue(initialValues);
   }, []);
+  
   const handleChange = (value: string | string[], data: any) => {
     setAdminSelect(data);
   };

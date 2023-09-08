@@ -89,8 +89,6 @@ export const SystemEventPage: React.FC<Props> = () => {
   const unseen = eventChoosedList.find(
     (item: any) => item.list_user_read?.length == 0 || !("list_user_read" in item),
   );
-  console.log(dataSource);
-
 
   return (
     <div className={styles.mainContainer + " system-event-container"}>

@@ -301,6 +301,9 @@ export const MindmapModal: React.FC<props> = ({
             ]}
             label="Tiêu đề"
             name={"title"}
+            labelCol={{
+              span: 5.5,
+            }}
           >
             <Input />
           </Form.Item>

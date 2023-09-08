@@ -1,5 +1,5 @@
 import { convertTimeToShowInUI } from "@/utils/tool-validate-string";
-import { CaretRightOutlined, LineOutlined } from "@ant-design/icons";
+import { CaretDownFilled, CaretRightOutlined, CaretUpFilled, LineOutlined } from "@ant-design/icons";
 import { Checkbox, Col, Collapse, DatePicker, Empty, Row, Select, Tooltip } from "antd";
 import { flatMap, unionBy } from "lodash";
 import React, { useEffect, useRef, useState } from "react";
@@ -58,7 +58,6 @@ export const InternationalRelationshipGraph = () => {
   const [eventContent, setEventContent] = useState<any>();    
   const [selectedOptions, setSelectedOptions] = React.useState<any>([]);
   const [selectedLabelOptions, setSelectedLabelOptions] = React.useState<any>([]);
-  
   const [dirty, setDirty] = React.useState(false);
   
   const {data: countries} = useObjectList(OBJECT_TYPE.QUOC_GIA, { name: "" });
@@ -81,6 +80,13 @@ export const InternationalRelationshipGraph = () => {
           label: `${edge.total} sự kiện: ${edge.positive} tích cực, ${edge.negative} tiêu cực, ${edge.normal} trung tính`
         }));
 
+        const combinedNodes = res.nodes.map((node:any) => ({
+          id: node.id,
+          img: node.img,
+          label: node.id
+        }))
+
+        res.nodes = combinedNodes;
         res.edges = combined;
         setDataDraw(res)
       },
@@ -89,10 +95,14 @@ export const InternationalRelationshipGraph = () => {
   };
 
   const handleChooseEdge = (source:any, target:any) => {
-    const data = [source.id, target.id];
+    // const data = [source.id, target.id];
+    const data = { source: source.id, target: target.id };
     setSelectedLabelOptions([source, target]);
     mutateMappingGraph({data, filterEvent}, {
-      onSuccess: (res) => {setEventContent(res)},
+      onSuccess: (res) => {
+
+        setEventContent(res)
+      },
       onError: (err) => {console.log(err); }
     })
   }
@@ -101,17 +111,37 @@ export const InternationalRelationshipGraph = () => {
     const end_date = value?.[1].format("DD/MM/YYYY");
     setFilterEvent({ ...filterEvent, start_date: start_date, end_date: end_date });
     const filter = { ...filterEvent, start_date: start_date, end_date: end_date };
-    setEventContent([]);
+    // setEventContent([]);
     setSelectedLabelOptions([]);
     mutateDrawGraph({data: selectedOptions, filterEvent: filter}, {
-      onSuccess: (res) => {setDataDraw(res)},
+      onSuccess: (res) => {
+        const combined = res.edges.map((edge:any) => ({
+          source: edge.source, 
+          target: edge.target,
+          label: `${edge.total} sự kiện: ${edge.positive} tích cực, ${edge.negative} tiêu cực, ${edge.normal} trung tính`
+        }));
+
+        const combinedNodes = res.nodes.map((node:any) => ({
+          id: node.id,
+          img: node.img,
+          label: node.id
+        }))
+
+        res.nodes = combinedNodes;
+        res.edges = combined;
+        setDataDraw(res)
+      },
       onError: (err) => {}
     })
 
-    mutateMappingGraph({data: selectedOptions, filterEvent: filter}, {
-      onSuccess: (res) => {setEventContent(res)},
-      onError: (err) => {console.log(err); }
-    })
+
+    if(selectedLabelOptions.length > 0) {
+      const data = {source: selectedLabelOptions[0]?.id, target: selectedLabelOptions[1]?.id}
+      mutateMappingGraph({data: data, filterEvent: filter}, {
+        onSuccess: (res) => {setEventContent(res)},
+        onError: (err) => {console.log(err); }
+      })
+    }
   }
 
   const searchInput = document.querySelector(".ant-select-multiple .ant-select-selector");
@@ -197,7 +227,14 @@ export const InternationalRelationshipGraph = () => {
                       <div className="graph-item-content">
                       {eventContent && eventContent[1] && (
                           <div className="graph-content-box negative">
-                            <div className="box-shade">Tích cực</div>
+                            <div className="box-shade">
+                              <div className="box-shade-icon">
+                                <Tooltip title="Tiêu cực">
+                                  <CaretUpFilled className={styles.goodIcon} />
+                                </Tooltip>
+                              </div>
+                              Tích cực
+                              </div>
                             <div className="box-collapse">
                             { 
                             eventContent[1].map((event:any, index:any) => (
@@ -222,7 +259,14 @@ export const InternationalRelationshipGraph = () => {
                         )}
                         {eventContent && eventContent[2] && (
                           <div className="graph-content-box negative">
-                            <div className="box-shade">Tiêu cực</div>
+                            <div className="box-shade">
+                              <div className="box-shade-icon">
+                                <Tooltip title="Tiêu cực">
+                                  <CaretDownFilled className={styles.badIcon}/>
+                                </Tooltip>
+                              </div>
+                              Tiêu cực
+                              </div>
                             <div className="box-collapse">
                             { 
                             eventContent[2].map((event:any, index:any) => (
