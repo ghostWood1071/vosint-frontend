@@ -29,6 +29,7 @@ function buildMenuItem(
   { onSearch }: { onSearch: (objectType: OBJECT_TYPE) => (value: string) => void },
   { onChange }: { onChange: (objectType: OBJECT_TYPE) => (page: number) => void },
 ): MenuProps["items"] {
+
   return [
     {
       label: (
@@ -60,7 +61,8 @@ function buildMenuItem(
       label: (
         <Pagination
           defaultCurrent={1}
-          showSizeChanger={false}
+          // current={1}
+          showSizeChanger={true}
           pageSize={5}
           total={total}
           onChange={onChange(objectType)}
@@ -218,7 +220,9 @@ function Sidebar(): JSX.Element {
   }
 
   function handleChangePaginate(key: OBJECT_TYPE) {
+    
     return function (page: number) {
+      
       setSidebarFilter(
         produce((draft) => {
           draft[key].skip = page;
@@ -228,6 +232,7 @@ function Sidebar(): JSX.Element {
   }
 
   function handleChangeName(key: OBJECT_TYPE) {
+
     return function (value: string) {
       setSidebarFilter(
         produce((draft) => {

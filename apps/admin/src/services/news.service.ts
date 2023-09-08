@@ -11,7 +11,7 @@ const getNewsList = async (filter: any) => {
 };
 
 const getNewsDetail = async (id: string) => {
-  const result = await apiClient.get(`/news/${id}`);
+  const result = await apiClient.get(`/news/get-detail/${id}`);
   return result.data;
 };
 

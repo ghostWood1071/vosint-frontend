@@ -86,7 +86,7 @@ export const SourceNewsConfigList: React.FC = () => {
     Modal.confirm({
       title: "Bạn có chắc chắn muốn xoá nguồn tin này?",
       okText: "Xoá",
-      cancelText: "Huỷ",
+      cancelText: "Thoát",
       onOk: () => {
         handleDelete({ _id: value._id });
       },

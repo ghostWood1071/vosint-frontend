@@ -60,7 +60,7 @@ const updateReport = async (id: string, data: any) => {
 };
 
 const UpdateReportAndEvent = async (data: UpdateReportAndEventType) => {
-  const result = await apiClient.put(`/report/remove-heading`, "", {
+  const result = await apiClient.put(`/report/remove-heading/`, "", {
     params: filterEmptyString(data),
   });
   return result.data;

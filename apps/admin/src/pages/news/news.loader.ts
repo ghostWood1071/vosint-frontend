@@ -215,7 +215,11 @@ export const useMutationNewsSidebar = () => {
         queryClient.invalidateQueries([CACHE_KEYS.NewsSidebar]);
         queryClient.invalidateQueries([CACHE_KEYS.NewsletterDetail]);
       },
-      onError: () => {},
+      onError: (err) => {
+        // message.error(`${err.response.data}`);
+        message.error(`Đã tồn tại!`);
+
+      },
     },
   );
 };

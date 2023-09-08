@@ -145,7 +145,7 @@ export const ProxyConfig = () => {
     Modal.confirm({
       title: "Bạn có chắc chắn muốn xoá proxy này?",
       okText: "Xoá",
-      cancelText: "Huỷ",
+      cancelText: "Thoát",
       onOk: () => {
         handleDelete({ _id: value._id });
       },

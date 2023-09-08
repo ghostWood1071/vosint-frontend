@@ -90,7 +90,7 @@ export function NewsFilter(
       title: "Bạn có chắc muốn xoá những bản tin này không?",
       icon: <ExclamationCircleOutlined />,
       okText: "Xoá",
-      cancelText: "Huỷ",
+      cancelText: "Thoát",
       onOk() {
         mutateDeleteNewsObject(data, {
           onSuccess: (res) => {
@@ -305,7 +305,7 @@ export function NewsFilter(
       title: "Bạn có chắc muốn xoá những bản tin này không?",
       icon: <ExclamationCircleOutlined />,
       okText: "Xoá",
-      cancelText: "Huỷ",
+      cancelText: "Thoát",
       onOk() {
         setNewsSelection([]);
         return mutateDelete({

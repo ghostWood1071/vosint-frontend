@@ -288,7 +288,7 @@ export const EventPage: React.FC<Props> = () => {
     Modal.confirm({
       title: "Bạn có chắc chắn muốn xoá sự kiện này?",
       okText: "Xoá",
-      cancelText: "Huỷ",
+      cancelText: "Thoát",
       onOk: () => {
         handleDelete(value._id);
       },

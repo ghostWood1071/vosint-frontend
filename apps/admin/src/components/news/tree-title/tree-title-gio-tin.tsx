@@ -49,6 +49,7 @@ export function TreeTitleGioTin({ onClick, children, isEditable, ...node }: Prop
             <Space>
               {/* <Tooltip title={`Thêm ${MTreeTag[node.tag]} con`}> */}
                 <PlusOutlined
+                  style={{ cursor: "pointer"}}
                   onClick={handleCreate}
                   className={styles.add}
                   title={`Thêm ${MTreeTag[node.tag]} con`}
@@ -56,6 +57,7 @@ export function TreeTitleGioTin({ onClick, children, isEditable, ...node }: Prop
               {/* </Tooltip> */}
               {/* <Tooltip title={`Cập nhật ${MTreeTag[node.tag]} con`}> */}
                 <EditOutlined
+                  style={{ cursor: "pointer"}}
                   onClick={handleUpdate}
                   className={styles.edit}
                   title={`Cập nhật ${MTreeTag[node.tag]}` + (("parent_id" in node) ? " con" : "")}
@@ -63,6 +65,7 @@ export function TreeTitleGioTin({ onClick, children, isEditable, ...node }: Prop
               {/* </Tooltip> */}
               {/* <Tooltip title={`Xoá ${MTreeTag[node.tag]} con`}> */}
                 <DeleteOutlined
+                  style={{ cursor: "pointer"}}
                   onClick={handleDelete}
                   className={styles.delete}
                   title={`Xoá ${MTreeTag[node.tag]}`  + (("parent_id" in node) ? " con" : "")}

@@ -257,7 +257,7 @@ export const NewsTableItem: React.FC<Props> = ({
         <tr ref={Ref}>
           <td colSpan={type === "edit" ? 5 : 4}>
             <div className={`${styles.content}`}>
-              <div
+              {/* <div
                 onClick={() => {
                   Ref?.current?.scrollIntoView();
                 }}
@@ -269,8 +269,21 @@ export const NewsTableItem: React.FC<Props> = ({
                 >
                   <CloseOutlined title="Đóng chi tiết tin" className={styles.closeIcon} />
                 </button>
-              </div>
+              </div> */}
               <div className={`${styles.detailContainer} news__detail`}>
+                <div
+                  onClick={() => {
+                    Ref?.current?.scrollIntoView();
+                  }}
+                  className={styles.scrollContainer}
+                >
+                  <button
+                    className={`${styles.hideDetailButton} btn__close`}
+                    onClick={() => setTypeShow(!typeShow)}
+                  >
+                    <CloseOutlined title="Đóng chi tiết tin" className={styles.closeIcon} />
+                  </button>
+                </div>
                 <div className={styles.detailHeader}>
                   <div className={styles.title} style={{ marginBottom: "50px" }}>
                     <span style={{ marginRight: 10 }} className="news__title">
@@ -505,7 +518,7 @@ export const NewsTableItem: React.FC<Props> = ({
       icon: <ExclamationCircleOutlined />,
       content: `${item["data:title"]}`,
       okText: "Xoá",
-      cancelText: "Huỷ",
+      cancelText: "Thoát",
       onOk() {
         return onDelete?.(item._id);
       },

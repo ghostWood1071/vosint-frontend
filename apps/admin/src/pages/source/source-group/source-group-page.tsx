@@ -187,7 +187,7 @@ export const ViewList = () => {
     Modal.confirm({
       title: "Bạn có chắc chắn muốn xoá nhóm nguồn tin này?",
       okText: "Xoá",
-      cancelText: "Huỷ",
+      cancelText: "Thoát",
       onOk: () => {
         handleDelete({ _id: value._id });
       },
@@ -214,7 +214,7 @@ export const ViewList = () => {
     Modal.confirm({
       title: "Bạn có chắc chắn muốn xoá nguồn tin này?",
       okText: "Xoá",
-      cancelText: "Huỷ",
+      cancelText: "Thoát",
       onOk: () => {
         handeDeleteItemSource({ ...dataItem, news: dataNewsResult });
       },

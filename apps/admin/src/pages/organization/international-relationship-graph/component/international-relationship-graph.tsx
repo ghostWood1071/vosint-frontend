@@ -60,15 +60,45 @@ export const InternationalRelationshipGraph = () => {
   const [selectedLabelOptions, setSelectedLabelOptions] = React.useState<any>([]);
   const [dirty, setDirty] = React.useState(false);
   
-  const {data: countries} = useObjectList(OBJECT_TYPE.QUOC_GIA, { name: "" });
+  const {data: countries} = useObjectList(OBJECT_TYPE.QUOC_GIA, { name: "", limit: 10000 });
 
   const {mutate: mutateDrawGraph} = useMutationDrawGraph();
   const {mutate: mutateMappingGraph} = useMutationMappingGraph();
+
+
+  const chooseAll = () => {
+    setSelectedOptions(countries?.data.map((country: any) => country._id))
+
+    const data = countries?.data.map((country: any) => country._id);
+    mutateDrawGraph({data, filterEvent}, {
+      onSuccess: (res) => {
+        const combined = res.edges.map((edge:any) => ({
+          source: edge.source, 
+          target: edge.target,
+          // label: `${edge.total} sự kiện: ${edge.positive} tích cực, ${edge.negative} tiêu cực, ${edge.normal} trung tính`
+          label: `${edge.total} sự kiện`
+        }));
+
+        const combinedNodes = res.nodes.map((node:any) => ({
+          id: node.id,
+          img: node.img,
+          label: node.id
+        }))
+
+        res.nodes = combinedNodes;
+        res.edges = combined;
+        setDataDraw(res)
+      },
+      onError: (err) => {}
+    })
+  }
 
   const handleChange = (value: string[], text: any) => {
     if(value.length === 0) setEventContent([]); setSelectedLabelOptions([]);
     setSelectedOptions(value);
     setDirty(true);
+
+    console.log(value);
 
     // const data = text.map((item: any) => item.label.props.children);
     const data = value;
@@ -77,7 +107,8 @@ export const InternationalRelationshipGraph = () => {
         const combined = res.edges.map((edge:any) => ({
           source: edge.source, 
           target: edge.target,
-          label: `${edge.total} sự kiện: ${edge.positive} tích cực, ${edge.negative} tiêu cực, ${edge.normal} trung tính`
+          // label: `${edge.total} sự kiện: ${edge.positive} tích cực, ${edge.negative} tiêu cực, ${edge.normal} trung tính`
+          label: `${edge.total} sự kiện`
         }));
 
         const combinedNodes = res.nodes.map((node:any) => ({
@@ -95,6 +126,7 @@ export const InternationalRelationshipGraph = () => {
   };
 
   const handleChooseEdge = (source:any, target:any) => {
+
     // const data = [source.id, target.id];
     const data = { source: source.id, target: target.id };
     setSelectedLabelOptions([source, target]);
@@ -118,7 +150,7 @@ export const InternationalRelationshipGraph = () => {
         const combined = res.edges.map((edge:any) => ({
           source: edge.source, 
           target: edge.target,
-          label: `${edge.total} sự kiện: ${edge.positive} tích cực, ${edge.negative} tiêu cực, ${edge.normal} trung tính`
+          label: `${edge.total} sự kiện`
         }));
 
         const combinedNodes = res.nodes.map((node:any) => ({
@@ -186,7 +218,8 @@ export const InternationalRelationshipGraph = () => {
                   )
                 }))
               }
-            />
+              />
+              {/* <button onClick={chooseAll}>Chọn tất cả</button> */}
             </div>
             <DatePicker.RangePicker
               inputReadOnly
@@ -233,7 +266,7 @@ export const InternationalRelationshipGraph = () => {
                                   <CaretUpFilled className={styles.goodIcon} />
                                 </Tooltip>
                               </div>
-                              Tích cực
+                              Tích cực ({eventContent[1].length})
                               </div>
                             <div className="box-collapse">
                             { 
@@ -265,7 +298,7 @@ export const InternationalRelationshipGraph = () => {
                                   <CaretDownFilled className={styles.badIcon}/>
                                 </Tooltip>
                               </div>
-                              Tiêu cực
+                              Tiêu cực ({eventContent[2].length})
                               </div>
                             <div className="box-collapse">
                             { 
@@ -297,7 +330,7 @@ export const InternationalRelationshipGraph = () => {
                                   <LineOutlined className={styles.normalIcon} />
                                 </Tooltip>
                               </div>
-                              Trung tính
+                              Trung tính ({eventContent[0].length})
                             </div>
                             <div className="box-collapse">
                               {

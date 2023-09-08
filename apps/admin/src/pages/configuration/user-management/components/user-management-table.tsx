@@ -109,7 +109,7 @@ export const UserManagerTable: React.FC<Props> = ({
       icon: <ExclamationCircleOutlined />,
       title: `Bạn có chắc muốn xoá "${record.full_name}" không?`,
       okText: "Xoá",
-      cancelText: "Huỷ",
+      cancelText: "Thoát",
       onOk: () => onDelete?.(record._id),
     });
   }
