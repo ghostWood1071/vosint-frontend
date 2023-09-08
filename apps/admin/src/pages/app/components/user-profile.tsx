@@ -317,7 +317,9 @@ export const UserProfile: React.FC<Props> = ({ open, setOpen }) => {
     }
 
     // eslint-disable-next-line no-restricted-globals
-    location.reload();
+    setTimeout(() => {
+      location.reload();
+    }, 500)
   }
 
   function handleSelectFile(e: React.ChangeEvent<HTMLInputElement>) {

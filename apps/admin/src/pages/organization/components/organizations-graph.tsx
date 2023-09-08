@@ -105,7 +105,6 @@ const Graph = ({data, handleChooseEdge} : {data:any, handleChooseEdge:any}) => {
       // const target = e.item._cfg.target._cfg.id;
       const source = {id: e.item._cfg.source._cfg.id, img: e.item._cfg.source._cfg.model.img};
       const target = {id: e.item._cfg.target._cfg.id, img: e.item._cfg.target._cfg.model.img};
-      console.log(e.item);
       handleChooseEdge(source, target);
     });
 

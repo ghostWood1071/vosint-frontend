@@ -49,12 +49,12 @@ const getSocialObjectList = async (filter: any) => {
 };
 
 const getSetting = async () => {
-  const result = await apiClient.get<any>(`/social-media/social_media/Facebook`);
+  const result = await apiClient.get<any>(`/Social-media/social_media/Facebook`);
   return result.data;
 };
 
 const postSetting = async (data: any) => {
-  const result = await apiClient.post<APIResponse<any>>(`/social-media`, data);
+  const result = await apiClient.post<APIResponse<any>>(`/Social-media`, data);
   return result.data.payload;
 };
 

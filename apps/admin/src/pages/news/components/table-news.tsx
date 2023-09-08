@@ -41,7 +41,7 @@ import { MindmapModal } from "./mindmap-modal";
 import { NewDetailSummary } from "./news-detail/components";
 import "./table-news.less";
 import styles from "./table-news.module.less";
-import "@/assets/img/default-thumbnail.jpg";
+import defaultThumbnail from"@/assets/img/default-thumbnail.jpg";
 
 interface Props {
   item: any;
@@ -195,7 +195,7 @@ export const NewsTableItem: React.FC<Props> = ({
                 {item["source_name"]}
               </div> */}
               <div style={{ marginRight: "10px" }}>
-                <img src={item["source_favicon"]} title={item["source_name"]} className="source-icon" alt="" />
+                <img src={item["source_favicon"] || defaultThumbnail} title={item["source_name"]} className="source-icon" alt="" />
                 {/* <img src={"https://dantri.com.vn/favicon.ico"} title={item["source_name"]} className="source-icon" alt="" /> */}
               </div>
             </Tooltip>

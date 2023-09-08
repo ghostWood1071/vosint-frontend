@@ -1,7 +1,7 @@
 import { TNews } from "@/models/news.type";
 import { removeWhitespaceInStartAndEndOfString } from "@/utils/tool-validate-string";
 import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
-import { Button, Form, Input, Switch, Table, TableColumnsType, Typography } from "antd";
+import { Button, Form, Input, Switch, Table, TableColumnsType, Tooltip, Typography } from "antd";
 import produce from "immer";
 import { Dispatch, SetStateAction, useState } from "react";
 
@@ -275,10 +275,12 @@ export function NewsletterFormChuDe({ title, keyword, setKeyword }: Props): JSX.
                     onPressEnter={handleAddRequiredKeyword}
                   />
                   <div className={styles.inputButtonBox}>
-                    <Button
-                      icon={<PlusOutlined className={styles.plus} />}
-                      onClick={handleAddRequiredKeyword}
-                    />
+                    <Tooltip title="Thêm từ khoá bắt buộc">
+                      <Button
+                        icon={<PlusOutlined className={styles.plus} />}
+                        onClick={handleAddRequiredKeyword}
+                      />
+                    </Tooltip>
                   </div>
                 </div>
                 {requiredKeyword?.length > 0 ? (

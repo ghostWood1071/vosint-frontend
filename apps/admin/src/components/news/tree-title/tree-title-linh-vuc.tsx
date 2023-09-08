@@ -32,9 +32,9 @@ export function TreeTitleLinhVuc(node: Props): JSX.Element {
           <EditOutlined
             onClick={handleUpdate}
             className={styles.edit}
-            title={"Cập nhật lĩnh vực con"}
+            title={"Cập nhật lĩnh vực" + (("parent_id" in node) ? " con" : "")}
           />
-          <DeleteOutlined onClick={handleDelete} className={styles.delete} title={"Xoá lĩnh vực"} />
+          <DeleteOutlined onClick={handleDelete} className={styles.delete} title={"Xoá lĩnh vực" + (("parent_id" in node) ? " con" : "")} />
         </Space>
       </Col>
     </Row>

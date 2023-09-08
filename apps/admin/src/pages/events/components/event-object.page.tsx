@@ -65,10 +65,10 @@ export const EventObjectPage: React.FC<Props> = () => {
   //   }
   // }
   useEffect(() => {
-    if (inView && skip * 50 <= data?.pages[0].total) {
+    // if (inView && skip * 50 <= data?.pages[0].total) {
       fetchNextPage({ pageParam: { skip: skip + 1, limit: 50 } });
       setSkip(skip + 1);
-    }
+    // }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inView]);
 

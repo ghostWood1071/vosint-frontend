@@ -38,6 +38,7 @@ export const Tree: React.FC<Props> = ({
   reportLayout,
   onClickTitle,
 }) => {
+
   const setNews = useNewsState((state) => state.setNews);
   const setNewsSelectId = useNewsState((state) => state.setNewsSelectId);
 
@@ -69,9 +70,9 @@ export const Tree: React.FC<Props> = ({
           className={`${styles.treeAnt} tree-antd-report`}
           blockNode
           treeData={treeData}
-          titleRender={(node: any) => (
-            <TreeTitleGioTin {...node} isEditable={isEditable} onClick={onClickTitle} tag={tag} />
-          )}
+          titleRender={(node: any) => {
+            return <TreeTitleGioTin {...node} isEditable={isEditable} onClick={onClickTitle} tag={tag} />
+          }}
           selectedKeys={selectedKeys}
           onSelect={handleSelect}
         />
