@@ -60,7 +60,7 @@ export const InternationalRelationshipGraph = () => {
   const [selectedLabelOptions, setSelectedLabelOptions] = React.useState<any>([]);
   const [dirty, setDirty] = React.useState(false);
   
-  const {data: countries} = useObjectList(OBJECT_TYPE.QUOC_GIA, { name: "" });
+  const {data: countries} = useObjectList(OBJECT_TYPE.QUOC_GIA, { name: "", limit: 10000 });
 
   const {mutate: mutateDrawGraph} = useMutationDrawGraph();
   const {mutate: mutateMappingGraph} = useMutationMappingGraph();
@@ -77,7 +77,8 @@ export const InternationalRelationshipGraph = () => {
         const combined = res.edges.map((edge:any) => ({
           source: edge.source, 
           target: edge.target,
-          label: `${edge.total} sự kiện: ${edge.positive} tích cực, ${edge.negative} tiêu cực, ${edge.normal} trung tính`
+          // label: `${edge.total} sự kiện: ${edge.positive} tích cực, ${edge.negative} tiêu cực, ${edge.normal} trung tính`
+          label: `${edge.total} sự kiện`
         }));
 
         const combinedNodes = res.nodes.map((node:any) => ({
@@ -233,7 +234,7 @@ export const InternationalRelationshipGraph = () => {
                                   <CaretUpFilled className={styles.goodIcon} />
                                 </Tooltip>
                               </div>
-                              Tích cực
+                              Tích cực ({eventContent[1].length})
                               </div>
                             <div className="box-collapse">
                             { 
@@ -265,7 +266,7 @@ export const InternationalRelationshipGraph = () => {
                                   <CaretDownFilled className={styles.badIcon}/>
                                 </Tooltip>
                               </div>
-                              Tiêu cực
+                              Tiêu cực ({eventContent[2].length})
                               </div>
                             <div className="box-collapse">
                             { 
@@ -297,7 +298,7 @@ export const InternationalRelationshipGraph = () => {
                                   <LineOutlined className={styles.normalIcon} />
                                 </Tooltip>
                               </div>
-                              Trung tính
+                              Trung tính ({eventContent[0].length})
                             </div>
                             <div className="box-collapse">
                               {

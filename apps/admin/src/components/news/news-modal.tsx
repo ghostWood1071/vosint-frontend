@@ -87,7 +87,7 @@ export function NewsletterModal({ onFinish, confirmLoading, isChild }: Props): J
         title: `Bạn có chắc muốn xoá "${data?.title}" không?`,
         icon: <ExclamationCircleOutlined />,
         okText: "Xoá",
-        cancelText: "Huỷ",
+        cancelText: "Thoát",
         onOk: handleFormFinish,
         onCancel: handleCancel,
       });

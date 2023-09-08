@@ -713,7 +713,7 @@ export const MindmapModal: React.FC<props> = ({
     Modal.confirm({
       title: "Bạn có chắc chắn muốn xoá sự kiện này?",
       okText: "Xoá",
-      cancelText: "Huỷ",
+      cancelText: "Thoát",
       onOk: () => {
         const result = listNewsFromServer.filter((e: any) => e._id !== value._id);
         setListNewsFromServer(result);
@@ -725,7 +725,7 @@ export const MindmapModal: React.FC<props> = ({
     Modal.confirm({
       title: "Bạn có chắc chắn muốn xoá sự kiện này?",
       okText: "Xoá",
-      cancelText: "Huỷ",
+      cancelText: "Thoát",
       onOk: () => {
         // handleDeleteEvent({ _id: value._id });
         const result = listNewsAddedByUser.filter((e: any) => e.id !== value.id);
@@ -829,7 +829,7 @@ export const MindmapModal: React.FC<props> = ({
     Modal.confirm({
       title: "Bạn có chắc chắn muốn xoá sự kiện này?",
       okText: "Xoá",
-      cancelText: "Huỷ",
+      cancelText: "Thoát",
       onOk: () => {
         handleDeleteEvent({ _id: value._id });
       },

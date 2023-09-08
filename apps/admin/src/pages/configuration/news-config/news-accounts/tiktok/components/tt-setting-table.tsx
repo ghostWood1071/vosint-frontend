@@ -236,7 +236,7 @@ export const SettingTable: React.FC<Props> = ({ data, listProxy, accountMonitor,
       title: `Bạn có chắc muốn xoá "${values.username}" không?`,
       icon: <ExclamationCircleOutlined />,
       okText: "Xoá",
-      cancelText: "Huỷ",
+      cancelText: "Thoát",
       onOk: () =>
         mutateDelete(value, {
           onSuccess: () => {

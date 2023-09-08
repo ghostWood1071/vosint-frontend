@@ -228,7 +228,9 @@ export const SystemEventItem: React.FC<Props> = ({
                 className={`${styles.detailContent} news__content`}
                 onClick={(event) => event.stopPropagation()}
               >
-                {item?.event_content?.split(".").map((e: string) => {
+                {/* {item?.event_content} */}
+                {/* {item?.event_content.replace(/\.\./g, ".")} */}
+                {item?.event_content?.split("..").map((e: string) => {
                   if (e === "") {
                     return null;
                   }

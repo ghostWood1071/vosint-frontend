@@ -81,12 +81,12 @@ const Sidebar = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const [filter, setFilter] = useState({
-    page: 1,
+    skip: 1,
     limit: 10,
     title: "",
   });
   const [quickFilter, setQuickFilter] = useState({
-    page: 1,
+    skip: 1,
     limit: 10,
     title: "",
   });
@@ -97,6 +97,7 @@ const Sidebar = () => {
   const { data: dataQuickReport, isLoading: isQuickReportLoading } = useQuickReports(quickFilter, {
     keepPreviousData: true,
   });
+
 
   const { data: dataNewsLetter } = useNewsSidebar();
 
@@ -148,7 +149,7 @@ const Sidebar = () => {
               defaultCurrent={1}
               showSizeChanger={false}
               total={dataQuickReport?.total || 0}
-              current={quickFilter.page}
+              current={quickFilter.skip}
               pageSize={quickFilter.limit}
               onChange={handleQuickChangePaginate}
               size="small"
@@ -205,7 +206,7 @@ const Sidebar = () => {
               defaultCurrent={1}
               showSizeChanger={false}
               total={dataReport?.total || 0}
-              current={filter.page}
+              current={filter.skip}
               pageSize={filter.limit}
               onChange={handleChangePaginate}
               size="small"
@@ -268,16 +269,16 @@ const Sidebar = () => {
     setFilter((prev) => ({ ...prev, title: value }));
   }
 
-  function handleChangePaginate(page: number) {
-    setFilter((prev) => ({ ...prev, page }));
+  function handleChangePaginate(skip: number) {
+    setFilter((prev) => ({ ...prev, skip }));
   }
 
   function handleQuickSearch(value: string) {
     setQuickFilter((prev) => ({ ...prev, title: value }));
   }
 
-  function handleQuickChangePaginate(page: number) {
-    setQuickFilter((prev) => ({ ...prev, page }));
+  function handleQuickChangePaginate(skip: number) {
+    setQuickFilter((prev) => ({ ...prev, skip }));
   }
 
   function navigateCreateQuickReport() {

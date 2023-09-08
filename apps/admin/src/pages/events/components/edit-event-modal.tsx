@@ -232,7 +232,6 @@ export const EditEventModal: React.FC<ModalEditProps> = ({
     });
   }, 500);
 
-  console.log(valueNewsSelect);
   return (
     <Modal
       title={typeModal === "add" ? "Thêm mới sự kiện" : "Cập nhật sự kiện"}

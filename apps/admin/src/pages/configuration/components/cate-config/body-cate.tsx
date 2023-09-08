@@ -129,7 +129,7 @@ export const BodyCate: React.FC<Props> = ({ title }) => {
     Modal.confirm({
       title: "Bạn có chắc chắn muốn xoá " + title + " này?",
       okText: "Xoá",
-      cancelText: "Huỷ",
+      cancelText: "Thoát",
       onOk: () => {
         handleDelete({ _id: choosedCate._id });
       },

@@ -505,7 +505,7 @@ export const NewsTableItem: React.FC<Props> = ({
       icon: <ExclamationCircleOutlined />,
       content: `${item["data:title"]}`,
       okText: "Xoá",
-      cancelText: "Huỷ",
+      cancelText: "Thoát",
       onOk() {
         return onDelete?.(item._id);
       },

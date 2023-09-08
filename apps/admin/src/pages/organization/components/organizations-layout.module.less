@@ -25,6 +25,28 @@
   :global {
     .ant-pagination-item a {
       color: #000000d9 !important;
+      // color: red !important;
+
+      &::before {
+        z-index: -1 !important;
+        display: none !important;
+      }
+    }
+
+    .ant-menu-item {
+      &::before {
+        display: none !important;
+        z-index: -1 !important;
+      }
     }
   }
 }
+
+:global {
+  .ant-menu-item a::before {
+    display: none !important;
+    z-index: -1 !important;
+  }
+}
+
+

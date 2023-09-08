@@ -54,6 +54,12 @@ const Graph = ({data, handleChooseEdge} : {data:any, handleChooseEdge:any}) => {
             r: 30,
           },
 
+          labelCfg: {
+            style: {
+              fontWeight: "bold"
+            }
+          },
+
           style: {
             cursor: 'pointer',
             shadowOffsetX: 10,

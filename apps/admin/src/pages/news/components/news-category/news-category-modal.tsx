@@ -77,6 +77,11 @@ const NewsCategoryModal = () => {
   const handleSubmit = () => {
     const selectionIds = newsSelection.map((news) => news._id);
     const data = { news_ids: selectionIds, object_ids: [...objectIds, ...organizationIds, ...regionIds], news_keyword: []};
+    if(data?.object_ids.length === 0) {
+      message.error("Vui lòng chọn danh mục.");
+      return;
+    }
+    
     mutateCheckMatchKeyword(data, {
       onSuccess: (res) => {
         const check = res.find((news: any) => !news.is_contain);

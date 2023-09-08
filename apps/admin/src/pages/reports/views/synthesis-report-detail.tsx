@@ -108,9 +108,9 @@ export function SynthesisReport(): JSX.Element {
     if (mode === "delete") {
       Modal.confirm({
         title: "Bạn có chắc chắn muốn xoá tiêu đề này?",
-        content: "Tất cả các sự kiện bên trong tiêu đề này sẽ bị xóa",
+        // content: "Tất cả các sự kiện bên trong tiêu đề này sẽ bị xóa",
         okText: "Xóa",
-        cancelText: "Hủy",
+        cancelText: "Thoát",
         onOk: handleOK,
         onCancel: () => {
           setMode(null);
@@ -276,10 +276,10 @@ export function SynthesisReport(): JSX.Element {
 
   function handleDelete() {
     Modal.confirm({
-      title: "Xác nhận xoá báo cáo",
-      content: "Bạn có chắc chắn muốn xoá báo cáo này?",
+      title: "Bạn có chắc chắn muốn xoá báo cáo này?",
+      // content: "Bạn có chắc chắn muốn xoá báo cáo này?",
       okText: "Xoá",
-      cancelText: "Huỷ",
+      cancelText: "Thoát",
       onOk: () => {
         deleteReport(id!, {
           onSuccess: () => {
