@@ -14,11 +14,19 @@
         /* Add any other CSS properties you need */
       }
 
+    // .ant-select-multiple .ant-select-selector.hide {
+    //     & input::placeholder {
+    //         color: transparent !important;
+    //     }
+    // }
+
     .ant-select-multiple .ant-select-selector.hide::after {
         content: "Đang chọn quốc gia" !important;
         padding: 0 8px !important;
         width: 100% !important;    
         color: grey !important;    
+
+       
     }
     
     .ant-select {
@@ -76,7 +84,7 @@
             justify-content: space-around;
             align-items: center;
             background: #fff;
-            padding: 10px;
+            padding: 10px 30px;
             font-weight: bold;
             border: 1px solid #ececec;
             border-radius: 5px;
@@ -114,6 +122,7 @@
             width: 100%;
             padding: 8px 10px;
             margin-bottom: 10px;
+            color: #888 !important;
 
             &-icon {
                 width: 20px;
@@ -169,7 +178,7 @@
         }
 
         &.neutral .box-shade {
-            color: #a6a6a6 !important;
+            color: #888888 !important;
         }
     }
 }

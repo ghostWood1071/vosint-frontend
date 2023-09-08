@@ -241,7 +241,6 @@ const Items: React.FC<ItemProps> = ({ item, object1, object2 }) => {
   }
   const Ref = useRef<any>();
 
-
   return (
     <div className={styles.mainItemContainer}>
       {data1.length > 0 || data2.length > 0 ? (
