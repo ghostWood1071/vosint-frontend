@@ -15,13 +15,16 @@ export const newsTTXVNPath = "/news-ttxvn";
 
 // export const getNewsDetailUrl = (id: string | number, tag?: ETreeTag) => `/news/${id}/${tag ?? ""}`;
 export const getNewsDetailUrl = (id: any, tag?: any) => `/news/${id}/${tag ?? ""}`;
-export const getEventDetailUrl = (id: any, tag?: any) => `/event/${id}/${tag ?? ""}`;
+export const getEventNewsDetailUrl = (id: any, tag?: any) => `/events/${id}/${tag ?? ""}`;
+export const getEventObjectDetailUrl = (id: any) => `/organization/${id}/events`;
 // export const eventListPath = "/event-list";
 
 export const organizationPath = "/organization";
 export const organizationDetailPath = "/organization/:id";
 export const getOrganizationsDetailUrl = (id: string | number) => `/organization/${id}`;
 export const organizationGraphPath = "/organization/international-relationship-graph";
+export const organizationGraphPathBackup = "/organization/international-relationship-graph-backup";
+export const organizationCrossComparisonPath = "/organization/cross-comparison";
 
 export const socialPath = "/social";
 export const socialDashboardPath = "/social/dashboard";

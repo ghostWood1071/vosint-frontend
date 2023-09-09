@@ -17,7 +17,7 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { Popover, Space, Typography } from "antd";
+import { Popover, Space, Tooltip, Typography } from "antd";
 import cn from "classnames";
 import { CSSProperties, Dispatch, SetStateAction, forwardRef, useRef, useState } from "react";
 
@@ -92,7 +92,9 @@ export function QuickHeading({ headingsData, setHeadingsData }: Props): JSX.Elem
       <Space align="start" className={styles.header}>
         <div className={styles.textHeader}>Mục lục</div>
         <div>
-          <PlusCircleFilled onClick={handleAdd} />
+          <Tooltip title="Thêm tiêu đề">
+            <PlusCircleFilled onClick={handleAdd} />
+          </Tooltip>
         </div>
       </Space>
       <div className={styles.navigationItemList} tabIndex={0} ref={refIsOpen}>

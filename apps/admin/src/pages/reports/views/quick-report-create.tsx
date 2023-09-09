@@ -74,7 +74,9 @@ export function QuickReport(): JSX.Element {
       navigate(getReportQuickUrl(data));
       message.success("Tạo báo cáo nhanh thành công");
       queryClient.invalidateQueries(CACHE_KEYS.QUICK_REPORT);
-    },
+    },onError: (err: any) => {
+      message.error(err.response.data);
+    }
   });
 
   // HeadingTOC
@@ -85,9 +87,9 @@ export function QuickReport(): JSX.Element {
     if (mode === "delete") {
       Modal.confirm({
         title: "Bạn có chắc chắn muốn xoá tiêu đề này?",
-        content: "Tất cả các sự kiện bên trong tiêu đề này sẽ bị xóa",
+        // content: "Tất cả các sự kiện bên trong tiêu đề này sẽ bị xóa",
         okText: "Xóa",
-        cancelText: "Hủy",
+        cancelText: "Thoát",
         onOk: handleOK,
         onCancel: () => {
           setMode(null);

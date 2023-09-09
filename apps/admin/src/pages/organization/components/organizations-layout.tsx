@@ -1,8 +1,8 @@
-import { EarthIcon, FlagIcon, GroupIcon, UserTieIcon } from "@/assets/svg";
+import { EarthIcon, FlagIcon, GroupIcon, UserTieIcon, CrossComparisonIcon } from "@/assets/svg";
 import { AppContainer } from "@/pages/app";
 import { NewsFilter } from "@/pages/news/components/news-filter";
 import { NewsFilterProvider } from "@/pages/news/news.context";
-import { getOrganizationsDetailUrl, organizationGraphPath } from "@/pages/router";
+import { getOrganizationsDetailUrl, organizationGraphPath, organizationCrossComparisonPath } from "@/pages/router";
 import { UserOutlined } from "@ant-design/icons";
 import { Avatar, Input, Menu, MenuProps, Pagination, Space, Typography } from "antd";
 import { useState } from "react";
@@ -29,6 +29,7 @@ function buildMenuItem(
   { onSearch }: { onSearch: (objectType: OBJECT_TYPE) => (value: string) => void },
   { onChange }: { onChange: (objectType: OBJECT_TYPE) => (page: number) => void },
 ): MenuProps["items"] {
+
   return [
     {
       label: (
@@ -60,7 +61,8 @@ function buildMenuItem(
       label: (
         <Pagination
           defaultCurrent={1}
-          showSizeChanger={false}
+          // current={1}
+          showSizeChanger={true}
           pageSize={5}
           total={total}
           onChange={onChange(objectType)}
@@ -152,6 +154,11 @@ function Sidebar(): JSX.Element {
       key: organizationGraphPath,
       icon: <EarthIcon />,
     },
+    {
+      label: "SO SÁNH CHÉO",
+      key: organizationCrossComparisonPath,
+      icon: <CrossComparisonIcon />,
+    },
   ];
 
   return (
@@ -171,6 +178,9 @@ function Sidebar(): JSX.Element {
 
     if (key === organizationGraphPath) {
       navigate(organizationGraphPath);
+    } else if(key === organizationCrossComparisonPath) {
+      navigate(organizationCrossComparisonPath);
+
     } else {
       navigate(key);
     }
@@ -185,7 +195,7 @@ function Sidebar(): JSX.Element {
       ).find((e: any) => e._id === listString[listString.length - 1]);
 
       let keywordsString = "";
-      Object.keys(dataObject.keywords).forEach((e) => {
+      Object.keys(dataObject?.keywords).forEach((e) => {
         if (dataObject.keywords[e] !== "") {
           let keyStringItem = "";
           const listKey = dataObject.keywords[e].split(",");
@@ -210,7 +220,9 @@ function Sidebar(): JSX.Element {
   }
 
   function handleChangePaginate(key: OBJECT_TYPE) {
+    
     return function (page: number) {
+      
       setSidebarFilter(
         produce((draft) => {
           draft[key].skip = page;
@@ -220,6 +232,7 @@ function Sidebar(): JSX.Element {
   }
 
   function handleChangeName(key: OBJECT_TYPE) {
+
     return function (value: string) {
       setSidebarFilter(
         produce((draft) => {

@@ -14,6 +14,7 @@ import { ETreeAction, ETreeTag, useNewsSamplesTopicState, useNewsState } from ".
 interface Props {
   onFinish: (values: NewsletterDTO) => Promise<any>;
   confirmLoading?: boolean;
+  isChild?: any;
 }
 
 type IKeyword = Record<
@@ -43,7 +44,7 @@ const defaultKeyword: IKeyword = {
   },
 };
 
-export function NewsletterModal({ onFinish, confirmLoading }: Props): JSX.Element {
+export function NewsletterModal({ onFinish, confirmLoading, isChild }: Props): JSX.Element {
   const { t } = useTranslation("translation", { keyPrefix: "news" });
   const { action, tag, data } = useNewsState((state) => state.news);
   const reset = useNewsState((state) => state.reset);
@@ -55,6 +56,7 @@ export function NewsletterModal({ onFinish, confirmLoading }: Props): JSX.Elemen
   const setNewsSamples = useNewsSamplesTopicState((state) => state.setNewsSamples);
   const [form] = Form.useForm<NewsletterDTO & { is_sample?: boolean }>();
   const [keyword, setKeyword] = useState<IKeyword>(defaultKeyword);
+
 
   useEffect(() => {
     if (action === ETreeAction.UPDATE && initialData) {
@@ -85,7 +87,7 @@ export function NewsletterModal({ onFinish, confirmLoading }: Props): JSX.Elemen
         title: `Bạn có chắc muốn xoá "${data?.title}" không?`,
         icon: <ExclamationCircleOutlined />,
         okText: "Xoá",
-        cancelText: "Huỷ",
+        cancelText: "Thoát",
         onOk: handleFormFinish,
         onCancel: handleCancel,
       });
@@ -94,11 +96,11 @@ export function NewsletterModal({ onFinish, confirmLoading }: Props): JSX.Elemen
 
   return (
     <Modal
-      title={t(action!) + t(tag!)}
+      title={t(action!) + t(tag!) + (((initialData && initialData?.parent_id) || (!initialData?.parent_id && action === "create" && data !== null))  ? " con" : "")}
       open={action !== null && action !== ETreeAction.SELECT && action !== ETreeAction.DELETE}
       confirmLoading={confirmLoading}
       maskClosable={false}
-      destroyOnClose
+      destroyOnClose  
       onOk={handleFormFinish}
       onCancel={handleCancel}
       closable={false}

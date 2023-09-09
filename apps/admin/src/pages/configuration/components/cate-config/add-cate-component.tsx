@@ -62,7 +62,7 @@ export const AddCateComponent: React.FC<Props> = ({
   const { mutate: mutateCheckMatchKeyword } = useCheckMatchKeyword();
 
   const [fileList, setFileList] = useState<any[]>(
-    type === "edit"
+    type === "edit" && choosedCate.avatar_url
       ? [
           {
             uid: "-1",
@@ -73,6 +73,7 @@ export const AddCateComponent: React.FC<Props> = ({
         ]
       : [],
   );
+
 
   const onChange: UploadProps["onChange"] = async ({ fileList: newFileList }) => {
     setFileList(newFileList);
@@ -147,13 +148,15 @@ export const AddCateComponent: React.FC<Props> = ({
       .then(async (values) => {
         var url = "";
         if (fileList[0]?.url === undefined) {
-          var newFile: any = fileList[0].originFileObj;
-          delete newFile["uid"];
-          const formDataa: any = new FormData();
-          formDataa.append("file", newFile);
-
-          const result = await uploadFile(formDataa);
-          url = `${BASE_URL}/${result.data[0].file_url}`;
+          if(fileList[0]) {
+            var newFile: any = fileList[0].originFileObj;
+            delete newFile["uid"];
+            const formDataa: any = new FormData();
+            formDataa.append("file", newFile);
+  
+            const result = await uploadFile(formDataa);
+            url = `${BASE_URL}/${result.data[0].file_url}`;
+          } else url = ""
         } else {
           url = choosedCate.avatar_url;
         }

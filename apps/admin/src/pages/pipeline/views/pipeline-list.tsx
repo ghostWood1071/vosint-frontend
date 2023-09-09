@@ -152,6 +152,7 @@ export const PipelineList: React.FC = () => {
         width={800}
         okText="Thêm"
         cancelText="Thoát"
+        maskClosable={false}
       >
         <Form layout="vertical" form={form}>
           <Form.Item

@@ -59,6 +59,7 @@ export const SystemEventItem: React.FC<Props> = ({
   }, [eventChoosedList]);
 
   const checkoutClone = item?.list_user_clone?.includes(dataIAm?._id);
+
   return (
     <div className={styles.mainContainer} key={item._id}>
       {typeShow ? (
@@ -227,7 +228,9 @@ export const SystemEventItem: React.FC<Props> = ({
                 className={`${styles.detailContent} news__content`}
                 onClick={(event) => event.stopPropagation()}
               >
-                {item?.event_content?.split(".").map((e: string) => {
+                {/* {item?.event_content} */}
+                {/* {item?.event_content.replace(/\.\./g, ".")} */}
+                {item?.event_content?.split("..").map((e: string) => {
                   if (e === "") {
                     return null;
                   }
@@ -236,7 +239,7 @@ export const SystemEventItem: React.FC<Props> = ({
               </div>
               <div className={styles.listNewsContainer}>
                 <div className={styles.titleText}>Nguồn tin ({item.new_list?.length}):</div>
-                {item.new_list?.length === 0 && item.news_added_by_user?.length === 0 && (
+                {(item.new_list?.length === 0) && item.news_added_by_user?.length === 0 && (
                   <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={"Trống"} />
                 )}
                 {item.new_list?.map((e: any) => (

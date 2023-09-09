@@ -79,9 +79,9 @@ export const SystemEventPage: React.FC<Props> = () => {
 
   const handleSetSeen = (checkedSeen: boolean, data: any) => {
     if (checkedSeen) {
-      mutateChangeStatusSeenEvent({ action: "set-seen", data: data });
+      mutateChangeStatusSeenEvent({ action: "set-seen", data: data, is_system_created: true });
     } else {
-      mutateChangeStatusSeenEvent({ action: "set-unseen", data: data });
+      mutateChangeStatusSeenEvent({ action: "set-unseen", data: data, is_system_created: true });
     }
   }
 
@@ -89,7 +89,6 @@ export const SystemEventPage: React.FC<Props> = () => {
   const unseen = eventChoosedList.find(
     (item: any) => item.list_user_read?.length == 0 || !("list_user_read" in item),
   );
-
 
   return (
     <div className={styles.mainContainer + " system-event-container"}>
@@ -156,6 +155,7 @@ export const SystemEventPage: React.FC<Props> = () => {
             onSearch={(value) => {
               setFilterEvent({ ...filterEvent, event_name: value });
             }}
+            placeholder="Tìm kiếm"
           />
         </Space>
       </div>

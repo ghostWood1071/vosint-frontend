@@ -3,7 +3,8 @@
   // & > li {
   //   padding: 15px 0 !important;
   // }
-  padding: 25px 0;
+  // padding: 25px 0;
+  padding-top: 25px;
 
   & > li {
     font-weight: 500;
@@ -32,6 +33,10 @@
   :global {
     .ant-pagination-item a {
       color: #000000d9 !important;
+
+      &:before {
+        z-index: -1;
+      }
     }
   }
 }

@@ -277,7 +277,8 @@ export const MindmapModal: React.FC<props> = ({
             />
           </div>
           <div className={styles.rightAddExistNewsContainer}>
-            <Button type="primary" className={styles.addButton} onClick={addNewsFromServer}>
+            <Button type="primary" className={styles.addButton} onClick={addNewsFromServer}
+            disabled={valueNewsSelect.label === "" && valueNewsSelect.value === ""}>
               Thêm
             </Button>
           </div>
@@ -300,6 +301,9 @@ export const MindmapModal: React.FC<props> = ({
             ]}
             label="Tiêu đề"
             name={"title"}
+            labelCol={{
+              span: 5.5,
+            }}
           >
             <Input />
           </Form.Item>
@@ -314,6 +318,9 @@ export const MindmapModal: React.FC<props> = ({
             ]}
             label="Đường dẫn"
             name={"link"}
+            labelCol={{
+              span: 5.5,
+            }}
           >
             <Input />
           </Form.Item>
@@ -383,6 +390,9 @@ export const MindmapModal: React.FC<props> = ({
               rules={[
                 { type: "object" as const, required: true, message: "Hãy nhập vào thời gian!" },
               ]}
+              labelCol={{
+                span: 5,
+              }}
             >
               <DatePicker format={"DD/MM/YYYY"} inputReadOnly/>
             </Form.Item>
@@ -700,13 +710,29 @@ export const MindmapModal: React.FC<props> = ({
   }
 
   function handleDeleteItemNewsFromServer(value: any) {
-    const result = listNewsFromServer.filter((e: any) => e._id !== value._id);
-    setListNewsFromServer(result);
+    Modal.confirm({
+      title: "Bạn có chắc chắn muốn xoá sự kiện này?",
+      okText: "Xoá",
+      cancelText: "Thoát",
+      onOk: () => {
+        const result = listNewsFromServer.filter((e: any) => e._id !== value._id);
+        setListNewsFromServer(result);
+      },
+    });
   }
 
   function handleDeleteItemNewsList(value: any) {
-    const result = listNewsAddedByUser.filter((e: any) => e.id !== value.id);
-    setListNewsAddedByUser(result);
+    Modal.confirm({
+      title: "Bạn có chắc chắn muốn xoá sự kiện này?",
+      okText: "Xoá",
+      cancelText: "Thoát",
+      onOk: () => {
+        // handleDeleteEvent({ _id: value._id });
+        const result = listNewsAddedByUser.filter((e: any) => e.id !== value.id);
+        setListNewsAddedByUser(result);
+      },
+    });
+
   }
 
   function addOneEvent() {
@@ -803,7 +829,7 @@ export const MindmapModal: React.FC<props> = ({
     Modal.confirm({
       title: "Bạn có chắc chắn muốn xoá sự kiện này?",
       okText: "Xoá",
-      cancelText: "Huỷ",
+      cancelText: "Thoát",
       onOk: () => {
         handleDeleteEvent({ _id: value._id });
       },

@@ -174,7 +174,9 @@ export const EditEventModal: React.FC<ModalEditProps> = ({
             />
           </div>
           <div className={styles.rightAddExistNewsContainer}>
-            <Button type="primary" className={styles.addButton} onClick={addNewsFromServer}>
+            <Button type="primary" className={styles.addButton} onClick={addNewsFromServer}
+            disabled={valueNewsSelect.value === "" && valueNewsSelect.label === ""}
+            >
               Thêm
             </Button>
           </div>
@@ -229,6 +231,7 @@ export const EditEventModal: React.FC<ModalEditProps> = ({
       text_search_news: value.trim(),
     });
   }, 500);
+
   return (
     <Modal
       title={typeModal === "add" ? "Thêm mới sự kiện" : "Cập nhật sự kiện"}
@@ -286,7 +289,7 @@ export const EditEventModal: React.FC<ModalEditProps> = ({
           name={"date_created"}
           rules={[{ type: "object" as const, required: true, message: "Hãy nhập vào thời gian!" }]}
         >
-          <DatePicker format={"DD/MM/YYYY"} />
+          <DatePicker format={"DD/MM/YYYY"} inputReadOnly/>
         </Form.Item>
         <Form.Item validateTrigger={["onChange", "onBlur"]} label="Nguồn tin" name={"news"}>
           <div>

@@ -41,7 +41,7 @@ import { MindmapModal } from "./mindmap-modal";
 import { NewDetailSummary } from "./news-detail/components";
 import "./table-news.less";
 import styles from "./table-news.module.less";
-import "@/assets/img/default-thumbnail.jpg";
+import defaultThumbnail from"@/assets/img/default-thumbnail.jpg";
 
 interface Props {
   item: any;
@@ -153,10 +153,12 @@ export const NewsTableItem: React.FC<Props> = ({
                 </Tooltip>
               )}
 
-              <Tooltip title={item.isBell ? "Xoá khỏi tin quan trọng" : "Thêm vào tin quan trọng"}>
+              <Tooltip  
+              // title={item.isBell ? "Xoá khỏi tin quan trọng" : "Thêm vào tin quan trọng"}>
+              title="Xoá khỏi tin quan trọng">
                 <ImportantButton item={item} handleClickImportant={handleClickImportant} />
               </Tooltip>
-              <Tooltip
+              <Tooltip 
                 title={item.isStar ? "Xoá khỏi tin được đánh dấu" : "Thêm vào tin được đánh dấu"}
               >
                 <StarTwoTone
@@ -193,7 +195,7 @@ export const NewsTableItem: React.FC<Props> = ({
                 {item["source_name"]}
               </div> */}
               <div style={{ marginRight: "10px" }}>
-                <img src={item["source_favicon"]} title={item["source_name"]} className="source-icon" alt="" />
+                <img src={item["source_favicon"] || defaultThumbnail} title={item["source_name"]} className="source-icon" alt="" />
                 {/* <img src={"https://dantri.com.vn/favicon.ico"} title={item["source_name"]} className="source-icon" alt="" /> */}
               </div>
             </Tooltip>
@@ -255,7 +257,7 @@ export const NewsTableItem: React.FC<Props> = ({
         <tr ref={Ref}>
           <td colSpan={type === "edit" ? 5 : 4}>
             <div className={`${styles.content}`}>
-              <div
+              {/* <div
                 onClick={() => {
                   Ref?.current?.scrollIntoView();
                 }}
@@ -267,8 +269,21 @@ export const NewsTableItem: React.FC<Props> = ({
                 >
                   <CloseOutlined title="Đóng chi tiết tin" className={styles.closeIcon} />
                 </button>
-              </div>
+              </div> */}
               <div className={`${styles.detailContainer} news__detail`}>
+                <div
+                  onClick={() => {
+                    Ref?.current?.scrollIntoView();
+                  }}
+                  className={styles.scrollContainer}
+                >
+                  <button
+                    className={`${styles.hideDetailButton} btn__close`}
+                    onClick={() => setTypeShow(!typeShow)}
+                  >
+                    <CloseOutlined title="Đóng chi tiết tin" className={styles.closeIcon} />
+                  </button>
+                </div>
                 <div className={styles.detailHeader}>
                   <div className={styles.title} style={{ marginBottom: "50px" }}>
                     <span style={{ marginRight: 10 }} className="news__title">
@@ -503,7 +518,7 @@ export const NewsTableItem: React.FC<Props> = ({
       icon: <ExclamationCircleOutlined />,
       content: `${item["data:title"]}`,
       okText: "Xoá",
-      cancelText: "Huỷ",
+      cancelText: "Thoát",
       onOk() {
         return onDelete?.(item._id);
       },

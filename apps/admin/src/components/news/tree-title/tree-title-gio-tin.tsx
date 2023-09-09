@@ -1,5 +1,5 @@
 import { DeleteOutlined, EditOutlined, EllipsisOutlined, ExclamationCircleOutlined, PlusOutlined } from "@ant-design/icons";
-import { Col, Modal, Row, Space, TreeDataNode, Typography } from "antd";
+import { Col, Modal, Row, Space, Tooltip, TreeDataNode, Typography } from "antd";
 import classNames from "classnames";
 import { useRef, useState } from "react";
 import { useClickAway } from "react-use";
@@ -24,6 +24,9 @@ export function TreeTitleGioTin({ onClick, children, isEditable, ...node }: Prop
   const ref = useRef(null);
 
   useClickAway(ref, handleClickAway);
+  const news = useNewsState((state) => state.news);
+  // console.log(news)
+  // console.log(isEditable)
 
   return (
     <Row className={`${styles.treeTitle} tree-title-gio-tin`} onClick={handleClick} align="middle">
@@ -44,21 +47,30 @@ export function TreeTitleGioTin({ onClick, children, isEditable, ...node }: Prop
         <Col span={8} className={styles.menu} ref={ref}>
           {isOpen ? (
             <Space>
-              <PlusOutlined
-                onClick={handleCreate}
-                className={styles.add}
-                title={`Thêm ${MTreeTag[node.tag]} con`}
-              />
-              <EditOutlined
-                onClick={handleUpdate}
-                className={styles.edit}
-                title={`Cập nhật ${MTreeTag[node.tag]} con`}
-              />
-              <DeleteOutlined
-                onClick={handleDelete}
-                className={styles.delete}
-                title={`Xoá ${MTreeTag[node.tag]}`}
-              />
+              {/* <Tooltip title={`Thêm ${MTreeTag[node.tag]} con`}> */}
+                <PlusOutlined
+                  style={{ cursor: "pointer"}}
+                  onClick={handleCreate}
+                  className={styles.add}
+                  title={`Thêm ${MTreeTag[node.tag]} con`}
+                />
+              {/* </Tooltip> */}
+              {/* <Tooltip title={`Cập nhật ${MTreeTag[node.tag]} con`}> */}
+                <EditOutlined
+                  style={{ cursor: "pointer"}}
+                  onClick={handleUpdate}
+                  className={styles.edit}
+                  title={`Cập nhật ${MTreeTag[node.tag]}` + (("parent_id" in node) ? " con" : "")}
+                />
+              {/* </Tooltip> */}
+              {/* <Tooltip title={`Xoá ${MTreeTag[node.tag]} con`}> */}
+                <DeleteOutlined
+                  style={{ cursor: "pointer"}}
+                  onClick={handleDelete}
+                  className={styles.delete}
+                  title={`Xoá ${MTreeTag[node.tag]}`  + (("parent_id" in node) ? " con" : "")}
+                />
+              {/* </Tooltip> */}
             </Space>
           ) : (
             <EllipsisOutlined

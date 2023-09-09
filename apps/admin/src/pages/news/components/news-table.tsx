@@ -155,7 +155,7 @@ export const NewsTable: React.FC<Props> = ({
             title: "Bạn có chắc muốn xoá bản tin này?",
             icon: <ExclamationCircleOutlined />,
             okText: "Xoá",
-            cancelText: "Huỷ",
+            cancelText: "Thoát",
             content: `${record["data:title"]}`,
             onOk() {
               return onDelete?.(id);

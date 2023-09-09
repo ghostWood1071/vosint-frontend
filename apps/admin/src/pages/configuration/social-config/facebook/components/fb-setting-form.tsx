@@ -41,6 +41,7 @@ export const SettingCreateForm: React.FC<Props> = ({
   useEffect(() => {
     form.setFieldsValue(initialValues);
   }, []);
+  
   const handleChange = (value: string | string[], data: any) => {
     setAdminSelect(data);
   };
@@ -125,7 +126,7 @@ export const SettingCreateForm: React.FC<Props> = ({
         name="followed_by"
         label="Chọn tài khoản giám sát: "
         labelCol={{
-          span: 6.5,
+          span: 7,
         }}
         rules={[
           {

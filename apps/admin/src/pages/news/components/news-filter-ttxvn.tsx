@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import { useNewsFilter, useNewsFilterDispatch } from "../news.context";
 import styles from "./news-filter.module.less";
+import "../less/news-filter.less";
 
 export function NewsFilterTTXVN(): JSX.Element {
   const pinned = useSidebar((state) => state.pinned);
@@ -12,7 +13,7 @@ export function NewsFilterTTXVN(): JSX.Element {
   const [internalTextSearch, setInternalTextSearch] = useState("");
 
   return (
-    <div className={pinned ? styles.filterWithSidebar : styles.filter}>
+    <div className={(pinned ? styles.filterWithSidebar : styles.filter) + " filter-ttxvn"}>
       <Form
         onValuesChange={handleFinish}
         initialValues={{

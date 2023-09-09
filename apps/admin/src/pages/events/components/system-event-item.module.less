@@ -135,11 +135,15 @@
   text-overflow: ellipsis;
   max-width: calc(100%);
   color: black;
+  // text-overflow: ellipsis;
+
   .detail-content-header {
     font-weight: 300;
   }
 
   &--seen {
+    overflow: hidden;
+    text-overflow: ellipsis;
     font-weight: 400;
     color: #666;
   }

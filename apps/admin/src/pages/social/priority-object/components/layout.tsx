@@ -95,7 +95,7 @@ export const Layout: React.FC<LayoutProps> = ({
     Modal.confirm({
       title: "Bạn có chắc chắn muốn xoá " + typeName + " này?",
       okText: "Xoá",
-      cancelText: "Huỷ",
+      cancelText: "Thoát",
       onOk: () => {
         functionDelete({ id: value._id });
       },

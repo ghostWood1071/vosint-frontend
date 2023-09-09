@@ -186,7 +186,7 @@ export const TwSettingTable: React.FC<Props> = ({
       title: `Bạn có chắc muốn xoá "${values.social_name}" không?`,
       icon: <ExclamationCircleOutlined />,
       okText: "Xoá",
-      cancelText: "Huỷ",
+      cancelText: "Thoát",
       onOk: () =>
         mutateDelete(value, {
           onSuccess: () => {

@@ -26,8 +26,7 @@
 }
 
 .item-label {
-  padding: 16px 24px;
-
+  padding: 16px 20px;
   display: flex;
   align-items: center;
 
@@ -37,8 +36,9 @@
 }
 
 .item-content {
+  border-top: 1px solid #f0f0f0;
   border-left: 1px solid #f0f0f0;
-  padding: 16px 24px;
+  padding: 16px 20px;
   background-color: white;
 
   &:not(:last-child) {
@@ -56,6 +56,10 @@
     display: flex;
     align-items: center;
     cursor: pointer;
+
+    &:not(:last-child) {
+      border-right: 1px solid #f0f0f0;
+    }
 
     .condition-option-type1 {
       width: 100%;

@@ -1,9 +1,11 @@
 import {
   DeleteOutlined,
+  DownCircleOutlined,
   EditOutlined,
   EyeInvisibleOutlined,
   EyeOutlined,
   PlusOutlined,
+  UpCircleOutlined,
 } from "@ant-design/icons";
 import {
   Button,
@@ -134,6 +136,12 @@ export const ViewList = () => {
               item.news[0] !== undefined ? expandedRow(item.news, item._id) : null,
             rowExpandable: (item) => item._id !== "Not Expandable",
             indentSize: 10,
+            expandIcon: ({ expanded, onExpand, record }) =>
+            expanded ? (
+              <UpCircleOutlined onClick={(e:any) => onExpand(record, e)} />
+            ) : (
+              <DownCircleOutlined onClick={(e:any) => onExpand(record, e)} />
+            )
           }}
           pagination={{
             position: ["bottomCenter"],
@@ -179,7 +187,7 @@ export const ViewList = () => {
     Modal.confirm({
       title: "Bạn có chắc chắn muốn xoá nhóm nguồn tin này?",
       okText: "Xoá",
-      cancelText: "Huỷ",
+      cancelText: "Thoát",
       onOk: () => {
         handleDelete({ _id: value._id });
       },
@@ -206,7 +214,7 @@ export const ViewList = () => {
     Modal.confirm({
       title: "Bạn có chắc chắn muốn xoá nguồn tin này?",
       okText: "Xoá",
-      cancelText: "Huỷ",
+      cancelText: "Thoát",
       onOk: () => {
         handeDeleteItemSource({ ...dataItem, news: dataNewsResult });
       },

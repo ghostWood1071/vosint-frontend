@@ -4,7 +4,7 @@ import { ETreeTag, useNewsSelection, useNewsState } from "@/components/news/news
 import { AddCateComponent } from "@/pages/configuration/components/cate-config/add-cate-component";
 import { useMutationObjectCate } from "@/pages/configuration/config.loader";
 import { OBJECT_TYPE, useObjectList } from "@/pages/organization/organizations.loader";
-import { AppstoreOutlined, DeleteOutlined } from "@ant-design/icons";
+import { AppstoreOutlined, DeleteOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
 import {
   Button,
   Checkbox,
@@ -51,9 +51,9 @@ const NewsCategoryModal = () => {
   const { mutate: mutateDeleteNewsObject} = useMutationDeleteNewsObject();
 
   //build checkbox menu
-  const { data: dataObject } = useObjectList(OBJECT_TYPE.DOI_TUONG, { name: "" });
-  const { data: dataOrganization } = useObjectList(OBJECT_TYPE.TO_CHUC, { name: "" });
-  const { data: dataRegion } = useObjectList(OBJECT_TYPE.QUOC_GIA, { name: "" });
+  const { data: dataObject } = useObjectList(OBJECT_TYPE.DOI_TUONG, { name: "", limit: 10000 });
+  const { data: dataOrganization } = useObjectList(OBJECT_TYPE.TO_CHUC, { name: "", limit: 10000 });
+  const { data: dataRegion } = useObjectList(OBJECT_TYPE.QUOC_GIA, { name: "", limit: 10000 });
 
   
   const CATEGORY_OBJECT = "Danh Mục Đối Tượng";
@@ -77,6 +77,11 @@ const NewsCategoryModal = () => {
   const handleSubmit = () => {
     const selectionIds = newsSelection.map((news) => news._id);
     const data = { news_ids: selectionIds, object_ids: [...objectIds, ...organizationIds, ...regionIds], news_keyword: []};
+    if(data?.object_ids.length === 0) {
+      message.error("Vui lòng chọn danh mục.");
+      return;
+    }
+    
     mutateCheckMatchKeyword(data, {
       onSuccess: (res) => {
         const check = res.find((news: any) => !news.is_contain);
@@ -84,9 +89,9 @@ const NewsCategoryModal = () => {
         if (check) {
           mutateCreateNewsObject(data, {onSuccess: (res) => {
             setOpenNewsCategory(false);
-          }, onError: (err) => { console.log(err) }})
+          }, onError: (err:any) => { console.log(err) }})
         } else {
-          message.success("Danh sách tin đã có trong mục đối tượng!");
+          message.error("Đã tồn tại!");
         }
       },
       onError: (err) => {
@@ -172,11 +177,22 @@ const NewsCategoryModal = () => {
                   dataSource={newsSelection}
                   renderItem={(item) => {
                     const handleDelete = () => {
-                      const deletedNews = produce(newsSelection, (draft) => {
-                        const index = draft.findIndex((i) => i._id === item._id);
-                        if (index !== -1) draft.splice(index, 1);
+                      Modal.confirm({
+                        title: `Bạn có chắc chắn muốn xoá không?`,
+                        icon: <ExclamationCircleOutlined />,
+                        okText: "Xoá",
+                        cancelText: "Thoát",
+                        onOk: () => {
+                          const deletedNews = produce(newsSelection, (draft) => {
+                            const index = draft.findIndex((i) => i._id === item._id);
+                            if (index !== -1) draft.splice(index, 1);
+                          });
+                          setNewsSelection(deletedNews);
+                          message.success("Xoá thành công!");
+                        },
+                        onCancel: () => {},
                       });
-                      setNewsSelection(deletedNews);
+
                     };
 
                     return (

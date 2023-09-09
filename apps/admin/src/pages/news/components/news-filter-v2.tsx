@@ -15,7 +15,7 @@ import {
   useNewsSidebar,
 } from "@/pages/news/news.loader";
 import { buildTree } from "@/pages/news/news.utils";
-import { getEventDetailUrl } from "@/pages/router";
+import { getEventNewsDetailUrl } from "@/pages/router";
 import {
   DeleteOutlined,
   ExclamationCircleOutlined,
@@ -193,7 +193,7 @@ export function NewsFilterV2(): JSX.Element {
           onClick={() => {
             // setStatus(!status);
             // handleConvert(status);
-            navigate(getEventDetailUrl(detailIds, tag));
+            navigate(getEventNewsDetailUrl(detailIds, tag));
           }}
           title={"Hiển thị dòng sự kiện"}
         />
@@ -238,7 +238,7 @@ export function NewsFilterV2(): JSX.Element {
       title: "Bạn có chắc muốn xoá những bản tin này không?",
       icon: <ExclamationCircleOutlined />,
       okText: "Xoá",
-      cancelText: "Huỷ",
+      cancelText: "Thoát",
       onOk() {
         setNewsSelection([]);
         return mutateDelete({
