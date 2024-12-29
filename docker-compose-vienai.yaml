@@ -1,23 +1,20 @@
 version: '3.6'
 services:
     vosint-frontend:
-        image: vienai/vosint-frontend:1.0.0
+        image: vienai/vosint-frontend:1.0.2
         ports: 
-            - 6103:80
-        
+            - 3666:80        
         deploy:
             restart_policy:
                 condition: on-failure
             replicas: 2     
             placement:
                 constraints:
-                  - node.hostname==srv1                   
+                  - node.hostname==aivn                   
       
         networks:
             - vosint3_system_network
     
-    
-
 networks: 
   vosint3_system_network:
     external: true
